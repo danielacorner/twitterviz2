@@ -1,26 +1,12 @@
 import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import tweets from "./tweets.json";
+import NetworkGraph from "./components/NetworkGraph";
 
 function App() {
-  console.log("🌟🚨: App -> tweets", tweets);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <NetworkGraph tweets={tweets} />
     </div>
   );
 }
