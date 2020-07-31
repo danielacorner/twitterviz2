@@ -1,3 +1,5 @@
+## clone twit into ./twit https://github.com/danielacorner/twit & run `npm install`
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

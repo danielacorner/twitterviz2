@@ -1,8 +1,10 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import tweets from "./tweets.json";
 
 function App() {
+  console.log("🌟🚨: App -> tweets", tweets);
   return (
     <div className="App">
       <header className="App-header">
