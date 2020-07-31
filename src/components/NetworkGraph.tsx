@@ -1,10 +1,26 @@
 import React from "react";
 import {
-  ForceGraph2D /* , ForceGraph3D, ForceGraphVR, ForceGraphAR */,
+  ForceGraph2D,
+  ForceGraph3D,
+  // ForceGraphVR,
+  // ForceGraphAR,
 } from "react-force-graph";
+// https://www.npmjs.com/package/react-force-graph
 
-const NetworkGraph = ({ tweets }) => {
+const NetworkGraph = ({ tweets, is3d }) => {
   console.log("🌟🚨: App -> tweets", tweets);
+  const data = transformTweetsIntoGraphData(tweets);
+
+  return is3d ? (
+    <ForceGraph3D graphData={data} />
+  ) : (
+    <ForceGraph2D graphData={data} />
+  );
+};
+
+export default NetworkGraph;
+
+function transformTweetsIntoGraphData(tweets: any) {
   const allUserIds = tweets.map((t) => t.user.id);
 
   const prunedLinks = tweets.reduce((acc, tweet) => {
@@ -40,8 +56,5 @@ const NetworkGraph = ({ tweets }) => {
     nodes: tweets,
     links: prunedLinks,
   };
-
-  return <ForceGraph2D graphData={data} />;
-};
-
-export default NetworkGraph;
+  return data;
+}
