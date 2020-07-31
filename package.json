@@ -27,7 +27,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "scrape": "node ./twit/index.js"
+    "scrape": "node ./twit/index.js \"./src/tweets.json\""
   },
   "eslintConfig": {
     "extends": "react-app"

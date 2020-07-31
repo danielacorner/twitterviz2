@@ -41,9 +41,11 @@ const NetworkGraph = ({ tweets }) => {
 
   // the graph configuration, you only need to pass down properties
   // that you want to override, otherwise default ones will be used
+  // https://danielcaldas.github.io/react-d3-graph/docs/index.html#config-global
   const myConfig = {
     nodeHighlightBehavior: true,
-    directed: true,
+    collapsible: false,
+    directed: false,
     node: {
       color: "lightgreen",
       size: 120,
