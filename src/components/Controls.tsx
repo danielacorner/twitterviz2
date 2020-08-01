@@ -13,6 +13,7 @@ import {
 } from "@material-ui/core";
 import styled from "styled-components/macro";
 import { COLOR_BY, FILTER_BY, FILTER_LEVELS } from "../utils/constants";
+import countryCodes from "../utils/countryCodes";
 
 const Div = styled.div`
   display: grid;
@@ -61,24 +62,26 @@ const Controls = ({
   setIsImageChecked,
   isVideoChecked,
   isImageChecked,
-  filterBy,
+  mediaType,
+  countryCode,
+  setCountryCode,
 }) => {
   const [numTweets, setNumTweets] = useState(50);
   const [loading, setLoading] = useState(false);
   const [filterLevel, setFilterLevel] = useState(FILTER_LEVELS.low);
 
   useEffect(() => {
-    if (filterBy) {
+    if (mediaType) {
       setNumTweets(25);
     }
-  }, [filterBy]);
+  }, [mediaType]);
 
   const fetchNewTweets = async () => {
     setLoading(true);
     const resp = await fetch(
       `/api/stream?num=${numTweets}&filterLevel=${filterLevel}${
-        filterBy ? `&filterBy=${filterBy}` : ""
-      }`
+        mediaType ? `&mediaType=${mediaType}` : ""
+      }${countryCode !== "All" ? `&countryCode=${countryCode}` : ""}`
     );
     const data = await resp.json();
     setLoading(false);
@@ -142,6 +145,25 @@ const Controls = ({
             <MenuItem value={FILTER_LEVELS.none}>None</MenuItem>
           </Select>
         </FormControl>
+        <FormControl>
+          <InputLabel id="location">Country</InputLabel>
+          <Select
+            labelId="location"
+            onChange={(event) => {
+              setCountryCode(event.target.value);
+            }}
+            value={countryCode}
+          >
+            <MenuItem value="All">
+              <em>All</em>
+            </MenuItem>
+            {Object.entries(countryCodes).map(([code, countryName]) => (
+              <MenuItem key={code} value={code}>
+                {countryName}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </div>
       <Switch3D onChange={() => setIs3d((prev) => !prev)} checked={is3d} />
       <div className="fetchTweets">
@@ -163,7 +185,7 @@ const Controls = ({
               FILTER_BY.imageAndVideo,
               FILTER_BY.imageOnly,
               FILTER_BY.videoOnly,
-            ].includes(filterBy)
+            ].includes(mediaType)
               ? 10
               : 50,
           }}

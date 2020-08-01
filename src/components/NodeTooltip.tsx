@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSpring, animated } from "react-spring";
 import styled from "styled-components/macro";
 import { getMediaArr } from "../utils/utils";
+import countryCodes from "../utils/countryCodes";
 
 const AVATAR_WIDTH = 46;
 const TOOLTIP_WIDTH = 380;
@@ -96,8 +97,15 @@ export default NodeTooltip;
 const TweetStyles = styled.div`
   display: grid;
   grid-gap: ${PADDING}px;
-  .userInfo {
-    display: flex;
+  .userInfo, .locationInfo {
+    display: grid;
+    grid-auto-flow:column;
+    place-content: start;
+    grid-gap: 4px;
+  }
+  .userInfo {}
+  .locationInfo{
+    color: hsl(0,0%,50%)
   }
   .media {
     display: grid;
@@ -113,15 +121,24 @@ const TweetStyles = styled.div`
   }
 `;
 function TweetContent({ nodeData }) {
-  const { user, text, extended_entities } = nodeData;
+  const { user, text, extended_entities, entities } = nodeData;
   const mediaArr = getMediaArr(nodeData);
   return (
     <TweetStyles isVideo={extended_entities?.media[0]?.type === "video"}>
       <div className="userInfo">
         <div className="username">{user.name}</div>
-        <div className="handle">@{user.screen_name}</div>
+        <div className="handle">| @{user.screen_name}</div>
+      </div>
+      <div className="locationInfo">
+        {user.location && <div className="location">📍{user.location}</div>}
+        {entities?.place?.country_code && (
+          <div className="country">
+            | {countryCodes[entities?.place?.country_code]}
+          </div>
+        )}
       </div>
       <div className="text">{text}</div>
+
       <div className="media">
         {mediaArr.map(({ type, id_str, poster, src }) => {
           return (

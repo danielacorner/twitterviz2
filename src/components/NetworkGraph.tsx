@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import {
   ForceGraph2D,
   ForceGraph3D,
@@ -27,6 +27,10 @@ const NetworkGraph = ({
   useWhyDidYouUpdate("NETWORKGRAPH", { is3d, colorBy, graphDataFromServer });
 
   const [nodeData, setNodeData] = useState(null);
+
+  useEffect(() => {
+    console.log("🌟🚨: node", nodeData);
+  }, [nodeData]);
 
   return (
     <>

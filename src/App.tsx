@@ -11,13 +11,14 @@ function App() {
     COLOR_BY.sentiment as keyof typeof COLOR_BY | null
   );
   const [tweetsFromServer, setTweetsFromServer] = useState(null);
-  const [isVideoChecked, setIsVideoChecked] = useState(true);
-  const [isImageChecked, setIsImageChecked] = useState(true);
+  const [isVideoChecked, setIsVideoChecked] = useState(false);
+  const [isImageChecked, setIsImageChecked] = useState(false);
+  const [countryCode, setCountryCode] = useState("All");
   const allowedMediaTypes = [
     ...(isVideoChecked ? ["video"] : []),
     ...(isImageChecked ? ["photo"] : []),
   ];
-  const filterBy =
+  const mediaType =
     allowedMediaTypes.length === 2
       ? FILTER_BY.imageAndVideo
       : allowedMediaTypes.includes("photo")
@@ -38,7 +39,9 @@ function App() {
           setIsImageChecked,
           isVideoChecked,
           isImageChecked,
-          filterBy,
+          mediaType,
+          countryCode,
+          setCountryCode,
           is3d,
         }}
       />
