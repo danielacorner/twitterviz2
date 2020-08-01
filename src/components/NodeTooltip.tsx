@@ -116,6 +116,7 @@ function TweetContent({ nodeData }) {
                   ).url
                 }
                 autoPlay={true}
+                loop={true}
               ></video>
             ) : (
               <img src={media.media_url_https} alt="" />

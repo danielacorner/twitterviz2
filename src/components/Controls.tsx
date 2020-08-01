@@ -6,26 +6,41 @@ import {
   Button,
   TextField,
   CircularProgress,
+  InputLabel,
+  FormControl,
 } from "@material-ui/core";
 import styled from "styled-components/macro";
 import { COLOR_BY } from "../utils/constants";
 
+const Div = styled.div`
+  display: grid;
+  place-items: center;
+`;
+
 const Switch3D = ({ onChange }) => (
-  <span>
-    2D
-    <Switch onChange={onChange} />
-    3D
-  </span>
+  <Div css={``}>
+    <span>
+      2D
+      <Switch onChange={onChange} />
+      3D
+    </span>
+  </Div>
 );
 
 const ControlsStyles = styled.div`
   display: grid;
   grid-auto-flow: column;
   grid-gap: 8px;
+  .styleTweets {
+    display: grid;
+    grid-gap: 8px;
+  }
   .fetchTweets {
     display: grid;
+    grid-gap: 8px;
     grid-template-columns: 1fr 100px;
   }
+  padding: 8px;
 `;
 
 const Controls = ({
@@ -45,19 +60,29 @@ const Controls = ({
   };
   return (
     <ControlsStyles>
-      <Select onChange={handleSelectColor} value={colorBy}>
-        <MenuItem value="">
-          <em>None</em>
-        </MenuItem>
-        <MenuItem value={COLOR_BY.mediaType}>Media type</MenuItem>
-        <MenuItem value={COLOR_BY.textLength}>Text length</MenuItem>
-      </Select>
+      <div className="styleTweets">
+        <FormControl>
+          <InputLabel id="color-by">Color by...</InputLabel>
+          <Select
+            labelId="color-by"
+            onChange={handleSelectColor}
+            value={colorBy}
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            <MenuItem value={COLOR_BY.mediaType}>Media type</MenuItem>
+            <MenuItem value={COLOR_BY.textLength}>Text length</MenuItem>
+          </Select>
+        </FormControl>
+      </div>
       <Switch3D onChange={() => setIs3d((prev) => !prev)} />
       <div className="fetchTweets">
         <Button
           className="btnFetch"
           disabled={loading}
           onClick={fetchNewTweets}
+          variant="outlined"
         >
           {loading ? <CircularProgress /> : "Fetch New Tweets"}
         </Button>
