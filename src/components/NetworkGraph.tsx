@@ -38,8 +38,15 @@ function Graph({ is3d, graphDataFromServer, setNodeData, colorBy }) {
     },
     [setNodeData]
   );
+  const onNodeClick = useCallback((node) => {
+    window.open(
+      `https://twitter.com/${node.user.screen_name}/status/${node.id_str}`,
+      "_blank"
+    );
+  }, []);
   const forceGraphProps = {
     onNodeHover,
+    onNodeClick,
     cooldownTime: 250,
     nodeRelSize: 25,
     nodeColor: (node) => getNodeColor(node, colorBy),
