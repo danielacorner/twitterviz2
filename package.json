@@ -13,6 +13,7 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "d3": "^5.16.0",
+    "lodash": "^4.17.19",
     "react": "^16.13.1",
     "react-d3-graph": "^2.5.0",
     "react-dom": "^16.13.1",
@@ -20,7 +21,8 @@
     "react-scripts": "3.4.1",
     "react-spring": "^8.0.27",
     "styled-components": "^5.1.1",
-    "typescript": "~3.7.2"
+    "typescript": "~3.7.2",
+    "use-why-did-you-update": "^0.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -48,6 +50,7 @@
   },
   "devDependencies": {
     "@types/d3": "^5.7.2",
+    "@types/lodash": "^4.14.158",
     "@types/material-ui": "^0.21.7",
     "@types/react-d3-graph": "^2.3.3",
     "concurrently": "^5.2.0"

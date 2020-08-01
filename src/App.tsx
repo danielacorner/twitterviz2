@@ -3,6 +3,7 @@ import "./App.css";
 import NetworkGraph from "./components/NetworkGraph";
 import { COLOR_BY } from "./utils/constants";
 import Controls from "./components/Controls";
+import { transformTweetsIntoGraphData } from "./utils/transformData";
 
 function App() {
   const [is3d, setIs3d] = useState(false);
@@ -26,7 +27,9 @@ function App() {
       <NetworkGraph
         is3d={is3d}
         colorBy={colorBy}
-        tweetsFromServer={tweetsFromServer}
+        graphDataFromServer={
+          tweetsFromServer && transformTweetsIntoGraphData(tweetsFromServer)
+        }
       />
     </div>
   );

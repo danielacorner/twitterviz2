@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   ForceGraph2D,
   ForceGraph3D,
@@ -10,25 +10,42 @@ import NodeTooltip from "./NodeTooltip";
 import tweets from "../tweets.json";
 import { transformTweetsIntoGraphData } from "../utils/transformData";
 import { COLOR_BY } from "../utils/constants";
+import { useWhyDidYouUpdate } from "use-why-did-you-update";
 
 const defaultGraphData = transformTweetsIntoGraphData(tweets);
 
-const NetworkGraph = ({ is3d, colorBy, tweetsFromServer }) => {
-  const graphDataFromServer =
-    tweetsFromServer && transformTweetsIntoGraphData(tweetsFromServer);
+const NetworkGraph = ({ is3d, colorBy, graphDataFromServer }) => {
+  useWhyDidYouUpdate("NETWORKGRAPH", { is3d, colorBy, graphDataFromServer });
+
   const [nodeData, setNodeData] = useState(null);
 
-  const forceGraphProps = {
-    onNodeHover: (node) => {
+  return (
+    <>
+      <Graph {...{ is3d, graphDataFromServer, setNodeData, colorBy }} />
+      <NodeTooltip nodeData={nodeData} />
+    </>
+  );
+};
+
+function Graph({ is3d, graphDataFromServer, setNodeData, colorBy }) {
+  useWhyDidYouUpdate("GRAPH", { is3d, graphDataFromServer, setNodeData });
+  const onNodeHover = useCallback(
+    (node) => {
       if (node) {
+        console.log("🌟🚨: NetworkGraph -> node", node);
         setNodeData(node);
       }
     },
+    [setNodeData]
+  );
+  const forceGraphProps = {
+    onNodeHover,
     cooldownTime: 250,
     nodeRelSize: 25,
     nodeColor: (node) => getNodeColor(node, colorBy),
-    // nodeAutoColorBy:
+    // nodeAutoColorBy: (node) => node.extended_entities?.media[0].type,
   };
+
   return (
     <>
       {is3d ? (
@@ -42,10 +59,9 @@ const NetworkGraph = ({ is3d, colorBy, tweetsFromServer }) => {
           {...forceGraphProps}
         />
       )}
-      <NodeTooltip nodeData={nodeData} />
     </>
   );
-};
+}
 
 export default NetworkGraph;
 

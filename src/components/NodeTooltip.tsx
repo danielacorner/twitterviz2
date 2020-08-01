@@ -97,7 +97,6 @@ const TweetStyles = styled.div`
 `;
 function TweetContent({ nodeData }) {
   const { user, text, extended_entities } = nodeData;
-  console.log("🌟🚨: TweetContent -> extended_entities", extended_entities);
   return (
     <TweetStyles isVideo={extended_entities?.media[0]?.type === "video"}>
       <div className="userInfo">
