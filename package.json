@@ -30,7 +30,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "scrape": "node ./twit/index.js \"./src/tweets.json\"",
+    "generate": "node ./twit/index.js \"./src/tweets.json\"",
     "server": "cd twit && npm run start",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run start\""
   },
