@@ -21,8 +21,8 @@ const NetworkGraph = ({ is3d }) => {
         setNodeData(node);
       }
     },
-    cooldownTime: 50,
-    nodeRelSize: 10,
+    cooldownTime: 250,
+    nodeRelSize: 25,
   };
   return (
     <>
