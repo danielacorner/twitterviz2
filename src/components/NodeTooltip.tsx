@@ -31,7 +31,7 @@ const AvatarStyles = styled.div`
 `;
 
 const NodeTooltip = ({ nodeData }) => {
-  console.log("🌟🚨: NodeTooltip -> nodeData", nodeData);
+  // console.log("🌟🚨: NodeTooltip -> nodeData", nodeData);
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
   // on mount, start listening to mouse position

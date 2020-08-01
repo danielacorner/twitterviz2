@@ -11,9 +11,11 @@ import tweets from "../tweets.json";
 import { transformTweetsIntoGraphData } from "../utils/transformData";
 import { COLOR_BY } from "../utils/constants";
 
-const data = transformTweetsIntoGraphData(tweets);
+const defaultGraphData = transformTweetsIntoGraphData(tweets);
 
-const NetworkGraph = ({ is3d, colorBy }) => {
+const NetworkGraph = ({ is3d, colorBy, tweetsFromServer }) => {
+  const graphDataFromServer =
+    tweetsFromServer && transformTweetsIntoGraphData(tweetsFromServer);
   const [nodeData, setNodeData] = useState(null);
 
   const forceGraphProps = {
@@ -30,9 +32,15 @@ const NetworkGraph = ({ is3d, colorBy }) => {
   return (
     <>
       {is3d ? (
-        <ForceGraph3D graphData={data} {...forceGraphProps} />
+        <ForceGraph3D
+          graphData={graphDataFromServer || defaultGraphData}
+          {...forceGraphProps}
+        />
       ) : (
-        <ForceGraph2D graphData={data} {...forceGraphProps} />
+        <ForceGraph2D
+          graphData={graphDataFromServer || defaultGraphData}
+          {...forceGraphProps}
+        />
       )}
       <NodeTooltip nodeData={nodeData} />
     </>

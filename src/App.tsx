@@ -9,6 +9,7 @@ function App() {
   const [colorBy, setColorBy] = useState(
     COLOR_BY.mediaType as keyof typeof COLOR_BY | null
   );
+  const [tweetsFromServer, setTweetsFromServer] = useState(null);
 
   const handleSelectColor = (event) => {
     setColorBy(event.target.value);
@@ -17,11 +18,16 @@ function App() {
   return (
     <div className="App">
       <Controls
+        setTweetsFromServer={setTweetsFromServer}
         setIs3d={setIs3d}
         colorBy={colorBy}
         handleSelectColor={handleSelectColor}
       />
-      <NetworkGraph is3d={is3d} colorBy={colorBy} />
+      <NetworkGraph
+        is3d={is3d}
+        colorBy={colorBy}
+        tweetsFromServer={tweetsFromServer}
+      />
     </div>
   );
 }
