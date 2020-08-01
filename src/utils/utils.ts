@@ -1,21 +1,27 @@
-export function getMediaArr(
-  node
-): { src: string; poster?: string; type: string; id_str: string }[] {
-  return node.extended_entities?.media.map(getMediaSrc) || [];
-}
+export type MediaItem = {
+  src: string;
+  poster?: string;
+  type: string;
+  id_str: string;
+  sizes: {
+    large: { w: number; h: number; resize: string };
+    medium: { w: number; h: number; resize: string };
+    small: { w: number; h: number; resize: string };
+    thumb: { w: number; h: number; resize: string };
+  };
+};
 
-export function getMediaSrc(
-  media
-): { src: string; poster?: string; type: string; id_str: string } {
-  return media.type === "video"
-    ? {
-        src: media.video_info?.variants.find(
-          ({ content_type }) => content_type === "video/mp4"
-        ).url,
-        poster: media.media_url_https,
-        type: media.type,
-        id_str: media.is_str,
-      }
-    : /* media.type==="image"? */
-      { src: media.media_url_https, type: media.type, id_str: media.is_str };
+export function getMediaArr(node): MediaItem[] {
+  return (
+    node.extended_entities?.media.map((media) => ({
+      ...media,
+      src:
+        media.type === "video"
+          ? media.video_info?.variants.find(
+              ({ content_type }) => content_type === "video/mp4"
+            ).url
+          : media.media_url_https,
+      poster: media.media_url_https,
+    })) || []
+  );
 }

@@ -6,7 +6,7 @@ import Controls from "./components/Controls";
 import { transformTweetsIntoGraphData } from "./utils/transformData";
 
 function App() {
-  const [is3d, setIs3d] = useState(false);
+  const [is3d, setIs3d] = useState(true);
   const [colorBy, setColorBy] = useState(
     COLOR_BY.mediaType as keyof typeof COLOR_BY | null
   );

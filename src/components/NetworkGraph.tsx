@@ -60,7 +60,7 @@ function Graph({ is3d, graphDataFromServer, setNodeData, colorBy }) {
     //   console.log("🌟🚨: Graph -> args", args);
     // },
     onEngineStop: () =>
-      fgRef.current ? (fgRef.current as any).zoomToFit(400) : null,
+      fgRef.current && !is3d ? (fgRef.current as any).zoomToFit(400) : null,
 
     // nodeCanvasObject: (node, ctx, scale) => {
     //   const mediaArr = getMediaArr(node);
@@ -80,15 +80,26 @@ function Graph({ is3d, graphDataFromServer, setNodeData, colorBy }) {
     nodeThreeObject:
       colorBy === COLOR_BY.mediaType
         ? (node) => {
-            console.log("🌟🚨: Graph -> node", node);
-            console.log("🌟🚨: Graph -> node.media", node.media);
             const mediaArr = getMediaArr(node);
-            const imgTexture = new THREE.TextureLoader().load(
-              mediaArr[0]?.poster || mediaArr[0]?.src
+            const first = mediaArr[0];
+            console.log("🌟🚨: Graph -> first", first);
+            const imgSrc = first?.poster || first?.src;
+            const imgTexture = new THREE.TextureLoader().load(imgSrc);
+            const color = new THREE.Color(
+              first?.type === "video" ? "hsl(10,100%,80%)" : "hsl(120,100%,80%)"
             );
-            const material = new THREE.SpriteMaterial({ map: imgTexture });
+            const material = new THREE.SpriteMaterial({
+              map: imgTexture,
+              color,
+            });
             const sprite = new THREE.Sprite(material);
-            sprite.scale.set(48, 48, 48);
+            const scaleDown = 0.3;
+            const { h, w, d } = {
+              h: first?.sizes.small.h * scaleDown,
+              w: first?.sizes.small.w * scaleDown,
+              d: 0,
+            };
+            sprite.scale.set(w, h, d);
 
             return sprite;
           }

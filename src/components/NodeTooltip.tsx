@@ -34,14 +34,26 @@ const AvatarStyles = styled.div`
 const NodeTooltip = ({ nodeData }) => {
   // console.log("🌟🚨: NodeTooltip -> nodeData", nodeData);
   const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [hidden, setHidden] = useState(false);
 
   // on mount, start listening to mouse position
   useEffect(() => {
     window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("auxclick", handleMiddleCLick);
+    window.addEventListener("keydown", handleKeydown);
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("auxclick", handleMiddleCLick);
+      window.removeEventListener("keydown", handleKeydown);
     };
   }, []);
+
+  function handleKeydown(event) {
+    console.log("🌟🚨: handleKeydown -> event.key", event.key);
+    if (event.key === " ") {
+      setHidden((h) => !h);
+    }
+  }
 
   function handleMouseMove(event) {
     const x = Math.min(
@@ -51,11 +63,15 @@ const NodeTooltip = ({ nodeData }) => {
     const y = Math.min(event.y, window.innerHeight - MAX_TOOLTIP_HEIGHT);
     setPosition({ x, y });
   }
+  function handleMiddleCLick(e) {
+    setHidden((h) => !h);
+  }
 
   const springToMousePosition = useSpring({
     pointerEvents: "none",
     position: "fixed",
     top: 16,
+    opacity: hidden ? 0 : 1,
     left: MOUSE_WIDTH,
     transform: `translate(${position.x}px,${position.y}px)`,
     config: { tension: 300, mass: 0.2 },
