@@ -12,7 +12,7 @@ import {
   FormControlLabel,
 } from "@material-ui/core";
 import styled from "styled-components/macro";
-import { COLOR_BY, FILTER_BY } from "../utils/constants";
+import { COLOR_BY, FILTER_BY, FILTER_LEVELS } from "../utils/constants";
 
 const Div = styled.div`
   display: grid;
@@ -65,6 +65,7 @@ const Controls = ({
 }) => {
   const [numTweets, setNumTweets] = useState(50);
   const [loading, setLoading] = useState(false);
+  const [filterLevel, setFilterLevel] = useState(FILTER_LEVELS.low);
 
   useEffect(() => {
     if (filterBy) {
@@ -75,7 +76,9 @@ const Controls = ({
   const fetchNewTweets = async () => {
     setLoading(true);
     const resp = await fetch(
-      `/api/stream?num=${numTweets}${filterBy ? `&filterBy=${filterBy}` : ""}`
+      `/api/stream?num=${numTweets}&filterLevel=${filterLevel}${
+        filterBy ? `&filterBy=${filterBy}` : ""
+      }`
     );
     const data = await resp.json();
     setLoading(false);
@@ -125,6 +128,20 @@ const Controls = ({
             />
           </div>
         ) : null}
+        <FormControl>
+          <InputLabel id="filter-level">Filter level</InputLabel>
+          <Select
+            labelId="filter-level"
+            onChange={(event) => {
+              setFilterLevel(event.target.value as string);
+            }}
+            value={filterLevel}
+          >
+            <MenuItem value={FILTER_LEVELS.medium}>Medium</MenuItem>
+            <MenuItem value={FILTER_LEVELS.low}>Low</MenuItem>
+            <MenuItem value={FILTER_LEVELS.none}>None</MenuItem>
+          </Select>
+        </FormControl>
       </div>
       <Switch3D onChange={() => setIs3d((prev) => !prev)} checked={is3d} />
       <div className="fetchTweets">

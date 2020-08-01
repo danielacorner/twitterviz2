@@ -8,3 +8,8 @@ export const FILTER_BY = {
   imageOnly: "imageOnly",
   videoOnly: "videoOnly",
 };
+export const FILTER_LEVELS = {
+  medium: "medium",
+  low: "low",
+  none: "none",
+};
