@@ -10,6 +10,7 @@ const WINDOW_PADDING_HZ = 12;
 const PADDING = 8;
 
 const TooltipStyles = styled.div`
+  border-radius: 4px;
   background: white;
   width: ${TOOLTIP_WIDTH}px;
   height: fit-content;
