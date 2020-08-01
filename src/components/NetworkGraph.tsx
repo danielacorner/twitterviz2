@@ -1,60 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   ForceGraph2D,
   ForceGraph3D,
   // ForceGraphVR,
   // ForceGraphAR,
 } from "react-force-graph";
+import NodeTooltip from "./NodeTooltip";
 // https://www.npmjs.com/package/react-force-graph
+import tweets from "../tweets.json";
+import { transformTweetsIntoGraphData } from "../utils/transformData";
 
-const NetworkGraph = ({ tweets, is3d }) => {
-  console.log("🌟🚨: App -> tweets", tweets);
-  const data = transformTweetsIntoGraphData(tweets);
+const data = transformTweetsIntoGraphData(tweets);
 
-  return is3d ? (
-    <ForceGraph3D graphData={data} />
-  ) : (
-    <ForceGraph2D graphData={data} />
+const NetworkGraph = ({ is3d }) => {
+  const [nodeData, setNodeData] = useState(null);
+
+  const forceGraphProps = {
+    onNodeHover: (node) => {
+      if (node) {
+        setNodeData(node);
+      }
+    },
+    cooldownTime: 50,
+    nodeRelSize: 10,
+  };
+  return (
+    <>
+      {is3d ? (
+        <ForceGraph3D graphData={data} {...forceGraphProps} />
+      ) : (
+        <ForceGraph2D graphData={data} {...forceGraphProps} />
+      )}
+      <NodeTooltip nodeData={nodeData} />
+    </>
   );
 };
 
 export default NetworkGraph;
-
-function transformTweetsIntoGraphData(tweets: any) {
-  const allUserIds = tweets.map((t) => t.user.id);
-
-  const prunedLinks = tweets.reduce((acc, tweet) => {
-    // skip any links that don't point to nodes in our dataset
-    // ? is there a more efficient way?
-    const doWeHaveTargetUser = allUserIds.includes(
-      tweet.in_reply_to_user_id_str
-    );
-
-    // create a link if it's a reply
-    if (tweet.in_reply_to_user_id_str && doWeHaveTargetUser) {
-      acc = [
-        ...acc,
-        { source: tweet.user.id_str, target: tweet.in_reply_to_user_id_str },
-      ];
-    }
-
-    return acc;
-  }, []);
-
-  console.log("🌟🚨: NetworkGraph -> prunedLinks", prunedLinks);
-
-  // graph payload
-  // const data = {
-  //   nodes: [
-  //     { id: "Harry" }, { id: "Sally" }, { id: "Alice" }],
-  //   links: [
-  //     { source: "Harry", target: "Sally" },
-  //     { source: "Harry", target: "Alice" },
-  //   ],
-  // };
-  const data = {
-    nodes: tweets,
-    links: prunedLinks,
-  };
-  return data;
-}

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "./App.css";
-import tweets from "./tweets.json";
 import NetworkGraph from "./components/NetworkGraph";
 import { Switch } from "@material-ui/core";
 
@@ -18,7 +17,7 @@ function App() {
   return (
     <div className="App">
       <Switch3D onChange={() => setIs3d((prev) => !prev)} />
-      <NetworkGraph tweets={tweets} is3d={is3d} />
+      <NetworkGraph is3d={is3d} />
     </div>
   );
 }
