@@ -22,8 +22,6 @@ export function transformTweetsIntoGraphData(tweets: any) {
     return acc;
   }, []);
 
-  console.log("🌟🚨: NetworkGraph -> prunedLinks", prunedLinks);
-
   // graph payload
   // const data = {
   //   nodes: [

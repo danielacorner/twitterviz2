@@ -43,12 +43,7 @@ const ControlsStyles = styled.div`
   padding: 8px;
 `;
 
-const Controls = ({
-  handleSelectColor,
-  colorBy,
-  setIs3d,
-  setTweetsFromServer,
-}) => {
+const Controls = ({ colorBy, setIs3d, setTweetsFromServer, setColorBy }) => {
   const [numTweets, setNumTweets] = useState(100);
   const [loading, setLoading] = useState(false);
   const fetchNewTweets = async () => {
@@ -65,7 +60,9 @@ const Controls = ({
           <InputLabel id="color-by">Color by...</InputLabel>
           <Select
             labelId="color-by"
-            onChange={handleSelectColor}
+            onChange={(event) => {
+              setColorBy(event.target.value);
+            }}
             value={colorBy}
           >
             <MenuItem value="">
@@ -73,6 +70,7 @@ const Controls = ({
             </MenuItem>
             <MenuItem value={COLOR_BY.mediaType}>Media type</MenuItem>
             <MenuItem value={COLOR_BY.textLength}>Text length</MenuItem>
+            <MenuItem value={COLOR_BY.sentiment}>Sentiment</MenuItem>
           </Select>
         </FormControl>
       </div>

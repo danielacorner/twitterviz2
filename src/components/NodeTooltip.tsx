@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSpring, animated } from "react-spring";
 import styled from "styled-components/macro";
+import { getMediaArr } from "../utils/utils";
 
 const AVATAR_WIDTH = 46;
 const TOOLTIP_WIDTH = 380;
@@ -97,6 +98,7 @@ const TweetStyles = styled.div`
 `;
 function TweetContent({ nodeData }) {
   const { user, text, extended_entities } = nodeData;
+  const mediaArr = getMediaArr(nodeData);
   return (
     <TweetStyles isVideo={extended_entities?.media[0]?.type === "video"}>
       <div className="userInfo">
@@ -105,24 +107,22 @@ function TweetContent({ nodeData }) {
       </div>
       <div className="text">{text}</div>
       <div className="media">
-        {extended_entities?.media.map((media) => (
-          <div className="media" key={media.id_str}>
-            {media.type === "video" ? (
-              <video
-                poster={media.media_url_https}
-                src={
-                  media.video_info?.variants.find(
-                    ({ content_type }) => content_type === "video/mp4"
-                  ).url
-                }
-                autoPlay={true}
-                loop={true}
-              ></video>
-            ) : (
-              <img src={media.media_url_https} alt="" />
-            )}
-          </div>
-        ))}
+        {mediaArr.map(({ type, id_str, poster, src }) => {
+          return (
+            <div className="media" key={id_str}>
+              {type === "video" ? (
+                <video
+                  poster={poster}
+                  src={src}
+                  autoPlay={true}
+                  loop={true}
+                ></video>
+              ) : (
+                <img src={src} alt="" />
+              )}
+            </div>
+          );
+        })}
       </div>
     </TweetStyles>
   );

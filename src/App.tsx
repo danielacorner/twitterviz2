@@ -12,17 +12,13 @@ function App() {
   );
   const [tweetsFromServer, setTweetsFromServer] = useState(null);
 
-  const handleSelectColor = (event) => {
-    setColorBy(event.target.value);
-  };
-
   return (
     <div className="App">
       <Controls
         setTweetsFromServer={setTweetsFromServer}
         setIs3d={setIs3d}
         colorBy={colorBy}
-        handleSelectColor={handleSelectColor}
+        setColorBy={setColorBy}
       />
       <NetworkGraph
         is3d={is3d}
