@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   MenuItem,
   Switch,
@@ -8,20 +8,22 @@ import {
   CircularProgress,
   InputLabel,
   FormControl,
+  Checkbox,
+  FormControlLabel,
 } from "@material-ui/core";
 import styled from "styled-components/macro";
-import { COLOR_BY } from "../utils/constants";
+import { COLOR_BY, FILTER_BY } from "../utils/constants";
 
 const Div = styled.div`
   display: grid;
   place-items: center;
 `;
 
-const Switch3D = ({ onChange }) => (
+const Switch3D = ({ onChange, checked }) => (
   <Div css={``}>
     <span>
       2D
-      <Switch onChange={onChange} />
+      <Switch onChange={onChange} checked={checked} />
       3D
     </span>
   </Div>
@@ -33,6 +35,7 @@ const ControlsStyles = styled.div`
   grid-gap: 8px;
   .styleTweets {
     display: grid;
+    grid-template-columns: auto 1fr;
     grid-gap: 8px;
   }
   .fetchTweets {
@@ -40,15 +43,40 @@ const ControlsStyles = styled.div`
     grid-gap: 8px;
     grid-template-columns: 1fr 100px;
   }
+  .checkboxes {
+    display: grid;
+    max-width: 200px;
+    grid-template-columns: 1fr 1fr;
+  }
   padding: 8px;
 `;
 
-const Controls = ({ colorBy, setIs3d, setTweetsFromServer, setColorBy }) => {
-  const [numTweets, setNumTweets] = useState(100);
+const Controls = ({
+  colorBy,
+  is3d,
+  setIs3d,
+  setTweetsFromServer,
+  setColorBy,
+  setIsVideoChecked,
+  setIsImageChecked,
+  isVideoChecked,
+  isImageChecked,
+  filterBy,
+}) => {
+  const [numTweets, setNumTweets] = useState(50);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (filterBy) {
+      setNumTweets(25);
+    }
+  }, [filterBy]);
+
   const fetchNewTweets = async () => {
     setLoading(true);
-    const resp = await fetch(`/api/stream?num=${numTweets}`);
+    const resp = await fetch(
+      `/api/stream?num=${numTweets}${filterBy ? `&filterBy=${filterBy}` : ""}`
+    );
     const data = await resp.json();
     setLoading(false);
     setTweetsFromServer(data);
@@ -73,8 +101,32 @@ const Controls = ({ colorBy, setIs3d, setTweetsFromServer, setColorBy }) => {
             <MenuItem value={COLOR_BY.sentiment}>Sentiment</MenuItem>
           </Select>
         </FormControl>
+        {colorBy === COLOR_BY.mediaType ? (
+          <div className="checkboxes">
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isVideoChecked}
+                  onChange={() => setIsVideoChecked((p) => !p)}
+                  name="checkedA"
+                />
+              }
+              label="Video"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isImageChecked}
+                  onChange={() => setIsImageChecked((p) => !p)}
+                  name="checkedA"
+                />
+              }
+              label="Image"
+            />
+          </div>
+        ) : null}
       </div>
-      <Switch3D onChange={() => setIs3d((prev) => !prev)} />
+      <Switch3D onChange={() => setIs3d((prev) => !prev)} checked={is3d} />
       <div className="fetchTweets">
         <Button
           className="btnFetch"
@@ -89,7 +141,15 @@ const Controls = ({ colorBy, setIs3d, setTweetsFromServer, setColorBy }) => {
           value={numTweets}
           onChange={(e) => setNumTweets(+e.target.value)}
           type="number"
-          inputProps={{ step: 50 }}
+          inputProps={{
+            step: [
+              FILTER_BY.imageAndVideo,
+              FILTER_BY.imageOnly,
+              FILTER_BY.videoOnly,
+            ].includes(filterBy)
+              ? 10
+              : 50,
+          }}
         />
       </div>
     </ControlsStyles>

@@ -18,20 +18,39 @@ import * as THREE from "three";
 
 const defaultGraphData = transformTweetsIntoGraphData(tweets);
 
-const NetworkGraph = ({ is3d, colorBy, graphDataFromServer }) => {
+const NetworkGraph = ({
+  is3d,
+  colorBy,
+  graphDataFromServer,
+  allowedMediaTypes,
+}) => {
   useWhyDidYouUpdate("NETWORKGRAPH", { is3d, colorBy, graphDataFromServer });
 
   const [nodeData, setNodeData] = useState(null);
 
   return (
     <>
-      <Graph {...{ is3d, graphDataFromServer, setNodeData, colorBy }} />
+      <Graph
+        {...{
+          is3d,
+          graphDataFromServer,
+          setNodeData,
+          colorBy,
+          allowedMediaTypes,
+        }}
+      />
       <NodeTooltip nodeData={nodeData} />
     </>
   );
 };
 
-function Graph({ is3d, graphDataFromServer, setNodeData, colorBy }) {
+function Graph({
+  is3d,
+  graphDataFromServer,
+  setNodeData,
+  colorBy,
+  allowedMediaTypes,
+}) {
   useWhyDidYouUpdate("GRAPH", { is3d, graphDataFromServer, setNodeData });
 
   const fgRef = useRef();
@@ -56,9 +75,7 @@ function Graph({ is3d, graphDataFromServer, setNodeData, colorBy }) {
     cooldownTime: 250,
     nodeRelSize: 25,
     nodeColor: (node) => getNodeColor(node, colorBy),
-    // d3Force: (...args) => {
-    //   console.log("🌟🚨: Graph -> args", args);
-    // },
+
     onEngineStop: () =>
       fgRef.current && !is3d ? (fgRef.current as any).zoomToFit(400) : null,
 
@@ -82,7 +99,9 @@ function Graph({ is3d, graphDataFromServer, setNodeData, colorBy }) {
         ? (node) => {
             const mediaArr = getMediaArr(node);
             const first = mediaArr[0];
-            console.log("🌟🚨: Graph -> first", first);
+            if (!allowedMediaTypes.includes(first?.type)) {
+              return null;
+            }
             const imgSrc = first?.poster || first?.src;
             const imgTexture = new THREE.TextureLoader().load(imgSrc);
             const color = new THREE.Color(
@@ -143,7 +162,7 @@ function getNodeColor(node, colorBy) {
     case COLOR_BY.sentiment:
       const scale = d3.scaleSequential(d3.interpolatePiYG).domain([-1, 1]);
 
-      return scale(node.sentimentResult.comparative) as string;
+      return scale(node.sentimentResult?.comparative) as string;
 
     default:
       return DEFAULT_NODE_COLOR;

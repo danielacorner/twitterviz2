@@ -3,3 +3,8 @@ export const COLOR_BY = {
   textLength: "textLength",
   sentiment: "sentiment",
 };
+export const FILTER_BY = {
+  imageAndVideo: "imageAndVideo",
+  imageOnly: "imageOnly",
+  videoOnly: "videoOnly",
+};
