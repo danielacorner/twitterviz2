@@ -22,6 +22,7 @@ function App() {
   const [isVideoChecked, setIsVideoChecked] = useState(false);
   const [isImageChecked, setIsImageChecked] = useState(false);
   const [countryCode, setCountryCode] = useState("All");
+  const [lang, setLang] = useState("All");
   const allowedMediaTypes = [
     ...(isVideoChecked ? ["video"] : []),
     ...(isImageChecked ? ["photo"] : []),
@@ -51,6 +52,8 @@ function App() {
           countryCode,
           setCountryCode,
           is3d,
+          lang,
+          setLang,
         }}
       />
       <NetworkGraph

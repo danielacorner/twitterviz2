@@ -14,6 +14,7 @@ import {
 import styled from "styled-components/macro";
 import { COLOR_BY, FILTER_BY, FILTER_LEVELS } from "../utils/constants";
 import countryCodes from "../utils/countryCodes";
+import languages from "../utils/languages";
 
 const Div = styled.div`
   display: grid;
@@ -67,6 +68,8 @@ const Controls = ({
   mediaType,
   countryCode,
   setCountryCode,
+  lang,
+  setLang,
 }) => {
   const [numTweets, setNumTweets] = useState(50);
   const [loading, setLoading] = useState(false);
@@ -83,7 +86,9 @@ const Controls = ({
     const resp = await fetch(
       `/api/stream?num=${numTweets}&filterLevel=${filterLevel}${
         mediaType ? `&mediaType=${mediaType}` : ""
-      }${countryCode !== "All" ? `&countryCode=${countryCode}` : ""}`
+      }${countryCode !== "All" ? `&countryCode=${countryCode}` : ""}${
+        lang !== "All" ? `&lang=${lang}` : ""
+      }`
     );
     const data = await resp.json();
     setLoading(false);
@@ -162,6 +167,25 @@ const Controls = ({
             {Object.entries(countryCodes).map(([code, countryName]) => (
               <MenuItem key={code} value={code}>
                 {countryName}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl>
+          <InputLabel id="language">Language</InputLabel>
+          <Select
+            labelId="language"
+            onChange={(event) => {
+              setLang(event.target.value);
+            }}
+            value={lang}
+          >
+            <MenuItem value="All">
+              <em>All</em>
+            </MenuItem>
+            {languages.map(({ code, name }) => (
+              <MenuItem key={code} value={code}>
+                {name}
               </MenuItem>
             ))}
           </Select>
