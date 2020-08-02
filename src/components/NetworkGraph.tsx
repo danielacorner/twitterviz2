@@ -11,13 +11,12 @@ import NodeTooltip from "./NodeTooltip";
 import tweets from "../tweets.json";
 import { transformTweetsIntoGraphData } from "../utils/transformData";
 import { getMediaArr } from "../utils/utils";
-import { COLOR_BY } from "../utils/constants";
+import { COLOR_BY, CONTROLS_WIDTH } from "../utils/constants";
 import { useWhyDidYouUpdate } from "use-why-did-you-update";
 import * as d3 from "d3";
 import * as THREE from "three";
 import styled from "styled-components/macro";
 import { useWindowSize } from "../utils/hooks";
-import { CONTROLS_WIDTH } from "../App";
 const defaultGraphData = transformTweetsIntoGraphData(tweets);
 
 const GraphStyles = styled.div`
@@ -29,6 +28,7 @@ const NetworkGraph = ({
   colorBy,
   graphDataFromServer,
   allowedMediaTypes,
+  setSelectedNode,
 }) => {
   useWhyDidYouUpdate("NETWORKGRAPH", { is3d, colorBy, graphDataFromServer });
 
@@ -47,6 +47,7 @@ const NetworkGraph = ({
           setNodeData,
           colorBy,
           allowedMediaTypes,
+          setSelectedNode,
         }}
       />
       <NodeTooltip nodeData={nodeData} />
@@ -60,6 +61,7 @@ function Graph({
   setNodeData,
   colorBy,
   allowedMediaTypes,
+  setSelectedNode,
 }) {
   useWhyDidYouUpdate("GRAPH", { is3d, graphDataFromServer, setNodeData });
 
@@ -73,11 +75,13 @@ function Graph({
     },
     [setNodeData]
   );
+  // on click, open the bottom drawer containing tweet info
   const onNodeClick = useCallback((node) => {
-    window.open(
-      `https://twitter.com/${node.user.screen_name}/status/${node.id_str}`,
-      "_blank"
-    );
+    setSelectedNode(node);
+    // window.open(
+    //   `https://twitter.com/${node.user.screen_name}/status/${node.id_str}`,
+    //   "_blank"
+    // );
   }, []);
 
   const { width, height } = useWindowSize();

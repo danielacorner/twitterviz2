@@ -13,3 +13,4 @@ export const FILTER_LEVELS = {
   low: "low",
   none: "none",
 };
+export const CONTROLS_WIDTH = 200;

@@ -120,7 +120,7 @@ const TweetStyles = styled.div`
     }
   }
 `;
-function TweetContent({ nodeData }) {
+export function TweetContent({ nodeData }) {
   const { user, text, extended_entities, entities } = nodeData;
   const mediaArr = getMediaArr(nodeData);
   return (

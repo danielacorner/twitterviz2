@@ -52,7 +52,6 @@
   "devDependencies": {
     "@types/d3": "^5.7.2",
     "@types/lodash": "^4.14.158",
-    "@types/material-ui": "^0.21.7",
     "@types/react-d3-graph": "^2.3.3",
     "concurrently": "^5.2.0"
   },

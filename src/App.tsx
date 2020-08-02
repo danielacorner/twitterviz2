@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import NetworkGraph from "./components/NetworkGraph";
-import { COLOR_BY, FILTER_BY } from "./utils/constants";
+import { COLOR_BY, FILTER_BY, CONTROLS_WIDTH } from "./utils/constants";
 import Controls from "./components/Controls";
 import { transformTweetsIntoGraphData } from "./utils/transformData";
 import styled from "styled-components/macro";
-
-export const CONTROLS_WIDTH = 200;
+import { Tweet } from "./types";
+import BottomDrawer from "./components/BottomDrawer";
 
 const AppStyles = styled.div`
   display: grid;
@@ -16,8 +16,9 @@ const AppStyles = styled.div`
 function App() {
   const [is3d, setIs3d] = useState(false);
   const [colorBy, setColorBy] = useState(
-    COLOR_BY.sentiment as keyof typeof COLOR_BY | null
+    COLOR_BY.mediaType as keyof typeof COLOR_BY | null
   );
+  const [selectedNode, setSelectedNode] = useState(null as null | Tweet);
   const [tweetsFromServer, setTweetsFromServer] = useState(null);
   const [isVideoChecked, setIsVideoChecked] = useState(false);
   const [isImageChecked, setIsImageChecked] = useState(false);
@@ -27,6 +28,19 @@ function App() {
     ...(isVideoChecked ? ["video"] : []),
     ...(isImageChecked ? ["photo"] : []),
   ];
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeydown);
+    return () => {
+      window.removeEventListener("keydown", handleKeydown);
+    };
+  }, []);
+
+  function handleKeydown(event) {
+    if (event.key === "Backspace") {
+      setSelectedNode(null);
+    }
+  }
+
   const mediaType =
     allowedMediaTypes.length === 2
       ? FILTER_BY.imageAndVideo
@@ -57,13 +71,16 @@ function App() {
         }}
       />
       <NetworkGraph
-        is3d={is3d}
-        colorBy={colorBy}
-        allowedMediaTypes={allowedMediaTypes}
-        graphDataFromServer={
-          tweetsFromServer && transformTweetsIntoGraphData(tweetsFromServer)
-        }
+        {...{
+          is3d,
+          colorBy,
+          allowedMediaTypes,
+          graphDataFromServer:
+            tweetsFromServer && transformTweetsIntoGraphData(tweetsFromServer),
+          setSelectedNode,
+        }}
       />
+      <BottomDrawer {...{ setSelectedNode, selectedNode }} />
     </AppStyles>
   );
 }
