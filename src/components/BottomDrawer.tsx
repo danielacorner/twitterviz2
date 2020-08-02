@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components/macro";
 import { Drawer, IconButton } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
@@ -14,6 +14,7 @@ const BottomDrawerStyles = styled.div`
   left: ${CONTROLS_WIDTH}px;
 `;
 const DrawerContentStyles = styled.div`
+  box-sizing: border-box;
   padding: 16px;
   position: relative;
   .btnClose {
@@ -26,11 +27,14 @@ const DrawerContentStyles = styled.div`
     max-height: 900px;
   }
   .dragHandleWrapper {
-    width: 100%;
+    width: calc(100% + 32px);
     display: grid;
     place-items: center;
     padding: 8px 0 16px 0;
-    margin: -16px 0 -8px 0;
+    margin: -16px 0 0px -16px;
+    &:hover {
+      background: hsl(0, 0%, 80%);
+    }
     cursor: n-resize;
     .dragHandle {
       height: 6px;
@@ -43,17 +47,28 @@ const DrawerContentStyles = styled.div`
 
 const BottomDrawer = ({ selectedNode, setSelectedNode }) => {
   const [offset, setOffset] = useState(0);
+  const [isMouseDown, setIsMouseDown] = useState(false);
   const handleDrag = (event) => {
-    if (!event.pageY) {
+    if (!event.pageY || !isMouseDown) {
+      // mouseup
       return;
     }
-    console.log(event);
     const newOffset = event.pageY - window.innerHeight + DRAWER_HEIGHT;
-    console.log("🌟🚨: handleDrag ->  event.pageY", event.pageY);
-    console.log("🌟🚨: handleDrag -> newOffset", newOffset);
     setOffset(newOffset);
   };
   const handleClose = () => setSelectedNode(null);
+  const mouseDown = () => setIsMouseDown(true);
+  const mouseUp = () => setIsMouseDown(false);
+
+  useEffect(() => {
+    window.addEventListener("mousedown", mouseDown);
+    window.addEventListener("mouseup", mouseUp);
+    return () => {
+      window.removeEventListener("mousedown", mouseDown);
+      window.removeEventListener("mouseup", mouseUp);
+    };
+  }, []);
+
   return (
     <BottomDrawerStyles>
       <Drawer
@@ -63,13 +78,17 @@ const BottomDrawer = ({ selectedNode, setSelectedNode }) => {
         ModalProps={{
           BackdropProps: { style: { backgroundColor: "transparent" } },
         }}
-        PaperProps={{ style: { height: DRAWER_HEIGHT - offset } }}
+        PaperProps={{ style: { height: DRAWER_HEIGHT + 20 - offset } }}
       >
         <DrawerContentStyles>
           <IconButton className="btnClose" onClick={handleClose}>
             <CloseIcon />
           </IconButton>
-          <div onDrag={handleDrag} className="dragHandleWrapper">
+          <div
+            onDrag={handleDrag}
+            onTouchMove={handleDrag}
+            className="dragHandleWrapper"
+          >
             <div className="dragHandle"></div>
           </div>
           <div className="tweetContentWrapper">

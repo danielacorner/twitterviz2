@@ -33,7 +33,6 @@ const AvatarStyles = styled.div`
 `;
 
 const NodeTooltip = ({ nodeData }) => {
-  // console.log("🌟🚨: NodeTooltip -> nodeData", nodeData);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [hidden, setHidden] = useState(false);
 
@@ -50,7 +49,6 @@ const NodeTooltip = ({ nodeData }) => {
   }, []);
 
   function handleKeydown(event) {
-    console.log("🌟🚨: handleKeydown -> event.key", event.key);
     if (event.key === " ") {
       setHidden((h) => !h);
     }
