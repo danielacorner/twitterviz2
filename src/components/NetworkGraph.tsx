@@ -15,8 +15,14 @@ import { COLOR_BY } from "../utils/constants";
 import { useWhyDidYouUpdate } from "use-why-did-you-update";
 import * as d3 from "d3";
 import * as THREE from "three";
-
+import styled from "styled-components/macro";
+import { useWindowSize } from "../utils/hooks";
+import { CONTROLS_WIDTH } from "../App";
 const defaultGraphData = transformTweetsIntoGraphData(tweets);
+
+const GraphStyles = styled.div`
+  width: 100%;
+`;
 
 const NetworkGraph = ({
   is3d,
@@ -33,7 +39,7 @@ const NetworkGraph = ({
   }, [nodeData]);
 
   return (
-    <>
+    <GraphStyles>
       <Graph
         {...{
           is3d,
@@ -44,7 +50,7 @@ const NetworkGraph = ({
         }}
       />
       <NodeTooltip nodeData={nodeData} />
-    </>
+    </GraphStyles>
   );
 };
 
@@ -73,7 +79,12 @@ function Graph({
       "_blank"
     );
   }, []);
+
+  const { width, height } = useWindowSize();
+
   const forceGraphProps = {
+    width: width - CONTROLS_WIDTH,
+    height,
     onNodeHover,
     onNodeClick,
     cooldownTime: 250,
@@ -133,6 +144,7 @@ function Graph({
   return (
     <>
       {is3d ? (
+        // https://www.npmjs.com/package/react-force-graph
         <ForceGraph3D
           ref={fgRef}
           graphData={graphDataFromServer || defaultGraphData}

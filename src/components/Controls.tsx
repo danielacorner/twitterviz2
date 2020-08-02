@@ -32,8 +32,9 @@ const Switch3D = ({ onChange, checked }) => (
 
 const ControlsStyles = styled.div`
   display: grid;
-  grid-auto-flow: column;
-  grid-gap: 8px;
+  grid-auto-flow: row;
+  grid-template-rows: repeat(auto-fit, 140px);
+  grid-gap: 16px;
   .styleTweets {
     display: grid;
     grid-template-columns: auto 1fr;
@@ -50,6 +51,7 @@ const ControlsStyles = styled.div`
     grid-template-columns: 1fr 1fr;
   }
   padding: 8px;
+  border-right: 1px solid black;
 `;
 
 const Controls = ({

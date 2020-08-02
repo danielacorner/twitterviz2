@@ -4,6 +4,14 @@ import NetworkGraph from "./components/NetworkGraph";
 import { COLOR_BY, FILTER_BY } from "./utils/constants";
 import Controls from "./components/Controls";
 import { transformTweetsIntoGraphData } from "./utils/transformData";
+import styled from "styled-components/macro";
+
+export const CONTROLS_WIDTH = 200;
+
+const AppStyles = styled.div`
+  display: grid;
+  grid-template-columns: ${CONTROLS_WIDTH}px 1fr;
+`;
 
 function App() {
   const [is3d, setIs3d] = useState(false);
@@ -28,7 +36,7 @@ function App() {
       : null;
 
   return (
-    <div className="App">
+    <AppStyles className="App">
       <Controls
         {...{
           setTweetsFromServer,
@@ -53,7 +61,7 @@ function App() {
           tweetsFromServer && transformTweetsIntoGraphData(tweetsFromServer)
         }
       />
-    </div>
+    </AppStyles>
   );
 }
 
