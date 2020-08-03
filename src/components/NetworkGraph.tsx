@@ -18,6 +18,8 @@ import * as THREE from "three";
 import styled from "styled-components/macro";
 import { useWindowSize } from "../utils/hooks";
 import useStore from "../store";
+import { isEqual } from "lodash";
+
 const defaultGraphData = transformTweetsIntoGraphData(tweets);
 
 const GraphStyles = styled.div`
@@ -61,8 +63,10 @@ function Graph({
   allowedMediaTypes,
   setSelectedNode,
 }) {
-  const tweetsFromServer = useStore((state) => state.tweetsFromServer);
-  const graphDataFromServer = transformTweetsIntoGraphData(tweetsFromServer);
+  const graphDataFromServer = useStore(
+    (state) => transformTweetsIntoGraphData(state.tweetsFromServer),
+    isEqual
+  );
   useWhyDidYouUpdate("GRAPH", { is3d, graphDataFromServer, setNodeData });
 
   const fgRef = useRef();

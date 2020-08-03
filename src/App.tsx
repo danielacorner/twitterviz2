@@ -3,10 +3,9 @@ import "./App.css";
 import NetworkGraph from "./components/NetworkGraph";
 import { COLOR_BY, FILTER_BY, CONTROLS_WIDTH } from "./utils/constants";
 import Controls from "./components/Controls";
-import { transformTweetsIntoGraphData } from "./utils/transformData";
 import styled from "styled-components/macro";
 import { Tweet } from "./types";
-import BottomDrawer from "./components/BottomDrawer";
+import BottomDrawer from "./components/BottomDrawer/BottomDrawer";
 
 const AppStyles = styled.div`
   display: grid;

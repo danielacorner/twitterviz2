@@ -1,19 +1,12 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components/macro";
-import {
-  Drawer,
-  IconButton,
-  Button,
-  CircularProgress,
-} from "@material-ui/core";
+import { Drawer, IconButton } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
-import { TweetContent } from "./NodeTooltip";
-import { CONTROLS_WIDTH } from "../utils/constants";
-import { Tweet } from "../types";
-import useStore from "../store";
+import { TweetContent } from "../NodeTooltip";
+import { CONTROLS_WIDTH } from "../../utils/constants";
+import UserInfo, { USER_INFO_WIDTH } from "./UserInfo";
 
 const DRAWER_HEIGHT = 400;
-const USER_INFO_WIDTH = 200;
 
 const BottomDrawerStyles = styled.div`
   position: fixed;
@@ -55,6 +48,9 @@ const DrawerContentStyles = styled.div`
       border-radius: 999px;
     }
   }
+  .MuiDrawer-paper {
+    transition: all 225ms cubic-bezier(0, 0, 0.2, 1) 0ms !important;
+  }
 `;
 
 const BottomDrawer = ({ selectedNode, setSelectedNode }) => {
@@ -68,6 +64,11 @@ const BottomDrawer = ({ selectedNode, setSelectedNode }) => {
     const newOffset = event.pageY - window.innerHeight + DRAWER_HEIGHT;
     setOffset(newOffset);
   };
+
+  const handleWheel = (event) => {
+    const delta = offset - event.deltaY;
+    setOffset(delta);
+  };
   const handleClose = () => setSelectedNode(null);
   const mouseDown = () => setIsMouseDown(true);
   const mouseUp = () => setIsMouseDown(false);
@@ -75,9 +76,11 @@ const BottomDrawer = ({ selectedNode, setSelectedNode }) => {
   useEffect(() => {
     window.addEventListener("mousedown", mouseDown);
     window.addEventListener("mouseup", mouseUp);
+    disableScroll();
     return () => {
       window.removeEventListener("mousedown", mouseDown);
       window.removeEventListener("mouseup", mouseUp);
+      enableScroll();
     };
   }, []);
 
@@ -87,10 +90,18 @@ const BottomDrawer = ({ selectedNode, setSelectedNode }) => {
         anchor="bottom"
         open={Boolean(selectedNode)}
         onBackdropClick={handleClose}
+        onWheel={handleWheel}
         ModalProps={{
-          BackdropProps: { style: { backgroundColor: "transparent" } },
+          BackdropProps: {
+            style: { backgroundColor: "transparent" },
+          },
         }}
-        PaperProps={{ style: { height: DRAWER_HEIGHT + 20 - offset } }}
+        PaperProps={{
+          style: {
+            height: DRAWER_HEIGHT + 20 - offset,
+            overflow: "hidden",
+          },
+        }}
       >
         <DrawerContentStyles>
           {/* absolute-position below here */}
@@ -123,48 +134,35 @@ const BottomDrawer = ({ selectedNode, setSelectedNode }) => {
 
 export default BottomDrawer;
 
-const UserInfoStyles = styled.div`
-  height: ${USER_INFO_WIDTH}px;
-  .avatar {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    overflow: hidden;
-    img {
-      width: 100%;
-    }
+// https://stackoverflow.com/questions/4770025/how-to-disable-scrolling-temporarily
+// left: 37, up: 38, right: 39, down: 40,
+// spacebar: 32, pageup: 33, pagedown: 34, end: 35, home: 36
+const keys = { 37: 1, 38: 1, 39: 1, 40: 1 };
+
+const wheelEvent =
+  "onwheel" in document.createElement("div") ? "wheel" : "mousewheel";
+
+function preventDefault(e) {
+  e.preventDefault();
+}
+function preventDefaultForScrollKeys(e) {
+  if (keys[e.keyCode]) {
+    preventDefault(e);
+    return false;
   }
-`;
-function UserInfo({ tweet }: { tweet: Tweet | null }) {
-  const addTweetsFromServer = useStore((state) => state.addTweetsFromServer);
-  const [loading, setLoading] = useState(false);
-  const user = tweet?.user || null;
-  const fetchTimeline = async (user: Tweet["user"]) => {
-    setLoading(true);
-    const resp = await fetch(`/api/user_timeline?id_str=${user?.id_str}`);
-    const { data } = await resp.json();
-    setLoading(false);
-    addTweetsFromServer(data);
-  };
-  return (
-    <UserInfoStyles>
-      <a
-        href={`https://twitter.com/${user?.screen_name}/`}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <div className="avatar">
-          <img src={user?.profile_image_url_https} alt="" />
-        </div>
-      </a>
-      <div className="screenName">{user?.screen_name}</div>
-      <Button
-        variant="outlined"
-        disabled={loading}
-        onClick={() => fetchTimeline(user)}
-      >
-        {loading ? <CircularProgress /> : "Fetch user timeline"}
-      </Button>
-    </UserInfoStyles>
-  );
+}
+// call this to Disable
+function disableScroll() {
+  window.addEventListener("DOMMouseScroll", preventDefault, false); // older FF
+  window.addEventListener(wheelEvent, preventDefault); // modern desktop
+  window.addEventListener("touchmove", preventDefault); // mobile
+  window.addEventListener("keydown", preventDefaultForScrollKeys, false);
+}
+
+// call this to Enable
+function enableScroll() {
+  window.removeEventListener("DOMMouseScroll", preventDefault, false);
+  window.removeEventListener(wheelEvent, preventDefault);
+  window.removeEventListener("touchmove", preventDefault);
+  window.removeEventListener("keydown", preventDefaultForScrollKeys, false);
 }
