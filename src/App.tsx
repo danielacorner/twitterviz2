@@ -19,7 +19,7 @@ function App() {
     COLOR_BY.mediaType as keyof typeof COLOR_BY | null
   );
   const [selectedNode, setSelectedNode] = useState(null as null | Tweet);
-  const [tweetsFromServer, setTweetsFromServer] = useState(null);
+
   const [isVideoChecked, setIsVideoChecked] = useState(false);
   const [isImageChecked, setIsImageChecked] = useState(false);
   const [countryCode, setCountryCode] = useState("All");
@@ -54,7 +54,6 @@ function App() {
     <AppStyles className="App">
       <Controls
         {...{
-          setTweetsFromServer,
           setIs3d,
           colorBy,
           setColorBy,
@@ -75,8 +74,6 @@ function App() {
           is3d,
           colorBy,
           allowedMediaTypes,
-          graphDataFromServer:
-            tweetsFromServer && transformTweetsIntoGraphData(tweetsFromServer),
           setSelectedNode,
         }}
       />

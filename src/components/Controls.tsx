@@ -15,6 +15,7 @@ import styled from "styled-components/macro";
 import { COLOR_BY, FILTER_BY, FILTER_LEVELS } from "../utils/constants";
 import countryCodes from "../utils/countryCodes";
 import languages from "../utils/languages";
+import useStore from "../store";
 
 const Div = styled.div`
   display: grid;
@@ -164,7 +165,6 @@ const Controls = ({
   colorBy,
   is3d,
   setIs3d,
-  setTweetsFromServer,
   setColorBy,
   setIsVideoChecked,
   setIsImageChecked,
@@ -176,6 +176,8 @@ const Controls = ({
   lang,
   setLang,
 }) => {
+  const setTweetsFromServer = useStore((state) => state.setTweetsFromServer);
+  const tweetsFromServer = useStore((state) => state.tweetsFromServer);
   const [numTweets, setNumTweets] = useState(50);
   const [loading, setLoading] = useState(false);
   const [filterLevel, setFilterLevel] = useState(FILTER_LEVELS.low);
@@ -236,7 +238,7 @@ const Controls = ({
               FILTER_BY.imageOnly,
               FILTER_BY.videoOnly,
             ].includes(mediaType)
-              ? 10
+              ? 5
               : 50,
           }}
         />

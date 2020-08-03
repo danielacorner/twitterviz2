@@ -17,6 +17,7 @@ import * as d3 from "d3";
 import * as THREE from "three";
 import styled from "styled-components/macro";
 import { useWindowSize } from "../utils/hooks";
+import useStore from "../store";
 const defaultGraphData = transformTweetsIntoGraphData(tweets);
 
 const GraphStyles = styled.div`
@@ -26,11 +27,10 @@ const GraphStyles = styled.div`
 const NetworkGraph = ({
   is3d,
   colorBy,
-  graphDataFromServer,
   allowedMediaTypes,
   setSelectedNode,
 }) => {
-  useWhyDidYouUpdate("NETWORKGRAPH", { is3d, colorBy, graphDataFromServer });
+  useWhyDidYouUpdate("NETWORKGRAPH", { is3d, colorBy });
 
   const [nodeData, setNodeData] = useState(null);
 
@@ -43,7 +43,6 @@ const NetworkGraph = ({
       <Graph
         {...{
           is3d,
-          graphDataFromServer,
           setNodeData,
           colorBy,
           allowedMediaTypes,
@@ -57,12 +56,13 @@ const NetworkGraph = ({
 
 function Graph({
   is3d,
-  graphDataFromServer,
   setNodeData,
   colorBy,
   allowedMediaTypes,
   setSelectedNode,
 }) {
+  const tweetsFromServer = useStore((state) => state.tweetsFromServer);
+  const graphDataFromServer = transformTweetsIntoGraphData(tweetsFromServer);
   useWhyDidYouUpdate("GRAPH", { is3d, graphDataFromServer, setNodeData });
 
   const fgRef = useRef();
@@ -76,13 +76,16 @@ function Graph({
     [setNodeData]
   );
   // on click, open the bottom drawer containing tweet info
-  const onNodeClick = useCallback((node) => {
-    setSelectedNode(node);
-    // window.open(
-    //   `https://twitter.com/${node.user.screen_name}/status/${node.id_str}`,
-    //   "_blank"
-    // );
-  }, []);
+  const onNodeClick = useCallback(
+    (node) => {
+      setSelectedNode(node);
+      // window.open(
+      //   `https://twitter.com/${node.user.screen_name}/status/${node.id_str}`,
+      //   "_blank"
+      // );
+    },
+    [setSelectedNode]
+  );
 
   const { width, height } = useWindowSize();
 
@@ -151,13 +154,21 @@ function Graph({
         // https://www.npmjs.com/package/react-force-graph
         <ForceGraph3D
           ref={fgRef}
-          graphData={graphDataFromServer || defaultGraphData}
+          graphData={
+            graphDataFromServer.nodes.length > 0
+              ? graphDataFromServer
+              : defaultGraphData
+          }
           {...forceGraphProps}
         />
       ) : (
         <ForceGraph2D
           ref={fgRef}
-          graphData={graphDataFromServer || defaultGraphData}
+          graphData={
+            graphDataFromServer.nodes.length > 0
+              ? graphDataFromServer
+              : defaultGraphData
+          }
           {...forceGraphProps}
         />
       )}

@@ -128,7 +128,14 @@ export function TweetContent({ nodeData }) {
         <div className="handle">| @{user.screen_name}</div>
       </div>
       <div className="locationInfo">
-        {user.location && <div className="location">📍{user.location}</div>}
+        {user.location && (
+          <div className="location">
+            <span aria-label="pin" role="img">
+              📍
+            </span>
+            {user.location}
+          </div>
+        )}
         {entities?.place?.country_code && (
           <div className="country">
             | {countryCodes[entities?.place?.country_code]}
