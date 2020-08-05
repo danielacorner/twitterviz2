@@ -52,32 +52,34 @@ const NetworkGraph = ({ is3d, colorBy, allowedMediaTypes }) => {
 function Graph({ is3d, colorBy, allowedMediaTypes }) {
   const setTooltipNode = useStore((state) => state.setTooltipNode);
   const setSelectedNode = useStore((state) => state.setSelectedNode);
+  const selectedNode = useStore((state) => state.selectedNode);
 
   const graphDataFromServer = useStore(
     (state) => transformTweetsIntoGraphData(state.tweetsFromServer),
     isEqual
   );
-  useWhyDidYouUpdate("GRAPH", { is3d, graphDataFromServer, setTooltipNode });
+  useWhyDidYouUpdate("GRAPH", {
+    is3d,
+    setTooltipNode,
+    setSelectedNode,
+    graphDataFromServer,
+  });
 
   const fgRef = useRef();
 
   const onNodeHover = useCallback(
     (node) => {
-      if (node) {
+      if (node && !selectedNode) {
         setTooltipNode(node);
       }
     },
-    [setTooltipNode]
+    [setTooltipNode, selectedNode]
   );
   // on click, open the bottom drawer containing tweet info
   const onNodeClick = useCallback(
     (node) => {
       setSelectedNode(node);
       setTooltipNode(null);
-      // window.open(
-      //   `https://twitter.com/${node.user.screen_name}/status/${node.id_str}`,
-      //   "_blank"
-      // );
     },
     [setSelectedNode, setTooltipNode]
   );

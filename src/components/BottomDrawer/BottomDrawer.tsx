@@ -7,6 +7,7 @@ import { CONTROLS_WIDTH } from "../../utils/constants";
 import UserInfo, { USER_INFO_WIDTH } from "./UserInfo";
 import useStore from "../../store";
 import { PADDING } from "../../utils/utils";
+import { useWindowSize } from "../../utils/hooks";
 
 const DRAWER_HEIGHT = 400;
 
@@ -54,7 +55,8 @@ const DrawerContentStyles = styled.div`
       border-radius: 999px;
     }
   }
-  .MuiDrawer-paper {
+  .MuiDrawer-paper,
+  .MuiDrawer-root {
     transition: all 225ms cubic-bezier(0, 0, 0.2, 1) 0ms !important;
   }
 `;
@@ -64,18 +66,19 @@ const BottomDrawer = () => {
   const selectedNode = useStore((state) => state.selectedNode);
   const [offset, setOffset] = useState(0);
   const [isMouseDown, setIsMouseDown] = useState(false);
+  const { height } = useWindowSize();
   const handleDrag = (event) => {
     if (!event.pageY || !isMouseDown) {
       // mouseup
       return;
     }
-    const newOffset = event.pageY - window.innerHeight + DRAWER_HEIGHT;
+    const newOffset = event.pageY - height + DRAWER_HEIGHT;
     setOffset(newOffset);
   };
 
   const handleWheel = (event) => {
     const delta = offset - event.deltaY;
-    setOffset(delta);
+    setOffset(Math.max(DRAWER_HEIGHT - height, Math.min(0, delta)));
   };
   const handleClose = () => setSelectedNode(null);
   const mouseDown = () => setIsMouseDown(true);
@@ -101,14 +104,22 @@ const BottomDrawer = () => {
         onWheel={handleWheel}
         ModalProps={{
           BackdropProps: {
-            style: { backgroundColor: "transparent" },
+            style: {
+              backgroundColor: "transparent",
+              transform: `translateY(calc(-100vh + ${
+                DRAWER_HEIGHT - offset
+              }px))`,
+            },
           },
         }}
         PaperProps={{
           style: {
-            height: DRAWER_HEIGHT + 20 - offset,
+            height: "100vh",
             overflow: "hidden",
           },
+        }}
+        style={{
+          transform: `translateY(calc(100vh - ${DRAWER_HEIGHT - offset}px))`,
         }}
       >
         <DrawerContentStyles>

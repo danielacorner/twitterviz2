@@ -3,6 +3,7 @@ import { getMediaArr, PADDING } from "../utils/utils";
 import countryCodes from "../utils/countryCodes";
 import styled from "styled-components/macro";
 import CachedIcon from "@material-ui/icons/CachedRounded";
+import LocationIcon from "@material-ui/icons/LocationOnRounded";
 
 const TweetStyles = styled.div`
   position: relative;
@@ -27,7 +28,13 @@ const TweetStyles = styled.div`
   }
   .userInfo {}
   .locationInfo{
-    color: hsl(0,0%,50%)
+    color: hsl(0,0%,50%);
+    .location{
+      display: grid;
+      grid-auto-flow: column;
+      transform: scale(0.8) translateY(-6px);
+      transform-origin: top left;
+    }
   }
   .media {
     display: grid;
@@ -50,7 +57,6 @@ export default function TweetContent({ nodeData }) {
   const mediaArr = getMediaArr(nodeData);
   const textWithLinks = text
     .split(" ")
-
     // if first two are "RT: someUser", store separately
     .reduce((acc, cur) => {
       if (cur === "RT") {
@@ -110,7 +116,7 @@ export default function TweetContent({ nodeData }) {
             target="_blank"
             rel="noopener noreferrer"
           >
-            {retweetedUser}
+            {retweetedUser.slice(0, -1)}
           </a>
         </div>
       )}
@@ -130,9 +136,7 @@ export default function TweetContent({ nodeData }) {
       <div className="locationInfo">
         {user.location && (
           <div className="location">
-            <span aria-label="pin" role="img">
-              📍
-            </span>
+            <LocationIcon />
             {user.location}
           </div>
         )}
