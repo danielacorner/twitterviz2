@@ -1,3 +1,5 @@
+export const PADDING = 8;
+
 export type MediaItem = {
   src: string;
   poster?: string;
@@ -17,9 +19,18 @@ export function getMediaArr(node): MediaItem[] {
       ...media,
       src:
         media.type === "video"
-          ? media.video_info?.variants.find(
-              ({ content_type }) => content_type === "video/mp4"
-            ).url
+          ? media.video_info?.variants
+              .filter(({ content_type }) => content_type === "video/mp4")
+              .reduce((acc, cur) => {
+                // return biggest bitrate
+                if (!acc && cur.bitrate) {
+                  return cur;
+                } else if (cur.bitrate && cur.bitrate > acc.bitrate) {
+                  return cur;
+                } else {
+                  return acc;
+                }
+              }, null).url
           : media.media_url_https,
       poster: media.media_url_https,
     })) || []

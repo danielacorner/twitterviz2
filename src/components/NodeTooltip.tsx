@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useSpring, animated } from "react-spring";
 import styled from "styled-components/macro";
-import { getMediaArr } from "../utils/utils";
-import countryCodes from "../utils/countryCodes";
+import TweetContent from "./TweetContent";
+import { PADDING } from "../utils/utils";
+import useStore from "../store";
 
 const AVATAR_WIDTH = 46;
 const TOOLTIP_WIDTH = 380;
 const MAX_TOOLTIP_HEIGHT = 680;
 const MOUSE_WIDTH = 12;
 const WINDOW_PADDING_HZ = 12;
-const PADDING = 8;
 
 const TooltipStyles = styled.div`
   border-radius: 4px;
@@ -32,7 +32,8 @@ const AvatarStyles = styled.div`
   overflow: hidden;
 `;
 
-const NodeTooltip = ({ nodeData }) => {
+const NodeTooltip = () => {
+  const tooltipNode = useStore((state) => state.tooltipNode);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [hidden, setHidden] = useState(false);
 
@@ -68,14 +69,14 @@ const NodeTooltip = ({ nodeData }) => {
     config: { tension: 300, mass: 0.2 },
   });
 
-  return nodeData ? (
+  return tooltipNode ? (
     <animated.div style={springToMousePosition}>
       <TooltipStyles>
         <div className="profileAndContent">
           <AvatarStyles>
-            <img src={nodeData.user.profile_image_url_https} alt="" />
+            <img src={tooltipNode.user.profile_image_url_https} alt="" />
           </AvatarStyles>
-          <TweetContent nodeData={nodeData} />
+          {!hidden && <TweetContent nodeData={tooltipNode} />}
         </div>
       </TooltipStyles>
     </animated.div>
@@ -83,77 +84,3 @@ const NodeTooltip = ({ nodeData }) => {
 };
 
 export default NodeTooltip;
-
-const TweetStyles = styled.div`
-  display: grid;
-  grid-gap: ${PADDING}px;
-  .userInfo, .locationInfo {
-    display: grid;
-    grid-auto-flow:column;
-    place-content: start;
-    grid-gap: 4px;
-  }
-  .userInfo {}
-  .locationInfo{
-    color: hsl(0,0%,50%)
-  }
-  .media {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    ${(props) => (props.isVideo ? "grid-template-columns: 1fr;" : "")}
-    grid-gap: ${PADDING}px;
-    img {
-      width: 100%;
-    }
-    video{
-      width: 100%;
-    }
-  }
-`;
-export function TweetContent({ nodeData }) {
-  const { user, text, extended_entities, entities } = nodeData;
-  const mediaArr = getMediaArr(nodeData);
-  return (
-    <TweetStyles isVideo={extended_entities?.media[0]?.type === "video"}>
-      <div className="userInfo">
-        <div className="username">{user.name}</div>
-        <div className="handle">| @{user.screen_name}</div>
-      </div>
-      <div className="locationInfo">
-        {user.location && (
-          <div className="location">
-            <span aria-label="pin" role="img">
-              📍
-            </span>
-            {user.location}
-          </div>
-        )}
-        {entities?.place?.country_code && (
-          <div className="country">
-            | {countryCodes[entities?.place?.country_code]}
-          </div>
-        )}
-      </div>
-      <div className="text">{text}</div>
-
-      <div className="media">
-        {mediaArr.map(({ type, id_str, poster, src }) => {
-          return (
-            <div className="media" key={id_str}>
-              {type === "video" ? (
-                <video
-                  poster={poster}
-                  src={src}
-                  autoPlay={true}
-                  loop={true}
-                ></video>
-              ) : (
-                <img src={src} alt="" />
-              )}
-            </div>
-          );
-        })}
-      </div>
-    </TweetStyles>
-  );
-}

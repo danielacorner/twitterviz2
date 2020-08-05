@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components/macro";
 import { Drawer, IconButton } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
-import { TweetContent } from "../NodeTooltip";
+import TweetContent from "../TweetContent";
 import { CONTROLS_WIDTH } from "../../utils/constants";
 import UserInfo, { USER_INFO_WIDTH } from "./UserInfo";
+import useStore from "../../store";
 
 const DRAWER_HEIGHT = 400;
 
@@ -13,6 +14,9 @@ const BottomDrawerStyles = styled.div`
   bottom: 0;
   right: 0;
   left: ${CONTROLS_WIDTH}px;
+  video {
+    height: fit-content;
+  }
 `;
 const DrawerContentStyles = styled.div`
   box-sizing: border-box;
@@ -53,7 +57,9 @@ const DrawerContentStyles = styled.div`
   }
 `;
 
-const BottomDrawer = ({ selectedNode, setSelectedNode }) => {
+const BottomDrawer = () => {
+  const setSelectedNode = useStore((state) => state.setSelectedNode);
+  const selectedNode = useStore((state) => state.selectedNode);
   const [offset, setOffset] = useState(0);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const handleDrag = (event) => {

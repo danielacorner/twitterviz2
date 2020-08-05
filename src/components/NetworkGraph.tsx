@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef, useEffect } from "react";
+import React, { useCallback, useRef, useEffect } from "react";
 import {
   ForceGraph2D,
   ForceGraph3D,
@@ -26,58 +26,48 @@ const GraphStyles = styled.div`
   width: 100%;
 `;
 
-const NetworkGraph = ({
-  is3d,
-  colorBy,
-  allowedMediaTypes,
-  setSelectedNode,
-}) => {
+const NetworkGraph = ({ is3d, colorBy, allowedMediaTypes }) => {
   useWhyDidYouUpdate("NETWORKGRAPH", { is3d, colorBy });
 
-  const [nodeData, setNodeData] = useState(null);
+  const tooltipNode = useStore((state) => state.tooltipNode);
 
   useEffect(() => {
-    console.log("🌟🚨: node", nodeData);
-  }, [nodeData]);
+    console.log("🌟🚨: node", tooltipNode);
+  }, [tooltipNode]);
 
   return (
     <GraphStyles>
       <Graph
         {...{
           is3d,
-          setNodeData,
           colorBy,
           allowedMediaTypes,
-          setSelectedNode,
         }}
       />
-      <NodeTooltip nodeData={nodeData} />
+      <NodeTooltip />
     </GraphStyles>
   );
 };
 
-function Graph({
-  is3d,
-  setNodeData,
-  colorBy,
-  allowedMediaTypes,
-  setSelectedNode,
-}) {
+function Graph({ is3d, colorBy, allowedMediaTypes }) {
+  const setTooltipNode = useStore((state) => state.setTooltipNode);
+  const setSelectedNode = useStore((state) => state.setSelectedNode);
+
   const graphDataFromServer = useStore(
     (state) => transformTweetsIntoGraphData(state.tweetsFromServer),
     isEqual
   );
-  useWhyDidYouUpdate("GRAPH", { is3d, graphDataFromServer, setNodeData });
+  useWhyDidYouUpdate("GRAPH", { is3d, graphDataFromServer, setTooltipNode });
 
   const fgRef = useRef();
 
   const onNodeHover = useCallback(
     (node) => {
       if (node) {
-        setNodeData(node);
+        setTooltipNode(node);
       }
     },
-    [setNodeData]
+    [setTooltipNode]
   );
   // on click, open the bottom drawer containing tweet info
   const onNodeClick = useCallback(
@@ -98,7 +88,7 @@ function Graph({
     height,
     onNodeHover,
     onNodeClick,
-    cooldownTime: 250,
+    cooldownTime: is3d ? 2000 : 500,
     nodeRelSize: 25,
     nodeColor: (node) => getNodeColor(node, colorBy),
 

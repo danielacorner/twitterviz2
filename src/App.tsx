@@ -4,8 +4,8 @@ import NetworkGraph from "./components/NetworkGraph";
 import { COLOR_BY, FILTER_BY, CONTROLS_WIDTH } from "./utils/constants";
 import Controls from "./components/Controls";
 import styled from "styled-components/macro";
-import { Tweet } from "./types";
 import BottomDrawer from "./components/BottomDrawer/BottomDrawer";
+import useStore from "./store";
 
 const AppStyles = styled.div`
   display: grid;
@@ -13,12 +13,11 @@ const AppStyles = styled.div`
 `;
 
 function App() {
+  const setSelectedNode = useStore((state) => state.setSelectedNode);
   const [is3d, setIs3d] = useState(false);
   const [colorBy, setColorBy] = useState(
     COLOR_BY.mediaType as keyof typeof COLOR_BY | null
   );
-  const [selectedNode, setSelectedNode] = useState(null as null | Tweet);
-
   const [isVideoChecked, setIsVideoChecked] = useState(false);
   const [isImageChecked, setIsImageChecked] = useState(false);
   const [countryCode, setCountryCode] = useState("All");
@@ -73,10 +72,9 @@ function App() {
           is3d,
           colorBy,
           allowedMediaTypes,
-          setSelectedNode,
         }}
       />
-      <BottomDrawer {...{ setSelectedNode, selectedNode }} />
+      <BottomDrawer />
     </AppStyles>
   );
 }
