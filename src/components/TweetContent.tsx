@@ -2,10 +2,23 @@ import React from "react";
 import { getMediaArr, PADDING } from "../utils/utils";
 import countryCodes from "../utils/countryCodes";
 import styled from "styled-components/macro";
+import CachedIcon from "@material-ui/icons/CachedRounded";
 
 const TweetStyles = styled.div`
+  position: relative;
   display: grid;
   grid-gap: ${PADDING}px;
+  .retweetedUser{
+    position: absolute;
+    top:0;
+    right:-28px;
+    display: grid;
+    grid-auto-flow: column;
+    place-items: start;
+    grid-gap: 4px;
+    transform: scale(0.8);
+    transform-origin:left;
+  }
   .userInfo, .locationInfo {
     display: grid;
     grid-auto-flow:column;
@@ -33,37 +46,86 @@ const TweetStyles = styled.div`
 
 export default function TweetContent({ nodeData }) {
   const { user, text, extended_entities, entities } = nodeData;
+  let retweetedUser = null;
   const mediaArr = getMediaArr(nodeData);
-  const textWithLinks = text.split(" ").map((word) =>
-    word[0] === "@" ? (
-      <a
-        style={{ marginRight: "0.5ch" }}
-        key={word}
-        href={`https://twitter.com/${word.slice(1)}`}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {word}
-      </a>
-    ) : word[0] === "#" ? (
-      <a
-        style={{ marginRight: "0.5ch" }}
-        key={word}
-        href={`https://twitter.com/hashtag/${word.slice(1)}`}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {word}
-      </a>
-    ) : (
-      word + " "
-    )
-  );
+  const textWithLinks = text
+    .split(" ")
+
+    // if first two are "RT: someUser", store separately
+    .reduce((acc, cur) => {
+      if (cur === "RT") {
+        retweetedUser = "next";
+        return acc;
+      } else if (retweetedUser === "next") {
+        retweetedUser = cur;
+        return acc;
+      } else {
+        return [...acc, cur];
+      }
+    }, [])
+    .map((word) =>
+      word[0] === "@" ? (
+        <a
+          style={{ marginRight: "0.5ch" }}
+          key={word}
+          href={`https://twitter.com/${
+            word.slice(-1) === ":" ? word.slice(1, -1) : word.slice(1)
+          }`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {word}
+        </a>
+      ) : word[0] === "#" ? (
+        <a
+          style={{ marginRight: "0.5ch" }}
+          key={word}
+          href={`https://twitter.com/hashtag/${word.slice(1)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {word}
+        </a>
+      ) : word.slice(0, 5) === "https" ? (
+        <a
+          style={{ marginRight: "0.5ch" }}
+          key={word}
+          href={word}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {word}
+        </a>
+      ) : (
+        word + " "
+      )
+    );
   return (
     <TweetStyles isVideo={extended_entities?.media[0]?.type === "video"}>
+      {retweetedUser && (
+        <div className="retweetedUser">
+          <CachedIcon />
+          <a
+            href={`https://twitter.com/${retweetedUser.slice(1)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {retweetedUser}
+          </a>
+        </div>
+      )}
       <div className="userInfo">
         <div className="username">{user.name}</div>
-        <div className="handle">| @{user.screen_name}</div>
+        <div className="handle">
+          |{" "}
+          <a
+            href={`https://twitter.com/${user.screen_name}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            @{user.screen_name}
+          </a>
+        </div>
       </div>
       <div className="locationInfo">
         {user.location && (

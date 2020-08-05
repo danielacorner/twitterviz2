@@ -6,6 +6,7 @@ import TweetContent from "../TweetContent";
 import { CONTROLS_WIDTH } from "../../utils/constants";
 import UserInfo, { USER_INFO_WIDTH } from "./UserInfo";
 import useStore from "../../store";
+import { PADDING } from "../../utils/utils";
 
 const DRAWER_HEIGHT = 400;
 
@@ -20,11 +21,12 @@ const BottomDrawerStyles = styled.div`
 `;
 const DrawerContentStyles = styled.div`
   box-sizing: border-box;
-  padding: 16px;
+  padding: 32px 16px 16px;
   position: relative;
   height: ${DRAWER_HEIGHT}px;
   .userAndTweetWrapper {
     display: grid;
+    grid-gap: ${PADDING}px;
     grid-template-columns: ${USER_INFO_WIDTH}px 1fr;
   }
   .btnClose {

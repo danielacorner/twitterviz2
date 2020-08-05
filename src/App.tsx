@@ -27,17 +27,16 @@ function App() {
     ...(isImageChecked ? ["photo"] : []),
   ];
   useEffect(() => {
+    function handleKeydown(event) {
+      if (event.key === "Backspace") {
+        setSelectedNode(null);
+      }
+    }
     window.addEventListener("keydown", handleKeydown);
     return () => {
       window.removeEventListener("keydown", handleKeydown);
     };
-  }, []);
-
-  function handleKeydown(event) {
-    if (event.key === "Backspace") {
-      setSelectedNode(null);
-    }
-  }
+  }, [setSelectedNode]);
 
   const mediaType =
     allowedMediaTypes.length === 2

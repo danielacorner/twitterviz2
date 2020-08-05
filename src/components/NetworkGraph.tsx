@@ -79,7 +79,7 @@ function Graph({ is3d, colorBy, allowedMediaTypes }) {
       //   "_blank"
       // );
     },
-    [setSelectedNode]
+    [setSelectedNode, setTooltipNode]
   );
 
   const { width, height } = useWindowSize();
