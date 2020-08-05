@@ -16,7 +16,7 @@ function App() {
   const setSelectedNode = useStore((state) => state.setSelectedNode);
   const [is3d, setIs3d] = useState(false);
   const [colorBy, setColorBy] = useState(
-    COLOR_BY.mediaType as keyof typeof COLOR_BY | null
+    COLOR_BY.sentiment as keyof typeof COLOR_BY | null
   );
   const [isVideoChecked, setIsVideoChecked] = useState(false);
   const [isImageChecked, setIsImageChecked] = useState(false);
