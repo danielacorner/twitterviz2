@@ -34,6 +34,31 @@ const TweetStyles = styled.div`
 export default function TweetContent({ nodeData }) {
   const { user, text, extended_entities, entities } = nodeData;
   const mediaArr = getMediaArr(nodeData);
+  const textWithLinks = text.split(" ").map((word) =>
+    word[0] === "@" ? (
+      <a
+        style={{ marginRight: "0.5ch" }}
+        key={word}
+        href={`https://twitter.com/${word.slice(1)}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {word}
+      </a>
+    ) : word[0] === "#" ? (
+      <a
+        style={{ marginRight: "0.5ch" }}
+        key={word}
+        href={`https://twitter.com/hashtag/${word.slice(1)}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {word}
+      </a>
+    ) : (
+      word + " "
+    )
+  );
   return (
     <TweetStyles isVideo={extended_entities?.media[0]?.type === "video"}>
       <div className="userInfo">
@@ -55,7 +80,7 @@ export default function TweetContent({ nodeData }) {
           </div>
         )}
       </div>
-      <div className="text">{text}</div>
+      <div className="text">{textWithLinks}</div>
 
       {mediaArr.map(({ type, id_str, poster, src }) => {
         return (

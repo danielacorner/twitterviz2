@@ -18,7 +18,7 @@ export function getMediaArr(node): MediaItem[] {
     node.extended_entities?.media.map((media) => ({
       ...media,
       src:
-        media.type === "video"
+        media?.type === "video"
           ? media.video_info?.variants
               .filter(({ content_type }) => content_type === "video/mp4")
               .reduce((acc, cur) => {

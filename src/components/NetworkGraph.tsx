@@ -73,6 +73,7 @@ function Graph({ is3d, colorBy, allowedMediaTypes }) {
   const onNodeClick = useCallback(
     (node) => {
       setSelectedNode(node);
+      setTooltipNode(null);
       // window.open(
       //   `https://twitter.com/${node.user.screen_name}/status/${node.id_str}`,
       //   "_blank"
