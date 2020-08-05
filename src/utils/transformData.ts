@@ -1,4 +1,5 @@
 export function transformTweetsIntoGraphData(tweets: any) {
+  console.log("🌟🚨: transformTweetsIntoGraphData -> tweets", tweets);
   const allUserIds = tweets.map((t) => t.user.id);
 
   const prunedLinks = tweets.reduce((acc, tweet) => {

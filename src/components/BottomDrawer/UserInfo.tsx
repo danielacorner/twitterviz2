@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components/macro";
 import { Button, CircularProgress, TextField } from "@material-ui/core";
-import CloseIcon from "@material-ui/icons/Close";
-import { TweetContent } from "../NodeTooltip";
-import { CONTROLS_WIDTH } from "../../utils/constants";
 import { Tweet } from "../../types";
 import useStore from "../../store";
 

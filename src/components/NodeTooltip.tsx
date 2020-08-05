@@ -40,19 +40,11 @@ const NodeTooltip = ({ nodeData }) => {
   useEffect(() => {
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("auxclick", handleMiddleCLick);
-    window.addEventListener("keydown", handleKeydown);
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("auxclick", handleMiddleCLick);
-      window.removeEventListener("keydown", handleKeydown);
     };
   }, []);
-
-  function handleKeydown(event) {
-    if (event.key === " ") {
-      setHidden((h) => !h);
-    }
-  }
 
   function handleMouseMove(event) {
     const x = Math.min(

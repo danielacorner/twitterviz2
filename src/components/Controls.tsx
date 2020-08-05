@@ -35,13 +35,13 @@ const Switch3D = ({ onChange, checked }) => (
 const ControlsStyles = styled.div`
   display: grid;
   grid-auto-flow: row;
-  grid-gap: 16px;
+  grid-gap: 32px;
   align-content: start;
   .styleTweets {
     display: grid;
     grid-gap: 8px;
   }
-  .fetchTweets {
+  .filters {
     display: grid;
     grid-gap: 8px;
     grid-template-columns: 1fr 1fr;
@@ -177,10 +177,10 @@ const Controls = ({
   setLang,
 }) => {
   const setTweetsFromServer = useStore((state) => state.setTweetsFromServer);
-  const tweetsFromServer = useStore((state) => state.tweetsFromServer);
   const [numTweets, setNumTweets] = useState(50);
   const [loading, setLoading] = useState(false);
   const [filterLevel, setFilterLevel] = useState(FILTER_LEVELS.low);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     if (mediaType) {
@@ -189,13 +189,16 @@ const Controls = ({
   }, [mediaType]);
 
   const fetchNewTweets = async () => {
+    const langParam = lang !== "All" ? `&lang=${lang}` : "";
+    const mediaParam = mediaType ? `&mediaType=${mediaType}` : "";
+    const countryParam =
+      countryCode !== "All" ? `&countryCode=${countryCode}` : "";
+
     setLoading(true);
     const resp = await fetch(
-      `/api/stream?num=${numTweets}&filterLevel=${filterLevel}${
-        mediaType ? `&mediaType=${mediaType}` : ""
-      }${countryCode !== "All" ? `&countryCode=${countryCode}` : ""}${
-        lang !== "All" ? `&lang=${lang}` : ""
-      }`
+      !searchTerm
+        ? `/api/stream?num=${numTweets}&filterLevel=${filterLevel}${mediaParam}${countryParam}${langParam}`
+        : `/api/search?num=${numTweets}&term=${searchTerm}${langParam}${mediaParam}`
     );
     const data = await resp.json();
     setLoading(false);
@@ -204,29 +207,25 @@ const Controls = ({
   return (
     <ControlsStyles>
       <div className="styleTweets">
-        <SelectColorBy
-          colorBy={colorBy}
-          setColorBy={setColorBy}
-        ></SelectColorBy>
+        <SelectColorBy colorBy={colorBy} setColorBy={setColorBy} />
         {colorBy === COLOR_BY.mediaType ? (
           <MediaTypeCheckboxes
             setIsVideoChecked={setIsVideoChecked}
             setIsImageChecked={setIsImageChecked}
             isVideoChecked={isVideoChecked}
             isImageChecked={isImageChecked}
-          ></MediaTypeCheckboxes>
+          />
         ) : null}
       </div>
       <Switch3D onChange={() => setIs3d((prev) => !prev)} checked={is3d} />
-      <div className="fetchTweets">
-        <Button
-          className="btnFetch"
-          disabled={loading}
-          onClick={fetchNewTweets}
-          variant="outlined"
-        >
-          {loading ? <CircularProgress /> : "Fetch New Tweets"}
-        </Button>
+      <form onSubmit={(e) => e.preventDefault()} className="filters">
+        <TextField
+          style={{ gridColumn: "span 2" }}
+          label="Search for..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          type="text"
+        />
         <TextField
           label="How many?"
           value={numTweets}
@@ -245,13 +244,23 @@ const Controls = ({
         <SelectFilterLevel
           filterLevel={filterLevel}
           setFilterLevel={setFilterLevel}
-        ></SelectFilterLevel>
+        />
         <SelectCountry
           countryCode={countryCode}
           setCountryCode={setCountryCode}
-        ></SelectCountry>
-        <SelectLanguage lang={lang} setLang={setLang}></SelectLanguage>
-      </div>
+        />
+        <SelectLanguage lang={lang} setLang={setLang} />
+        <Button
+          type="submit"
+          style={{ gridColumn: "span 2" }}
+          className="btnFetch"
+          disabled={loading}
+          onClick={fetchNewTweets}
+          variant="outlined"
+        >
+          {loading ? <CircularProgress /> : "Fetch New Tweets"}
+        </Button>
+      </form>
     </ControlsStyles>
   );
 };
