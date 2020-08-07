@@ -43,10 +43,10 @@ const TweetStyles = styled.div`
       transform-origin: top left;
     }
   }
-  .media {
+  .allMedia {
     display: grid;
     max-height: calc(100vh - 100px);
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     ${(props) => (props.isVideo ? "grid-template-columns: 1fr;" : "")}
     grid-gap: ${PADDING}px;
     img {
@@ -176,22 +176,24 @@ export default function TweetContent({
       </div>
       <div className="text">{textWithLinks}</div>
 
-      {mediaArr.map(({ type, id_str, poster, src }) => {
-        return (
-          <div className="media" key={id_str}>
-            {type === "video" ? (
-              <video
-                poster={poster}
-                src={src}
-                autoPlay={true}
-                loop={true}
-              ></video>
-            ) : (
-              <img src={src} alt="" />
-            )}
-          </div>
-        );
-      })}
+      <div className="allMedia">
+        {mediaArr.map(({ type, id_str, poster, src }) => {
+          return (
+            <div className="media" key={id_str}>
+              {type === "video" ? (
+                <video
+                  poster={poster}
+                  src={src}
+                  autoPlay={true}
+                  loop={true}
+                ></video>
+              ) : (
+                <img src={src} alt="" />
+              )}
+            </div>
+          );
+        })}
+      </div>
     </TweetStyles>
   );
 }
