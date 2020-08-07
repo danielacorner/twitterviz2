@@ -14,9 +14,9 @@ const AppStyles = styled.div`
 
 function App() {
   const setSelectedNode = useStore((state) => state.setSelectedNode);
-  const [is3d, setIs3d] = useState(false);
+  const [is3d, setIs3d] = useState(true);
   const [colorBy, setColorBy] = useState(
-    COLOR_BY.sentiment as keyof typeof COLOR_BY | null
+    COLOR_BY.profilePhoto as keyof typeof COLOR_BY | null
   );
   const [isVideoChecked, setIsVideoChecked] = useState(false);
   const [isImageChecked, setIsImageChecked] = useState(false);

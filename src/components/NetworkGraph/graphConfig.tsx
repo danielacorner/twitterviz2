@@ -67,6 +67,25 @@ export function getForceGraphProps(
 
             return sprite;
           }
+        : colorBy === COLOR_BY.profilePhoto
+        ? (node) => {
+            const imgSrc = node.user.profile_image_url_https;
+            const imgTexture = new THREE.TextureLoader().load(imgSrc);
+            const color = new THREE.Color("hsl(10,100%,100%)");
+            const material = new THREE.SpriteMaterial({
+              map: imgTexture,
+              color,
+            });
+            const sprite = new THREE.Sprite(material);
+            const { h, w, d } = {
+              h: 48,
+              w: 48,
+              d: 0,
+            };
+            sprite.scale.set(w, h, d);
+
+            return sprite;
+          }
         : null,
   };
 }

@@ -2,6 +2,7 @@ export const COLOR_BY = {
   mediaType: "mediaType",
   textLength: "textLength",
   sentiment: "sentiment",
+  profilePhoto: "profilePhoto",
 };
 export const FILTER_BY = {
   imageAndVideo: "imageAndVideo",

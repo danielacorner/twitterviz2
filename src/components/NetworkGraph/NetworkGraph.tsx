@@ -15,7 +15,7 @@ import {
 import { useWhyDidYouUpdate } from "use-why-did-you-update";
 import styled from "styled-components/macro";
 import { useWindowSize } from "../../utils/hooks";
-import useStore, { GlobalStateStoreType, useTooltipNode } from "../../store";
+import useStore, { GlobalStateStoreType } from "../../store";
 import { isEqual } from "lodash";
 import { Tweet } from "../../types";
 import { getForceGraphProps } from "./graphConfig";

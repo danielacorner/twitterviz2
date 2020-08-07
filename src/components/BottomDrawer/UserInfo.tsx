@@ -19,7 +19,6 @@ const UserInfoStyles = styled.div`
 `;
 export default function UserInfo() {
   const tweet = useSelectedNode();
-  console.log("🌟🚨: UserInfo -> tweet", tweet);
   const addTweetsFromServer = useStore((state) => state.addTweetsFromServer);
   const [loading, setLoading] = useState(false);
   const [numTweets, setNumTweets] = useState(50);
@@ -33,7 +32,6 @@ export default function UserInfo() {
   //   )
   //     .then((resp) => resp.json())
   //     .then(({ data }) => {
-  //       console.log("🌟🚨: UserInfo -> resp", data);
   //       setUser(data);
   //     });
   // }, []);

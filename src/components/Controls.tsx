@@ -157,6 +157,7 @@ const SelectColorBy = (props) => (
       <MenuItem value={COLOR_BY.mediaType}>Media type</MenuItem>
       <MenuItem value={COLOR_BY.textLength}>Text length</MenuItem>
       <MenuItem value={COLOR_BY.sentiment}>Sentiment</MenuItem>
+      <MenuItem value={COLOR_BY.profilePhoto}>Profile Photo</MenuItem>
     </Select>
   </FormControl>
 );
