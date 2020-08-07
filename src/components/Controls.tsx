@@ -189,6 +189,11 @@ const Controls = ({
   }, [mediaType]);
 
   const fetchNewTweets = async () => {
+    // after 10 seconds, stop loading
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 10 * 1000);
+
     const langParam = lang !== "All" ? `&lang=${lang}` : "";
     const mediaParam = mediaType ? `&mediaType=${mediaType}` : "";
     const countryParam =
@@ -202,6 +207,7 @@ const Controls = ({
     );
     const data = await resp.json();
     setLoading(false);
+    clearTimeout(timer);
     setTweetsFromServer(data);
   };
   return (

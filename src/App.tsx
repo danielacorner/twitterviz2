@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import NetworkGraph from "./components/NetworkGraph";
+import NetworkGraph from "./components/NetworkGraph/NetworkGraph";
 import { COLOR_BY, FILTER_BY, CONTROLS_WIDTH } from "./utils/constants";
 import Controls from "./components/Controls";
 import styled from "styled-components/macro";

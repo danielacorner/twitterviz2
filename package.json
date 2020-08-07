@@ -27,13 +27,14 @@
     "zustand": "^2.2.3"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "client": "react-scripts start",
+    "server": "cd twit && npm run start",
+    "start": "npm run dev",
+    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "generate": "node ./twit/index.js \"./src/tweets.json\"",
-    "server": "cd twit && npm run start",
-    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run start\""
+    "generate": "node ./twit/index.js \"./src/tweets.json\""
   },
   "eslintConfig": {
     "extends": "react-app"
