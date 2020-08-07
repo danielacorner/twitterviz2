@@ -16,10 +16,10 @@ function App() {
   const setSelectedNode = useStore((state) => state.setSelectedNode);
   const [is3d, setIs3d] = useState(true);
   const [colorBy, setColorBy] = useState(
-    COLOR_BY.profilePhoto as keyof typeof COLOR_BY | null
+    COLOR_BY.mediaType as keyof typeof COLOR_BY | null
   );
-  const [isVideoChecked, setIsVideoChecked] = useState(false);
-  const [isImageChecked, setIsImageChecked] = useState(false);
+  const [isVideoChecked, setIsVideoChecked] = useState(true);
+  const [isImageChecked, setIsImageChecked] = useState(true);
   const [countryCode, setCountryCode] = useState("All");
   const [lang, setLang] = useState("All");
   const allowedMediaTypes = [

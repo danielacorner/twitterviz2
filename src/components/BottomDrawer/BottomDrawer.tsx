@@ -16,9 +16,6 @@ const BottomDrawerStyles = styled.div`
   bottom: 0;
   right: 0;
   left: ${CONTROLS_WIDTH}px;
-  video {
-    height: fit-content;
-  }
 `;
 const DrawerContentStyles = styled.div`
   box-sizing: border-box;
@@ -96,7 +93,7 @@ const BottomDrawer = () => {
   }, []);
 
   return (
-    <BottomDrawerStyles>
+    <BottomDrawerStyles offset={offset}>
       <Drawer
         anchor="bottom"
         open={Boolean(selectedNode)}
@@ -144,7 +141,9 @@ const BottomDrawer = () => {
               <UserInfo />
             </div>
             <div className="tweetContentWrapper">
-              {selectedNode && <TweetContent nodeData={selectedNode} />}
+              {selectedNode && (
+                <TweetContent offset={offset} nodeData={selectedNode} />
+              )}
             </div>
           </div>
         </DrawerContentStyles>

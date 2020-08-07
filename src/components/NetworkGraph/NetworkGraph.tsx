@@ -52,9 +52,6 @@ function Graph({ is3d, colorBy, allowedMediaTypes }) {
   const setSelectedNode = useStore(
     (state: GlobalStateStoreType) => state.setSelectedNode
   );
-  const selectedNode = useStore(
-    (state: GlobalStateStoreType) => state.selectedNode
-  );
 
   const transformedTweets: TransformedTweets = useStore(
     (state) => transformTweetsIntoGraphData(state.tweetsFromServer),
@@ -71,17 +68,16 @@ function Graph({ is3d, colorBy, allowedMediaTypes }) {
 
   const onNodeHover = useCallback(
     (node) => {
-      if (node && node !== selectedNode) {
+      if (node) {
         setTooltipNode(node);
       }
     },
-    [setTooltipNode, selectedNode]
+    [setTooltipNode]
   );
   // on click, open the bottom drawer containing tweet info
   const onNodeClick = useCallback(
     (node) => {
       setSelectedNode(node);
-      setTooltipNode(null);
     },
     [setSelectedNode, setTooltipNode]
   );

@@ -46,12 +46,13 @@ const TweetStyles = styled.div`
       width: 100%;
     }
     video{
+    height: ${(props) => props.videoHeight}px;
       width: 100%;
     }
   }
 `;
 
-export default function TweetContent({ nodeData }) {
+export default function TweetContent({ nodeData, offset = 0 }) {
   const { user, text, extended_entities, entities } = nodeData;
   let retweetedUser = null;
   const mediaArr = getMediaArr(nodeData);
@@ -106,8 +107,16 @@ export default function TweetContent({ nodeData }) {
         word + " "
       )
     );
+  console.log("🌟🚨: TweetContent -> offset", offset);
+  console.log(
+    "🌟🚨: TweetContent -> window.innerHeight - offset",
+    window.innerHeight - offset
+  );
   return (
-    <TweetStyles isVideo={extended_entities?.media[0]?.type === "video"}>
+    <TweetStyles
+      videoHeight={-offset + 270}
+      isVideo={extended_entities?.media[0]?.type === "video"}
+    >
       {retweetedUser && (
         <div className="retweetedUser">
           <CachedIcon />
