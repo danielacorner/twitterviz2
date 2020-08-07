@@ -79,7 +79,7 @@ function Graph({ is3d, colorBy, allowedMediaTypes }) {
     (node) => {
       setSelectedNode(node);
     },
-    [setSelectedNode, setTooltipNode]
+    [setSelectedNode]
   );
 
   const { width, height } = useWindowSize();

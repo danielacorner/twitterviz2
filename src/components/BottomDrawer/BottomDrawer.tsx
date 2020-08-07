@@ -5,7 +5,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import TweetContent from "../TweetContent";
 import { CONTROLS_WIDTH } from "../../utils/constants";
 import UserInfo, { USER_INFO_WIDTH } from "./UserInfo";
-import useStore from "../../store";
+import useStore, { GlobalStateStoreType } from "../../store";
 import { PADDING } from "../../utils/utils";
 import { useWindowSize } from "../../utils/hooks";
 
@@ -60,10 +60,19 @@ const DrawerContentStyles = styled.div`
 `;
 
 const BottomDrawer = () => {
-  const setSelectedNode = useStore((state) => state.setSelectedNode);
-  const selectedNode = useStore((state) => state.selectedNode);
+  const setSelectedNode = useStore(
+    (state: GlobalStateStoreType) => state.setSelectedNode
+  );
+  const selectedNode = useStore(
+    (state: GlobalStateStoreType) => state.selectedNode
+  );
+  const addTweetsFromServer = useStore(
+    (state: GlobalStateStoreType) => state.addTweetsFromServer
+  );
+  const [loading, setLoading] = useState(false);
   const [offset, setOffset] = useState(0);
   const [isMouseDown, setIsMouseDown] = useState(false);
+  const [numTweets, setNumTweets] = useState(50);
   const { height } = useWindowSize();
   const handleDrag = (event) => {
     if (!event.pageY || !isMouseDown) {
@@ -97,6 +106,16 @@ const BottomDrawer = () => {
       enableScroll();
     };
   }, []);
+
+  const fetchTimeline = async (idStr: string, numTweets: number) => {
+    setLoading(true);
+    const resp = await fetch(
+      `/api/user_timeline?id_str=${idStr}&num=${numTweets}`
+    );
+    const { data } = await resp.json();
+    setLoading(false);
+    addTweetsFromServer(data);
+  };
 
   return (
     <BottomDrawerStyles offset={offset}>
@@ -144,11 +163,20 @@ const BottomDrawer = () => {
           <div className="userAndTweetWrapper">
             {/* non-absolute-position below here */}
             <div className="userWrapper">
-              <UserInfo />
+              <UserInfo
+                {...{ fetchTimeline, loading, setNumTweets, numTweets }}
+              />
             </div>
             <div className="tweetContentWrapper">
               {selectedNode && (
-                <TweetContent offset={offset} nodeData={selectedNode} />
+                <TweetContent
+                  {...{
+                    offset,
+                    nodeData: selectedNode,
+                    fetchTimeline,
+                    numTweets,
+                  }}
+                />
               )}
             </div>
           </div>

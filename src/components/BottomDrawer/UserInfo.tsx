@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components/macro";
 import { Button, CircularProgress, TextField } from "@material-ui/core";
-import useStore, { useSelectedNode } from "../../store";
+import { useSelectedNode } from "../../store";
 
 export const USER_INFO_WIDTH = 200;
 
@@ -17,11 +17,13 @@ const UserInfoStyles = styled.div`
     }
   }
 `;
-export default function UserInfo() {
+export default function UserInfo({
+  fetchTimeline,
+  loading,
+  setNumTweets,
+  numTweets,
+}) {
   const tweet = useSelectedNode();
-  const addTweetsFromServer = useStore((state) => state.addTweetsFromServer);
-  const [loading, setLoading] = useState(false);
-  const [numTweets, setNumTweets] = useState(50);
   const user = tweet?.user;
   // const [user, setUser] = useState(tweet?.user || null);
 
@@ -36,15 +38,6 @@ export default function UserInfo() {
   //     });
   // }, []);
 
-  const fetchTimeline = async () => {
-    setLoading(true);
-    const resp = await fetch(
-      `/api/user_timeline?id_str=${user?.id_str}&num=${numTweets}`
-    );
-    const { data } = await resp.json();
-    setLoading(false);
-    addTweetsFromServer(data);
-  };
   const profileImgUrl = `${user?.profile_image_url_https.slice(
     0,
     -"_normal.jpg".length
@@ -63,7 +56,11 @@ export default function UserInfo() {
         </div>
       </a>
       <div className="screenName">{user?.screen_name}</div>
-      <Button variant="outlined" disabled={loading} onClick={fetchTimeline}>
+      <Button
+        variant="outlined"
+        disabled={loading}
+        onClick={() => user?.id_str && fetchTimeline(user?.id_str, numTweets)}
+      >
         {loading ? <CircularProgress /> : "Fetch user timeline"}
       </Button>
       <TextField

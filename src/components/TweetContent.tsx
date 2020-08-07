@@ -4,19 +4,26 @@ import countryCodes from "../utils/countryCodes";
 import styled from "styled-components/macro";
 import CachedIcon from "@material-ui/icons/CachedRounded";
 import LocationIcon from "@material-ui/icons/LocationOnRounded";
+import { Button } from "@material-ui/core";
 
 const TweetStyles = styled.div`
   position: relative;
   display: grid;
   grid-gap: ${PADDING}px;
-  .retweetedUser{
+  .retweetedUser {
     position: absolute;
     top:0;
     right:-28px;
-    display: grid;
-    grid-auto-flow: column;
-    place-items: start;
-    grid-gap: 4px;
+    .user{
+      display: grid;
+      grid-auto-flow: column;
+      align-items: start;
+    justify-content: flex-end;      grid-gap: 4px;
+    }
+    button{
+      transform: scale(0.8);
+      transform-origin:right;
+    }
     transform: scale(0.8);
     transform-origin:left;
   }
@@ -52,7 +59,12 @@ const TweetStyles = styled.div`
   }
 `;
 
-export default function TweetContent({ nodeData, offset = 0 }) {
+export default function TweetContent({
+  nodeData,
+  fetchTimeline = null,
+  offset = 0,
+  numTweets = 0,
+}) {
   const { user, text, extended_entities, entities } = nodeData;
   let retweetedUser = null;
   const mediaArr = getMediaArr(nodeData);
@@ -107,11 +119,6 @@ export default function TweetContent({ nodeData, offset = 0 }) {
         word + " "
       )
     );
-  console.log("🌟🚨: TweetContent -> offset", offset);
-  console.log(
-    "🌟🚨: TweetContent -> window.innerHeight - offset",
-    window.innerHeight - offset
-  );
   return (
     <TweetStyles
       videoHeight={-offset + 270}
@@ -119,14 +126,26 @@ export default function TweetContent({ nodeData, offset = 0 }) {
     >
       {retweetedUser && (
         <div className="retweetedUser">
-          <CachedIcon />
-          <a
-            href={`https://twitter.com/${retweetedUser.slice(1)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {retweetedUser.slice(0, -1)}
-          </a>
+          <div className="user">
+            <CachedIcon />
+            <a
+              href={`https://twitter.com/${retweetedUser.slice(1)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {retweetedUser.slice(0, -1)}
+            </a>
+          </div>
+          {fetchTimeline && (
+            <Button
+              variant="outlined"
+              onClick={() =>
+                fetchTimeline(retweetedUser.slice(1, -1), numTweets)
+              }
+            >
+              Fetch user timeline
+            </Button>
+          )}
         </div>
       )}
       <div className="userInfo">
