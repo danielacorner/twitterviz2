@@ -37,6 +37,9 @@ const NodeTooltip = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [hidden, setHidden] = useState(false);
 
+  useEffect(() => {
+    console.log("🌟🚨: node", tooltipNode);
+  }, [tooltipNode]);
   // on mount, start listening to mouse position
   useEffect(() => {
     window.addEventListener("mousemove", handleMouseMove);

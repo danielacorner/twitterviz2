@@ -129,10 +129,11 @@ export function transformTweetsIntoGraphData(
   //     { source: "Harry", target: "Alice" },
   //   ],
   // };
+  console.log({links})
   return {
     graph: {
       nodes: tweets,
-      links,
+      links: [] || links,
     },
     users,
   };

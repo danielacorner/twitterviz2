@@ -32,13 +32,6 @@ const GraphStyles = styled.div`
 
 const NetworkGraph = ({ is3d, colorBy, allowedMediaTypes }) => {
   useWhyDidYouUpdate("NETWORKGRAPH", { is3d, colorBy });
-
-  const tooltipNode = useTooltipNode();
-
-  useEffect(() => {
-    console.log("🌟🚨: node", tooltipNode);
-  }, [tooltipNode]);
-
   return (
     <GraphStyles>
       <Graph
@@ -60,9 +53,6 @@ function Graph({ is3d, colorBy, allowedMediaTypes }) {
   const setSelectedNode = useStore(
     (state: GlobalStateStoreType) => state.setSelectedNode
   );
-  const selectedNode = useStore(
-    (state: GlobalStateStoreType) => state.selectedNode
-  );
 
   const transformedTweets: TransformedTweets = useStore(
     (state) => transformTweetsIntoGraphData(state.tweetsFromServer),
@@ -79,11 +69,11 @@ function Graph({ is3d, colorBy, allowedMediaTypes }) {
 
   const onNodeHover = useCallback(
     (node) => {
-      if (node && !selectedNode) {
+      if (node) {
         setTooltipNode(node);
       }
     },
-    [setTooltipNode, selectedNode]
+    [setTooltipNode]
   );
   // on click, open the bottom drawer containing tweet info
   const onNodeClick = useCallback(
@@ -105,8 +95,8 @@ function Graph({ is3d, colorBy, allowedMediaTypes }) {
     colorBy,
     fgRef,
     allowedMediaTypes
-  );
-  
+  )
+
   const { graph } = transformedTweets;
   const defaultGraph = transformedTweetsDefault.graph;
 
