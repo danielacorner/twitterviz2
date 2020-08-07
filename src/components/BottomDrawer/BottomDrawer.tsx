@@ -78,7 +78,7 @@ const BottomDrawer = () => {
 
   const handleWheel = (event) => {
     const delta = offset - event.deltaY;
-    setOffset(Math.max(DRAWER_HEIGHT - height, Math.min(0, delta)));
+    setOffset(Math.max(DRAWER_HEIGHT - height * 1.5, Math.min(0, delta)));
   };
   const handleClose = () => setSelectedNode(null);
   const mouseDown = () => setIsMouseDown(true);
@@ -105,20 +105,22 @@ const BottomDrawer = () => {
         ModalProps={{
           BackdropProps: {
             style: {
-              backgroundColor: "transparent",
-              transform: `translateY(calc(-100vh + ${
-                DRAWER_HEIGHT - offset
-              }px))`,
+              // backgroundColor: "transparent",
+              // transform: `translateY(calc(-100vh + ${
+              //   DRAWER_HEIGHT - offset
+              // }px))`,
             },
           },
         }}
+        hideBackdrop={true}
         PaperProps={{
           style: {
-            height: "100vh",
+            height: "150vh",
             overflow: "hidden",
           },
         }}
         style={{
+          bottom: "-50vh",
           transform: `translateY(calc(100vh - ${DRAWER_HEIGHT - offset}px))`,
         }}
       >
@@ -139,7 +141,7 @@ const BottomDrawer = () => {
           <div className="userAndTweetWrapper">
             {/* non-absolute-position below here */}
             <div className="userWrapper">
-              <UserInfo tweet={selectedNode} />
+              <UserInfo />
             </div>
             <div className="tweetContentWrapper">
               {selectedNode && <TweetContent nodeData={selectedNode} />}

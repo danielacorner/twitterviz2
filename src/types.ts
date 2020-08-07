@@ -333,6 +333,7 @@ export interface QuotedStatus {
   in_reply_to_user_id: number | null;
   in_reply_to_user_id_str: null | string;
   in_reply_to_screen_name: null | string;
+  // https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/user-object
   user: User;
   geo: null;
   coordinates: null;
@@ -352,6 +353,7 @@ export interface QuotedStatus {
   lang: string;
 }
 
+// https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/user-object
 export interface User {
   id: number;
   id_str: string;

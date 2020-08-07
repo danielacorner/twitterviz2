@@ -108,8 +108,8 @@ export function transformTweetsIntoGraphData(
         relatedUsers.forEach(relatedUser=>{
 
         if (relatedUser===userId) {
-          console.log("🌟🚨: userId", userId);
-          console.log("🌟🚨: relatedUser", relatedUser);
+          // console.log("🌟🚨: userId", userId);
+          // console.log("🌟🚨: relatedUser", relatedUser);
           acc = [...acc, { source: t.user.id_str, target: userId }];
         }
 

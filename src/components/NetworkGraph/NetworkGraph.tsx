@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useEffect } from "react";
+import React, { useCallback, useRef } from "react";
 import {
   ForceGraph2D,
   ForceGraph3D,
@@ -24,7 +24,6 @@ import { CONTROLS_WIDTH } from "../../utils/constants";
 const transformedTweetsDefault = transformTweetsIntoGraphData(
   tweets as Tweet[]
 );
-console.log("🌟🚨: transformedTweetsDefault", transformedTweetsDefault);
 
 const GraphStyles = styled.div`
   width: 100%;
@@ -53,6 +52,9 @@ function Graph({ is3d, colorBy, allowedMediaTypes }) {
   const setSelectedNode = useStore(
     (state: GlobalStateStoreType) => state.setSelectedNode
   );
+  const selectedNode = useStore(
+    (state: GlobalStateStoreType) => state.selectedNode
+  );
 
   const transformedTweets: TransformedTweets = useStore(
     (state) => transformTweetsIntoGraphData(state.tweetsFromServer),
@@ -69,11 +71,11 @@ function Graph({ is3d, colorBy, allowedMediaTypes }) {
 
   const onNodeHover = useCallback(
     (node) => {
-      if (node) {
+      if (node && node !== selectedNode) {
         setTooltipNode(node);
       }
     },
-    [setTooltipNode]
+    [setTooltipNode, selectedNode]
   );
   // on click, open the bottom drawer containing tweet info
   const onNodeClick = useCallback(
@@ -95,7 +97,7 @@ function Graph({ is3d, colorBy, allowedMediaTypes }) {
     colorBy,
     fgRef,
     allowedMediaTypes
-  )
+  );
 
   const { graph } = transformedTweets;
   const defaultGraph = transformedTweetsDefault.graph;
