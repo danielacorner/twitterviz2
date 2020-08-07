@@ -10,6 +10,7 @@ import { PADDING } from "../../utils/utils";
 import { useWindowSize } from "../../utils/hooks";
 
 const DRAWER_HEIGHT = 400;
+const DRAWER_MAX_HEIGHT_MULTIPLIER = 3.5;
 
 const BottomDrawerStyles = styled.div`
   position: fixed;
@@ -75,7 +76,12 @@ const BottomDrawer = () => {
 
   const handleWheel = (event) => {
     const delta = offset - event.deltaY;
-    setOffset(Math.max(DRAWER_HEIGHT - height * 1.5, Math.min(0, delta)));
+    setOffset(
+      Math.max(
+        DRAWER_HEIGHT - height * DRAWER_MAX_HEIGHT_MULTIPLIER,
+        Math.min(0, delta)
+      )
+    );
   };
   const handleClose = () => setSelectedNode(null);
   const mouseDown = () => setIsMouseDown(true);
@@ -112,12 +118,12 @@ const BottomDrawer = () => {
         hideBackdrop={true}
         PaperProps={{
           style: {
-            height: "150vh",
+            height: `${DRAWER_MAX_HEIGHT_MULTIPLIER * 100}vh`,
             overflow: "hidden",
           },
         }}
         style={{
-          bottom: "-50vh",
+          bottom: `-${(DRAWER_MAX_HEIGHT_MULTIPLIER - 1) * 100}vh`,
           transform: `translateY(calc(100vh - ${DRAWER_HEIGHT - offset}px))`,
         }}
       >

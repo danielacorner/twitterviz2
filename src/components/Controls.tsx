@@ -15,7 +15,7 @@ import styled from "styled-components/macro";
 import { COLOR_BY, FILTER_BY, FILTER_LEVELS } from "../utils/constants";
 import countryCodes from "../utils/countryCodes";
 import languages from "../utils/languages";
-import useStore from "../store";
+import useStore, { useTweetsFromServer } from "../store";
 
 const Div = styled.div`
   display: grid;
@@ -162,6 +162,21 @@ const SelectColorBy = (props) => (
   </FormControl>
 );
 
+const BtnFetchNewTweets = (props) => (
+  <Button
+    type="submit"
+    style={{
+      gridColumn: "span 2",
+    }}
+    className="btnFetch"
+    disabled={props.loading}
+    onClick={props.fetchNewTweets}
+    variant="outlined"
+  >
+    {props.loading ? <CircularProgress /> : "Fetch New Tweets"}
+  </Button>
+);
+
 const Controls = ({
   colorBy,
   is3d,
@@ -178,8 +193,10 @@ const Controls = ({
   setLang,
 }) => {
   const setTweetsFromServer = useStore((state) => state.setTweetsFromServer);
+  const tweetsFromServer = useTweetsFromServer();
   const [numTweets, setNumTweets] = useState(50);
   const [loading, setLoading] = useState(false);
+  const [replace, setReplace] = useState(true);
   const [filterLevel, setFilterLevel] = useState(FILTER_LEVELS.low);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -209,7 +226,7 @@ const Controls = ({
     const data = await resp.json();
     setLoading(false);
     clearTimeout(timer);
-    setTweetsFromServer(data);
+    setTweetsFromServer(replace ? data : [...tweetsFromServer, data]);
   };
   return (
     <ControlsStyles>
@@ -257,16 +274,17 @@ const Controls = ({
           setCountryCode={setCountryCode}
         />
         <SelectLanguage lang={lang} setLang={setLang} />
-        <Button
-          type="submit"
-          style={{ gridColumn: "span 2" }}
-          className="btnFetch"
-          disabled={loading}
-          onClick={fetchNewTweets}
-          variant="outlined"
-        >
-          {loading ? <CircularProgress /> : "Fetch New Tweets"}
-        </Button>
+        <BtnFetchNewTweets loading={loading} fetchNewTweets={fetchNewTweets} />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={replace}
+              onChange={() => setReplace((p) => !p)}
+              name="checkedD"
+            />
+          }
+          label="Replace?"
+        />
       </form>
     </ControlsStyles>
   );
