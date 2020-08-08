@@ -51,12 +51,14 @@ export function getForceGraphProps(
             const imgSrc = node.isUserNode
               ? node.user.profile_image_url_https
               : first?.poster || first?.src;
-            if (node.isUserNode) {
-              console.log("🌟🚨: imgSrc", imgSrc);
-            }
+
             const imgTexture = new THREE.TextureLoader().load(imgSrc);
             const color = new THREE.Color(
-              first?.type === "video" ? "hsl(10,100%,80%)" : "hsl(120,100%,80%)"
+              node.isUserNode
+                ? "hsl(200,100%,75%)"
+                : first?.type === "video"
+                ? "hsl(10,100%,80%)"
+                : "hsl(120,100%,80%)"
             );
             const material = new THREE.SpriteMaterial({
               map: imgTexture,

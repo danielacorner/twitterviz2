@@ -1,6 +1,12 @@
 import create from "zustand";
 import { uniqBy } from "lodash";
 import { Tweet } from "./types";
+import {
+  TransformedTweets,
+  transformTweetsIntoGraphData,
+} from "./utils/transformData";
+import tweets from "./tweets.json";
+
 export type GlobalStateStoreType = {
   tweetsFromServer: Tweet[];
   selectedNode: Tweet | null;
@@ -13,6 +19,9 @@ export type GlobalStateStoreType = {
 const [useStore] = create(
   (set) =>
     ({
+      transformedTweets: transformTweetsIntoGraphData(
+        tweets as Tweet[]
+      ) as TransformedTweets | null,
       tweetsFromServer: [] as Tweet[],
       selectedNode: null as Tweet | null,
       setSelectedNode: (node: Tweet | null) =>
@@ -22,6 +31,8 @@ const [useStore] = create(
         set((state) => ({ tooltipNode: node })),
       setTweetsFromServer: (tweets) =>
         set((state) => ({ tweetsFromServer: tweets })),
+      setTransformedTweets: (tweets) =>
+        set((state) => ({ transformedTweets: tweets })),
       addTweetsFromServer: (tweets) =>
         set((state) => ({
           tweetsFromServer: uniqBy(

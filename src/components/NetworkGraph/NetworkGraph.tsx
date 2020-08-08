@@ -7,23 +7,14 @@ import {
 } from "react-force-graph";
 import NodeTooltip from "../NodeTooltip";
 // https://www.npmjs.com/package/react-force-graph
-import tweets from "../../tweets.json";
-import {
-  transformTweetsIntoGraphData,
-  TransformedTweets,
-} from "../../utils/transformData";
+import { TransformedTweets } from "../../utils/transformData";
 import { useWhyDidYouUpdate } from "use-why-did-you-update";
 import styled from "styled-components/macro";
 import { useWindowSize } from "../../utils/hooks";
 import useStore, { GlobalStateStoreType } from "../../store";
 import { isEqual } from "lodash";
-import { Tweet } from "../../types";
 import { getForceGraphProps } from "./graphConfig";
 import { CONTROLS_WIDTH } from "../../utils/constants";
-
-const transformedTweetsDefault = transformTweetsIntoGraphData(
-  tweets as Tweet[]
-);
 
 const GraphStyles = styled.div`
   width: 100%;
@@ -53,16 +44,18 @@ function Graph({ is3d, colorBy, allowedMediaTypes }) {
     (state: GlobalStateStoreType) => state.setSelectedNode
   );
 
-  const tweets: Tweet[] = useStore((state) => state.tweetsFromServer, isEqual);
+  const transformedTweets: TransformedTweets = useStore(
+    (state) => state.transformedTweets,
+    isEqual
+  );
   useWhyDidYouUpdate("GRAPH", {
     is3d,
     setTooltipNode,
+    transformedTweets,
     setSelectedNode,
-    tweets,
   });
-  const transformedTweets: TransformedTweets = transformTweetsIntoGraphData(
-    tweets
-  );
+
+  console.log("🌟🚨: Graph -> transformedTweets", transformedTweets);
 
   const fgRef = useRef();
 
@@ -96,23 +89,14 @@ function Graph({ is3d, colorBy, allowedMediaTypes }) {
   );
 
   const { graph } = transformedTweets;
-  const defaultGraph = transformedTweetsDefault.graph;
 
   return (
     <>
       {is3d ? (
         // https://www.npmjs.com/package/react-force-graph
-        <ForceGraph3D
-          ref={fgRef}
-          graphData={graph.nodes.length > 0 ? graph : defaultGraph}
-          {...forceGraphProps}
-        />
+        <ForceGraph3D ref={fgRef} graphData={graph} {...forceGraphProps} />
       ) : (
-        <ForceGraph2D
-          ref={fgRef}
-          graphData={graph.nodes.length > 0 ? graph : defaultGraph}
-          {...forceGraphProps}
-        />
+        <ForceGraph2D ref={fgRef} graphData={graph} {...forceGraphProps} />
       )}
     </>
   );

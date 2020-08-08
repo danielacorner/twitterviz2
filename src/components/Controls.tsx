@@ -16,6 +16,7 @@ import { COLOR_BY, FILTER_BY, FILTER_LEVELS } from "../utils/constants";
 import countryCodes from "../utils/countryCodes";
 import languages from "../utils/languages";
 import useStore, { useTweetsFromServer } from "../store";
+import { transformTweetsIntoGraphData } from "../utils/transformData";
 
 const Div = styled.div`
   display: grid;
@@ -193,6 +194,7 @@ const Controls = ({
   setLang,
 }) => {
   const setTweetsFromServer = useStore((state) => state.setTweetsFromServer);
+  const setTransformedTweets = useStore((state) => state.setTransformedTweets);
   const tweetsFromServer = useTweetsFromServer();
   const [numTweets, setNumTweets] = useState(50);
   const [loading, setLoading] = useState(false);
@@ -226,8 +228,12 @@ const Controls = ({
     const data = await resp.json();
     setLoading(false);
     clearTimeout(timer);
-    setTweetsFromServer(replace ? data : [...tweetsFromServer, data]);
+    const newTweets = replace ? data : [...tweetsFromServer, data];
+    setTweetsFromServer(newTweets);
+    setTransformedTweets(transformTweetsIntoGraphData(newTweets));
   };
+
+  const createLinks = () => {};
   return (
     <ControlsStyles>
       <div className="styleTweets">
@@ -285,6 +291,7 @@ const Controls = ({
           }
           label="Replace?"
         />
+        <Button onClick={createLinks}>Link Nodes</Button>
       </form>
     </ControlsStyles>
   );
