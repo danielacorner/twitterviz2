@@ -182,6 +182,7 @@ export default function TweetContent({
             <div className="media" key={id_str}>
               {type === "video" ? (
                 <video
+                  controls={true}
                   poster={poster}
                   src={src}
                   autoPlay={true}

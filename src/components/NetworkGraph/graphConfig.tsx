@@ -2,6 +2,7 @@ import { CONTROLS_WIDTH, COLOR_BY } from "../../utils/constants";
 import { getMediaArr } from "../../utils/utils";
 import * as THREE from "three";
 import * as d3 from "d3";
+import { Tweet } from "../../types";
 
 export function getForceGraphProps(
   width: any,
@@ -18,7 +19,7 @@ export function getForceGraphProps(
     height,
     onNodeHover,
     onNodeClick,
-    cooldownTime: is3d ? 2000 : 1000,
+    cooldownTime: is3d ? 10000 : 5000,
     nodeRelSize: 25,
     nodeColor: (node) => getNodeColor(node, colorBy),
 
@@ -41,13 +42,18 @@ export function getForceGraphProps(
     // nodeCanvasObjectMode: () => "after" as any,
     nodeThreeObject:
       colorBy === COLOR_BY.mediaType
-        ? (node) => {
+        ? (node: Tweet) => {
             const mediaArr = getMediaArr(node);
             const first = mediaArr[0];
             if (!allowedMediaTypes.includes(first?.type)) {
               return null;
             }
-            const imgSrc = first?.poster || first?.src;
+            const imgSrc = node.isUserNode
+              ? node.user.profile_image_url_https
+              : first?.poster || first?.src;
+            if (node.isUserNode) {
+              console.log("🌟🚨: imgSrc", imgSrc);
+            }
             const imgTexture = new THREE.TextureLoader().load(imgSrc);
             const color = new THREE.Color(
               first?.type === "video" ? "hsl(10,100%,80%)" : "hsl(120,100%,80%)"
@@ -57,12 +63,18 @@ export function getForceGraphProps(
               color,
             });
             const sprite = new THREE.Sprite(material);
-            const scaleDown = 0.3;
-            const { h, w, d } = {
-              h: first?.sizes.small.h * scaleDown,
-              w: first?.sizes.small.w * scaleDown,
-              d: 0,
-            };
+            const scaleDown = 0.35;
+            const { h, w, d } = node.isUserNode
+              ? {
+                  h: 48,
+                  w: 48,
+                  d: 48,
+                }
+              : {
+                  h: first?.sizes.small.h * scaleDown,
+                  w: first?.sizes.small.w * scaleDown,
+                  d: 0,
+                };
             sprite.scale.set(w, h, d);
 
             return sprite;

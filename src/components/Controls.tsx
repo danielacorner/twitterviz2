@@ -197,7 +197,7 @@ const Controls = ({
   const [numTweets, setNumTweets] = useState(50);
   const [loading, setLoading] = useState(false);
   const [replace, setReplace] = useState(true);
-  const [filterLevel, setFilterLevel] = useState(FILTER_LEVELS.low);
+  const [filterLevel, setFilterLevel] = useState(FILTER_LEVELS.none);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {

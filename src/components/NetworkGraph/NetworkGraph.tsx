@@ -53,16 +53,16 @@ function Graph({ is3d, colorBy, allowedMediaTypes }) {
     (state: GlobalStateStoreType) => state.setSelectedNode
   );
 
-  const transformedTweets: TransformedTweets = useStore(
-    (state) => transformTweetsIntoGraphData(state.tweetsFromServer),
-    isEqual
-  );
+  const tweets: Tweet[] = useStore((state) => state.tweetsFromServer, isEqual);
   useWhyDidYouUpdate("GRAPH", {
     is3d,
     setTooltipNode,
     setSelectedNode,
-    transformedTweets,
+    tweets,
   });
+  const transformedTweets: TransformedTweets = transformTweetsIntoGraphData(
+    tweets
+  );
 
   const fgRef = useRef();
 

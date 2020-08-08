@@ -88,7 +88,7 @@ const BottomDrawer = () => {
     setOffset(
       Math.max(
         DRAWER_HEIGHT - height * DRAWER_MAX_HEIGHT_MULTIPLIER,
-        Math.min(0, delta)
+        Math.min(DRAWER_HEIGHT - 100, delta)
       )
     );
   };

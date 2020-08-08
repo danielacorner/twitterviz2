@@ -136,6 +136,7 @@
 
 export interface Tweet {
   created_at: string;
+  isUserNode?: boolean;
   id: number;
   id_str: string;
   text: string;
