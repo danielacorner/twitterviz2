@@ -13,6 +13,8 @@ export type GlobalStateStoreType = {
   setSelectedNode: (node: Tweet | null) => void;
   tooltipNode: Tweet | null;
   setTooltipNode: (node: Tweet | null) => void;
+  setTransformedTweets: (tweets) => void;
+  transformedTweets: TransformedTweets;
   setTweetsFromServer: (tweets) => void;
   addTweetsFromServer: (tweets) => void;
 };
@@ -21,7 +23,7 @@ const [useStore] = create(
     ({
       transformedTweets: transformTweetsIntoGraphData(
         tweets as Tweet[]
-      ) as TransformedTweets | null,
+      ) as TransformedTweets,
       tweetsFromServer: [] as Tweet[],
       selectedNode: null as Tweet | null,
       setSelectedNode: (node: Tweet | null) =>

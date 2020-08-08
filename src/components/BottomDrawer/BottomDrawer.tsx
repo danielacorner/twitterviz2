@@ -8,6 +8,7 @@ import UserInfo, { USER_INFO_WIDTH } from "./UserInfo";
 import useStore, { GlobalStateStoreType } from "../../store";
 import { PADDING } from "../../utils/utils";
 import { useWindowSize } from "../../utils/hooks";
+import { transformTweetsIntoGraphData } from "../../utils/transformData";
 
 const DRAWER_HEIGHT = 400;
 const DRAWER_MAX_HEIGHT_MULTIPLIER = 3.5;
@@ -66,8 +67,14 @@ const BottomDrawer = () => {
   const selectedNode = useStore(
     (state: GlobalStateStoreType) => state.selectedNode
   );
-  const addTweetsFromServer = useStore(
-    (state: GlobalStateStoreType) => state.addTweetsFromServer
+  const tweetsFromServer = useStore(
+    (state: GlobalStateStoreType) => state.tweetsFromServer
+  );
+  const setTweetsFromServer = useStore(
+    (state: GlobalStateStoreType) => state.setTweetsFromServer
+  );
+  const setTransformedTweets = useStore(
+    (state: GlobalStateStoreType) => state.setTransformedTweets
   );
   const [loading, setLoading] = useState(false);
   const [offset, setOffset] = useState(0);
@@ -107,14 +114,16 @@ const BottomDrawer = () => {
     };
   }, []);
 
-  const fetchTimeline = async (idStr: string, numTweets: number) => {
+  const fetchTimeline = async (userId: string, numTweets: number) => {
     setLoading(true);
     const resp = await fetch(
-      `/api/user_timeline?id_str=${idStr}&num=${numTweets}`
+      `/api/user_timeline?id_str=${userId}&num=${numTweets}`
     );
     const { data } = await resp.json();
     setLoading(false);
-    addTweetsFromServer(data);
+    const newTweets = [...tweetsFromServer, ...data];
+    setTweetsFromServer(newTweets);
+    setTransformedTweets(transformTweetsIntoGraphData(newTweets));
   };
 
   return (

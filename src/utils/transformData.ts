@@ -23,11 +23,11 @@ export function transformTweetsIntoGraphData(
 ): TransformedTweets {
   let tweets = tweetsArg.map((tweet) => ({ ...tweet, id: +tweet.id_str }));
   // list of all user that tweeted
-  const users = tweets.map((t) => t.user);
+  const users = tweets.map((t) => t.user).filter(Boolean);
   const tweetsByUser: { [userId: string]: Tweet } = tweets.reduce(
     (acc, t) => ({
       ...acc,
-      [t.user.id_str]: t,
+      ...(t?.user?.id_str ? { [t.user.id_str]: t } : {}),
     }),
     {} as { [userId: string]: Tweet }
   );
@@ -44,14 +44,12 @@ export function transformTweetsIntoGraphData(
     }
   });
 
-  const userIds = uniq(tweets.map((t) => t.user.id_str));
-
   const tweetIdsByHashtag: {
     [hashtag: string]: Tweet[];
   } = tweets.reduce(
     (acc, tweet) => {
-      const hashtagsInTweet = (tweet.extended_tweet || tweet)?.entities
-        .hashtags;
+      const hashtagsInTweet =
+        (tweet.extended_tweet || tweet)?.entities?.hashtags || [];
 
       hashtagsInTweet.forEach((hashtag) => {
         acc = { ...acc, [hashtag]: [...(acc[hashtag] ? acc[hashtag] : [])] };
@@ -124,7 +122,9 @@ export function transformTweetsIntoGraphData(
     const replyRecipientUserId = t.in_reply_to_user_id_str;
 
     // - mentioned users
-    const mentionedUserIds = (t.extended_tweet || t).entities.user_mentions
+    const mentionedUserIds = (
+      (t.extended_tweet || t).entities?.user_mentions || []
+    )
       .map(
         (user) =>
           tweets.find(
@@ -156,7 +156,7 @@ export function transformTweetsIntoGraphData(
 
     // Link this tweet to userIds: poster, replied, mentioned, retweeted
     const relatedUserIds = uniq([
-      t.user.id_str,
+      ...(t.user?.id_str ? [t.user.id_str] : []),
       ...(replyRecipientUserId ? [replyRecipientUserId] : []),
       ...mentionedUserIds,
     ]);
@@ -179,7 +179,6 @@ export function transformTweetsIntoGraphData(
       });
       relatedTweetIds.forEach((relatedTweetId) => {
         if (relatedTweetId === tweet.id_str) {
-          console.log("🌟🚨: relatedTweetId", relatedTweetId);
           acc = [
             ...acc,
             {
@@ -208,7 +207,9 @@ export function transformTweetsIntoGraphData(
   console.log({ links });
   return {
     graph: {
-      nodes: tweets.map((t) => ({ ...t, id: +t.user.id_str })),
+      nodes: tweets
+        .map((t) => ({ ...t, id: +t.user?.id_str }))
+        .filter((t) => Boolean(t.id)),
       // links: [],
       links: [],
       // links: uniqBy(links, (l) => JSON.stringify(l)),

@@ -17,6 +17,7 @@ import countryCodes from "../utils/countryCodes";
 import languages from "../utils/languages";
 import useStore, { useTweetsFromServer } from "../store";
 import { transformTweetsIntoGraphData } from "../utils/transformData";
+import { uniqBy } from "lodash";
 
 const Div = styled.div`
   display: grid;
@@ -228,7 +229,9 @@ const Controls = ({
     const data = await resp.json();
     setLoading(false);
     clearTimeout(timer);
-    const newTweets = replace ? data : [...tweetsFromServer, data];
+    const newTweets = replace
+      ? data
+      : uniqBy([...tweetsFromServer, ...data], (t) => t.id_str);
     setTweetsFromServer(newTweets);
     setTransformedTweets(transformTweetsIntoGraphData(newTweets));
   };
