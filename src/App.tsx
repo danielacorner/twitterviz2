@@ -14,7 +14,7 @@ const AppStyles = styled.div`
 
 function App() {
   const setSelectedNode = useStore((state) => state.setSelectedNode);
-  const [is3d, setIs3d] = useState(true);
+  const [is3d, setIs3d] = useState(false);
   const [colorBy, setColorBy] = useState(
     COLOR_BY.mediaType as keyof typeof COLOR_BY | null
   );
