@@ -11,7 +11,7 @@ import { TransformedTweets } from "../../utils/transformData";
 import { useWhyDidYouUpdate } from "use-why-did-you-update";
 import styled from "styled-components/macro";
 import { useWindowSize } from "../../utils/hooks";
-import useStore, { GlobalStateStoreType } from "../../store";
+import useStore, { GlobalStateStoreType } from "../../providers/store";
 import { isEqual } from "lodash";
 import { getForceGraphProps } from "./graphConfig";
 import { CONTROLS_WIDTH } from "../../utils/constants";
@@ -54,8 +54,6 @@ function Graph({ is3d, colorBy, allowedMediaTypes }) {
     transformedTweets,
     setSelectedNode,
   });
-
-  console.log("🌟🚨: Graph -> transformedTweets", transformedTweets);
 
   const fgRef = useRef();
 

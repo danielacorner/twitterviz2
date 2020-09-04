@@ -5,10 +5,10 @@ import CloseIcon from "@material-ui/icons/Close";
 import TweetContent from "../TweetContent";
 import { CONTROLS_WIDTH } from "../../utils/constants";
 import UserInfo, { USER_INFO_WIDTH } from "./UserInfo";
-import useStore, { GlobalStateStoreType } from "../../store";
+import useStore, { GlobalStateStoreType } from "../../providers/store";
 import { PADDING } from "../../utils/utils";
 import { useWindowSize } from "../../utils/hooks";
-import { transformTweetsIntoGraphData } from "../../utils/transformData";
+import { useSetTweetsFromServer } from "../../providers/store";
 
 const DRAWER_HEIGHT = 400;
 const DRAWER_MAX_HEIGHT_MULTIPLIER = 3.5;
@@ -70,12 +70,7 @@ const BottomDrawer = () => {
   const tweetsFromServer = useStore(
     (state: GlobalStateStoreType) => state.tweetsFromServer
   );
-  const setTweetsFromServer = useStore(
-    (state: GlobalStateStoreType) => state.setTweetsFromServer
-  );
-  const setTransformedTweets = useStore(
-    (state: GlobalStateStoreType) => state.setTransformedTweets
-  );
+  const setTweetsFromServer = useSetTweetsFromServer();
   const [loading, setLoading] = useState(false);
   const [offset, setOffset] = useState(0);
   const [isMouseDown, setIsMouseDown] = useState(false);
@@ -123,7 +118,6 @@ const BottomDrawer = () => {
     setLoading(false);
     const newTweets = [...tweetsFromServer, ...data];
     setTweetsFromServer(newTweets);
-    setTransformedTweets(transformTweetsIntoGraphData(newTweets));
   };
 
   return (

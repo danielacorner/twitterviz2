@@ -5,7 +5,11 @@ import { COLOR_BY, FILTER_BY, CONTROLS_WIDTH } from "./utils/constants";
 import Controls from "./components/Controls";
 import styled from "styled-components/macro";
 import BottomDrawer from "./components/BottomDrawer/BottomDrawer";
-import useStore from "./store";
+import useStore from "./providers/store";
+import { useMount } from "./utils/utils";
+import { useSetTweetsFromServer } from "./providers/store";
+import { query as q } from "faunadb";
+import { faunaClient } from "./providers/faunaProvider";
 
 const AppStyles = styled.div`
   display: grid;
@@ -26,6 +30,9 @@ function App() {
     ...(isVideoChecked ? ["video"] : []),
     ...(isImageChecked ? ["photo"] : []),
   ];
+
+  useFetchTweetsOnMount();
+
   useEffect(() => {
     function handleKeydown(event) {
       if (event.key === "Backspace") {
@@ -79,3 +86,31 @@ function App() {
 }
 
 export default App;
+
+/** retrieve posts from faunadb
+ *
+ * [docs](https://docs.fauna.com/fauna/current/tutorials/crud?lang=javascript#retrieve)
+ */
+function useFetchTweetsOnMount() {
+  const setTweets = useSetTweetsFromServer();
+
+  // fetch tweets from DB on mount
+  useMount(() => {
+    faunaClient
+      .query(
+        q.Map(
+          q.Paginate(q.Documents(q.Collection("Tweet"))),
+          q.Lambda((x) => q.Get(x))
+        )
+      )
+      .then((ret: { data: any[] }) => {
+        // TODO: tweets seem duplicated - check the twit/populateDB script
+        console.log("🌟🚨: useFetchTweetsOnMount -> ret", ret);
+        setTweets(ret.data.map((d) => d.data));
+      })
+      .catch((err) => {
+        console.error(err);
+        setTweets([]);
+      });
+  });
+}

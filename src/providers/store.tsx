@@ -1,11 +1,11 @@
 import create from "zustand";
 import { uniqBy } from "lodash";
-import { Tweet } from "./types";
+import { Tweet } from "../types";
 import {
   TransformedTweets,
   transformTweetsIntoGraphData,
-} from "./utils/transformData";
-import tweets from "./tweets.json";
+} from "../utils/transformData";
+import tweets from "../tweets.json";
 
 export type GlobalStateStoreType = {
   tweetsFromServer: Tweet[];
@@ -57,7 +57,17 @@ export const useTooltipNode = () =>
   useStore((state: GlobalStateStoreType) => state.tooltipNode);
 export const useSetTooltipNode = () =>
   useStore((state: GlobalStateStoreType) => state.setTooltipNode);
-export const useSetTweetsFromServer = () =>
-  useStore((state: GlobalStateStoreType) => state.setTweetsFromServer);
+export const useSetTweetsFromServer = () => {
+  const setTweetsFromServer = useStore(
+    (state: GlobalStateStoreType) => state.setTweetsFromServer
+  );
+  const setTransformedTweets = useStore(
+    (state: GlobalStateStoreType) => state.setTransformedTweets
+  );
+  return (tweets: Tweet[]) => {
+    setTweetsFromServer(tweets);
+    setTransformedTweets(transformTweetsIntoGraphData(tweets));
+  };
+};
 export const useAddTweetsFromServer = () =>
   useStore((state: GlobalStateStoreType) => state.addTweetsFromServer);

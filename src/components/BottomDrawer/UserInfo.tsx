@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components/macro";
 import { Button, CircularProgress, TextField } from "@material-ui/core";
-import { useSelectedNode } from "../../store";
+import { useSelectedNode } from "../../providers/store";
 
 export const USER_INFO_WIDTH = 200;
 

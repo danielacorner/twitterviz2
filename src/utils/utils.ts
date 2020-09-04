@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 export const PADDING = 8;
 
 export type MediaItem = {
@@ -35,4 +37,8 @@ export function getMediaArr(node): MediaItem[] {
       poster: media.media_url_https,
     })) || []
   );
+}
+
+export function useMount(cb) {
+  return useEffect(cb, []);
 }

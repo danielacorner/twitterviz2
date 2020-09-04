@@ -15,9 +15,9 @@ import styled from "styled-components/macro";
 import { COLOR_BY, FILTER_BY, FILTER_LEVELS } from "../utils/constants";
 import countryCodes from "../utils/countryCodes";
 import languages from "../utils/languages";
-import useStore, { useTweetsFromServer } from "../store";
-import { transformTweetsIntoGraphData } from "../utils/transformData";
+import { useTweetsFromServer } from "../providers/store";
 import { uniqBy } from "lodash";
+import { useSetTweetsFromServer } from "../providers/store";
 
 const Div = styled.div`
   display: grid;
@@ -194,8 +194,7 @@ const Controls = ({
   lang,
   setLang,
 }) => {
-  const setTweetsFromServer = useStore((state) => state.setTweetsFromServer);
-  const setTransformedTweets = useStore((state) => state.setTransformedTweets);
+  const setTweetsFromServer = useSetTweetsFromServer();
   const tweetsFromServer = useTweetsFromServer();
   const [numTweets, setNumTweets] = useState(50);
   const [loading, setLoading] = useState(false);
@@ -233,7 +232,6 @@ const Controls = ({
       ? data
       : uniqBy([...tweetsFromServer, ...data], (t) => t.id_str);
     setTweetsFromServer(newTweets);
-    setTransformedTweets(transformTweetsIntoGraphData(newTweets));
   };
 
   const createLinks = () => {};

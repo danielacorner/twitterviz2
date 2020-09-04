@@ -3,7 +3,7 @@ import { useSpring, animated } from "react-spring";
 import styled from "styled-components/macro";
 import TweetContent from "./TweetContent";
 import { PADDING } from "../utils/utils";
-import useStore from "../store";
+import useStore from "../providers/store";
 
 const AVATAR_WIDTH = 46;
 const TOOLTIP_WIDTH = 380;
