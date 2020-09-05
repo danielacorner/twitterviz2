@@ -8,7 +8,7 @@ import UserInfo, { USER_INFO_WIDTH } from "./UserInfo";
 import useStore, { GlobalStateStoreType } from "../../providers/store";
 import { PADDING } from "../../utils/utils";
 import { useWindowSize } from "../../utils/hooks";
-import { useSetTweetsFromServer } from "../../providers/store";
+import { useSetTweets } from "../../providers/store";
 
 const DRAWER_HEIGHT = 400;
 const DRAWER_MAX_HEIGHT_MULTIPLIER = 3.5;
@@ -70,7 +70,7 @@ const BottomDrawer = () => {
   const tweetsFromServer = useStore(
     (state: GlobalStateStoreType) => state.tweetsFromServer
   );
-  const setTweetsFromServer = useSetTweetsFromServer();
+  const setTweetsFromServer = useSetTweets();
   const [loading, setLoading] = useState(false);
   const [offset, setOffset] = useState(0);
   const [isMouseDown, setIsMouseDown] = useState(false);

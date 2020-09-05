@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import NetworkGraph from "./components/NetworkGraph/NetworkGraph";
-import { COLOR_BY, FILTER_BY, CONTROLS_WIDTH } from "./utils/constants";
+import { CONTROLS_WIDTH } from "./utils/constants";
 import Controls from "./components/Controls/Controls";
 import styled from "styled-components/macro";
 import BottomDrawer from "./components/BottomDrawer/BottomDrawer";
 import useStore from "./providers/store";
 import { useMount } from "./utils/utils";
-import { useSetTweetsFromServer } from "./providers/store";
+import { useSetTweets } from "./providers/store";
 import { query as q } from "faunadb";
 import { faunaClient } from "./providers/faunaProvider";
 
@@ -17,22 +17,23 @@ const AppStyles = styled.div`
 `;
 
 function App() {
-  const setSelectedNode = useStore((state) => state.setSelectedNode);
-  const [is3d, setIs3d] = useState(false);
-  const [colorBy, setColorBy] = useState(
-    COLOR_BY.mediaType as keyof typeof COLOR_BY | null
-  );
-  const [isVideoChecked, setIsVideoChecked] = useState(true);
-  const [isImageChecked, setIsImageChecked] = useState(true);
-  const [countryCode, setCountryCode] = useState("All");
-  const [lang, setLang] = useState("All");
-  const allowedMediaTypes = [
-    ...(isVideoChecked ? ["video"] : []),
-    ...(isImageChecked ? ["photo"] : []),
-  ];
-
   useFetchTweetsOnMount();
 
+  useDeselectNodeOnBackspace();
+
+  return (
+    <AppStyles className="App">
+      <Controls />
+      <NetworkGraph />
+      <BottomDrawer />
+    </AppStyles>
+  );
+}
+
+export default App;
+
+function useDeselectNodeOnBackspace() {
+  const setSelectedNode = useStore((state) => state.setSelectedNode);
   useEffect(() => {
     function handleKeydown(event) {
       if (event.key === "Backspace") {
@@ -44,55 +45,14 @@ function App() {
       window.removeEventListener("keydown", handleKeydown);
     };
   }, [setSelectedNode]);
-
-  const mediaType =
-    allowedMediaTypes.length === 2
-      ? FILTER_BY.imageAndVideo
-      : allowedMediaTypes.includes("photo")
-      ? FILTER_BY.imageOnly
-      : allowedMediaTypes.includes("video")
-      ? FILTER_BY.videoOnly
-      : null;
-
-  return (
-    <AppStyles className="App">
-      <Controls
-        {...{
-          setIs3d,
-          colorBy,
-          setColorBy,
-          setIsVideoChecked,
-          setIsImageChecked,
-          isVideoChecked,
-          isImageChecked,
-          mediaType,
-          countryCode,
-          setCountryCode,
-          is3d,
-          lang,
-          setLang,
-        }}
-      />
-      <NetworkGraph
-        {...{
-          is3d,
-          colorBy,
-          allowedMediaTypes,
-        }}
-      />
-      <BottomDrawer />
-    </AppStyles>
-  );
 }
-
-export default App;
 
 /** retrieve posts from faunadb
  *
  * [docs](https://docs.fauna.com/fauna/current/tutorials/crud?lang=javascript#retrieve)
  */
 function useFetchTweetsOnMount() {
-  const setTweets = useSetTweetsFromServer();
+  const setTweets = useSetTweets();
 
   // fetch tweets from DB on mount
   useMount(() => {
@@ -105,7 +65,6 @@ function useFetchTweetsOnMount() {
       )
       .then((ret: { data: any[] }) => {
         // TODO: tweets seem duplicated - check the twit/populateDB script
-        console.log("🌟🚨: useFetchTweetsOnMount -> ret", ret);
         setTweets(ret.data.map((d) => d.data));
       })
       .catch((err) => {

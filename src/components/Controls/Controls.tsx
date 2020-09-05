@@ -14,98 +14,32 @@ import {
 import { COLOR_BY, FILTER_BY, FILTER_LEVELS } from "../../utils/constants";
 import countryCodes from "../../utils/countryCodes";
 import languages from "../../utils/languages";
-import { useTweetsFromServer } from "../../providers/store";
+import {
+  useConfig,
+  useTweets,
+  useSetTweets,
+  AppConfig,
+} from "../../providers/store";
 import { uniqBy } from "lodash";
-import { useSetTweetsFromServer } from "../../providers/store";
 import { Div, ControlsStyles } from "./ControlsStyles";
 
-const Controls = ({
-  colorBy,
-  is3d,
-  setIs3d,
-  setColorBy,
-  setIsVideoChecked,
-  setIsImageChecked,
-  isVideoChecked,
-  isImageChecked,
-  mediaType,
-  countryCode,
-  setCountryCode,
-  lang,
-  setLang,
-}) => {
-  const setTweetsFromServer = useSetTweetsFromServer();
-  const tweetsFromServer = useTweetsFromServer();
-  const [numTweets, setNumTweets] = useState(50);
-  const [loading, setLoading] = useState(false);
-  const [replace, setReplace] = useState(true);
-  const [filterLevel, setFilterLevel] = useState(FILTER_LEVELS.none);
-  const [searchTerm, setSearchTerm] = useState("");
-
-  useEffect(() => {
-    if (mediaType) {
-      setNumTweets(25);
-    }
-  }, [mediaType]);
-
-  const fetchNewTweets = async () => {
-    setLoading(true);
-    // after 10 seconds, stop loading
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 10 * 1000);
-
-    const langParam = lang !== "All" ? `&lang=${lang}` : "";
-    const mediaParam = mediaType ? `&mediaType=${mediaType}` : "";
-    const countryParam =
-      countryCode !== "All" ? `&countryCode=${countryCode}` : "";
-
-    const resp = await fetch(
-      !searchTerm
-        ? `/api/stream?num=${numTweets}&filterLevel=${filterLevel}${mediaParam}${countryParam}${langParam}`
-        : `/api/search?num=${numTweets}&term=${searchTerm}${langParam}${mediaParam}`
-    );
-
-    const data = await resp.json();
-    setLoading(false);
-    clearTimeout(timer);
-    const newTweets = replace
-      ? data
-      : uniqBy([...tweetsFromServer, ...data], (t) => t.id_str);
-
-    setTweetsFromServer(newTweets);
-  };
-
+const Controls = () => {
   const createLinks = () => {};
   return (
     <ControlsStyles>
       <div className="styleTweets">
-        <SelectColorBy {...{ colorBy, setColorBy }} />
-        {colorBy === COLOR_BY.mediaType ? (
-          <MediaTypeCheckboxes
-            {...{
-              setIsVideoChecked,
-              setIsImageChecked,
-              isVideoChecked,
-              isImageChecked,
-            }}
-          />
-        ) : null}
+        <SelectColorBy />
+        <MediaTypeCheckboxes />
       </div>
-      <Switch3D onChange={() => setIs3d((prev) => !prev)} checked={is3d} />
+      <Switch3D />
       <form onSubmit={(e) => e.preventDefault()} className="filters">
-        <SearchBox {...{ searchTerm, setSearchTerm }}></SearchBox>
-        <HowMany {...{ numTweets, setNumTweets, mediaType }}></HowMany>
-        <SelectFilterLevel
-          {...{
-            filterLevel,
-            setFilterLevel,
-          }}
-        />
-        <SelectCountry {...{ countryCode, setCountryCode }} />
-        <SelectLanguage {...{ lang, setLang }} />
-        <BtnFetchNewTweets {...{ loading, fetchNewTweets }} />
-        <ReplaceCheckbox {...{ replace, setReplace }}></ReplaceCheckbox>
+        <SearchBox />
+        <HowMany />
+        <SelectFilterLevel />
+        <SelectCountry />
+        <SelectLanguage />
+        <BtnFetchNewTweets />
+        <ReplaceCheckbox />
         <Button onClick={createLinks}>Link Nodes</Button>
       </form>
     </ControlsStyles>
@@ -114,33 +48,36 @@ const Controls = ({
 
 export default Controls;
 
-function SearchBox(props) {
+function SearchBox() {
+  const { searchTerm, setConfig } = useConfig();
   return (
     <TextField
       style={{
         gridColumn: "span 2",
       }}
       label="Search for..."
-      value={props.searchTerm}
-      onChange={(e) => props.setSearchTerm(e.target.value)}
+      value={searchTerm}
+      onChange={(e) => setConfig({ searchTerm: e.target.value })}
       type="text"
     />
   );
 }
 
-function HowMany(props) {
+function HowMany() {
+  const { numTweets, mediaType, setConfig } = useConfig();
+
   return (
     <TextField
       label="How many?"
-      value={props.numTweets}
-      onChange={(e) => props.setNumTweets(+e.target.value)}
+      value={numTweets}
+      onChange={(e) => setConfig({ numTweets: +e.target.value })}
       type="number"
       inputProps={{
         step: [
           FILTER_BY.imageAndVideo,
           FILTER_BY.imageOnly,
           FILTER_BY.videoOnly,
-        ].includes(props.mediaType)
+        ].includes(mediaType)
           ? 5
           : 50,
       }}
@@ -148,28 +85,30 @@ function HowMany(props) {
   );
 }
 
-function Switch3D({ onChange, checked }) {
+function Switch3D() {
+  const { is3d, setConfig } = useConfig();
   return (
     <Div css={``}>
       <span>
         2D
-        <Switch onChange={onChange} checked={checked} />
+        <Switch onChange={() => setConfig({ is3d: !is3d })} checked={is3d} />
         3D
       </span>
     </Div>
   );
 }
 
-function SelectLanguage(props) {
+function SelectLanguage() {
+  const { setConfig, lang } = useConfig();
   return (
     <FormControl>
       <InputLabel id="language">Language</InputLabel>
       <Select
         labelId="language"
         onChange={(event) => {
-          props.setLang(event.target.value);
+          setConfig({ lang: String(event.target.value) });
         }}
-        value={props.lang}
+        value={lang}
       >
         <MenuItem value="All">
           <em>All</em>
@@ -227,14 +166,29 @@ function SelectFilterLevel(props) {
   );
 }
 
-function MediaTypeCheckboxes(props) {
-  return (
+function MediaTypeCheckboxes() {
+  const {
+    isVideoChecked,
+    isImageChecked,
+    colorBy,
+    setConfig,
+    mediaType,
+  } = useConfig();
+
+  useEffect(() => {
+    // if searching for media, reduce num tweets
+    if (mediaType) {
+      setConfig({ numTweets: 25 });
+    }
+  }, [mediaType, setConfig]);
+
+  return colorBy === COLOR_BY.mediaType ? (
     <div className="checkboxes">
       <FormControlLabel
         control={
           <Checkbox
-            checked={props.isVideoChecked}
-            onChange={() => props.setIsVideoChecked((p) => !p)}
+            checked={isVideoChecked}
+            onChange={() => setConfig({ isVideoChecked: !isVideoChecked })}
             name="checkedA"
           />
         }
@@ -243,27 +197,28 @@ function MediaTypeCheckboxes(props) {
       <FormControlLabel
         control={
           <Checkbox
-            checked={props.isImageChecked}
-            onChange={() => props.setIsImageChecked((p) => !p)}
+            checked={isImageChecked}
+            onChange={() => setConfig({ isImageChecked: !isImageChecked })}
             name="checkedA"
           />
         }
         label="Image"
       />
     </div>
-  );
+  ) : null;
 }
 
-function SelectColorBy(props) {
+function SelectColorBy() {
+  const { setConfig, colorBy } = useConfig();
   return (
     <FormControl>
       <InputLabel id="color-by">Color by...</InputLabel>
       <Select
         labelId="color-by"
         onChange={(event) => {
-          props.setColorBy(event.target.value);
+          setConfig({ colorBy: event.target.value as AppConfig["colorBy"] });
         }}
-        value={props.colorBy}
+        value={colorBy}
       >
         <MenuItem value="">
           <em>None</em>
@@ -277,7 +232,48 @@ function SelectColorBy(props) {
   );
 }
 
-function BtnFetchNewTweets(props) {
+function BtnFetchNewTweets() {
+  const [loading, setLoading] = useState(false);
+  const {
+    lang,
+    countryCode,
+    searchTerm,
+    numTweets,
+    filterLevel,
+    replace,
+    mediaType,
+  } = useConfig();
+  const tweetsFromServer = useTweets();
+  const setTweetsFromServer = useSetTweets();
+
+  const fetchNewTweets = async () => {
+    setLoading(true);
+    // after 10 seconds, stop loading
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 10 * 1000);
+
+    const langParam = lang !== "All" ? `&lang=${lang}` : "";
+    const mediaParam = mediaType ? `&mediaType=${mediaType}` : "";
+    const countryParam =
+      countryCode !== "All" ? `&countryCode=${countryCode}` : "";
+
+    const resp = await fetch(
+      !searchTerm
+        ? `/api/stream?num=${numTweets}&filterLevel=${filterLevel}${mediaParam}${countryParam}${langParam}`
+        : `/api/search?num=${numTweets}&term=${searchTerm}${langParam}${mediaParam}`
+    );
+
+    const data = await resp.json();
+    setLoading(false);
+    clearTimeout(timer);
+    const newTweets = replace
+      ? data
+      : uniqBy([...tweetsFromServer, ...data], (t) => t.id_str);
+
+    setTweetsFromServer(newTweets);
+  };
+
   return (
     <Button
       type="submit"
@@ -285,22 +281,23 @@ function BtnFetchNewTweets(props) {
         gridColumn: "span 2",
       }}
       className="btnFetch"
-      disabled={props.loading}
-      onClick={props.fetchNewTweets}
+      disabled={loading}
+      onClick={fetchNewTweets}
       variant="outlined"
     >
-      {props.loading ? <CircularProgress /> : "Fetch New Tweets"}
+      {loading ? <CircularProgress /> : "Fetch New Tweets"}
     </Button>
   );
 }
 
-function ReplaceCheckbox(props) {
+function ReplaceCheckbox() {
+  const { replace, setConfig } = useConfig();
   return (
     <FormControlLabel
       control={
         <Checkbox
-          checked={props.replace}
-          onChange={() => props.setReplace((p) => !p)}
+          checked={replace}
+          onChange={() => setConfig({ replace: !replace })}
           name="checkedD"
         />
       }

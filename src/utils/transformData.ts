@@ -24,25 +24,25 @@ export function transformTweetsIntoGraphData(
   let tweets = tweetsArg.map((tweet) => ({ ...tweet, id: +tweet.id_str }));
   // list of all user that tweeted
   const users = tweets.map((t) => t.user).filter(Boolean);
-  const tweetsByUser: { [userId: string]: Tweet } = tweets.reduce(
-    (acc, t) => ({
-      ...acc,
-      ...(t?.user?.id_str ? { [t.user.id_str]: t } : {}),
-    }),
-    {} as { [userId: string]: Tweet }
-  );
+  // const tweetsByUser: { [userId: string]: Tweet } = tweets.reduce(
+  //   (acc, t) => ({
+  //     ...acc,
+  //     ...(t?.user?.id_str ? { [t.user.id_str]: t } : {}),
+  //   }),
+  //   {} as { [userId: string]: Tweet }
+  // );
 
-  // for each user, make a isUserNode: true node
-  users.forEach((user) => {
-    if (tweetsByUser[user.id_str]) {
-      tweets.push({
-        ...tweetsByUser[user.id_str],
-        isUserNode: true,
-        // the id_str becomes the user's id_str
-        id: +user.id_str,
-      });
-    }
-  });
+  // // for each user, make a isUserNode: true node
+  // users.forEach((user) => {
+  //   if (tweetsByUser[user.id_str]) {
+  //     tweets.push({
+  //       ...tweetsByUser[user.id_str],
+  //       isUserNode: true,
+  //       // the id_str becomes the user's id_str
+  //       id: +user.id_str,
+  //     });
+  //   }
+  // });
 
   const tweetIdsByHashtag: {
     [hashtag: string]: Tweet[];

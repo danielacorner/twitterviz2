@@ -11,7 +11,10 @@ import { TransformedTweets } from "../../utils/transformData";
 import { useWhyDidYouUpdate } from "use-why-did-you-update";
 import styled from "styled-components/macro";
 import { useWindowSize } from "../../utils/hooks";
-import useStore, { GlobalStateStoreType } from "../../providers/store";
+import useStore, {
+  GlobalStateStoreType,
+  useConfig,
+} from "../../providers/store";
 import { isEqual } from "lodash";
 import { getForceGraphProps } from "./graphConfig";
 import { CONTROLS_WIDTH } from "../../utils/constants";
@@ -20,23 +23,18 @@ const GraphStyles = styled.div`
   width: 100%;
 `;
 
-const NetworkGraph = ({ is3d, colorBy, allowedMediaTypes }) => {
-  useWhyDidYouUpdate("NETWORKGRAPH", { is3d, colorBy });
+const NetworkGraph = () => {
   return (
     <GraphStyles>
-      <Graph
-        {...{
-          is3d,
-          colorBy,
-          allowedMediaTypes,
-        }}
-      />
+      <Graph />
       <NodeTooltip />
     </GraphStyles>
   );
 };
 
-function Graph({ is3d, colorBy, allowedMediaTypes }) {
+function Graph() {
+  const { is3d, colorBy, allowedMediaTypes } = useConfig();
+
   const setTooltipNode = useStore(
     (state: GlobalStateStoreType) => state.setTooltipNode
   );
@@ -74,7 +72,6 @@ function Graph({ is3d, colorBy, allowedMediaTypes }) {
   );
 
   const { width, height } = useWindowSize();
-
   const forceGraphProps = getForceGraphProps(
     width || window.innerWidth - CONTROLS_WIDTH,
     height,
