@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import NetworkGraph from "./components/NetworkGraph/NetworkGraph";
 import { COLOR_BY, FILTER_BY, CONTROLS_WIDTH } from "./utils/constants";
-import Controls from "./components/Controls";
+import Controls from "./components/Controls/Controls";
 import styled from "styled-components/macro";
 import BottomDrawer from "./components/BottomDrawer/BottomDrawer";
 import useStore from "./providers/store";

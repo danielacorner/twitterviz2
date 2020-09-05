@@ -5,7 +5,6 @@ import {
   TransformedTweets,
   transformTweetsIntoGraphData,
 } from "../utils/transformData";
-import tweets from "../tweets.json";
 
 export type GlobalStateStoreType = {
   tweetsFromServer: Tweet[];
@@ -16,14 +15,14 @@ export type GlobalStateStoreType = {
   setTransformedTweets: (tweets) => void;
   transformedTweets: TransformedTweets;
   setTweetsFromServer: (tweets) => void;
-  addTweetsFromServer: (tweets) => void;
 };
 const [useStore] = create(
   (set) =>
     ({
-      transformedTweets: transformTweetsIntoGraphData(
-        tweets as Tweet[]
-      ) as TransformedTweets,
+      transformedTweets: {
+        graph: { nodes: [], links: [] },
+        users: [],
+      } as TransformedTweets,
       tweetsFromServer: [] as Tweet[],
       selectedNode: null as Tweet | null,
       setSelectedNode: (node: Tweet | null) =>
@@ -35,13 +34,6 @@ const [useStore] = create(
         set((state) => ({ tweetsFromServer: tweets })),
       setTransformedTweets: (tweets) =>
         set((state) => ({ transformedTweets: tweets })),
-      addTweetsFromServer: (tweets) =>
-        set((state) => ({
-          tweetsFromServer: uniqBy(
-            [...state.tweetsFromServer, ...tweets],
-            (t) => t.id_str
-          ),
-        })),
     } as GlobalStateStoreType)
 );
 
@@ -57,6 +49,8 @@ export const useTooltipNode = () =>
   useStore((state: GlobalStateStoreType) => state.tooltipNode);
 export const useSetTooltipNode = () =>
   useStore((state: GlobalStateStoreType) => state.setTooltipNode);
+
+/** transform and save tweets to store */
 export const useSetTweetsFromServer = () => {
   const setTweetsFromServer = useStore(
     (state: GlobalStateStoreType) => state.setTweetsFromServer
@@ -69,5 +63,21 @@ export const useSetTweetsFromServer = () => {
     setTransformedTweets(transformTweetsIntoGraphData(tweets));
   };
 };
-export const useAddTweetsFromServer = () =>
-  useStore((state: GlobalStateStoreType) => state.addTweetsFromServer);
+
+/** transform and add tweets to store */
+export const useAddTweetsFromServer = () => {
+  const tweetsFromServer = useStore(
+    (state: GlobalStateStoreType) => state.tweetsFromServer
+  );
+  const setTweetsFromServer = useStore(
+    (state: GlobalStateStoreType) => state.setTweetsFromServer
+  );
+  const setTransformedTweets = useStore(
+    (state: GlobalStateStoreType) => state.setTransformedTweets
+  );
+  return (tweets: Tweet[]) => {
+    const newTweets = uniqBy([...tweetsFromServer, ...tweets], (t) => t.id_str);
+    setTweetsFromServer(newTweets);
+    setTransformedTweets(transformTweetsIntoGraphData(newTweets));
+  };
+};
