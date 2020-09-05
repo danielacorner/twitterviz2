@@ -123,16 +123,17 @@ function SelectLanguage() {
   );
 }
 
-function SelectCountry(props) {
+function SelectCountry() {
+  const { countryCode, setConfig } = useConfig();
   return (
     <FormControl>
       <InputLabel id="location">Country</InputLabel>
       <Select
         labelId="location"
         onChange={(event) => {
-          props.setCountryCode(event.target.value);
+          setConfig({ countryCode: event.target.value as string });
         }}
-        value={props.countryCode}
+        value={countryCode}
       >
         <MenuItem value="All">
           <em>All</em>
@@ -147,16 +148,20 @@ function SelectCountry(props) {
   );
 }
 
-function SelectFilterLevel(props) {
+function SelectFilterLevel() {
+  const { filterLevel, setConfig } = useConfig();
+
   return (
     <FormControl>
       <InputLabel id="filter-level">Filter level</InputLabel>
       <Select
         labelId="filter-level"
         onChange={(event) => {
-          props.setFilterLevel(event.target.value as string);
+          setConfig({
+            filterLevel: event.target.value as keyof typeof FILTER_LEVELS,
+          });
         }}
-        value={props.filterLevel}
+        value={filterLevel}
       >
         <MenuItem value={FILTER_LEVELS.medium}>Medium</MenuItem>
         <MenuItem value={FILTER_LEVELS.low}>Low</MenuItem>
