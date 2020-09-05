@@ -2,7 +2,7 @@ import create from "zustand";
 import { uniqBy } from "lodash";
 import { Tweet } from "../types";
 import {
-  TransformedTweets,
+  GraphData,
   transformTweetsIntoGraphData,
 } from "../utils/transformData";
 import { COLOR_BY, FILTER_LEVELS, FILTER_BY } from "../utils/constants";
@@ -26,8 +26,8 @@ export type GlobalStateStoreType = {
   setSelectedNode: (node: Tweet | null) => void;
   tooltipNode: Tweet | null;
   setTooltipNode: (node: Tweet | null) => void;
-  setTransformedTweets: (tweets) => void;
-  transformedTweets: TransformedTweets;
+  setGraphData: (tweets) => void;
+  graphData: GraphData;
   setTweetsFromServer: (tweets) => void;
   config: AppConfig;
   setConfig: (newConfig: Partial<AppConfig>) => void;
@@ -36,10 +36,10 @@ export type GlobalStateStoreType = {
 const [useStore] = create(
   (set) =>
     ({
-      transformedTweets: {
+      graphData: {
         graph: { nodes: [], links: [] },
         users: [],
-      } as TransformedTweets,
+      } as GraphData,
       tweetsFromServer: [] as Tweet[],
       selectedNode: null as Tweet | null,
       setSelectedNode: (node: Tweet | null) =>
@@ -49,8 +49,7 @@ const [useStore] = create(
         set((state) => ({ tooltipNode: node })),
       setTweetsFromServer: (tweets) =>
         set((state) => ({ tweetsFromServer: tweets })),
-      setTransformedTweets: (tweets) =>
-        set((state) => ({ transformedTweets: tweets })),
+      setGraphData: (tweets) => set((state) => ({ graphData: tweets })),
       config: {
         is3d: false,
         colorBy: COLOR_BY.mediaType as keyof typeof COLOR_BY | null,
@@ -81,18 +80,20 @@ export const useTooltipNode = () =>
   useStore((state: GlobalStateStoreType) => state.tooltipNode);
 export const useSetTooltipNode = () =>
   useStore((state: GlobalStateStoreType) => state.setTooltipNode);
+export const useGraphData = () =>
+  useStore((state: GlobalStateStoreType) => state.graphData);
 
 /** transform and save tweets to store */
 export const useSetTweets = () => {
   const setTweetsFromServer = useStore(
     (state: GlobalStateStoreType) => state.setTweetsFromServer
   );
-  const setTransformedTweets = useStore(
-    (state: GlobalStateStoreType) => state.setTransformedTweets
+  const setGraphData = useStore(
+    (state: GlobalStateStoreType) => state.setGraphData
   );
   return (tweets: Tweet[]) => {
     setTweetsFromServer(tweets);
-    setTransformedTweets(transformTweetsIntoGraphData(tweets));
+    setGraphData(transformTweetsIntoGraphData(tweets));
   };
 };
 
@@ -104,13 +105,13 @@ export const useAddTweets = () => {
   const setTweetsFromServer = useStore(
     (state: GlobalStateStoreType) => state.setTweetsFromServer
   );
-  const setTransformedTweets = useStore(
-    (state: GlobalStateStoreType) => state.setTransformedTweets
+  const setGraphData = useStore(
+    (state: GlobalStateStoreType) => state.setGraphData
   );
   return (tweets: Tweet[]) => {
     const newTweets = uniqBy([...tweetsFromServer, ...tweets], (t) => t.id_str);
     setTweetsFromServer(newTweets);
-    setTransformedTweets(transformTweetsIntoGraphData(newTweets));
+    setGraphData(transformTweetsIntoGraphData(newTweets));
   };
 };
 

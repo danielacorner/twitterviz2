@@ -7,15 +7,14 @@ import {
 } from "react-force-graph";
 import NodeTooltip from "../NodeTooltip";
 // https://www.npmjs.com/package/react-force-graph
-import { TransformedTweets } from "../../utils/transformData";
-import { useWhyDidYouUpdate } from "use-why-did-you-update";
 import styled from "styled-components/macro";
 import { useWindowSize } from "../../utils/hooks";
-import useStore, {
-  GlobalStateStoreType,
+import {
   useConfig,
+  useGraphData,
+  useSetTooltipNode,
+  useSetSelectedNode,
 } from "../../providers/store";
-import { isEqual } from "lodash";
 import { getForceGraphProps } from "./graphConfig";
 import { CONTROLS_WIDTH } from "../../utils/constants";
 
@@ -35,23 +34,9 @@ const NetworkGraph = () => {
 function Graph() {
   const { is3d, colorBy, allowedMediaTypes } = useConfig();
 
-  const setTooltipNode = useStore(
-    (state: GlobalStateStoreType) => state.setTooltipNode
-  );
-  const setSelectedNode = useStore(
-    (state: GlobalStateStoreType) => state.setSelectedNode
-  );
-
-  const transformedTweets: TransformedTweets = useStore(
-    (state) => state.transformedTweets,
-    isEqual
-  );
-  useWhyDidYouUpdate("GRAPH", {
-    is3d,
-    setTooltipNode,
-    transformedTweets,
-    setSelectedNode,
-  });
+  const setTooltipNode = useSetTooltipNode();
+  const setSelectedNode = useSetSelectedNode();
+  const { graph } = useGraphData();
 
   const fgRef = useRef();
 
@@ -82,8 +67,6 @@ function Graph() {
     fgRef,
     allowedMediaTypes
   );
-
-  const { graph } = transformedTweets;
 
   return (
     <>

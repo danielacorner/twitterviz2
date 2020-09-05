@@ -17,10 +17,8 @@ import { uniq } from "lodash";
 type Link = { source: string | number; target: string | number };
 type User = Tweet["user"];
 type GraphOfTweets = { nodes: Tweet[]; links: Link[] };
-export type TransformedTweets = { graph: GraphOfTweets; users: User[] };
-export function transformTweetsIntoGraphData(
-  tweetsArg: Tweet[]
-): TransformedTweets {
+export type GraphData = { graph: GraphOfTweets; users: User[] };
+export function transformTweetsIntoGraphData(tweetsArg: Tweet[]): GraphData {
   let tweets = tweetsArg.map((tweet) => ({ ...tweet, id: +tweet.id_str }));
   // list of all user that tweeted
   const users = tweets.map((t) => t.user).filter(Boolean);
