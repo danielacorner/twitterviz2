@@ -8,7 +8,7 @@ const WordcloudStyles = styled.div``;
 /** https://www.npmjs.com/package/react-wordcloud  */
 const Wordcloud = () => {
   const tweets = useTweets();
-  const { minChars, maxChars } = useWordcloudConfig();
+  const { minChars, maxChars, minInstances } = useWordcloudConfig();
 
   // grab text from tweet, quoted tweet
   const tweetsWithText: {
@@ -20,7 +20,6 @@ const Wordcloud = () => {
     text: t.text,
     quotedText: t.quoted_status?.text,
   }));
-  console.log("🌟🚨: Wordcloud -> tweets", tweets);
 
   const allTextJoined: string = tweetsWithText.reduce((acc, cur) => {
     return acc + cur.text + (cur.quotedText || "");
@@ -40,13 +39,27 @@ const Wordcloud = () => {
   // then, turn the object into an array
 
   const words: { text: string; value: number }[] = Object.entries(allWordsObj)
-    .filter(([word, value]) => minChars < word.length && word.length < maxChars)
+    .filter(([word, value]) => {
+      const isRightNumChars = minChars < word.length && word.length < maxChars;
+      const isAboveMinInstances = value >= minInstances;
+
+      return isRightNumChars && isAboveMinInstances;
+    })
     .map(([word, value]) => ({ text: word, value }));
 
-  console.log("🌟🚨: Wordcloud -> words", words);
+  // https://codesandbox.io/s/fnk8w?file=/src/index.js:506-523
+  // https://react-wordcloud.netlify.app/props
+  const options = {
+    fontSizes: [20, 80] as [number, number],
+    scale: "sqrt" as any,
+    rotations: 3,
+    rotationAngles: [0, 90] as [number, number],
+    spiral: "archimedean" as any,
+    enableOptimizations: true,
+  };
   return (
     <WordcloudStyles>
-      <ReactWordcloud words={words} />
+      <ReactWordcloud {...{ words, options }} />
     </WordcloudStyles>
   );
 };

@@ -46,7 +46,7 @@ const [useStore] = create(
         countryCode: "All",
         isVideoChecked: true,
         isImageChecked: true,
-        isWordcloud: false,
+        isWordcloud: true,
         replace: true,
         filterLevel: FILTER_LEVELS.none,
         searchTerm: "",
@@ -57,11 +57,12 @@ const [useStore] = create(
         set((state) => ({ config: { ...state.config, ...newConfig } })),
       wordcloudConfig: {
         minChars: 0,
-        maxChars: 280,
+        maxChars: 25,
+        minInstances: 1,
       },
       setWordcloudConfig: (newConfig) =>
         set((state) => ({
-          wordcloudConfig: { ...state.config, ...newConfig },
+          wordcloudConfig: { ...state.wordcloudConfig, ...newConfig },
         })),
     } as GlobalStateStoreType)
 );
@@ -163,6 +164,7 @@ export const useConfig = () => {
 export type WordcloudConfig = {
   minChars: number;
   maxChars: number;
+  minInstances: number;
 };
 
 export const useWordcloudConfig = () => {
@@ -172,6 +174,9 @@ export const useWordcloudConfig = () => {
     ),
     maxChars: useStore(
       (state: GlobalStateStoreType) => state.wordcloudConfig.maxChars
+    ),
+    minInstances: useStore(
+      (state: GlobalStateStoreType) => state.wordcloudConfig.minInstances
     ),
     setWordcloudConfig: useStore(
       (state: GlobalStateStoreType) => state.setWordcloudConfig

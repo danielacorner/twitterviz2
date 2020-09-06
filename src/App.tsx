@@ -70,7 +70,6 @@ function useFetchTweetsOnMount() {
         )
       )
       .then((ret: { data: any[] }) => {
-        // TODO: tweets seem duplicated - check the twit/populateDB script
         setTweets(ret.data.map((d) => d.data));
       })
       .catch((err) => {
