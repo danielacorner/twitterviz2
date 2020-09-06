@@ -10,6 +10,8 @@ import {
   FormControl,
   Checkbox,
   FormControlLabel,
+  Slider,
+  Typography,
 } from "@material-ui/core";
 import { COLOR_BY, FILTER_BY, FILTER_LEVELS } from "../../utils/constants";
 import countryCodes from "../../utils/countryCodes";
@@ -22,6 +24,7 @@ import {
 } from "../../providers/store";
 import { uniqBy } from "lodash";
 import { Div, ControlsStyles } from "./ControlsStyles";
+import { useWordcloudConfig } from "../../providers/store";
 
 const Controls = () => {
   // TODO
@@ -36,6 +39,7 @@ const Controls = () => {
       </div>
       <Switch3D />
       <SwitchWordcloud />
+      <WordcloudCharsSlider />
       <form onSubmit={(e) => e.preventDefault()} className="filters">
         <SearchBox />
         <HowMany />
@@ -115,6 +119,33 @@ function SwitchWordcloud() {
         />
       </span>
     </Div>
+  );
+}
+
+function valuetext(value) {
+  return `${value} letters`;
+}
+function WordcloudCharsSlider() {
+  const { isWordcloud } = useConfig();
+  const { minChars, maxChars, setWordcloudConfig } = useWordcloudConfig();
+  const handleChange = (event, [newMin, newMax]) => {
+    setWordcloudConfig({ minChars: newMin, maxChars: newMax });
+  };
+  return !isWordcloud ? null : (
+    <>
+      <Typography id="range-slider" gutterBottom>
+        Number of letters
+      </Typography>
+      <Slider
+        min={0}
+        max={280}
+        value={[minChars, maxChars]}
+        onChange={handleChange}
+        valueLabelDisplay="auto"
+        aria-labelledby="range-slider"
+        getAriaValueText={valuetext}
+      />
+    </>
   );
 }
 

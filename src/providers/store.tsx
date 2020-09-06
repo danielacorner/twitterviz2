@@ -6,21 +6,6 @@ import {
   transformTweetsIntoGraphData,
 } from "../utils/transformData";
 import { COLOR_BY, FILTER_LEVELS, FILTER_BY } from "../utils/constants";
-import shallowEqual from "zustand/shallow";
-
-export type AppConfig = {
-  is3d: boolean;
-  colorBy: keyof typeof COLOR_BY | null;
-  lang: string;
-  countryCode: string;
-  isVideoChecked: boolean;
-  isImageChecked: boolean;
-  replace: boolean;
-  isWordcloud: boolean;
-  filterLevel: keyof typeof FILTER_LEVELS;
-  searchTerm: string;
-  numTweets: number;
-};
 
 export type GlobalStateStoreType = {
   tweetsFromServer: Tweet[];
@@ -33,6 +18,8 @@ export type GlobalStateStoreType = {
   setTweetsFromServer: (tweets) => void;
   config: AppConfig;
   setConfig: (newConfig: Partial<AppConfig>) => void;
+  wordcloudConfig: WordcloudConfig;
+  setWordcloudConfig: (newConfig: Partial<WordcloudConfig>) => void;
 };
 
 const [useStore] = create(
@@ -68,6 +55,14 @@ const [useStore] = create(
       /** overwrite any values passed in */
       setConfig: (newConfig) =>
         set((state) => ({ config: { ...state.config, ...newConfig } })),
+      wordcloudConfig: {
+        minChars: 0,
+        maxChars: 280,
+      },
+      setWordcloudConfig: (newConfig) =>
+        set((state) => ({
+          wordcloudConfig: { ...state.config, ...newConfig },
+        })),
     } as GlobalStateStoreType)
 );
 
@@ -118,12 +113,69 @@ export const useAddTweets = () => {
   };
 };
 
+export type AppConfig = {
+  is3d: boolean;
+  colorBy: keyof typeof COLOR_BY | null;
+  lang: string;
+  countryCode: string;
+  isVideoChecked: boolean;
+  isImageChecked: boolean;
+  replace: boolean;
+  isWordcloud: boolean;
+  filterLevel: keyof typeof FILTER_LEVELS;
+  searchTerm: string;
+  numTweets: number;
+};
+
 export const useConfig = () => {
   return {
-    ...useStore((state: GlobalStateStoreType) => state.config, shallowEqual),
+    is3d: useStore((state: GlobalStateStoreType) => state.config.is3d),
+    colorBy: useStore((state: GlobalStateStoreType) => state.config.colorBy),
+    lang: useStore((state: GlobalStateStoreType) => state.config.lang),
+    countryCode: useStore(
+      (state: GlobalStateStoreType) => state.config.countryCode
+    ),
+    isVideoChecked: useStore(
+      (state: GlobalStateStoreType) => state.config.isVideoChecked
+    ),
+    isImageChecked: useStore(
+      (state: GlobalStateStoreType) => state.config.isImageChecked
+    ),
+    replace: useStore((state: GlobalStateStoreType) => state.config.replace),
+    isWordcloud: useStore(
+      (state: GlobalStateStoreType) => state.config.isWordcloud
+    ),
+    filterLevel: useStore(
+      (state: GlobalStateStoreType) => state.config.filterLevel
+    ),
+    searchTerm: useStore(
+      (state: GlobalStateStoreType) => state.config.searchTerm
+    ),
+    numTweets: useStore(
+      (state: GlobalStateStoreType) => state.config.numTweets
+    ),
     mediaType: useMediaType(),
     allowedMediaTypes: useAllowedMediaTypes(),
     setConfig: useStore((state: GlobalStateStoreType) => state.setConfig),
+  };
+};
+
+export type WordcloudConfig = {
+  minChars: number;
+  maxChars: number;
+};
+
+export const useWordcloudConfig = () => {
+  return {
+    minChars: useStore(
+      (state: GlobalStateStoreType) => state.wordcloudConfig.minChars
+    ),
+    maxChars: useStore(
+      (state: GlobalStateStoreType) => state.wordcloudConfig.maxChars
+    ),
+    setWordcloudConfig: useStore(
+      (state: GlobalStateStoreType) => state.setWordcloudConfig
+    ),
   };
 };
 
