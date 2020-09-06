@@ -24,7 +24,10 @@ import { uniqBy } from "lodash";
 import { Div, ControlsStyles } from "./ControlsStyles";
 
 const Controls = () => {
-  const createLinks = () => {};
+  // TODO
+  const createLinks = () => {
+    console.log("TODO");
+  };
   return (
     <ControlsStyles>
       <div className="styleTweets">
@@ -32,6 +35,7 @@ const Controls = () => {
         <MediaTypeCheckboxes />
       </div>
       <Switch3D />
+      <SwitchWordcloud />
       <form onSubmit={(e) => e.preventDefault()} className="filters">
         <SearchBox />
         <HowMany />
@@ -62,6 +66,7 @@ function SearchBox() {
     />
   );
 }
+SearchBox.whyDidYouRender = { logOnDifferentValues: true };
 
 function HowMany() {
   const { numTweets, mediaType, setConfig } = useConfig();
@@ -93,6 +98,21 @@ function Switch3D() {
         2D
         <Switch onChange={() => setConfig({ is3d: !is3d })} checked={is3d} />
         3D
+      </span>
+    </Div>
+  );
+}
+
+function SwitchWordcloud() {
+  const { isWordcloud, setConfig } = useConfig();
+  return (
+    <Div css={``}>
+      <span>
+        Word Cloud
+        <Switch
+          onChange={() => setConfig({ isWordcloud: !isWordcloud })}
+          checked={isWordcloud}
+        />
       </span>
     </Div>
   );

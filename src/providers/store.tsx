@@ -6,6 +6,7 @@ import {
   transformTweetsIntoGraphData,
 } from "../utils/transformData";
 import { COLOR_BY, FILTER_LEVELS, FILTER_BY } from "../utils/constants";
+import shallowEqual from "zustand/shallow";
 
 export type AppConfig = {
   is3d: boolean;
@@ -15,6 +16,7 @@ export type AppConfig = {
   isVideoChecked: boolean;
   isImageChecked: boolean;
   replace: boolean;
+  isWordcloud: boolean;
   filterLevel: keyof typeof FILTER_LEVELS;
   searchTerm: string;
   numTweets: number;
@@ -57,6 +59,7 @@ const [useStore] = create(
         countryCode: "All",
         isVideoChecked: true,
         isImageChecked: true,
+        isWordcloud: false,
         replace: true,
         filterLevel: FILTER_LEVELS.none,
         searchTerm: "",
@@ -117,7 +120,7 @@ export const useAddTweets = () => {
 
 export const useConfig = () => {
   return {
-    ...useStore((state: GlobalStateStoreType) => state.config),
+    ...useStore((state: GlobalStateStoreType) => state.config, shallowEqual),
     mediaType: useMediaType(),
     allowedMediaTypes: useAllowedMediaTypes(),
     setConfig: useStore((state: GlobalStateStoreType) => state.setConfig),
