@@ -17,15 +17,27 @@ import { useConfig, useSetTweets } from "../../providers/store";
 import { TwoColFormStyles } from "./ControlsStyles";
 import CheckIcon from "@material-ui/icons/Check";
 import { Div } from "../DivStyles";
+import styled from "styled-components/macro";
+
+const FetchTweetsControlsStyles = styled.div`
+  h4 {
+    margin: 1em 0 0.5em;
+  }
+`;
 
 const FetchTweetsControls = () => {
   return (
-    <div className="fetchTweetsControls controlsContainer">
+    <FetchTweetsControlsStyles className="fetchTweetsControls controlsContainer">
+      <h3>Fetch New Tweets</h3>
+      <SwitchReplace />
+      <h4>Filters</h4>
       <TweetFilterControls />
+      <h4>Stream Tweets</h4>
       <BtnStreamNewTweets />
+      <h4>Search Tweets</h4>
       <SearchForm />
       <FetchUserTweetsForm />
-    </div>
+    </FetchTweetsControlsStyles>
   );
 };
 
@@ -34,12 +46,10 @@ export default FetchTweetsControls;
 function TweetFilterControls() {
   return (
     <div className="tweetFilterControls">
-      <h3>Fetch Tweets</h3>
       <HowManyTweets />
       <SelectFilterLevel />
       <SelectCountry />
       <SelectLanguage />
-      <SwitchReplace />
     </div>
   );
 }

@@ -12,6 +12,8 @@ const MOUSE_WIDTH = 12;
 const WINDOW_PADDING_HZ = 12;
 
 const TooltipStyles = styled.div`
+  opacity: 0.9;
+  pointer-events: none;
   border-radius: 4px;
   background: white;
   width: ${TOOLTIP_WIDTH}px;

@@ -24,7 +24,6 @@ export default Controls;
 
 function VizSpecificControls() {
   const { isWordcloud, isNetworkGraph } = useConfig();
-  console.log("🌟🚨: VizSpecificControls -> isWordcloud", isWordcloud);
   return isWordcloud ? (
     <WordcloudControls />
   ) : isNetworkGraph ? (

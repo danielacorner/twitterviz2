@@ -3,7 +3,7 @@ import { Tabs, Tab } from "@material-ui/core";
 import NetworkGraph from "./NetworkGraph/NetworkGraph";
 import Wordcloud from "./Wordcloud/Wordcloud";
 import styled from "styled-components/macro";
-import { useConfig } from "../providers/store";
+import { useConfig, TAB_INDICES } from "../providers/store";
 const Div = styled.div``;
 
 function a11yProps(index) {
@@ -38,10 +38,10 @@ export default function VisualizationTabs() {
         <Tab label="Network Graph" {...a11yProps(0)} />
         <Tab label="Word Cloud" {...a11yProps(1)} />
       </Tabs>
-      <TabPanel value={value} index={0}>
+      <TabPanel value={value} index={TAB_INDICES.NETWORKGRAPH}>
         <NetworkGraph />
       </TabPanel>
-      <TabPanel value={value} index={1}>
+      <TabPanel value={value} index={TAB_INDICES.WORDCLOUD}>
         <Wordcloud />
       </TabPanel>
     </Div>

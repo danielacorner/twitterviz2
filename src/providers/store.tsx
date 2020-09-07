@@ -7,6 +7,11 @@ import {
 } from "../utils/transformData";
 import { COLOR_BY, FILTER_LEVELS, FILTER_BY } from "../utils/constants";
 
+export const TAB_INDICES = {
+  NETWORKGRAPH: 0,
+  WORDCLOUD: 1,
+};
+
 export type GlobalStateStoreType = {
   tweetsFromServer: Tweet[];
   selectedNode: Tweet | null;
@@ -50,7 +55,7 @@ const [useStore] = create(
         filterLevel: FILTER_LEVELS.none,
         searchTerm: "",
         numTweets: 50,
-        tabIndex: 1,
+        tabIndex: TAB_INDICES.NETWORKGRAPH,
       },
       /** overwrite any values passed in */
       setConfig: (newConfig) =>
@@ -152,10 +157,12 @@ export const useConfig = () => {
     ),
     replace: useStore((state: GlobalStateStoreType) => state.config.replace),
     isWordcloud: useStore(
-      (state: GlobalStateStoreType) => state.config.tabIndex === 1
+      (state: GlobalStateStoreType) =>
+        state.config.tabIndex === TAB_INDICES.WORDCLOUD
     ),
     isNetworkGraph: useStore(
-      (state: GlobalStateStoreType) => state.config.tabIndex === 0
+      (state: GlobalStateStoreType) =>
+        state.config.tabIndex === TAB_INDICES.NETWORKGRAPH
     ),
     tabIndex: useStore((state: GlobalStateStoreType) => state.config.tabIndex),
     filterLevel: useStore(

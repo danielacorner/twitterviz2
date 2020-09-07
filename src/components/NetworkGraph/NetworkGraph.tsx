@@ -56,6 +56,10 @@ function Graph() {
     [setSelectedNode]
   );
 
+  const onBackgroundClick = () => {
+    setSelectedNode(null);
+  };
+
   const { width, height } = useWindowSize();
   const forceGraphProps = getForceGraphProps(
     width || window.innerWidth - CONTROLS_WIDTH,
@@ -72,9 +76,19 @@ function Graph() {
     <>
       {is3d ? (
         // https://www.npmjs.com/package/react-force-graph
-        <ForceGraph3D ref={fgRef} graphData={graph} {...forceGraphProps} />
+        <ForceGraph3D
+          ref={fgRef}
+          graphData={graph}
+          {...forceGraphProps}
+          onBackgroundClick={onBackgroundClick}
+        />
       ) : (
-        <ForceGraph2D ref={fgRef} graphData={graph} {...forceGraphProps} />
+        <ForceGraph2D
+          ref={fgRef}
+          graphData={graph}
+          {...forceGraphProps}
+          onBackgroundClick={onBackgroundClick}
+        />
       )}
     </>
   );
