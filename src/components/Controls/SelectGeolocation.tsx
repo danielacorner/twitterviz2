@@ -6,6 +6,8 @@ import { useMount } from "../../utils/utils";
 import { Modal, IconButton, Button, TextareaAutosize } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 
+const Div = styled.div``;
+
 const MODAL_PADDING = 50;
 
 const MapContainerStyles = styled.div`
@@ -70,9 +72,25 @@ const SelectGeolocation = ({ google }) => {
 
   return (
     <>
-      <Button variant="outlined" onClick={() => setIsModalOpen(true)}>
-        Select Geolocation
-      </Button>
+      <Div
+        css={`
+          display: grid;
+          grid-template-columns: 1fr auto;
+        `}
+      >
+        <Button variant="outlined" onClick={() => setIsModalOpen(true)}>
+          Geolocation
+        </Button>
+        <IconButton
+          className="btnClose"
+          disabled={!geolocation}
+          onClick={() => {
+            setConfig({ geolocation: null });
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </Div>
       <TextareaAutosize
         style={{ resize: "none" }}
         value={`${JSON.stringify(geolocation)}`}
@@ -93,6 +111,7 @@ const SelectGeolocation = ({ google }) => {
             style={{ width: "100%", height: "100%" }}
             initialCenter={initialCenter}
             onDragend={onDragEnd}
+            onZoomChanged={onDragEnd}
           />
           <Button
             className="btnConfirmLocation"

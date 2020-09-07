@@ -60,7 +60,14 @@ function TweetFilterControls() {
 }
 
 function BtnStreamNewTweets() {
-  const { lang, countryCode, numTweets, filterLevel, mediaType } = useConfig();
+  const {
+    lang,
+    countryCode,
+    numTweets,
+    filterLevel,
+    mediaType,
+    geolocation,
+  } = useConfig();
   const setTweets = useSetTweets();
 
   const [loading, setLoading] = useState(false);
@@ -77,8 +84,14 @@ function BtnStreamNewTweets() {
     const countryParam =
       countryCode !== "All" ? `&countryCode=${countryCode}` : "";
 
+    const locations = geolocation
+      ? `${geolocation.latitude.left},${geolocation.longitude.left},${geolocation.latitude.right},${geolocation.longitude.right}`
+      : "";
+
     const resp = await fetch(
-      `/api/stream?num=${numTweets}&filterLevel=${filterLevel}${mediaParam}${countryParam}${langParam}`
+      geolocation
+        ? `/api/filter?num=${numTweets}&locations=${locations}${mediaParam}`
+        : `/api/stream?num=${numTweets}&filterLevel=${filterLevel}${mediaParam}${countryParam}${langParam}`
     );
 
     const data = await resp.json();
