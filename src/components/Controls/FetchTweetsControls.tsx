@@ -11,6 +11,8 @@ import {
   IconButton,
   FormControlLabel,
   Checkbox,
+  Radio,
+  RadioGroup,
 } from "@material-ui/core";
 import { FILTER_BY, FILTER_LEVELS } from "../../utils/constants";
 import countryCodes from "../../utils/countryCodes";
@@ -21,6 +23,7 @@ import CheckIcon from "@material-ui/icons/Check";
 import { Div } from "../DivStyles";
 import styled from "styled-components/macro";
 import SelectGeolocation from "./SelectGeolocation";
+import { geoDistanceKm } from "../../utils/distanceFromCoords";
 
 const FetchTweetsControlsStyles = styled.div`
   h4 {
@@ -50,12 +53,37 @@ function TweetFilterControls() {
   return (
     <div className="tweetFilterControls">
       <HowManyTweets />
+      <RecentPopularMixedRadioBtns />
       <MediaTypeCheckboxes />
       <SelectFilterLevel />
       <SelectCountry />
       <SelectGeolocation />
       <SelectLanguage />
     </div>
+  );
+}
+
+const RadioBtnsStyles = styled.div``;
+
+function RecentPopularMixedRadioBtns() {
+  const { resultType, setConfig } = useConfig();
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setConfig({ resultType: event.target.value as any });
+  };
+  return (
+    <RadioBtnsStyles>
+      <RadioGroup
+        aria-label="result type"
+        name="resultType"
+        value={resultType}
+        onChange={handleChange}
+        row={true}
+      >
+        <FormControlLabel value="mixed" control={<Radio />} label="Mixed" />
+        <FormControlLabel value="recent" control={<Radio />} label="Recent" />
+        <FormControlLabel value="popular" control={<Radio />} label="Popular" />
+      </RadioGroup>
+    </RadioBtnsStyles>
   );
 }
 
@@ -123,6 +151,8 @@ function SearchForm() {
     lang,
     mediaType,
     countryCode,
+    geolocation,
+    resultType,
   } = useConfig();
   const [loading, setLoading] = useState(false);
   const setTweets = useSetTweets();
@@ -138,10 +168,27 @@ function SearchForm() {
     const mediaParam = mediaType ? `&mediaType=${mediaType}` : "";
     const countryParam =
       countryCode !== "All" ? `&countryCode=${countryCode}` : "";
+    // https://developer.twitter.com/en/docs/twitter-api/v1/tweets/search/api-reference/get-search-tweets
+    const searchRadius = geolocation
+      ? geoDistanceKm(
+          geolocation.latitude.left,
+          geolocation.longitude.left,
+          geolocation.latitude.right,
+          geolocation.longitude.left
+        ) / 2
+      : "";
+    const geocodeParam = geolocation
+      ? `&geocode=${
+          (geolocation.latitude.left + geolocation.latitude.right) / 2
+        },${
+          (geolocation.longitude.left + geolocation.longitude.right) / 2
+        },${searchRadius}km`
+      : "";
     const resp = await fetch(
-      `/api/search?term=${searchTerm}&num=${numTweets}${langParam}${mediaParam}${countryParam}`
+      `/api/search?term=${searchTerm}&num=${numTweets}&result_type=${resultType}${langParam}${mediaParam}${countryParam}${geocodeParam}`
     );
     const data = await resp.json();
+    console.log("🌟🚨: fetchSearchResults -> data", data);
     setLoading(false);
     clearTimeout(timer);
 

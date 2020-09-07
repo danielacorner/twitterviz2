@@ -49,6 +49,7 @@ const [useStore] = create(
         colorBy: COLOR_BY.mediaType as keyof typeof COLOR_BY | null,
         lang: "All",
         countryCode: "All",
+        resultType: "mixed",
         geolocation: null,
         isAllChecked: true,
         isVideoChecked: true,
@@ -133,6 +134,7 @@ export type AppConfig = {
   is3d: boolean;
   colorBy: keyof typeof COLOR_BY | null;
   lang: string;
+  resultType: "mixed" | "recent" | "popular";
   geolocation: {
     latitude: { left: number; right: number };
     longitude: { left: number; right: number };
@@ -158,6 +160,9 @@ export const useConfig = () => {
     ),
     geolocation: useStore(
       (state: GlobalStateStoreType) => state.config.geolocation
+    ),
+    resultType: useStore(
+      (state: GlobalStateStoreType) => state.config.resultType
     ),
     isVideoChecked: useStore(
       (state: GlobalStateStoreType) => state.config.isVideoChecked
