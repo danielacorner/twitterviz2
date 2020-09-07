@@ -59,6 +59,7 @@ const [useStore] = create(
         minChars: 1,
         maxChars: 25,
         minInstances: 1,
+        numAngles: 3,
       },
       setWordcloudConfig: (newConfig) =>
         set((state) => ({
@@ -172,6 +173,7 @@ export type WordcloudConfig = {
   minChars: number;
   maxChars: number;
   minInstances: number;
+  numAngles: number;
 };
 
 export const useWordcloudConfig = () => {
@@ -184,6 +186,9 @@ export const useWordcloudConfig = () => {
     ),
     minInstances: useStore(
       (state: GlobalStateStoreType) => state.wordcloudConfig.minInstances
+    ),
+    numAngles: useStore(
+      (state: GlobalStateStoreType) => state.wordcloudConfig.numAngles
     ),
     setWordcloudConfig: useStore(
       (state: GlobalStateStoreType) => state.setWordcloudConfig

@@ -10,8 +10,14 @@ export default function WordcloudControls() {
   return (
     <div className="wordcloudControls">
       <SwitchWordcloud />
-      {isWordcloud && <WordcloudCharsSlider />}
-      {isWordcloud && <WordcloudMinInstancesSlider />}
+      {isWordcloud && (
+        <>
+          <WordcloudCharsSlider />
+          <WordcloudCharsSlider />
+          <WordcloudAnglesSlider />
+          <WordcloudMinInstancesSlider />
+        </>
+      )}
     </div>
   );
 }
@@ -52,6 +58,32 @@ function WordcloudMinInstancesSlider() {
         valueLabelDisplay="auto"
         aria-labelledby="instances-slider"
         getAriaValueText={valuetextInstances}
+      />
+    </div>
+  );
+}
+
+function valuetextAngles(value) {
+  return `${value} angles`;
+}
+function WordcloudAnglesSlider() {
+  const { numAngles, setWordcloudConfig } = useWordcloudConfig();
+  const handleChange = (event, [newNum]) => {
+    setWordcloudConfig({ numAngles: newNum });
+  };
+  return (
+    <div className="wordcloudAnglesSlider">
+      <Typography id="angles-slider" gutterBottom>
+        Number of angles
+      </Typography>
+      <Slider
+        min={1}
+        max={5}
+        value={[numAngles]}
+        onChange={handleChange}
+        valueLabelDisplay="auto"
+        aria-labelledby="angles-slider"
+        getAriaValueText={valuetextAngles}
       />
     </div>
   );

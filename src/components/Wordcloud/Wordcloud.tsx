@@ -8,7 +8,7 @@ const WordcloudStyles = styled.div``;
 /** https://www.npmjs.com/package/react-wordcloud  */
 const Wordcloud = () => {
   const tweets = useTweets();
-  const { minChars, maxChars, minInstances } = useWordcloudConfig();
+  const { minChars, maxChars, minInstances, numAngles } = useWordcloudConfig();
 
   // grab text from tweet, quoted tweet
   const tweetsWithText: {
@@ -53,7 +53,7 @@ const Wordcloud = () => {
   const options = {
     fontSizes: [20, 80] as [number, number],
     scale: "sqrt" as any,
-    rotations: 3,
+    rotations: numAngles,
     rotationAngles: [0, 90] as [number, number],
     spiral: "archimedean" as any,
     enableOptimizations: true,
