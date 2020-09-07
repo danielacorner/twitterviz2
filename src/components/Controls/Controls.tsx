@@ -10,19 +10,19 @@ import {
   FormControl,
   Checkbox,
   FormControlLabel,
+  IconButton,
 } from "@material-ui/core";
 import { COLOR_BY, FILTER_BY, FILTER_LEVELS } from "../../utils/constants";
 import countryCodes from "../../utils/countryCodes";
 import languages from "../../utils/languages";
+import { useConfig, useSetTweets, AppConfig } from "../../providers/store";
 import {
-  useConfig,
-  useTweets,
-  useSetTweets,
-  AppConfig,
-} from "../../providers/store";
-import { uniqBy } from "lodash";
-import { Div, ControlsStyles } from "./ControlsStyles";
+  Div,
+  ControlsStyles,
+  FetchUserTweetsFormStyles,
+} from "./ControlsStyles";
 import WordcloudControls from "./WordcloudControls";
+import CheckIcon from "@material-ui/icons/Check";
 
 const Controls = () => {
   // TODO
@@ -47,6 +47,7 @@ const Controls = () => {
         <ReplaceCheckbox />
         <Button onClick={createLinks}>Link Nodes</Button>
       </form>
+      <FetchUserTweetsForm />
     </ControlsStyles>
   );
 };
@@ -67,7 +68,46 @@ function SearchBox() {
     />
   );
 }
-SearchBox.whyDidYouRender = { logOnDifferentValues: true };
+
+function FetchUserTweetsForm() {
+  const [userHandle, setUserHandle] = useState("");
+  const [loading, setLoading] = useState(false);
+  const setTweets = useSetTweets();
+
+  const fetchUserTweets = async () => {
+    setLoading(true);
+    // after 10 seconds, stop loading
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 10 * 1000);
+
+    const resp = await fetch(`/api/user_timeline?screen_name=${userHandle}`);
+    const data = await resp.json();
+    setLoading(false);
+    clearTimeout(timer);
+
+    setTweets(data);
+  };
+
+  return (
+    <FetchUserTweetsFormStyles
+      onSubmit={(e) => {
+        e.preventDefault();
+        fetchUserTweets();
+      }}
+    >
+      <TextField
+        label={loading ? <CircularProgress /> : "Fetch user timeline"}
+        value={userHandle}
+        onChange={(e) => setUserHandle(e.target.value)}
+        type="text"
+      />
+      <IconButton disabled={userHandle === ""} type="submit">
+        <CheckIcon />
+      </IconButton>
+    </FetchUserTweetsFormStyles>
+  );
+}
 
 function HowMany() {
   const { numTweets, mediaType, setConfig } = useConfig();
@@ -244,18 +284,17 @@ function SelectColorBy() {
 }
 
 function BtnFetchNewTweets() {
-  const [loading, setLoading] = useState(false);
   const {
     lang,
     countryCode,
     searchTerm,
     numTweets,
     filterLevel,
-    replace,
     mediaType,
   } = useConfig();
-  const tweetsFromServer = useTweets();
-  const setTweetsFromServer = useSetTweets();
+  const setTweets = useSetTweets();
+
+  const [loading, setLoading] = useState(false);
 
   const fetchNewTweets = async () => {
     setLoading(true);
@@ -278,11 +317,8 @@ function BtnFetchNewTweets() {
     const data = await resp.json();
     setLoading(false);
     clearTimeout(timer);
-    const newTweets = replace
-      ? data
-      : uniqBy([...tweetsFromServer, ...data], (t) => t.id_str);
 
-    setTweetsFromServer(newTweets);
+    setTweets(data);
   };
 
   return (

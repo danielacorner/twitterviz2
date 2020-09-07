@@ -46,11 +46,6 @@
     ]
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "1.17.8",
-    "@graphql-codegen/introspection": "^1.17.8",
-    "@graphql-codegen/typescript": "1.17.8",
-    "@graphql-codegen/typescript-operations": "^1.17.8",
-    "@graphql-codegen/typescript-react-apollo": "1.17.8",
     "@types/d3": "^5.7.2",
     "@types/lodash": "^4.14.158",
     "@types/react-d3-graph": "^2.3.3",

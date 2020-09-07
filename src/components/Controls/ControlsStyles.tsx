@@ -27,3 +27,9 @@ export const Div = styled.div`
   display: grid;
   place-items: center;
 `;
+
+export const FetchUserTweetsFormStyles = styled.form`
+  display: grid;
+  grid-auto-flow: column;
+  place-items: center;
+`;

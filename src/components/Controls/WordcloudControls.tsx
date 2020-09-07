@@ -71,7 +71,7 @@ function WordcloudCharsSlider() {
         Number of letters
       </Typography>
       <Slider
-        min={0}
+        min={1}
         max={25}
         value={[minChars, maxChars]}
         onChange={handleChange}

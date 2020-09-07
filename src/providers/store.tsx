@@ -56,7 +56,7 @@ const [useStore] = create(
       setConfig: (newConfig) =>
         set((state) => ({ config: { ...state.config, ...newConfig } })),
       wordcloudConfig: {
-        minChars: 0,
+        minChars: 1,
         maxChars: 25,
         minInstances: 1,
       },
@@ -84,6 +84,10 @@ export const useGraphData = () =>
 
 /** transform and save tweets to store */
 export const useSetTweets = () => {
+  const { replace } = useConfig();
+  const tweetsFromServer = useStore(
+    (state: GlobalStateStoreType) => state.tweetsFromServer
+  );
   const setTweetsFromServer = useStore(
     (state: GlobalStateStoreType) => state.setTweetsFromServer
   );
@@ -91,8 +95,11 @@ export const useSetTweets = () => {
     (state: GlobalStateStoreType) => state.setGraphData
   );
   return (tweets: Tweet[]) => {
-    setTweetsFromServer(tweets);
-    setGraphData(transformTweetsIntoGraphData(tweets));
+    const newTweets = replace
+      ? tweets
+      : uniqBy([...tweetsFromServer, ...tweets], (t) => t.id_str);
+    setTweetsFromServer(newTweets);
+    setGraphData(transformTweetsIntoGraphData(newTweets));
   };
 };
 
