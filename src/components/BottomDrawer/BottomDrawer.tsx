@@ -114,7 +114,7 @@ const BottomDrawer = () => {
     const resp = await fetch(
       `/api/user_timeline?id_str=${userId}&num=${numTweets}`
     );
-    const { data } = await resp.json();
+    const data = await resp.json();
     setLoading(false);
     const newTweets = [...tweetsFromServer, ...data];
     setTweetsFromServer(newTweets);

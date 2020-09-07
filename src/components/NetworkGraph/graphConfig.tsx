@@ -4,6 +4,9 @@ import * as THREE from "three";
 import * as d3 from "d3";
 import { Tweet } from "../../types";
 
+const NODE_SIZE = 25;
+
+/** https://www.npmjs.com/package/react-force-graph */
 export function getForceGraphProps(
   width: any,
   height: any,
@@ -20,12 +23,21 @@ export function getForceGraphProps(
     onNodeHover,
     onNodeClick,
     cooldownTime: is3d ? 10000 : 5000,
-    nodeRelSize: 25,
+    nodeRelSize: NODE_SIZE,
     nodeColor: (node) => getNodeColor(node, colorBy),
 
     onEngineStop: () =>
       fgRef.current && !is3d ? (fgRef.current as any).zoomToFit(400) : null,
-
+    ...(colorBy === COLOR_BY.profilePhoto
+      ? {
+          nodeCanvasObject: (node, ctx, scale) => {
+            console.log("🌟🚨: node", node);
+            const img = new Image(NODE_SIZE, NODE_SIZE);
+            img.src = node.user.profile_image_url_https;
+            ctx.drawImage(img, node.x, node.y);
+          },
+        }
+      : {}),
     // nodeCanvasObject: (node, ctx, scale) => {
     //   const mediaArr = getMediaArr(node);
     //   const imageObj1 = new Image();
