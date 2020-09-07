@@ -16,11 +16,7 @@ import { COLOR_BY, FILTER_BY, FILTER_LEVELS } from "../../utils/constants";
 import countryCodes from "../../utils/countryCodes";
 import languages from "../../utils/languages";
 import { useConfig, useSetTweets, AppConfig } from "../../providers/store";
-import {
-  Div,
-  ControlsStyles,
-  FetchUserTweetsFormStyles,
-} from "./ControlsStyles";
+import { Div, ControlsStyles, TwoColFormStyles } from "./ControlsStyles";
 import WordcloudControls from "./WordcloudControls";
 import CheckIcon from "@material-ui/icons/Check";
 
@@ -31,41 +27,93 @@ const Controls = () => {
   };
   return (
     <ControlsStyles>
-      <div className="styleTweets">
-        <SelectColorBy />
-        <MediaTypeCheckboxes />
-      </div>
-      <Switch3D />
+      <DisplayControls />
       <WordcloudControls />
-      <form onSubmit={(e) => e.preventDefault()} className="filters">
-        <SearchBox />
-        <HowMany />
-        <SelectFilterLevel />
-        <SelectCountry />
-        <SelectLanguage />
-        <BtnFetchNewTweets />
-        <ReplaceCheckbox />
-        <Button onClick={createLinks}>Link Nodes</Button>
-      </form>
+      <TweetFilterControls />
+      <BtnStreamNewTweets />
+      <SearchForm />
       <FetchUserTweetsForm />
+      <Button onClick={createLinks}>Link Nodes</Button>
     </ControlsStyles>
   );
 };
 
 export default Controls;
 
-function SearchBox() {
-  const { searchTerm, setConfig } = useConfig();
+function TweetFilterControls() {
   return (
-    <TextField
-      style={{
-        gridColumn: "span 2",
+    <div className="tweetFilterControls">
+      <h3>Filters</h3>
+      <HowManyTweets />
+      <SelectFilterLevel />
+      <SelectCountry />
+      <SelectLanguage />
+      <SwitchReplace />
+    </div>
+  );
+}
+
+function DisplayControls() {
+  return (
+    <div className="displayControls">
+      <h3>Display</h3>
+      <SelectColorBy />
+      <MediaTypeCheckboxes />
+      <Switch3D />
+    </div>
+  );
+}
+
+// TODO: abstract forms
+function SearchForm() {
+  const {
+    searchTerm,
+    numTweets,
+    setConfig,
+    lang,
+    mediaType,
+    countryCode,
+  } = useConfig();
+  const [loading, setLoading] = useState(false);
+  const setTweets = useSetTweets();
+
+  const fetchSearchResults = async () => {
+    setLoading(true);
+    // after 10 seconds, stop loading
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 10 * 1000);
+
+    const langParam = lang !== "All" ? `&lang=${lang}` : "";
+    const mediaParam = mediaType ? `&mediaType=${mediaType}` : "";
+    const countryParam =
+      countryCode !== "All" ? `&countryCode=${countryCode}` : "";
+    const resp = await fetch(
+      `/api/search?term=${searchTerm}&num=${numTweets}${langParam}${mediaParam}${countryParam}`
+    );
+    const data = await resp.json();
+    setLoading(false);
+    clearTimeout(timer);
+
+    setTweets(data);
+  };
+  return (
+    <TwoColFormStyles
+      onSubmit={(e) => {
+        e.preventDefault();
+        fetchSearchResults();
       }}
-      label="Search for..."
-      value={searchTerm}
-      onChange={(e) => setConfig({ searchTerm: e.target.value })}
-      type="text"
-    />
+    >
+      <TextField
+        label="Search for..."
+        value={searchTerm}
+        onChange={(e) => setConfig({ searchTerm: e.target.value })}
+        type="text"
+      />
+      <IconButton disabled={loading || searchTerm === ""} type="submit">
+        <CheckIcon />
+      </IconButton>
+    </TwoColFormStyles>
   );
 }
 
@@ -73,6 +121,7 @@ function FetchUserTweetsForm() {
   const [userHandle, setUserHandle] = useState("");
   const [loading, setLoading] = useState(false);
   const setTweets = useSetTweets();
+  const { numTweets } = useConfig();
 
   const fetchUserTweets = async () => {
     setLoading(true);
@@ -81,7 +130,9 @@ function FetchUserTweetsForm() {
       setLoading(false);
     }, 10 * 1000);
 
-    const resp = await fetch(`/api/user_timeline?screen_name=${userHandle}`);
+    const resp = await fetch(
+      `/api/user_timeline?screen_name=${userHandle}&num=${numTweets}`
+    );
     const data = await resp.json();
     setLoading(false);
     clearTimeout(timer);
@@ -90,31 +141,31 @@ function FetchUserTweetsForm() {
   };
 
   return (
-    <FetchUserTweetsFormStyles
+    <TwoColFormStyles
       onSubmit={(e) => {
         e.preventDefault();
         fetchUserTweets();
       }}
     >
       <TextField
-        label={loading ? <CircularProgress /> : "Fetch user timeline"}
+        label={loading ? <CircularProgress /> : "Fetch user timeline..."}
         value={userHandle}
         onChange={(e) => setUserHandle(e.target.value)}
         type="text"
       />
-      <IconButton disabled={userHandle === ""} type="submit">
+      <IconButton disabled={loading || userHandle === ""} type="submit">
         <CheckIcon />
       </IconButton>
-    </FetchUserTweetsFormStyles>
+    </TwoColFormStyles>
   );
 }
 
-function HowMany() {
+function HowManyTweets() {
   const { numTweets, mediaType, setConfig } = useConfig();
 
   return (
     <TextField
-      label="How many?"
+      label="How many tweets?"
       value={numTweets}
       onChange={(e) => setConfig({ numTweets: +e.target.value })}
       type="number"
@@ -283,15 +334,8 @@ function SelectColorBy() {
   );
 }
 
-function BtnFetchNewTweets() {
-  const {
-    lang,
-    countryCode,
-    searchTerm,
-    numTweets,
-    filterLevel,
-    mediaType,
-  } = useConfig();
+function BtnStreamNewTweets() {
+  const { lang, countryCode, numTweets, filterLevel, mediaType } = useConfig();
   const setTweets = useSetTweets();
 
   const [loading, setLoading] = useState(false);
@@ -309,9 +353,7 @@ function BtnFetchNewTweets() {
       countryCode !== "All" ? `&countryCode=${countryCode}` : "";
 
     const resp = await fetch(
-      !searchTerm
-        ? `/api/stream?num=${numTweets}&filterLevel=${filterLevel}${mediaParam}${countryParam}${langParam}`
-        : `/api/search?num=${numTweets}&term=${searchTerm}${langParam}${mediaParam}`
+      `/api/stream?num=${numTweets}&filterLevel=${filterLevel}${mediaParam}${countryParam}${langParam}`
     );
 
     const data = await resp.json();
@@ -324,31 +366,28 @@ function BtnFetchNewTweets() {
   return (
     <Button
       type="submit"
-      style={{
-        gridColumn: "span 2",
-      }}
       className="btnFetch"
       disabled={loading}
       onClick={fetchNewTweets}
       variant="outlined"
     >
-      {loading ? <CircularProgress /> : "Fetch New Tweets"}
+      {loading ? <CircularProgress /> : "Stream New Tweets"}
     </Button>
   );
 }
 
-function ReplaceCheckbox() {
+function SwitchReplace() {
   const { replace, setConfig } = useConfig();
   return (
-    <FormControlLabel
-      control={
-        <Checkbox
-          checked={replace}
+    <Div css={``}>
+      <span>
+        Add
+        <Switch
           onChange={() => setConfig({ replace: !replace })}
-          name="checkedD"
+          checked={replace}
         />
-      }
-      label="Replace?"
-    />
+        Replace
+      </span>
+    </Div>
   );
 }

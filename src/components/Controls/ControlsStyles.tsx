@@ -2,24 +2,23 @@ import styled from "styled-components/macro";
 
 export const ControlsStyles = styled.div`
   display: grid;
-  grid-auto-flow: row;
-  grid-gap: 32px;
+  align-items: start;
   align-content: start;
-  .styleTweets {
+  grid-gap: 16px;
+  width: 100%;
+  overflow: hidden auto;
+  max-height: 100vh;
+  .displayControls,
+  .tweetFilterControls {
     display: grid;
     grid-gap: 8px;
-  }
-  .filters {
-    display: grid;
-    grid-gap: 8px;
-    grid-template-columns: 1fr 1fr;
   }
   .checkboxes {
     display: grid;
     max-width: 200px;
     grid-template-columns: 1fr 1fr;
   }
-  padding: 8px;
+  padding: 12px;
   border-right: 1px solid black;
 `;
 
@@ -28,7 +27,7 @@ export const Div = styled.div`
   place-items: center;
 `;
 
-export const FetchUserTweetsFormStyles = styled.form`
+export const TwoColFormStyles = styled.form`
   display: grid;
   grid-auto-flow: column;
   place-items: center;

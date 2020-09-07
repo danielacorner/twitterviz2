@@ -15,6 +15,11 @@ import Wordcloud from "./components/Wordcloud/Wordcloud";
 const AppStyles = styled.div`
   display: grid;
   grid-template-columns: ${CONTROLS_WIDTH}px 1fr;
+  min-height: 100vh;
+  * {
+    margin: 0;
+    box-sizing: border-box;
+  }
 `;
 
 function App() {

@@ -40,7 +40,8 @@ const Wordcloud = () => {
 
   const words: { text: string; value: number }[] = Object.entries(allWordsObj)
     .filter(([word, value]) => {
-      const isRightNumChars = minChars < word.length && word.length < maxChars;
+      const isRightNumChars =
+        minChars <= word.length && word.length <= maxChars;
       const isAboveMinInstances = value >= minInstances;
 
       return isRightNumChars && isAboveMinInstances;
