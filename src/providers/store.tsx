@@ -157,6 +157,7 @@ export const useConfig = () => {
     isNetworkGraph: useStore(
       (state: GlobalStateStoreType) => state.config.tabIndex === 0
     ),
+    tabIndex: useStore((state: GlobalStateStoreType) => state.config.tabIndex),
     filterLevel: useStore(
       (state: GlobalStateStoreType) => state.config.filterLevel
     ),

@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { Tabs, Tab } from "@material-ui/core";
 import NetworkGraph from "./NetworkGraph/NetworkGraph";
 import Wordcloud from "./Wordcloud/Wordcloud";
 import styled from "styled-components/macro";
+import { useConfig } from "../providers/store";
 const Div = styled.div``;
 
 function a11yProps(index) {
@@ -13,7 +14,8 @@ function a11yProps(index) {
 }
 
 export default function VisualizationTabs() {
-  const [value, setValue] = useState(1);
+  const { tabIndex: value, setConfig } = useConfig();
+  const setValue = (newValue) => setConfig({ tabIndex: newValue });
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
