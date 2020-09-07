@@ -85,7 +85,7 @@ const NodeTooltip = () => {
           <AvatarStyles>
             <img src={nodeData?.user.profile_image_url_https} alt="" />
           </AvatarStyles>
-          {nodeData && <TweetContent nodeData={nodeData} />}
+          {nodeData && <TweetContent {...{ nodeData, isTooltip: true }} />}
         </div>
       </TooltipStyles>
     </animated.div>

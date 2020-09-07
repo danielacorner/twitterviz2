@@ -158,6 +158,7 @@ const BottomDrawer = () => {
                 <TweetContent
                   {...{
                     offset,
+                    isTooltip: false,
                     nodeData: selectedNode,
                   }}
                 />

@@ -1,82 +1,48 @@
 import React from "react";
-import { getMediaArr, PADDING } from "../utils/utils";
+import { getMediaArr } from "../utils/utils";
 import countryCodes from "../utils/countryCodes";
-import styled from "styled-components/macro";
-import CachedIcon from "@material-ui/icons/CachedRounded";
+import RetweetedIcon from "@material-ui/icons/CachedRounded";
 import LocationIcon from "@material-ui/icons/LocationOnRounded";
 import { Button } from "@material-ui/core";
 import { useFetchTimeline } from "../utils/hooks";
+import { TweetStyles } from "./TweetStyles";
 
-const TweetStyles = styled.div`
-  position: relative;
-  display: grid;
-  grid-gap: ${PADDING}px;
-  .retweetedUser {
-    position: absolute;
-    top: 0;
-    right: -28px;
-    .user {
-      display: grid;
-      grid-auto-flow: column;
-      align-items: start;
-      justify-content: flex-end;
-      grid-gap: 4px;
-    }
-    button {
-      transform: scale(0.8);
-      transform-origin: right;
-    }
-    transform: scale(0.8);
-    transform-origin: left;
-  }
-  .userInfo,
-  .locationInfo {
-    display: grid;
-    grid-auto-flow: column;
-    place-content: start;
-    grid-gap: 4px;
-  }
-  .userInfo {
-  }
-  .locationInfo {
-    color: hsl(0, 0%, 50%);
-    .location {
-      display: grid;
-      grid-auto-flow: column;
-      transform: scale(0.8) translateY(-6px);
-      transform-origin: top left;
-    }
-  }
-  .allMedia {
-    display: grid;
-    max-height: calc(100vh - 100px);
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    ${(props) => (props.isVideo ? "grid-template-columns: 1fr;" : "")}
-    grid-gap: ${PADDING}px;
-    img {
-      width: 100%;
-    }
-    video {
-      height: ${(props) => props.videoHeight}px;
-      width: 100%;
-    }
-  }
-`;
-
-export default function TweetContent({ nodeData, offset = 0, numTweets = 0 }) {
+export default function TweetContent({ nodeData, offset = 0, isTooltip }) {
   const { fetchTimeline } = useFetchTimeline();
-  const { user, text, extended_entities, entities } = nodeData;
-  let retweetedUser = null;
+  const {
+    user,
+    text,
+    retweeted_status,
+    extended_tweet,
+    extended_entities,
+    entities,
+  } = nodeData;
+  console.log("🌟🚨: TweetContent -> nodeData", nodeData);
+  const retweetedUser = retweeted_status?.user
+    ? {
+        name: retweeted_status.user.name,
+        screen_name: retweeted_status.user.screen_name,
+        id_str: retweeted_status.user.id_str,
+      }
+    : null;
+
+  let parsing = null; //TODO necessary?
+
   const mediaArr = getMediaArr(nodeData);
-  const textWithLinks = text
+  const textWithLinks = (
+    extended_tweet?.full_text ||
+    retweeted_status?.extended_tweet?.full_text ||
+    retweeted_status?.text ||
+    text
+  )
     .split(" ")
     // if first two are "RT: someUser", store separately
     .reduce((acc, cur) => {
       if (cur === "RT") {
-        retweetedUser = "next";
+        parsing = "next";
         return acc;
-      } else if (retweetedUser === "next") {
-        retweetedUser = cur;
+      } else if (parsing === "next") {
+        parsing = cur;
         return acc;
       } else {
         return [...acc, cur];
@@ -119,34 +85,47 @@ export default function TweetContent({ nodeData, offset = 0, numTweets = 0 }) {
         word + " "
       )
     );
+
   return (
     <TweetStyles
+      isRetweet={Boolean(retweetedUser)}
+      isTooltip={isTooltip}
       videoHeight={-offset + 270}
       isVideo={extended_entities?.media[0]?.type === "video"}
     >
       {retweetedUser && (
         <div className="retweetedUser">
           <div className="user">
-            <CachedIcon />
+            <span className="user_name">{retweetedUser.name}</span> |{" "}
             <a
-              href={`https://twitter.com/${retweetedUser.slice(1)}`}
+              href={`https://twitter.com/${retweetedUser.screen_name}`}
               target="_blank"
               rel="noopener noreferrer"
             >
-              {retweetedUser.slice(0, -1)}
+              <span className="user_screen_name">
+                {retweetedUser.screen_name}
+              </span>
             </a>
           </div>
-          <Button
-            variant="outlined"
-            onClick={() => fetchTimeline(retweetedUser.slice(1, -1))}
-          >
-            Fetch user timeline
-          </Button>
+          {!isTooltip && (
+            <Button
+              variant="outlined"
+              onClick={() => fetchTimeline(retweetedUser.id_str)}
+            >
+              Fetch user timeline
+            </Button>
+          )}
         </div>
       )}
       <div className="userInfo">
+        {retweetedUser && (
+          <>
+            <RetweetedIcon /> <span className="retweetedBy">retweeted by </span>
+          </>
+        )}
         <div className="username">{user.name}</div>
         <div className="handle">
+          {" "}
           |{" "}
           <a
             href={`https://twitter.com/${user.screen_name}`}
