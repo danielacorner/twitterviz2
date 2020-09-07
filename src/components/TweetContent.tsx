@@ -5,6 +5,7 @@ import styled from "styled-components/macro";
 import CachedIcon from "@material-ui/icons/CachedRounded";
 import LocationIcon from "@material-ui/icons/LocationOnRounded";
 import { Button } from "@material-ui/core";
+import { useFetchTimeline } from "../utils/hooks";
 
 const TweetStyles = styled.div`
   position: relative;
@@ -12,31 +13,34 @@ const TweetStyles = styled.div`
   grid-gap: ${PADDING}px;
   .retweetedUser {
     position: absolute;
-    top:0;
-    right:-28px;
-    .user{
+    top: 0;
+    right: -28px;
+    .user {
       display: grid;
       grid-auto-flow: column;
       align-items: start;
-    justify-content: flex-end;      grid-gap: 4px;
+      justify-content: flex-end;
+      grid-gap: 4px;
     }
-    button{
+    button {
       transform: scale(0.8);
-      transform-origin:right;
+      transform-origin: right;
     }
     transform: scale(0.8);
-    transform-origin:left;
+    transform-origin: left;
   }
-  .userInfo, .locationInfo {
+  .userInfo,
+  .locationInfo {
     display: grid;
-    grid-auto-flow:column;
+    grid-auto-flow: column;
     place-content: start;
     grid-gap: 4px;
   }
-  .userInfo {}
-  .locationInfo{
-    color: hsl(0,0%,50%);
-    .location{
+  .userInfo {
+  }
+  .locationInfo {
+    color: hsl(0, 0%, 50%);
+    .location {
       display: grid;
       grid-auto-flow: column;
       transform: scale(0.8) translateY(-6px);
@@ -52,19 +56,15 @@ const TweetStyles = styled.div`
     img {
       width: 100%;
     }
-    video{
-    height: ${(props) => props.videoHeight}px;
+    video {
+      height: ${(props) => props.videoHeight}px;
       width: 100%;
     }
   }
 `;
 
-export default function TweetContent({
-  nodeData,
-  fetchTimeline = null,
-  offset = 0,
-  numTweets = 0,
-}) {
+export default function TweetContent({ nodeData, offset = 0, numTweets = 0 }) {
+  const { fetchTimeline } = useFetchTimeline();
   const { user, text, extended_entities, entities } = nodeData;
   let retweetedUser = null;
   const mediaArr = getMediaArr(nodeData);
@@ -136,16 +136,12 @@ export default function TweetContent({
               {retweetedUser.slice(0, -1)}
             </a>
           </div>
-          {fetchTimeline && (
-            <Button
-              variant="outlined"
-              onClick={() =>
-                fetchTimeline(retweetedUser.slice(1, -1), numTweets)
-              }
-            >
-              Fetch user timeline
-            </Button>
-          )}
+          <Button
+            variant="outlined"
+            onClick={() => fetchTimeline(retweetedUser.slice(1, -1))}
+          >
+            Fetch user timeline
+          </Button>
         </div>
       )}
       <div className="userInfo">

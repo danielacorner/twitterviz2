@@ -8,7 +8,6 @@ import UserInfo, { USER_INFO_WIDTH } from "./UserInfo";
 import useStore, { GlobalStateStoreType } from "../../providers/store";
 import { PADDING } from "../../utils/utils";
 import { useWindowSize } from "../../utils/hooks";
-import { useSetTweets } from "../../providers/store";
 
 const DRAWER_HEIGHT = 400;
 const DRAWER_MAX_HEIGHT_MULTIPLIER = 3.5;
@@ -67,14 +66,8 @@ const BottomDrawer = () => {
   const selectedNode = useStore(
     (state: GlobalStateStoreType) => state.selectedNode
   );
-  const tweetsFromServer = useStore(
-    (state: GlobalStateStoreType) => state.tweetsFromServer
-  );
-  const setTweetsFromServer = useSetTweets();
-  const [loading, setLoading] = useState(false);
   const [offset, setOffset] = useState(0);
   const [isMouseDown, setIsMouseDown] = useState(false);
-  const [numTweets, setNumTweets] = useState(50);
   const { height } = useWindowSize();
   const handleDrag = (event) => {
     if (!event.pageY || !isMouseDown) {
@@ -108,17 +101,6 @@ const BottomDrawer = () => {
       enableScroll();
     };
   }, []);
-
-  const fetchTimeline = async (userId: string, numTweets: number) => {
-    setLoading(true);
-    const resp = await fetch(
-      `/api/user_timeline?id_str=${userId}&num=${numTweets}`
-    );
-    const data = await resp.json();
-    setLoading(false);
-    const newTweets = [...tweetsFromServer, ...data];
-    setTweetsFromServer(newTweets);
-  };
 
   return (
     <BottomDrawerStyles offset={offset}>
@@ -166,9 +148,7 @@ const BottomDrawer = () => {
           <div className="userAndTweetWrapper">
             {/* non-absolute-position below here */}
             <div className="userWrapper">
-              <UserInfo
-                {...{ fetchTimeline, loading, setNumTweets, numTweets }}
-              />
+              <UserInfo />
             </div>
             <div className="tweetContentWrapper">
               {selectedNode && (
@@ -176,8 +156,6 @@ const BottomDrawer = () => {
                   {...{
                     offset,
                     nodeData: selectedNode,
-                    fetchTimeline,
-                    numTweets,
                   }}
                 />
               )}

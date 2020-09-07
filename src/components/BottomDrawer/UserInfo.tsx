@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "styled-components/macro";
-import { Button, CircularProgress, TextField } from "@material-ui/core";
+import { Button, CircularProgress } from "@material-ui/core";
 import { useSelectedNode } from "../../providers/store";
+import { useFetchTimeline } from "../../utils/hooks";
 
 export const USER_INFO_WIDTH = 200;
 
@@ -17,12 +18,7 @@ const UserInfoStyles = styled.div`
     }
   }
 `;
-export default function UserInfo({
-  fetchTimeline,
-  loading,
-  setNumTweets,
-  numTweets,
-}) {
+export default function UserInfo() {
   const tweet = useSelectedNode();
   const user = tweet?.user;
   // const [user, setUser] = useState(tweet?.user || null);
@@ -37,6 +33,8 @@ export default function UserInfo({
   //       setUser(data);
   //     });
   // }, []);
+
+  const { fetchTimeline, loading } = useFetchTimeline();
 
   const profileImgUrl = `${user?.profile_image_url_https.slice(
     0,
@@ -59,19 +57,10 @@ export default function UserInfo({
       <Button
         variant="outlined"
         disabled={loading}
-        onClick={() => user?.id_str && fetchTimeline(user?.id_str, numTweets)}
+        onClick={() => user?.id_str && fetchTimeline(user?.id_str)}
       >
         {loading ? <CircularProgress /> : "Fetch user timeline"}
       </Button>
-      <TextField
-        label="How many tweets?"
-        value={numTweets}
-        onChange={(e) => setNumTweets(+e.target.value)}
-        type="number"
-        inputProps={{
-          step: 10,
-        }}
-      />
     </UserInfoStyles>
   );
 }

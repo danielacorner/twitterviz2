@@ -70,6 +70,11 @@ const NodeTooltip = () => {
     left: MOUSE_WIDTH,
     transform: `translate(${position.x}px,${position.y}px)`,
     config: { tension: 300, mass: 0.2 },
+    onRest: () => {
+      if (!tooltipNode) {
+        lastTooltipNode.current = null;
+      }
+    },
   });
 
   const nodeData = tooltipNode || lastTooltipNode.current;

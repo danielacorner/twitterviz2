@@ -6,6 +6,7 @@ export const COLOR_BY = {
   profilePhoto: "profilePhoto",
 };
 export const FILTER_BY = {
+  all: "all",
   imageAndVideo: "imageAndVideo",
   imageOnly: "imageOnly",
   videoOnly: "videoOnly",

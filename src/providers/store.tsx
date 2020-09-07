@@ -219,17 +219,24 @@ export function useAllowedMediaTypes(): string[] {
   const isImageChecked = useStore(
     (state: GlobalStateStoreType) => state.config.isImageChecked
   );
-  return [
-    ...(isVideoChecked ? ["video"] : []),
-    ...(isImageChecked ? ["photo"] : []),
-  ];
+  const isAllChecked = useStore(
+    (state: GlobalStateStoreType) => state.config.isAllChecked
+  );
+  return isAllChecked
+    ? ["all"]
+    : [
+        ...(isVideoChecked ? ["video"] : []),
+        ...(isImageChecked ? ["photo"] : []),
+      ];
 }
 
 /** returns one of imageAndVideo, imageOnly, videoOnly, null */
 export function useMediaType(): string | null {
   const allowedMediaTypes = useAllowedMediaTypes();
 
-  return allowedMediaTypes.length === 2
+  return allowedMediaTypes.includes("all")
+    ? FILTER_BY.all
+    : allowedMediaTypes.includes("photo") && allowedMediaTypes.includes("video")
     ? FILTER_BY.imageAndVideo
     : allowedMediaTypes.includes("photo")
     ? FILTER_BY.imageOnly

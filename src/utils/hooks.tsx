@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useConfig, useSetTweets } from "../providers/store";
 
 export function useWindowSize() {
   // Initialize state with undefined width/height so server and client renders match
@@ -29,4 +30,24 @@ export function useWindowSize() {
   }, []); // Empty array ensures that effect is only run on mount
 
   return windowSize;
+}
+
+export function useFetchTimeline() {
+  const [loading, setLoading] = useState(false);
+  const { numTweets, mediaType } = useConfig();
+  const setTweets = useSetTweets();
+
+  const fetchTimeline = async (userId: string) => {
+    setLoading(true);
+    const resp = await fetch(
+      `/api/user_timeline?id_str=${userId}&num=${numTweets}&mediaType=${mediaType}`
+    );
+    console.log("🌟🚨: fetchTimeline -> resp", resp);
+    const data = await resp.json();
+    console.log("🌟🚨: fetchTimeline -> data", data);
+    setLoading(false);
+    setTweets(data);
+  };
+
+  return { loading, fetchTimeline };
 }
