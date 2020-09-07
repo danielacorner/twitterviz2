@@ -1,16 +1,15 @@
 import React, { useEffect } from "react";
 import "./App.css";
-import NetworkGraph from "./components/NetworkGraph/NetworkGraph";
 import { CONTROLS_WIDTH } from "./utils/constants";
 import Controls from "./components/Controls/Controls";
 import styled from "styled-components/macro";
 import BottomDrawer from "./components/BottomDrawer/BottomDrawer";
-import useStore, { useConfig } from "./providers/store";
+import useStore from "./providers/store";
 import { useMount } from "./utils/utils";
 import { useSetTweets } from "./providers/store";
 import { query as q } from "faunadb";
 import { faunaClient } from "./providers/faunaProvider";
-import Wordcloud from "./components/Wordcloud/Wordcloud";
+import VisualizationTabs from "./components/VisualizationTabs";
 
 const AppStyles = styled.div`
   display: grid;
@@ -30,15 +29,10 @@ function App() {
   return (
     <AppStyles className="App">
       <Controls />
-      <Visualization />
+      <VisualizationTabs />
       <BottomDrawer />
     </AppStyles>
   );
-}
-
-function Visualization() {
-  const { isWordcloud } = useConfig();
-  return isWordcloud ? <Wordcloud /> : <NetworkGraph />;
 }
 
 export default App;

@@ -1,39 +1,16 @@
 import React from "react";
-import { Switch, Slider, Typography } from "@material-ui/core";
-import { useConfig } from "../../providers/store";
-import { Div } from "./ControlsStyles";
+import { Slider, Typography } from "@material-ui/core";
 import { useWordcloudConfig } from "../../providers/store";
 
 export default function WordcloudControls() {
-  const { isWordcloud } = useConfig();
-
   return (
-    <div className="wordcloudControls">
-      <SwitchWordcloud />
-      {isWordcloud && (
-        <>
-          <WordcloudCharsSlider />
-          <WordcloudCharsSlider />
-          <WordcloudAnglesSlider />
-          <WordcloudMinInstancesSlider />
-        </>
-      )}
+    <div className="wordcloudControls controlsContainer">
+      <h3>Word Cloud Controls</h3>
+      <WordcloudCharsSlider />
+      <WordcloudCharsSlider />
+      <WordcloudAnglesSlider />
+      <WordcloudMinInstancesSlider />
     </div>
-  );
-}
-
-function SwitchWordcloud() {
-  const { isWordcloud, setConfig } = useConfig();
-  return (
-    <Div css={``}>
-      <span>
-        Word Cloud
-        <Switch
-          onChange={() => setConfig({ isWordcloud: !isWordcloud })}
-          checked={isWordcloud}
-        />
-      </span>
-    </Div>
   );
 }
 

@@ -46,11 +46,11 @@ const [useStore] = create(
         countryCode: "All",
         isVideoChecked: true,
         isImageChecked: true,
-        isWordcloud: true,
         replace: true,
         filterLevel: FILTER_LEVELS.none,
         searchTerm: "",
         numTweets: 50,
+        tabIndex: 1,
       },
       /** overwrite any values passed in */
       setConfig: (newConfig) =>
@@ -130,7 +130,7 @@ export type AppConfig = {
   isVideoChecked: boolean;
   isImageChecked: boolean;
   replace: boolean;
-  isWordcloud: boolean;
+  tabIndex: number;
   filterLevel: keyof typeof FILTER_LEVELS;
   searchTerm: string;
   numTweets: number;
@@ -152,7 +152,10 @@ export const useConfig = () => {
     ),
     replace: useStore((state: GlobalStateStoreType) => state.config.replace),
     isWordcloud: useStore(
-      (state: GlobalStateStoreType) => state.config.isWordcloud
+      (state: GlobalStateStoreType) => state.config.tabIndex === 1
+    ),
+    isNetworkGraph: useStore(
+      (state: GlobalStateStoreType) => state.config.tabIndex === 0
     ),
     filterLevel: useStore(
       (state: GlobalStateStoreType) => state.config.filterLevel

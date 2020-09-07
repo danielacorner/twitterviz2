@@ -13,6 +13,11 @@ export const ControlsStyles = styled.div`
     display: grid;
     grid-gap: 8px;
   }
+  .controlsContainer {
+    h3 {
+      margin-bottom: 1em;
+    }
+  }
   .checkboxes {
     display: grid;
     max-width: 200px;
@@ -20,11 +25,6 @@ export const ControlsStyles = styled.div`
   }
   padding: 12px;
   border-right: 1px solid black;
-`;
-
-export const Div = styled.div`
-  display: grid;
-  place-items: center;
 `;
 
 export const TwoColFormStyles = styled.form`

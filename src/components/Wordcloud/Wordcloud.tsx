@@ -3,7 +3,10 @@ import ReactWordcloud from "react-wordcloud";
 import styled from "styled-components/macro";
 import { useTweets, useWordcloudConfig } from "../../providers/store";
 
-const WordcloudStyles = styled.div``;
+const WordcloudStyles = styled.div`
+  height: 100%;
+  width: 100%;
+`;
 
 /** https://www.npmjs.com/package/react-wordcloud  */
 const Wordcloud = () => {
