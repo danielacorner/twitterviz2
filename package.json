@@ -15,6 +15,7 @@
     "@types/react-dom": "^16.9.0",
     "d3": "^5.16.0",
     "faunadb": "^3.0.1",
+    "google-maps-react": "^2.0.6",
     "graphql": "^15.3.0",
     "lodash": "^4.17.19",
     "react": "^16.13.1",

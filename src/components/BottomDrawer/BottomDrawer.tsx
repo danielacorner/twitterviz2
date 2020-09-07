@@ -28,6 +28,9 @@ const DrawerContentStyles = styled.div`
     grid-gap: ${PADDING}px;
     grid-template-columns: ${USER_INFO_WIDTH}px 1fr;
   }
+  .userWrapper {
+    margin-top: -143px;
+  }
   .btnClose {
     position: absolute;
     top: 0;
@@ -123,7 +126,7 @@ const BottomDrawer = () => {
         PaperProps={{
           style: {
             height: `${DRAWER_MAX_HEIGHT_MULTIPLIER * 100}vh`,
-            overflow: "hidden",
+            overflow: "visible",
           },
         }}
         style={{

@@ -11,6 +11,7 @@ import {
   IconButton,
   FormControlLabel,
   Checkbox,
+  Modal,
 } from "@material-ui/core";
 import { FILTER_BY, FILTER_LEVELS } from "../../utils/constants";
 import countryCodes from "../../utils/countryCodes";
@@ -20,6 +21,7 @@ import { TwoColFormStyles } from "./ControlsStyles";
 import CheckIcon from "@material-ui/icons/Check";
 import { Div } from "../DivStyles";
 import styled from "styled-components/macro";
+import SelectGeolocation from "./SelectGeolocation";
 
 const FetchTweetsControlsStyles = styled.div`
   h4 {
@@ -52,6 +54,7 @@ function TweetFilterControls() {
       <MediaTypeCheckboxes />
       <SelectFilterLevel />
       <SelectCountry />
+      <SelectGeolocation />
       <SelectLanguage />
     </div>
   );

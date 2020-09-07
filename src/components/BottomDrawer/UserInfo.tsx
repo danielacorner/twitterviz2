@@ -13,6 +13,9 @@ const UserInfoStyles = styled.div`
     height: 100%;
     border-radius: 50%;
     overflow: hidden;
+    border: 8px solid white;
+    box-sizing: border-box;
+    box-shadow: 0px -4px 16px 2px #00000021;
     img {
       width: 100%;
     }

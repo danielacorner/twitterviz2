@@ -49,6 +49,7 @@ const [useStore] = create(
         colorBy: COLOR_BY.mediaType as keyof typeof COLOR_BY | null,
         lang: "All",
         countryCode: "All",
+        geolocation: null,
         isAllChecked: true,
         isVideoChecked: true,
         isImageChecked: true,
@@ -132,6 +133,7 @@ export type AppConfig = {
   is3d: boolean;
   colorBy: keyof typeof COLOR_BY | null;
   lang: string;
+  geolocation: { latitude: number; longitude: number } | null;
   countryCode: string;
   isAllChecked: boolean;
   isVideoChecked: boolean;
@@ -150,6 +152,9 @@ export const useConfig = () => {
     lang: useStore((state: GlobalStateStoreType) => state.config.lang),
     countryCode: useStore(
       (state: GlobalStateStoreType) => state.config.countryCode
+    ),
+    geolocation: useStore(
+      (state: GlobalStateStoreType) => state.config.geolocation
     ),
     isVideoChecked: useStore(
       (state: GlobalStateStoreType) => state.config.isVideoChecked
