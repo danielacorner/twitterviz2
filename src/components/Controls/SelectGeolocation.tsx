@@ -19,10 +19,15 @@ const MapContainerStyles = styled.div`
     right: -24px;
   }
   .btnConfirmLocation {
-    background: hsla(100, 80%, 45%, 0.9);
+    background: hsla(100, 80%, 45%, 1);
     position: absolute;
-    top: -24px;
-    right: -24px;
+    bottom: -24px;
+    height: 48px;
+    width: 300px;
+    left: calc(50% - 150px);
+    &:hover {
+      background: hsla(100, 100%, 55%, 1);
+    }
   }
 `;
 
@@ -30,9 +35,14 @@ const SelectGeolocation = ({ google }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { geolocation, setConfig } = useConfig();
   const [initialCenter, setInitialCenter] = useState({
-    lat: geolocation?.latitude || 0,
-    lng: geolocation?.longitude || 0,
+    lat: geolocation
+      ? (geolocation.latitude.left + geolocation.latitude.right) / 2
+      : 0,
+    lng: geolocation
+      ? (geolocation.longitude.left + geolocation.longitude.right) / 2
+      : 0,
   });
+  const [currentGeolocation, setCurrentGeolocation] = useState(geolocation);
 
   useMount(() => {
     if (!geolocation) {
@@ -45,7 +55,18 @@ const SelectGeolocation = ({ google }) => {
     }
   });
 
-  const handleConfirmGeolocation = () => {};
+  const handleConfirmGeolocation = () => {
+    setConfig({ geolocation: currentGeolocation });
+    setIsModalOpen(false);
+  };
+
+  const onDragEnd = (mapProps, map) => {
+    const bounds = map.getBounds();
+    setCurrentGeolocation({
+      latitude: { left: bounds.Va.i, right: bounds.Va.j },
+      longitude: { left: bounds.Za.i, right: bounds.Za.j },
+    });
+  };
 
   return (
     <>
@@ -67,13 +88,14 @@ const SelectGeolocation = ({ google }) => {
             google={google}
             style={{ width: "100%", height: "100%" }}
             initialCenter={initialCenter}
+            onDragend={onDragEnd}
           />
           <Button
             className="btnConfirmLocation"
             variant="contained"
             onClick={handleConfirmGeolocation}
           >
-            Filter to within the visible area
+            Select the current visible area
           </Button>
           <IconButton
             className="btnClose"

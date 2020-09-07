@@ -11,7 +11,6 @@ import {
   IconButton,
   FormControlLabel,
   Checkbox,
-  Modal,
 } from "@material-ui/core";
 import { FILTER_BY, FILTER_LEVELS } from "../../utils/constants";
 import countryCodes from "../../utils/countryCodes";

@@ -133,7 +133,10 @@ export type AppConfig = {
   is3d: boolean;
   colorBy: keyof typeof COLOR_BY | null;
   lang: string;
-  geolocation: { latitude: number; longitude: number } | null;
+  geolocation: {
+    latitude: { left: number; right: number };
+    longitude: { left: number; right: number };
+  } | null;
   countryCode: string;
   isAllChecked: boolean;
   isVideoChecked: boolean;
