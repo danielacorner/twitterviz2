@@ -44,41 +44,32 @@ export function getForceGraphProps(
             const mediaArr = getMediaArr(node);
             if (!mediaArr[0]) {
               // draw a circle if there's no media
+
               ctx.beginPath();
               ctx.arc(node.x, node.y, NODE_SIZE / 2, 0, Math.PI * 2);
               // stroke styles https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/stroke
               ctx.strokeStyle = "cornflowerblue";
               ctx.stroke();
             } else {
-              const img = new Image(NODE_SIZE, NODE_SIZE);
+              const imageSize = NODE_SIZE * 2;
+
+              // show the first image/video preview
+
+              const img = new Image(imageSize, imageSize);
               img.src = mediaArr[0].poster || mediaArr[0].src;
 
               // drawImage https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
               ctx.drawImage(
                 img,
-                node.x - NODE_SIZE / 2,
-                node.y - NODE_SIZE / 2,
-                NODE_SIZE,
-                NODE_SIZE
+                node.x - imageSize / 2,
+                node.y - imageSize / 2,
+                imageSize,
+                imageSize
               );
             }
           },
         }
       : {}),
-    // nodeCanvasObject: (node, ctx, scale) => {
-    //   const mediaArr = getMediaArr(node);
-    //   const imageObj1 = new Image();
-    //   if (!mediaArr[0]) {
-    //     ctx.arc(75, 75, 50, 0, Math.PI * 2, true); // Outer circle
-    //     return;
-    //   }
-    //   imageObj1.src = mediaArr[0].poster || mediaArr[0].src;
-    //   imageObj1.onload = function () {
-    //     ctx.drawImage(imageObj1, 0, 0);
-    //   };
-    //   return mediaArr[0] ? ctx.drawImage(imageObj1, 10, 10) : null;
-    // },
-    // nodeCanvasObjectMode: () => "after" as any,
     nodeThreeObject:
       colorBy === COLOR_BY.mediaType
         ? (node: Tweet) => {

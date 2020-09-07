@@ -49,6 +49,7 @@ const [useStore] = create(
         colorBy: COLOR_BY.mediaType as keyof typeof COLOR_BY | null,
         lang: "All",
         countryCode: "All",
+        isAllChecked: true,
         isVideoChecked: true,
         isImageChecked: true,
         replace: true,
@@ -132,6 +133,7 @@ export type AppConfig = {
   colorBy: keyof typeof COLOR_BY | null;
   lang: string;
   countryCode: string;
+  isAllChecked: boolean;
   isVideoChecked: boolean;
   isImageChecked: boolean;
   replace: boolean;
@@ -151,6 +153,9 @@ export const useConfig = () => {
     ),
     isVideoChecked: useStore(
       (state: GlobalStateStoreType) => state.config.isVideoChecked
+    ),
+    isAllChecked: useStore(
+      (state: GlobalStateStoreType) => state.config.isAllChecked
     ),
     isImageChecked: useStore(
       (state: GlobalStateStoreType) => state.config.isImageChecked

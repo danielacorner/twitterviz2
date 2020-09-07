@@ -18,11 +18,6 @@ export const ControlsStyles = styled.div`
       margin-bottom: 1em;
     }
   }
-  .checkboxes {
-    display: grid;
-    max-width: 200px;
-    grid-template-columns: 1fr 1fr;
-  }
   padding: 12px;
   border-right: 1px solid black;
 `;

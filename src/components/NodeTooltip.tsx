@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSpring, animated } from "react-spring";
 import styled from "styled-components/macro";
 import TweetContent from "./TweetContent";
@@ -37,18 +37,19 @@ const AvatarStyles = styled.div`
 const NodeTooltip = () => {
   const tooltipNode = useStore((state) => state.tooltipNode);
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [hidden, setHidden] = useState(false);
+  const lastTooltipNode = useRef();
 
   useEffect(() => {
-    console.log("🌟🚨: node", tooltipNode);
-  }, [tooltipNode]);
+    if (tooltipNode) {
+      lastTooltipNode.current = tooltipNode;
+    }
+  });
+
   // on mount, start listening to mouse position
   useEffect(() => {
     window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("auxclick", handleMiddleCLick);
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("auxclick", handleMiddleCLick);
     };
   }, []);
 
@@ -60,32 +61,30 @@ const NodeTooltip = () => {
     const y = Math.min(event.y, window.innerHeight - MAX_TOOLTIP_HEIGHT);
     setPosition({ x, y });
   }
-  function handleMiddleCLick(e) {
-    setHidden((h) => !h);
-  }
 
   const springToMousePosition = useSpring({
     pointerEvents: "none",
     position: "fixed",
+    opacity: tooltipNode ? 1 : 0,
     top: 16,
-    opacity: hidden ? 0 : 1,
     left: MOUSE_WIDTH,
     transform: `translate(${position.x}px,${position.y}px)`,
     config: { tension: 300, mass: 0.2 },
   });
 
-  return tooltipNode ? (
+  const nodeData = tooltipNode || lastTooltipNode.current;
+  return (
     <animated.div style={springToMousePosition}>
       <TooltipStyles>
         <div className="profileAndContent">
           <AvatarStyles>
-            <img src={tooltipNode.user.profile_image_url_https} alt="" />
+            <img src={nodeData?.user.profile_image_url_https} alt="" />
           </AvatarStyles>
-          {!hidden && <TweetContent nodeData={tooltipNode} />}
+          {nodeData && <TweetContent nodeData={nodeData} />}
         </div>
       </TooltipStyles>
     </animated.div>
-  ) : null;
+  );
 };
 
 export default NodeTooltip;

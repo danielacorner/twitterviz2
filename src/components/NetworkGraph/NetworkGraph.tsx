@@ -58,6 +58,7 @@ function Graph() {
 
   const onBackgroundClick = () => {
     setSelectedNode(null);
+    setTooltipNode(null);
   };
 
   const { width, height } = useWindowSize();

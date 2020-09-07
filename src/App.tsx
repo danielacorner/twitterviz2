@@ -1,10 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./App.css";
 import { CONTROLS_WIDTH } from "./utils/constants";
 import Controls from "./components/Controls/Controls";
 import styled from "styled-components/macro";
 import BottomDrawer from "./components/BottomDrawer/BottomDrawer";
-import useStore from "./providers/store";
 import { useMount } from "./utils/utils";
 import { useSetTweets } from "./providers/store";
 import { query as q } from "faunadb";
@@ -24,8 +23,6 @@ const AppStyles = styled.div`
 function App() {
   useFetchTweetsOnMount();
 
-  useDeselectNodeOnBackspace();
-
   return (
     <AppStyles className="App">
       <Controls />
@@ -36,21 +33,6 @@ function App() {
 }
 
 export default App;
-
-function useDeselectNodeOnBackspace() {
-  const setSelectedNode = useStore((state) => state.setSelectedNode);
-  useEffect(() => {
-    function handleKeydown(event) {
-      if (event.key === "Backspace") {
-        setSelectedNode(null);
-      }
-    }
-    window.addEventListener("keydown", handleKeydown);
-    return () => {
-      window.removeEventListener("keydown", handleKeydown);
-    };
-  }, [setSelectedNode]);
-}
 
 /** retrieve posts from faunadb
  *

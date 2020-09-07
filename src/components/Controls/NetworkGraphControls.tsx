@@ -1,25 +1,27 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   MenuItem,
   Switch,
   Select,
   InputLabel,
   FormControl,
-  Checkbox,
-  FormControlLabel,
 } from "@material-ui/core";
 import { COLOR_BY } from "../../utils/constants";
 import { useConfig, AppConfig } from "../../providers/store";
 import { Div } from "../DivStyles";
+import styled from "styled-components/macro";
+
+const NetworkGraphControlsStyles = styled.div`
+  display: grid;
+`;
 
 const NetworkGraphControls = () => {
   return (
-    <div className="networkGraphControls controlsContainer">
+    <NetworkGraphControlsStyles className="networkGraphControls controlsContainer">
       <h3>Network Graph Controls</h3>
-      <SelectColorBy />
-      <MediaTypeCheckboxes />
       <Switch3D />
-    </div>
+      <SelectColorBy />
+    </NetworkGraphControlsStyles>
   );
 };
 
@@ -36,48 +38,6 @@ function Switch3D() {
       </span>
     </Div>
   );
-}
-
-function MediaTypeCheckboxes() {
-  const {
-    isVideoChecked,
-    isImageChecked,
-    colorBy,
-    setConfig,
-    mediaType,
-  } = useConfig();
-
-  useEffect(() => {
-    // if searching for media, reduce num tweets
-    if (mediaType) {
-      setConfig({ numTweets: 25 });
-    }
-  }, [mediaType, setConfig]);
-
-  return colorBy === COLOR_BY.mediaType ? (
-    <div className="checkboxes">
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={isVideoChecked}
-            onChange={() => setConfig({ isVideoChecked: !isVideoChecked })}
-            name="checkedA"
-          />
-        }
-        label="Video"
-      />
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={isImageChecked}
-            onChange={() => setConfig({ isImageChecked: !isImageChecked })}
-            name="checkedA"
-          />
-        }
-        label="Image"
-      />
-    </div>
-  ) : null;
 }
 
 function SelectColorBy() {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   MenuItem,
   Switch,
@@ -9,6 +9,8 @@ import {
   InputLabel,
   FormControl,
   IconButton,
+  FormControlLabel,
+  Checkbox,
 } from "@material-ui/core";
 import { FILTER_BY, FILTER_LEVELS } from "../../utils/constants";
 import countryCodes from "../../utils/countryCodes";
@@ -47,6 +49,7 @@ function TweetFilterControls() {
   return (
     <div className="tweetFilterControls">
       <HowManyTweets />
+      <MediaTypeCheckboxes />
       <SelectFilterLevel />
       <SelectCountry />
       <SelectLanguage />
@@ -195,6 +198,13 @@ function FetchUserTweetsForm() {
 function HowManyTweets() {
   const { numTweets, mediaType, setConfig } = useConfig();
 
+  useEffect(() => {
+    // if searching for media, reduce num tweets
+    if (mediaType) {
+      setConfig({ numTweets: 25 });
+    }
+  }, [mediaType, setConfig]);
+
   return (
     <TextField
       label="How many tweets?"
@@ -300,5 +310,57 @@ function SwitchReplace() {
         Replace
       </span>
     </Div>
+  );
+}
+
+const MediaTypeCheckboxesStyles = styled.div`
+  display: grid;
+  max-width: 200px;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+`;
+
+function MediaTypeCheckboxes() {
+  const {
+    isVideoChecked,
+    isImageChecked,
+    setConfig,
+    isAllChecked,
+  } = useConfig();
+
+  return (
+    <MediaTypeCheckboxesStyles className="checkboxes">
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={isAllChecked}
+            onChange={() => setConfig({ isAllChecked: !isAllChecked })}
+            name="checkedA"
+          />
+        }
+        label="All"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            disabled={isAllChecked}
+            checked={isVideoChecked || isAllChecked}
+            onChange={() => setConfig({ isVideoChecked: !isVideoChecked })}
+            name="checkedA"
+          />
+        }
+        label="Video"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            disabled={isAllChecked}
+            checked={isImageChecked || isAllChecked}
+            onChange={() => setConfig({ isImageChecked: !isImageChecked })}
+            name="checkedA"
+          />
+        }
+        label="Image"
+      />
+    </MediaTypeCheckboxesStyles>
   );
 }
