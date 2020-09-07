@@ -7,7 +7,6 @@ export default function WordcloudControls() {
     <div className="wordcloudControls controlsContainer">
       <h3>Word Cloud Controls</h3>
       <WordcloudCharsSlider />
-      <WordcloudCharsSlider />
       <WordcloudAnglesSlider />
       <WordcloudMinInstancesSlider />
     </div>

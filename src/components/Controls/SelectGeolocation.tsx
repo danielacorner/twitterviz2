@@ -3,7 +3,7 @@ import styled from "styled-components/macro";
 import { useConfig } from "../../providers/store";
 import { Map, GoogleApiWrapper } from "google-maps-react";
 import { useMount } from "../../utils/utils";
-import { Modal, IconButton, Button } from "@material-ui/core";
+import { Modal, IconButton, Button, TextareaAutosize } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 
 const MODAL_PADDING = 50;
@@ -73,6 +73,10 @@ const SelectGeolocation = ({ google }) => {
       <Button variant="outlined" onClick={() => setIsModalOpen(true)}>
         Select Geolocation
       </Button>
+      <TextareaAutosize
+        style={{ resize: "none" }}
+        value={`${JSON.stringify(geolocation)}`}
+      />
 
       <Modal
         style={{
@@ -94,6 +98,7 @@ const SelectGeolocation = ({ google }) => {
             className="btnConfirmLocation"
             variant="contained"
             onClick={handleConfirmGeolocation}
+            disabled={!currentGeolocation}
           >
             Select the current visible area
           </Button>
