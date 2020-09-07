@@ -1,5 +1,6 @@
 export const COLOR_BY = {
   mediaType: "mediaType",
+  media: "media",
   textLength: "textLength",
   sentiment: "sentiment",
   profilePhoto: "profilePhoto",

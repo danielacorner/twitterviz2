@@ -29,12 +29,39 @@ export function getForceGraphProps(
     onEngineStop: () =>
       fgRef.current && !is3d ? (fgRef.current as any).zoomToFit(400) : null,
     ...(colorBy === COLOR_BY.profilePhoto
-      ? {
+      ? // show profile photo
+        {
           nodeCanvasObject: (node, ctx, scale) => {
-            console.log("🌟🚨: node", node);
             const img = new Image(NODE_SIZE, NODE_SIZE);
             img.src = node.user.profile_image_url_https;
             ctx.drawImage(img, node.x, node.y);
+          },
+        }
+      : colorBy === COLOR_BY.media
+      ? // show media
+        {
+          nodeCanvasObject: (node, ctx, scale) => {
+            const mediaArr = getMediaArr(node);
+            if (!mediaArr[0]) {
+              // draw a circle if there's no media
+              ctx.beginPath();
+              ctx.arc(node.x, node.y, NODE_SIZE / 2, 0, Math.PI * 2);
+              // stroke styles https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/stroke
+              ctx.strokeStyle = "cornflowerblue";
+              ctx.stroke();
+            } else {
+              const img = new Image(NODE_SIZE, NODE_SIZE);
+              img.src = mediaArr[0].poster || mediaArr[0].src;
+
+              // drawImage https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+              ctx.drawImage(
+                img,
+                node.x - NODE_SIZE / 2,
+                node.y - NODE_SIZE / 2,
+                NODE_SIZE,
+                NODE_SIZE
+              );
+            }
           },
         }
       : {}),
