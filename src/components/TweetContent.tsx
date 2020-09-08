@@ -40,9 +40,6 @@ export default function TweetContent({ nodeData, offset = 0, isTooltip }) {
     .split(" ")
     // if first two are "RT: someUser", store separately
     .reduce((acc, cur, idx) => {
-      if (idx === 0 && nodeData.in_reply_to_screen_name) {
-        return acc;
-      }
       if (cur === "RT") {
         parsing = "next";
         return acc;
