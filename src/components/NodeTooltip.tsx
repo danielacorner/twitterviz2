@@ -25,6 +25,14 @@ const TooltipStyles = styled.div`
     grid-gap: ${PADDING}px;
     grid-template-columns: ${AVATAR_WIDTH}px 1fr;
   }
+  position: relative;
+  .id_str {
+    font-size: 0.7em;
+    position: absolute;
+    top: -16px;
+    right: 0;
+    text-shadow: 1px -1px 0px white;
+  }
 `;
 
 const AvatarStyles = styled.div`
@@ -85,7 +93,12 @@ const NodeTooltip = () => {
           <AvatarStyles>
             <img src={nodeData?.user.profile_image_url_https} alt="" />
           </AvatarStyles>
-          {nodeData && <TweetContent {...{ nodeData, isTooltip: true }} />}
+          {nodeData && (
+            <>
+              <div className="id_str">{nodeData.id_str}</div>
+              <TweetContent {...{ nodeData, isTooltip: true }} />
+            </>
+          )}
         </div>
       </TooltipStyles>
     </animated.div>

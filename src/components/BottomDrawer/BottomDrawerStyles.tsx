@@ -22,6 +22,9 @@ export const DrawerContentStyles = styled.div`
     right: 16px;
     bottom: 16px;
     transition: transform 225ms cubic-bezier(0, 0, 0.2, 1) 0ms;
+    button {
+      background: white;
+    }
   }
   .userAndTweetWrapper {
     display: grid;
