@@ -1,66 +1,18 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components/macro";
-import { Drawer, IconButton } from "@material-ui/core";
+import { Drawer, IconButton, Button } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import TweetContent from "../TweetContent";
-import { CONTROLS_WIDTH } from "../../utils/constants";
-import UserInfo, { USER_INFO_WIDTH } from "./UserInfo";
+import UserInfo from "./UserInfo";
 import useStore, { GlobalStateStoreType } from "../../providers/store";
-import { PADDING } from "../../utils/utils";
 import { useWindowSize } from "../../utils/hooks";
+import OpenInNewIcon from "@material-ui/icons/OpenInNew";
+import {
+  BottomDrawerStyles,
+  DrawerContentStyles,
+  DRAWER_HEIGHT,
+} from "./BottomDrawerStyles";
 
-const DRAWER_HEIGHT = 400;
 const DRAWER_MAX_HEIGHT_MULTIPLIER = 3.5;
-
-const BottomDrawerStyles = styled.div`
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  left: ${CONTROLS_WIDTH}px;
-`;
-const DrawerContentStyles = styled.div`
-  box-sizing: border-box;
-  padding: 32px 16px 16px;
-  position: relative;
-  height: ${DRAWER_HEIGHT}px;
-  .userAndTweetWrapper {
-    display: grid;
-    grid-gap: ${PADDING}px;
-    grid-template-columns: ${USER_INFO_WIDTH}px 1fr;
-  }
-  .userWrapper {
-    margin-top: -143px;
-  }
-  .btnClose {
-    position: absolute;
-    top: 0;
-    right: 0;
-  }
-  .tweetContentWrapper {
-    max-height: 900px;
-  }
-  .dragHandleWrapper {
-    width: calc(100% + 32px);
-    display: grid;
-    place-items: center;
-    padding: 8px 0 16px 0;
-    margin: -16px 0 0px -16px;
-    &:hover {
-      background: hsl(0, 0%, 80%);
-    }
-    cursor: n-resize;
-    .dragHandle {
-      height: 6px;
-      width: 48px;
-      background: hsl(0, 0%, 40%);
-      border-radius: 999px;
-    }
-  }
-  .MuiDrawer-paper,
-  .MuiDrawer-root {
-    transition: all 225ms cubic-bezier(0, 0, 0.2, 1) 0ms !important;
-  }
-`;
 
 const BottomDrawer = () => {
   const setSelectedNode = useStore(
@@ -165,6 +117,19 @@ const BottomDrawer = () => {
               )}
             </div>
           </div>
+          {selectedNode?.user && (
+            <a
+              className="viewTweet"
+              style={{ transform: `translateY(${-offset}px)` }}
+              href={`https://www.twitter.com/${selectedNode.user.screen_name}/status/${selectedNode.id_str}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button variant="outlined" endIcon={<OpenInNewIcon />}>
+                View tweet
+              </Button>
+            </a>
+          )}
         </DrawerContentStyles>
       </Drawer>
     </BottomDrawerStyles>

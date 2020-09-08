@@ -56,7 +56,6 @@ export default function UserInfo() {
           <img src={user?.profile_image_url_https} alt="" />
         </div>
       </a>
-      <div className="screenName">{user?.screen_name}</div>
       <Button
         variant="outlined"
         disabled={loading}
