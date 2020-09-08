@@ -20,6 +20,14 @@ const UserInfoStyles = styled.div`
       width: 100%;
     }
   }
+  .username {
+    text-align: center;
+  }
+  .screenName {
+    text-align: center;
+    font-size: 0.75em;
+    color: hsl(0, 0%, 50%);
+  }
 `;
 export default function UserInfo() {
   const tweet = useSelectedNode();
@@ -56,6 +64,8 @@ export default function UserInfo() {
           <img src={user?.profile_image_url_https} alt="" />
         </div>
       </a>
+      <div className="username">{user?.name}</div>
+      <div className="screenName">{user?.screen_name}</div>
       <Button
         variant="outlined"
         disabled={loading}

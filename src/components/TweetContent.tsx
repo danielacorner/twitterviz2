@@ -95,20 +95,20 @@ export default function TweetContent({ nodeData, offset = 0, isTooltip }) {
     >
       {retweetedUser && (
         <div className="retweetedUser">
-          <div className="user">
-            <span className="user_name">{retweetedUser.name}</span> |{" "}
-            <a
-              href={`https://twitter.com/${retweetedUser.screen_name}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span className="user_screen_name">
-                {retweetedUser.screen_name}
-              </span>
-            </a>
-          </div>
+          <span className="user_name">{retweetedUser.name}</span>{" "}
+          <span className="pipe">|</span>
+          <a
+            href={`https://twitter.com/${retweetedUser.screen_name}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span className="user_screen_name">
+              {retweetedUser.screen_name}
+            </span>
+          </a>
           {!isTooltip && (
             <Button
+              className="btnFetchRetweetedTimeline"
               variant="outlined"
               onClick={() => fetchTimeline(retweetedUser.id_str)}
             >
@@ -124,9 +124,8 @@ export default function TweetContent({ nodeData, offset = 0, isTooltip }) {
           </>
         )}
         <div className="username">{user.name}</div>
+        <span className="pipe">|</span>
         <div className="handle">
-          {" "}
-          |{" "}
           <a
             href={`https://twitter.com/${user.screen_name}`}
             target="_blank"

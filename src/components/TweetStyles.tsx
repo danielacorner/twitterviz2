@@ -10,17 +10,15 @@ export const TweetStyles = styled.div`
 
   .retweetedUser {
     position: absolute;
-    top: -2px;
-    .user {
-      display: grid;
-      grid-auto-flow: column;
-      align-items: start;
-      justify-content: flex-start;
-      grid-gap: 4px;
-    }
-    button {
-      transform: scale(0.8);
-      transform-origin: right;
+    top: -1px;
+    display: grid;
+    grid-auto-flow: column;
+    align-items: start;
+    justify-content: flex-start;
+    grid-gap: 4px;
+    .btnFetchRetweetedTimeline {
+      transform: scale(0.6) translateY(2px);
+      transform-origin: top left;
     }
     transform-origin: left;
   }
@@ -29,6 +27,9 @@ export const TweetStyles = styled.div`
     grid-auto-flow: column;
     place-content: start;
     grid-gap: 4px;
+  }
+  .pipe {
+    margin: 0 0.5ch;
   }
   .userInfo {
     height: 38px;
@@ -46,6 +47,11 @@ export const TweetStyles = styled.div`
     }
     .retweetedBy {
       margin-right: 0.75ch;
+    }
+    .username {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
   }
   .locationInfo {
