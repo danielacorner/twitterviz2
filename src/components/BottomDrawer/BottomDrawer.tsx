@@ -22,16 +22,7 @@ const BottomDrawer = () => {
     (state: GlobalStateStoreType) => state.selectedNode
   );
   const [offset, setOffset] = useState(0);
-  const [isMouseDown, setIsMouseDown] = useState(false);
   const { height } = useWindowSize();
-  const handleDrag = (event) => {
-    if (!event.pageY || !isMouseDown) {
-      // mouseup
-      return;
-    }
-    const newOffset = event.pageY - height + DRAWER_HEIGHT;
-    setOffset(newOffset);
-  };
 
   const handleWheel = (event) => {
     const delta = offset - event.deltaY;
@@ -43,16 +34,10 @@ const BottomDrawer = () => {
     );
   };
   const handleClose = () => setSelectedNode(null);
-  const mouseDown = () => setIsMouseDown(true);
-  const mouseUp = () => setIsMouseDown(false);
 
   useEffect(() => {
-    window.addEventListener("mousedown", mouseDown);
-    window.addEventListener("mouseup", mouseUp);
     disableScroll();
     return () => {
-      window.removeEventListener("mousedown", mouseDown);
-      window.removeEventListener("mouseup", mouseUp);
       enableScroll();
     };
   }, []);
@@ -91,15 +76,6 @@ const BottomDrawer = () => {
           <IconButton className="btnClose" onClick={handleClose}>
             <CloseIcon />
           </IconButton>
-          <div
-            onMouseDown={handleDrag}
-            onDrag={handleDrag}
-            onTouchStart={handleDrag}
-            onTouchMove={handleDrag}
-            className="dragHandleWrapper"
-          >
-            <div className="dragHandle"></div>
-          </div>
           <div className="userAndTweetWrapper">
             {/* non-absolute-position below here */}
             <div className="userWrapper">

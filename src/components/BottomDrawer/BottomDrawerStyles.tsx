@@ -42,23 +42,6 @@ export const DrawerContentStyles = styled.div`
   .tweetContentWrapper {
     max-height: 900px;
   }
-  .dragHandleWrapper {
-    width: calc(100% + 32px);
-    display: grid;
-    place-items: center;
-    padding: 8px 0 16px 0;
-    margin: -16px 0 0px -16px;
-    &:hover {
-      background: hsl(0, 0%, 80%);
-    }
-    cursor: n-resize;
-    .dragHandle {
-      height: 6px;
-      width: 48px;
-      background: hsl(0, 0%, 40%);
-      border-radius: 999px;
-    }
-  }
   .MuiDrawer-paper,
   .MuiDrawer-root {
     transition: all 225ms cubic-bezier(0, 0, 0.2, 1) 0ms !important;

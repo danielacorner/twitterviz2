@@ -7,10 +7,7 @@ export const TweetStyles = styled.div`
   grid-gap: ${PADDING}px;
   overflow: hidden;
   word-break: break-all;
-
   .retweetedUser {
-    position: absolute;
-    top: -1px;
     display: grid;
     grid-auto-flow: column;
     align-items: start;
@@ -22,17 +19,11 @@ export const TweetStyles = styled.div`
     }
     transform-origin: left;
   }
-  .locationInfo {
-    display: grid;
-    grid-auto-flow: column;
-    place-content: start;
-    grid-gap: 4px;
-  }
   .pipe {
     margin: 0 0.5ch;
   }
   .userInfo {
-    height: 38px;
+    height: fit-content;
     display: grid;
     grid-auto-flow: column;
     justify-content: start;
@@ -55,12 +46,35 @@ export const TweetStyles = styled.div`
     }
   }
   .locationInfo {
+    display: grid;
+    grid-auto-flow: column;
+    place-content: start;
+    grid-gap: 4px;
+    height: 8px;
     color: hsl(0, 0%, 50%);
     .location {
       display: grid;
       grid-auto-flow: column;
-      transform: scale(0.8) translateY(-6px);
+      font-size: 0.8em;
+      transform: translateY(-6px);
       transform-origin: top left;
+      .MuiSvgIcon-root {
+        width: 0.8em;
+        height: 0.8em;
+      }
+    }
+  }
+  .inReplyTo {
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: 0.8em;
+    color: hsl(0, 0%, 50%);
+    text-align: left;
+    .MuiSvgIcon-root {
+      width: 0.8em;
+      height: 0.8em;
     }
   }
   .text {

@@ -3,6 +3,7 @@ import { getMediaArr } from "../utils/utils";
 import countryCodes from "../utils/countryCodes";
 import RetweetedIcon from "@material-ui/icons/CachedRounded";
 import LocationIcon from "@material-ui/icons/LocationOnRounded";
+import ReplyIcon from "@material-ui/icons/Reply";
 import { Button } from "@material-ui/core";
 import { useFetchTimeline } from "../utils/hooks";
 import { TweetStyles } from "./TweetStyles";
@@ -29,15 +30,19 @@ export default function TweetContent({ nodeData, offset = 0, isTooltip }) {
   let parsing = null; //TODO necessary?
 
   const mediaArr = getMediaArr(nodeData);
-  const textWithLinks = (
+  const fullText =
     extended_tweet?.full_text ||
     retweeted_status?.extended_tweet?.full_text ||
     retweeted_status?.text ||
-    text
-  )
+    text;
+  console.log("🌟🚨: TweetContent -> fullText", fullText);
+  const textWithLinks = fullText
     .split(" ")
     // if first two are "RT: someUser", store separately
-    .reduce((acc, cur) => {
+    .reduce((acc, cur, idx) => {
+      if (idx === 0 && nodeData.in_reply_to_screen_name) {
+        return acc;
+      }
       if (cur === "RT") {
         parsing = "next";
         return acc;
@@ -135,19 +140,35 @@ export default function TweetContent({ nodeData, offset = 0, isTooltip }) {
           </a>
         </div>
       </div>
-      <div className="locationInfo">
-        {user.location && (
-          <div className="location">
-            <LocationIcon />
-            {user.location}
-          </div>
-        )}
-        {entities?.place?.country_code && (
-          <div className="country">
-            | {countryCodes[entities?.place?.country_code]}
-          </div>
-        )}
-      </div>
+      {(user.location || entities?.place?.country_code) && (
+        <div className="locationInfo">
+          {user.location && (
+            <div className="location">
+              <LocationIcon />
+              {user.location}
+            </div>
+          )}
+          {entities?.place?.country_code && (
+            <div className="country">
+              | {countryCodes[entities?.place?.country_code]}
+            </div>
+          )}
+        </div>
+      )}
+      {nodeData.in_reply_to_screen_name && (
+        <div className="inReplyTo">
+          <ReplyIcon />
+          Replying to
+          <a
+            style={{ marginLeft: "0.5ch" }}
+            href={`https://twitter.com/${nodeData.in_reply_to_screen_name}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            @{nodeData.in_reply_to_screen_name}
+          </a>
+        </div>
+      )}
       <div className="text">{textWithLinks}</div>
 
       <div className="allMedia">
