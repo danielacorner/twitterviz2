@@ -1,14 +1,8 @@
 import React from "react";
-import {
-  MenuItem,
-  Switch,
-  Select,
-  InputLabel,
-  FormControl,
-} from "@material-ui/core";
+import { MenuItem, Select, InputLabel, FormControl } from "@material-ui/core";
 import { COLOR_BY } from "../../utils/constants";
 import { useConfig, AppConfig } from "../../providers/store";
-import { Div } from "../DivStyles";
+import { H5, SwitchWithLabels } from "../common/DivStyles";
 import styled from "styled-components/macro";
 
 const NetworkGraphControlsStyles = styled.div`
@@ -18,7 +12,7 @@ const NetworkGraphControlsStyles = styled.div`
 const NetworkGraphControls = () => {
   return (
     <NetworkGraphControlsStyles className="networkGraphControls controlsContainer">
-      <h3>Network Graph Controls</h3>
+      <H5>Network Graph Controls</H5>
       <Switch3D />
       <SelectColorBy />
     </NetworkGraphControlsStyles>
@@ -30,13 +24,12 @@ export default NetworkGraphControls;
 function Switch3D() {
   const { is3d, setConfig } = useConfig();
   return (
-    <Div css={``}>
-      <span>
-        2D
-        <Switch onChange={() => setConfig({ is3d: !is3d })} checked={is3d} />
-        3D
-      </span>
-    </Div>
+    <SwitchWithLabels
+      labelLeft="2D"
+      labelRight="3D"
+      onChange={() => setConfig({ is3d: !is3d })}
+      checked={is3d}
+    />
   );
 }
 

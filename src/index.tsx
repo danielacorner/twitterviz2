@@ -4,10 +4,13 @@ import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import "./whyDidYouRender";
+import ThemeManager from "./providers/ThemeManager";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ThemeManager>
+      <App />
+    </ThemeManager>
   </React.StrictMode>,
   document.getElementById("root")
 );

@@ -3,6 +3,7 @@ import styled from "styled-components/macro";
 export const ControlsStyles = styled.div`
   display: grid;
   align-items: start;
+  background: ${(props) => (props.isLight ? "hsl(0,0%,90%)" : "hsl(0,0%,15%)")};
   align-content: start;
   grid-gap: 16px;
   width: 100%;

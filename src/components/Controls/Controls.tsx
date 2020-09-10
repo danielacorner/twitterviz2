@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "@material-ui/core";
+import { Button, useTheme } from "@material-ui/core";
 import { useConfig } from "../../providers/store";
 import { ControlsStyles } from "./ControlsStyles";
 import WordcloudControls from "./WordcloudControls";
@@ -11,8 +11,9 @@ const Controls = () => {
   const createLinks = () => {
     console.log("TODO");
   };
+  const theme = useTheme();
   return (
-    <ControlsStyles>
+    <ControlsStyles isLight={theme.palette.type === "light"}>
       <VizSpecificControls />
       <FetchTweetsControls />
       <Button onClick={createLinks}>Link Nodes</Button>

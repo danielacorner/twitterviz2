@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
   MenuItem,
-  Switch,
   Select,
   Button,
   TextField,
@@ -20,13 +19,13 @@ import languages from "../../utils/languages";
 import { useConfig, useSetTweets } from "../../providers/store";
 import { TwoColFormStyles } from "./ControlsStyles";
 import CheckIcon from "@material-ui/icons/Check";
-import { Div } from "../DivStyles";
+import { H5, H6, Body1, SwitchWithLabels } from "../common/DivStyles";
 import styled from "styled-components/macro";
 import SelectGeolocation from "./SelectGeolocation";
 import { geoDistanceKm } from "../../utils/distanceFromCoords";
 
 const FetchTweetsControlsStyles = styled.div`
-  h4 {
+  h6 {
     margin: 1em 0 0.5em;
   }
 `;
@@ -34,13 +33,13 @@ const FetchTweetsControlsStyles = styled.div`
 const FetchTweetsControls = () => {
   return (
     <FetchTweetsControlsStyles className="fetchTweetsControls controlsContainer">
-      <h3>Fetch New Tweets</h3>
+      <H5>Fetch New Tweets</H5>
       <SwitchReplace />
-      <h4>Filters</h4>
+      <H6>Filters</H6>
       <TweetFilterControls />
-      <h4>Stream Tweets</h4>
+      <H6>Stream Tweets</H6>
       <BtnStreamNewTweets />
-      <h4>Search Tweets</h4>
+      <H6>Search Tweets</H6>
       <SearchForm />
       <FetchUserTweetsForm />
     </FetchTweetsControlsStyles>
@@ -79,9 +78,21 @@ function RecentPopularMixedRadioBtns() {
         onChange={handleChange}
         row={true}
       >
-        <FormControlLabel value="mixed" control={<Radio />} label="Mixed" />
-        <FormControlLabel value="recent" control={<Radio />} label="Recent" />
-        <FormControlLabel value="popular" control={<Radio />} label="Popular" />
+        <FormControlLabel
+          value="mixed"
+          control={<Radio />}
+          label={<Body1>Mixed</Body1>}
+        />
+        <FormControlLabel
+          value="recent"
+          control={<Radio />}
+          label={<Body1>Recent</Body1>}
+        />
+        <FormControlLabel
+          value="popular"
+          control={<Radio />}
+          label={<Body1>Popular</Body1>}
+        />
       </RadioGroup>
     </RadioBtnsStyles>
   );
@@ -362,16 +373,12 @@ function SelectFilterLevel() {
 function SwitchReplace() {
   const { replace, setConfig } = useConfig();
   return (
-    <Div css={``}>
-      <span>
-        Add
-        <Switch
-          onChange={() => setConfig({ replace: !replace })}
-          checked={replace}
-        />
-        Replace
-      </span>
-    </Div>
+    <SwitchWithLabels
+      labelLeft="Add"
+      labelRight="Replace"
+      onChange={() => setConfig({ replace: !replace })}
+      checked={replace}
+    />
   );
 }
 
@@ -399,7 +406,7 @@ function MediaTypeCheckboxes() {
             name="checkedA"
           />
         }
-        label="All"
+        label={<Body1>All</Body1>}
       />
       <FormControlLabel
         control={
@@ -410,7 +417,7 @@ function MediaTypeCheckboxes() {
             name="checkedA"
           />
         }
-        label="Video"
+        label={<Body1>Video</Body1>}
       />
       <FormControlLabel
         control={
@@ -421,7 +428,7 @@ function MediaTypeCheckboxes() {
             name="checkedA"
           />
         }
-        label="Image"
+        label={<Body1>Image</Body1>}
       />
     </MediaTypeCheckboxesStyles>
   );
