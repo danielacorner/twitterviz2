@@ -4,10 +4,11 @@ import styled from "styled-components/macro";
 import TweetContent from "./TweetContent";
 import { PADDING } from "../utils/utils";
 import useStore from "../providers/store";
+import useContainerDimensions from "../utils/useContainerDimensions";
+import { useWindowSize } from "../utils/hooks";
 
 const AVATAR_WIDTH = 46;
 const TOOLTIP_WIDTH = 380;
-const MAX_TOOLTIP_HEIGHT = 680;
 const MOUSE_WIDTH = 12;
 const WINDOW_PADDING_HZ = 12;
 
@@ -46,6 +47,12 @@ const NodeTooltip = () => {
   const tooltipNode = useStore((state) => state.tooltipNode);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const lastTooltipNode = useRef();
+  const [ref, dimensions] = useContainerDimensions();
+  const { height: windowHeight, width: windowWidth } = useWindowSize();
+  const tooltipHeight = dimensions?.height || 0;
+  const minYPosition = windowHeight - tooltipHeight;
+  const minXPosition =
+    windowWidth - TOOLTIP_WIDTH - MOUSE_WIDTH - WINDOW_PADDING_HZ;
 
   useEffect(() => {
     if (tooltipNode) {
@@ -55,20 +62,16 @@ const NodeTooltip = () => {
 
   // on mount, start listening to mouse position
   useEffect(() => {
+    function handleMouseMove(event) {
+      const x = Math.min(event.x, minXPosition);
+      const y = Math.min(event.y, minYPosition);
+      setPosition({ x, y });
+    }
     window.addEventListener("mousemove", handleMouseMove);
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
     };
-  }, []);
-
-  function handleMouseMove(event) {
-    const x = Math.min(
-      event.x,
-      window.innerWidth - TOOLTIP_WIDTH - MOUSE_WIDTH - WINDOW_PADDING_HZ
-    );
-    const y = Math.min(event.y, window.innerHeight - MAX_TOOLTIP_HEIGHT);
-    setPosition({ x, y });
-  }
+  }, [minYPosition, minXPosition]);
 
   const springToMousePosition = useSpring({
     pointerEvents: "none",
@@ -88,7 +91,7 @@ const NodeTooltip = () => {
   const nodeData = tooltipNode || lastTooltipNode.current;
   return (
     <animated.div style={springToMousePosition}>
-      <TooltipStyles>
+      <TooltipStyles ref={ref}>
         <div className="profileAndContent">
           <AvatarStyles>
             <img src={nodeData?.user.profile_image_url_https} alt="" />

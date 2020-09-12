@@ -4,7 +4,6 @@ import NetworkGraph from "./NetworkGraph/NetworkGraph";
 import Wordcloud from "./Wordcloud/Wordcloud";
 import styled from "styled-components/macro";
 import { useConfig, TAB_INDICES } from "../providers/store";
-import { H6 } from "./common/DivStyles";
 const Div = styled.div``;
 
 function a11yProps(index) {
