@@ -11,6 +11,7 @@ const AVATAR_WIDTH = 46;
 const TOOLTIP_WIDTH = 380;
 const MOUSE_WIDTH = 12;
 const WINDOW_PADDING_HZ = 12;
+const WINDOW_PADDING_VERT = 12;
 
 const TooltipStyles = styled.div`
   opacity: 0.9;
@@ -50,7 +51,7 @@ const NodeTooltip = () => {
   const [ref, dimensions] = useContainerDimensions();
   const { height: windowHeight, width: windowWidth } = useWindowSize();
   const tooltipHeight = dimensions?.height || 0;
-  const minYPosition = windowHeight - tooltipHeight;
+  const minYPosition = windowHeight - tooltipHeight - WINDOW_PADDING_VERT;
   const minXPosition =
     windowWidth - TOOLTIP_WIDTH - MOUSE_WIDTH - WINDOW_PADDING_HZ;
 

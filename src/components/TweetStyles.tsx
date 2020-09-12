@@ -81,6 +81,9 @@ export const TweetStyles = styled.div`
     text-align: left;
   }
   .allMedia {
+    .imgLink {
+      cursor: pointer;
+    }
     display: grid;
     max-height: calc(100vh - 100px);
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));

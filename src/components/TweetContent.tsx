@@ -180,7 +180,14 @@ export default function TweetContent({ nodeData, offset = 0, isTooltip }) {
                   loop={true}
                 ></video>
               ) : (
-                <img src={src} alt="" />
+                <a
+                  className="imgLink"
+                  href={src}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img src={src} alt="" />
+                </a>
               )}
             </div>
           );
