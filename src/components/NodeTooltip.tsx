@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useSpring, animated } from "react-spring";
 import styled from "styled-components/macro";
 import TweetContent from "./TweetContent";
@@ -60,18 +60,22 @@ const NodeTooltip = () => {
     }
   });
 
-  // on mount, start listening to mouse position
-  useEffect(() => {
-    function handleMouseMove(event) {
+  const handleMouseMove = useCallback(
+    (event) => {
       const x = Math.min(event.x, minXPosition);
       const y = Math.min(event.y, minYPosition);
       setPosition({ x, y });
-    }
+    },
+    [minXPosition, minYPosition]
+  );
+
+  // on mount, start listening to mouse position
+  useEffect(() => {
     window.addEventListener("mousemove", handleMouseMove);
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
     };
-  }, [minYPosition, minXPosition]);
+  }, [minYPosition, minXPosition, handleMouseMove]);
 
   const springToMousePosition = useSpring({
     pointerEvents: "none",

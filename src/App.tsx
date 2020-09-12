@@ -26,7 +26,6 @@ const AppStyles = styled.div`
 function App() {
   useFetchTweetsOnMount();
   const theme = useTheme();
-  console.log("🌟🚨: App -> theme", theme);
   return (
     <AppStyles isLight={theme.palette.type === "light"} className="App">
       <Controls />

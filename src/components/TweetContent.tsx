@@ -35,7 +35,6 @@ export default function TweetContent({ nodeData, offset = 0, isTooltip }) {
     retweeted_status?.extended_tweet?.full_text ||
     retweeted_status?.text ||
     text;
-  console.log("🌟🚨: TweetContent -> fullText", fullText);
   const textWithLinks = fullText
     .split(" ")
     // if first two are "RT: someUser", store separately
