@@ -46,7 +46,7 @@ const [useStore] = create(
       setGraphData: (tweets) => set((state) => ({ graphData: tweets })),
       config: {
         is3d: false,
-        colorBy: COLOR_BY.mediaType as keyof typeof COLOR_BY | null,
+        colorBy: COLOR_BY.media as keyof typeof COLOR_BY | null,
         lang: "All",
         countryCode: "All",
         resultType: "mixed",

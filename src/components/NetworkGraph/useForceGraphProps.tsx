@@ -53,7 +53,7 @@ export function useForceGraphProps() {
     height,
     onNodeHover,
     onNodeClick,
-    cooldownTime: is3d ? 10000 : 5000,
+    cooldownTime: is3d ? 10000 : 1000,
     nodeRelSize: NODE_SIZE,
     nodeColor: (node) => getNodeColor(node, colorBy),
 
@@ -82,20 +82,24 @@ export function useForceGraphProps() {
               ctx.strokeStyle = "cornflowerblue";
               ctx.stroke();
             } else {
-              const imageSize = NODE_SIZE * 2;
+              const image = mediaArr[0];
+              const small = image.sizes.small;
+              const hwRatio = small.h / small.w;
+              const imgHeight = NODE_SIZE * hwRatio * 2;
+              const imgWidth = NODE_SIZE * 2;
 
               // show the first image/video preview
 
-              const img = new Image(imageSize, imageSize);
-              img.src = mediaArr[0].poster || mediaArr[0].src;
+              const ctxImg = new Image(imgWidth, imgHeight);
+              ctxImg.src = image.poster || image.src;
 
               // drawImage https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
               ctx.drawImage(
-                img,
-                node.x - imageSize / 2,
-                node.y - imageSize / 2,
-                imageSize,
-                imageSize
+                ctxImg,
+                node.x - imgWidth / 2,
+                node.y - imgHeight / 2,
+                imgWidth,
+                imgHeight
               );
             }
           },
@@ -103,6 +107,8 @@ export function useForceGraphProps() {
       : {}),
     nodeThreeObject:
       colorBy === COLOR_BY.mediaType
+        ? null
+        : colorBy === COLOR_BY.media
         ? (node: Tweet) => {
             const mediaArr = getMediaArr(node);
             const first = mediaArr[0];

@@ -93,6 +93,7 @@ export const TweetStyles = styled.div`
       width: 100%;
     }
     video {
+      transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
       height: ${(props) => props.videoHeight}px;
       width: 100%;
     }

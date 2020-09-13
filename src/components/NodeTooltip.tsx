@@ -6,6 +6,7 @@ import { PADDING } from "../utils/utils";
 import useStore from "../providers/store";
 import useContainerDimensions from "../utils/useContainerDimensions";
 import { useWindowSize } from "../utils/hooks";
+import { CONTROLS_WIDTH } from "../utils/constants";
 
 const AVATAR_WIDTH = 46;
 const TOOLTIP_WIDTH = 380;
@@ -63,7 +64,7 @@ const NodeTooltip = () => {
 
   const handleMouseMove = useCallback(
     (event) => {
-      const x = Math.min(event.x, minXPosition);
+      const x = Math.max(CONTROLS_WIDTH, Math.min(event.x, minXPosition));
       const y = Math.min(event.y, minYPosition);
       setPosition({ x, y });
     },
