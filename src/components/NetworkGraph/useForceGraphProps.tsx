@@ -3,21 +3,52 @@ import { getMediaArr } from "../../utils/utils";
 import * as THREE from "three";
 import * as d3 from "d3";
 import { Tweet } from "../../types";
+import { useCallback, useRef } from "react";
+// https://www.npmjs.com/package/react-force-graph
+import { useWindowSize } from "../../utils/hooks";
+import {
+  useConfig,
+  useSetTooltipNode,
+  useSetSelectedNode,
+} from "../../providers/store";
 
 const NODE_SIZE = 25;
 
 /** https://www.npmjs.com/package/react-force-graph */
-export function getForceGraphProps(
-  width: any,
-  height: any,
-  onNodeHover: (node: any) => void,
-  onNodeClick: (node: any) => void,
-  is3d: any,
-  colorBy: any,
-  fgRef: React.MutableRefObject<undefined>,
-  allowedMediaTypes: any
-) {
-  return {
+
+const DEFAULT_NODE_COLOR = "steelblue";
+
+export function useForceGraphProps() {
+  const { is3d, colorBy, allowedMediaTypes } = useConfig();
+
+  const setTooltipNode = useSetTooltipNode();
+  const setSelectedNode = useSetSelectedNode();
+
+  const fgRef = useRef();
+
+  const onBackgroundClick = () => {
+    setSelectedNode(null);
+    setTooltipNode(null);
+  };
+
+  const { width, height } = useWindowSize();
+  const onNodeHover = useCallback(
+    (node) => {
+      if (node) {
+        setTooltipNode(node);
+      }
+    },
+    [setTooltipNode]
+  );
+  // on click, open the bottom drawer containing tweet info
+  const onNodeClick = useCallback(
+    (node) => {
+      setSelectedNode(node);
+      setTooltipNode(null);
+    },
+    [setSelectedNode, setTooltipNode]
+  );
+  const forceGraphProps = {
     width: width - CONTROLS_WIDTH,
     height,
     onNodeHover,
@@ -31,7 +62,7 @@ export function getForceGraphProps(
     ...(colorBy === COLOR_BY.profilePhoto
       ? // show profile photo
         {
-          nodeCanvasObject: (node, ctx, scale) => {
+          nodeCanvasObject: (node, ctx) => {
             const img = new Image(NODE_SIZE, NODE_SIZE);
             img.src = node.user.profile_image_url_https;
             ctx.drawImage(img, node.x, node.y);
@@ -40,7 +71,7 @@ export function getForceGraphProps(
       : colorBy === COLOR_BY.media
       ? // show media
         {
-          nodeCanvasObject: (node, ctx, scale) => {
+          nodeCanvasObject: (node, ctx) => {
             const mediaArr = getMediaArr(node);
             if (!mediaArr[0]) {
               // draw a circle if there's no media
@@ -131,10 +162,11 @@ export function getForceGraphProps(
             return sprite;
           }
         : null,
-  };
-}
 
-const DEFAULT_NODE_COLOR = "steelblue";
+    onBackgroundClick,
+  };
+  return { fgRef, forceGraphProps };
+}
 
 function getNodeColor(node, colorBy) {
   switch (colorBy) {
