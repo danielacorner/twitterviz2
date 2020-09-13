@@ -6,8 +6,8 @@ import { SwitchWithLabels } from "../components/common/DivStyles";
 const ThemeManagerStyles = styled.div`
   .switchWrapper {
     position: fixed;
-    top: 4px;
-    right: 20px;
+    bottom: 4px;
+    left: 12px;
     display: grid;
     grid-auto-flow: column;
     align-items: center;
@@ -22,7 +22,7 @@ export default function ThemeManager({ children }) {
     ? `hsl(270,50%,45%)`
     : `hsl(270,50%,60%)`;
   const textPrimaryColor = darkState ? `hsl(0,0%,100%)` : `hsl(0,0%,0%)`;
-  const textSecondaryColor = darkState ? `hsl(0,0%,90%)` : `hsl(0,0%,10%)`;
+  const textSecondaryColor = darkState ? `hsl(0,0%,60%)` : `hsl(0,0%,40%)`;
   const darkTheme = createMuiTheme({
     palette: {
       type: palletType,

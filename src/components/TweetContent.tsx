@@ -113,7 +113,7 @@ export default function TweetContent({ nodeData, offset = 0, isTooltip }) {
               variant="outlined"
               onClick={() => fetchTimeline(retweetedUser.id_str)}
             >
-              Fetch user timeline
+              Fetch timeline
             </Button>
           )}
         </div>

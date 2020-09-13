@@ -3,19 +3,14 @@ import { MenuItem, Select, InputLabel, FormControl } from "@material-ui/core";
 import { COLOR_BY } from "../../utils/constants";
 import { useConfig, AppConfig } from "../../providers/store";
 import { H5, SwitchWithLabels } from "../common/DivStyles";
-import styled from "styled-components/macro";
-
-const NetworkGraphControlsStyles = styled.div`
-  display: grid;
-`;
 
 const NetworkGraphControls = () => {
   return (
-    <NetworkGraphControlsStyles className="networkGraphControls controlsContainer">
+    <>
       <H5>Network Graph Controls</H5>
       <Switch3D />
       <SelectColorBy />
-    </NetworkGraphControlsStyles>
+    </>
   );
 };
 

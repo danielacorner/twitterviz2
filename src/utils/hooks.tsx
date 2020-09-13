@@ -39,13 +39,13 @@ export function useFetchTimeline() {
 
   const fetchTimeline = async (userId: string) => {
     setLoading(true);
+    const timer = setTimeout(() => setLoading(false), 10 * 1000);
     const resp = await fetch(
       `/api/user_timeline?id_str=${userId}&num=${numTweets}&mediaType=${mediaType}`
     );
-    console.log("🌟🚨: fetchTimeline -> resp", resp);
     const data = await resp.json();
-    console.log("🌟🚨: fetchTimeline -> data", data);
     setLoading(false);
+    window.clearTimeout(timer);
     setTweets(data);
   };
 

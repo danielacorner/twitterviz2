@@ -3,8 +3,10 @@ import styled from "styled-components/macro";
 import { useConfig } from "../../providers/store";
 import { Map, GoogleApiWrapper } from "google-maps-react";
 import { useMount } from "../../utils/utils";
-import { Modal, IconButton, Button, TextareaAutosize } from "@material-ui/core";
+import { Modal, IconButton, Button, Input } from "@material-ui/core";
+import LocationIcon from "@material-ui/icons/LocationOn";
 import CloseIcon from "@material-ui/icons/Close";
+import LocationOffIcon from "@material-ui/icons/LocationOff";
 
 const Div = styled.div``;
 
@@ -35,19 +37,15 @@ const MapContainerStyles = styled.div`
 
 const SelectGeolocation = ({ google }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { geolocation, setConfig } = useConfig();
+  const { geolocation: geo, setConfig } = useConfig();
   const [initialCenter, setInitialCenter] = useState({
-    lat: geolocation
-      ? (geolocation.latitude.left + geolocation.latitude.right) / 2
-      : 0,
-    lng: geolocation
-      ? (geolocation.longitude.left + geolocation.longitude.right) / 2
-      : 0,
+    lat: geo ? (geo.latitude.left + geo.latitude.right) / 2 : 0,
+    lng: geo ? (geo.longitude.left + geo.longitude.right) / 2 : 0,
   });
-  const [currentGeolocation, setCurrentGeolocation] = useState(geolocation);
+  const [currentGeo, setCurrentGeo] = useState(geo);
 
   useMount(() => {
-    if (!geolocation) {
+    if (!geo) {
       navigator.geolocation.getCurrentPosition((res) => {
         setInitialCenter({
           lat: res.coords.latitude,
@@ -58,13 +56,13 @@ const SelectGeolocation = ({ google }) => {
   });
 
   const handleConfirmGeolocation = () => {
-    setConfig({ geolocation: currentGeolocation });
+    setConfig({ geolocation: currentGeo });
     setIsModalOpen(false);
   };
 
   const onDragEnd = (mapProps, map) => {
     const bounds = map.getBounds();
-    setCurrentGeolocation({
+    setCurrentGeo({
       latitude: { left: bounds.Va.i, right: bounds.Va.j },
       longitude: { left: bounds.Za.i, right: bounds.Za.j },
     });
@@ -76,25 +74,25 @@ const SelectGeolocation = ({ google }) => {
         css={`
           display: grid;
           grid-template-columns: 1fr auto;
+          align-items: center;
         `}
       >
-        <Button variant="outlined" onClick={() => setIsModalOpen(true)}>
-          Geolocation
+        <Button onClick={() => setIsModalOpen(true)}>
+          <Input
+            style={{ pointerEvents: "none" }}
+            value={geo ? `${JSON.stringify(geo)}` : "🗺 geolocation"}
+          />
+          <IconButton
+            className="btnClose"
+            disabled={!geo}
+            onClick={() => {
+              setConfig({ geolocation: null });
+            }}
+          >
+            {geo ? <LocationIcon /> : <LocationOffIcon />}
+          </IconButton>
         </Button>
-        <IconButton
-          className="btnClose"
-          disabled={!geolocation}
-          onClick={() => {
-            setConfig({ geolocation: null });
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
       </Div>
-      <TextareaAutosize
-        style={{ resize: "none" }}
-        value={`${JSON.stringify(geolocation)}`}
-      />
 
       <Modal
         style={{
@@ -117,7 +115,7 @@ const SelectGeolocation = ({ google }) => {
             className="btnConfirmLocation"
             variant="contained"
             onClick={handleConfirmGeolocation}
-            disabled={!currentGeolocation}
+            disabled={!currentGeo}
           >
             Select the current visible area
           </Button>
