@@ -5,7 +5,7 @@ import { CONTROLS_PADDING_INNER } from "./components/Controls/ControlsStyles";
 import styled from "styled-components/macro";
 import BottomDrawer from "./components/BottomDrawer/BottomDrawer";
 import { useMount } from "./utils/utils";
-import { useSetTweets } from "./providers/store";
+import { useSetTweets, useLoading } from "./providers/store";
 import { query as q } from "faunadb";
 import { faunaClient } from "./providers/faunaProvider";
 import VisualizationTabs from "./components/VisualizationTabs";
@@ -13,6 +13,7 @@ import { useTheme } from "@material-ui/core";
 import Controls from "./components/Controls/Controls";
 
 const AppStyles = styled.div`
+  ${(props) => (props.loading ? "cursor: wait;" : "")}
   transition: background 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
   background: ${(props) => (props.isLight ? "white" : "hsl(0,0%,10%)")};
   display: grid;
@@ -33,8 +34,13 @@ const AppStyles = styled.div`
 function App() {
   useFetchTweetsOnMount();
   const theme = useTheme();
+  const { loading } = useLoading();
   return (
-    <AppStyles isLight={theme.palette.type === "light"} className="App">
+    <AppStyles
+      loading={loading}
+      isLight={theme.palette.type === "light"}
+      className="App"
+    >
       <Controls />
       <VisualizationTabs />
       <BottomDrawer />
