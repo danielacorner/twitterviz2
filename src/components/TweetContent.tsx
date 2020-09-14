@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { getMediaArr } from "../utils/utils";
 import countryCodes from "../utils/countryCodes";
 import RetweetedIcon from "@material-ui/icons/CachedRounded";
@@ -23,7 +23,6 @@ export default function TweetContent({
     extended_entities,
     entities,
   } = tweet;
-  console.log("🌟🚨: TweetContent -> tweet", tweet);
   const retweetedUser = retweeted_status?.user
     ? {
         name: retweeted_status.user.name,
@@ -92,6 +91,13 @@ export default function TweetContent({
       )
     );
 
+  // focus the video player when it starts playing
+  const videoRef = useRef();
+  useEffect(() => {
+    if (videoRef.current && autoPlay) {
+      (videoRef.current as any).focus();
+    }
+  }, [autoPlay]);
   return (
     <TweetStyles
       isRetweet={Boolean(retweetedUser)}
@@ -150,10 +156,10 @@ export default function TweetContent({
       {(user.location || entities?.place?.country_code) && (
         <Body2 className="locationInfo">
           {user.location && (
-            <Body2 className="location">
+            <>
               <LocationIcon />
               {user.location}
-            </Body2>
+            </>
           )}
           {entities?.place?.country_code && (
             <Body2 className="country">
@@ -170,6 +176,7 @@ export default function TweetContent({
             <div className="media" key={id_str}>
               {type === "video" ? (
                 <video
+                  ref={videoRef}
                   key={`${autoPlay}`} /* re-render when autoplay changes */
                   controls={true}
                   poster={poster}

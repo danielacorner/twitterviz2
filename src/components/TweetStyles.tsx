@@ -24,7 +24,7 @@ export const TweetStyles = styled.div`
     grid-template-columns: auto auto auto;
     align-items: baseline;
     justify-content: start;
-    grid-gap: 4px;
+    grid-gap: 2px;
     transform-origin: left;
   }
   .btnFetchTimeline {
@@ -32,7 +32,7 @@ export const TweetStyles = styled.div`
     width: 42px;
     min-width: 0;
     padding: 0;
-    height: 20px;
+    height: 16px;
   }
   .MuiSvgIcon-root {
     height: 18px;
@@ -46,10 +46,10 @@ export const TweetStyles = styled.div`
     justify-content: start;
     align-content: center;
     align-items: baseline;
-    grid-gap: 4px;
+    grid-gap: 2px;
     ${(props) =>
       props.isRetweet
-        ? "font-size: 0.75em; align-content: end; color: hsl(0, 0%, 50%);"
+        ? "font-size: 0.75rem; align-content: end; color: hsl(0, 0%, 50%);"
         : ""};
 
     .username {
@@ -58,19 +58,19 @@ export const TweetStyles = styled.div`
       text-overflow: ellipsis;
     }
   }
+  .retweetedBy {
+    margin-right: 0.5ch;
+  }
   .locationInfo {
+    font-size: 0.75rem;
     display: grid;
     grid-auto-flow: column;
     place-content: start;
-    grid-gap: 4px;
+    grid-gap: 2px;
     height: 8px;
-    .location {
-      color: hsl(0, 0%, 50%);
-      display: grid;
-      grid-auto-flow: column;
-      transform: translateY(-6px);
-      transform-origin: top left;
-    }
+    color: hsl(0, 0%, 50%);
+    transform: translateY(-6px);
+    transform-origin: top left;
   }
   .inReplyTo {
     display: grid;

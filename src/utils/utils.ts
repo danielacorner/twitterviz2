@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export const PADDING = 8;
+export const PADDING = 6;
 
 export type MediaItem = {
   src: string;
