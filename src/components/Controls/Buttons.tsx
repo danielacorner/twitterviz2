@@ -2,8 +2,10 @@ import React from "react";
 import { Button, CircularProgress } from "@material-ui/core";
 import { useConfig, useSetTweets, useLoading } from "../../providers/store";
 import SearchIcon from "@material-ui/icons/Search";
+import FavoriteIcon from "@material-ui/icons/Favorite";
 import { SwitchWithLabels } from "../common/styledComponents";
 import { SERVER_URL } from "../../utils/constants";
+import { getFavorites } from "../common/BtnFavorite";
 
 export function BtnStreamNewTweets() {
   const {
@@ -62,6 +64,48 @@ export function BtnStreamNewTweets() {
         <CircularProgress style={{ height: "24px", width: "24px" }} />
       ) : (
         "Stream Tweets"
+      )}
+    </Button>
+  );
+}
+
+export function BtnFetchFavorites() {
+  const { loading, setLoading } = useLoading();
+  const setTweets = useSetTweets();
+
+  const fetchNewTweets = async () => {
+    setLoading(true);
+    // after 10 seconds, stop loading
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 10 * 1000);
+
+    const { favorites } = getFavorites();
+    const resp = await fetch(`${SERVER_URL}/api/get?ids=${favorites}`);
+
+    const tweetsResponses = await resp.json();
+    const data = tweetsResponses.map((d) => d.data);
+
+    setLoading(false);
+    clearTimeout(timer);
+
+    setTweets(data);
+  };
+
+  return (
+    <Button
+      type="submit"
+      className="btnFetch"
+      disabled={loading}
+      onClick={fetchNewTweets}
+      variant="contained"
+      color="primary"
+      endIcon={<FavoriteIcon />}
+    >
+      {loading ? (
+        <CircularProgress style={{ height: "24px", width: "24px" }} />
+      ) : (
+        "Show Favorites"
       )}
     </Button>
   );

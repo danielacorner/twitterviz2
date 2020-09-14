@@ -26,7 +26,7 @@ export default function BtnFavorite({ tweet }) {
   );
 }
 
-function getFavorites() {
+export function getFavorites() {
   const getFavs = () =>
     JSON.parse(window.localStorage.getItem("favorites") || "[]");
   const favorites = getFavs();

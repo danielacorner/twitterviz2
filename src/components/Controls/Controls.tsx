@@ -14,7 +14,11 @@ import { ControlTitle } from "../common/TwoColRowStyles";
 import ControlsStyles from "./ControlsStyles";
 import WordcloudControls from "./WordcloudControls";
 import NetworkGraphControls from "./NetworkGraphControls";
-import { SwitchReplace, BtnStreamNewTweets } from "./Buttons";
+import {
+  SwitchReplace,
+  BtnStreamNewTweets,
+  BtnFetchFavorites,
+} from "./Buttons";
 
 const Controls = () => {
   // TODO
@@ -59,6 +63,7 @@ function FetchTweetsControls() {
         <BtnStreamNewTweets />
         <SearchForm />
         <FetchUserTweetsForm />
+        <BtnFetchFavorites />
       </div>
       <div className="filterTweets section">
         <H5>Filter Incoming Tweets</H5>
