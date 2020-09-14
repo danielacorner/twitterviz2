@@ -37,7 +37,7 @@ function TweetFilterControls() {
       <RecentPopularMixedRadioBtns />
       <ControlTitle>Media</ControlTitle>
       <MediaTypeCheckboxes />
-      <ControlTitle>Type</ControlTitle>
+      <ControlTitle>Content Filter</ControlTitle>
       <FilterLevelCheckboxes />
       <SelectCountry />
       <SelectGeolocation />

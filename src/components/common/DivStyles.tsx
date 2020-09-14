@@ -17,8 +17,13 @@ export const H6 = ({ children }) => (
     {children}
   </Typography>
 );
-export const Body1 = ({ children }) => (
-  <Typography color="textPrimary" variant="body1">
+export const Body1 = ({ children, ...props }) => (
+  <Typography color="textPrimary" variant="body1" {...props}>
+    {children}
+  </Typography>
+);
+export const Body2 = ({ children, ...props }) => (
+  <Typography color="textPrimary" variant="body2" {...props}>
     {children}
   </Typography>
 );

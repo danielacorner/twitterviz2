@@ -94,18 +94,18 @@ const NodeTooltip = () => {
     },
   });
 
-  const nodeData = tooltipNode || lastTooltipNode.current;
+  const tweet = tooltipNode || lastTooltipNode.current;
   return (
     <animated.div style={springToMousePosition}>
       <TooltipStyles ref={ref}>
         <div className="profileAndContent">
           <AvatarStyles>
-            <img src={nodeData?.user.profile_image_url_https} alt="" />
+            <img src={tweet?.user.profile_image_url_https} alt="" />
           </AvatarStyles>
-          {nodeData && (
+          {tweet && (
             <>
-              <div className="id_str">{nodeData.id_str}</div>
-              <TweetContent {...{ nodeData, isTooltip: true }} />
+              <div className="id_str">{tweet.id_str}</div>
+              <TweetContent {...{ tweet, isTooltip: true }} />
             </>
           )}
         </div>

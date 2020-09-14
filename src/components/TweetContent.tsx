@@ -7,8 +7,14 @@ import ReplyIcon from "@material-ui/icons/Reply";
 import { Button } from "@material-ui/core";
 import { useFetchTimeline } from "../utils/hooks";
 import { TweetStyles } from "./TweetStyles";
+import { Body2, Body1 } from "./common/DivStyles";
 
-export default function TweetContent({ nodeData, offset = 0, isTooltip }) {
+export default function TweetContent({
+  tweet,
+  offset = 0,
+  isTooltip,
+  autoPlay = true,
+}) {
   const { fetchTimeline } = useFetchTimeline();
   const {
     user,
@@ -17,8 +23,8 @@ export default function TweetContent({ nodeData, offset = 0, isTooltip }) {
     extended_tweet,
     extended_entities,
     entities,
-  } = nodeData;
-  console.log("🌟🚨: TweetContent -> nodeData", nodeData);
+  } = tweet;
+  console.log("🌟🚨: TweetContent -> tweet", tweet);
   const retweetedUser = retweeted_status?.user
     ? {
         name: retweeted_status.user.name,
@@ -29,7 +35,7 @@ export default function TweetContent({ nodeData, offset = 0, isTooltip }) {
 
   let parsing = null; //TODO necessary?
 
-  const mediaArr = getMediaArr(nodeData);
+  const mediaArr = getMediaArr(tweet);
   const fullText =
     extended_tweet?.full_text ||
     retweeted_status?.extended_tweet?.full_text ||
@@ -96,16 +102,17 @@ export default function TweetContent({ nodeData, offset = 0, isTooltip }) {
     >
       {retweetedUser && (
         <div className="retweetedUser">
-          <span className="user_name">{retweetedUser.name}</span>{" "}
-          <span className="pipe">|</span>
+          <Body1 className="user_name">
+            {retweetedUser.name} <span className="pipe">|</span>
+          </Body1>
           <a
             href={`https://twitter.com/${retweetedUser.screen_name}`}
             target="_blank"
             rel="noopener noreferrer"
           >
-            <span className="user_screen_name">
+            <Body2 className="user_screen_name">
               {retweetedUser.screen_name}
-            </span>
+            </Body2>
           </a>
           {!isTooltip && (
             <Button
@@ -124,9 +131,9 @@ export default function TweetContent({ nodeData, offset = 0, isTooltip }) {
             <RetweetedIcon /> <span className="retweetedBy">retweeted by </span>
           </>
         )}
-        <div className="username">{user.name}</div>
+        <Body2 className="username">{user.name}</Body2>
         <span className="pipe">|</span>
-        <div className="handle">
+        <Body2 className="handle">
           <a
             href={`https://twitter.com/${user.screen_name}`}
             target="_blank"
@@ -134,38 +141,38 @@ export default function TweetContent({ nodeData, offset = 0, isTooltip }) {
           >
             @{user.screen_name}
           </a>
-        </div>
+        </Body2>
       </div>
       {(user.location || entities?.place?.country_code) && (
-        <div className="locationInfo">
+        <Body2 className="locationInfo">
           {user.location && (
-            <div className="location">
+            <Body2 className="location">
               <LocationIcon />
               {user.location}
-            </div>
+            </Body2>
           )}
           {entities?.place?.country_code && (
-            <div className="country">
+            <Body2 className="country">
               | {countryCodes[entities?.place?.country_code]}
-            </div>
+            </Body2>
           )}
-        </div>
+        </Body2>
       )}
-      {nodeData.in_reply_to_screen_name && (
-        <div className="inReplyTo">
+      {tweet.in_reply_to_screen_name && (
+        <Body2 className="inReplyTo">
           <ReplyIcon />
           Replying to
           <a
             style={{ marginLeft: "0.5ch" }}
-            href={`https://twitter.com/${nodeData.in_reply_to_screen_name}`}
+            href={`https://twitter.com/${tweet.in_reply_to_screen_name}`}
             target="_blank"
             rel="noopener noreferrer"
           >
-            @{nodeData.in_reply_to_screen_name}
+            @{tweet.in_reply_to_screen_name}
           </a>
-        </div>
+        </Body2>
       )}
-      <div className="text">{textWithLinks}</div>
+      <Body2 className="text">{textWithLinks}</Body2>
 
       <div className="allMedia">
         {mediaArr.map(({ type, id_str, poster, src }) => {
@@ -176,7 +183,7 @@ export default function TweetContent({ nodeData, offset = 0, isTooltip }) {
                   controls={true}
                   poster={poster}
                   src={src}
-                  autoPlay={true}
+                  autoPlay={autoPlay}
                   loop={true}
                 ></video>
               ) : (

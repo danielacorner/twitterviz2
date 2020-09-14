@@ -4,6 +4,7 @@ import NetworkGraph from "./NetworkGraph/NetworkGraph";
 import Wordcloud from "./Wordcloud/Wordcloud";
 import styled from "styled-components/macro";
 import { useConfig, TAB_INDICES } from "../providers/store";
+import Gallery from "./Gallery/Gallery";
 const Div = styled.div``;
 
 function a11yProps(index) {
@@ -58,12 +59,23 @@ export default function VisualizationTabs() {
           }
           {...a11yProps(1)}
         />
+        <Tab
+          label={
+            <Typography variant="button" color="textPrimary">
+              Gallery
+            </Typography>
+          }
+          {...a11yProps(2)}
+        />
       </Tabs>
       <TabPanel value={value} index={TAB_INDICES.NETWORKGRAPH}>
         <NetworkGraph />
       </TabPanel>
       <TabPanel value={value} index={TAB_INDICES.WORDCLOUD}>
         <Wordcloud />
+      </TabPanel>
+      <TabPanel value={value} index={TAB_INDICES.GALLERY}>
+        <Gallery />
       </TabPanel>
     </Div>
   );

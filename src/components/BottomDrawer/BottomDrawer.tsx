@@ -87,7 +87,7 @@ const BottomDrawer = () => {
                   {...{
                     offset,
                     isTooltip: false,
-                    nodeData: selectedNode,
+                    tweet: selectedNode,
                   }}
                 />
               )}

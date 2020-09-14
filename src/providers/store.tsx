@@ -10,6 +10,7 @@ import { COLOR_BY, FILTER_LEVELS, FILTER_BY } from "../utils/constants";
 export const TAB_INDICES = {
   NETWORKGRAPH: 0,
   WORDCLOUD: 1,
+  GALLERY: 2,
 };
 
 export type GlobalStateStoreType = {
@@ -58,7 +59,7 @@ const [useStore] = create(
         filterLevel: FILTER_LEVELS.none,
         searchTerm: "",
         numTweets: 50,
-        tabIndex: TAB_INDICES.NETWORKGRAPH,
+        tabIndex: TAB_INDICES.GALLERY,
       },
       /** overwrite any values passed in */
       setConfig: (newConfig) =>

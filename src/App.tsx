@@ -21,6 +21,12 @@ const AppStyles = styled.div`
     margin: 0;
     box-sizing: border-box;
   }
+  a {
+    color: cornflowerblue;
+    &:visited {
+      color: hsl(250, 50%, 60%);
+    }
+  }
 `;
 
 function App() {

@@ -109,7 +109,7 @@ export function FetchUserTweetsForm() {
     }, 10 * 1000);
 
     const resp = await fetch(
-      `/api/user_timeline?screen_name=${userHandle.slice(1)}&num=${numTweets}`
+      `/api/user_timeline?screen_name=${userHandle}&num=${numTweets}`
     );
     const data = await resp.json();
     setLoading(false);
