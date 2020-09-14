@@ -170,6 +170,7 @@ export default function TweetContent({
             <div className="media" key={id_str}>
               {type === "video" ? (
                 <video
+                  key={`${autoPlay}`} /* re-render when autoplay changes */
                   controls={true}
                   poster={poster}
                   src={src}

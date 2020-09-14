@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTweets } from "../../providers/store";
 import styled from "styled-components/macro";
 import TweetContent from "../TweetContent";
@@ -46,8 +46,11 @@ function GridItem({ tweet }) {
   const rowSpan = Math.ceil(
     (dimensions?.height || MIN_TWEET_WIDTH) / GRID_ROW_PX
   );
+  const [autoPlay, setAutoPlay] = useState(false);
   return (
     <div
+      onMouseEnter={() => setAutoPlay(true)}
+      onMouseLeave={() => setAutoPlay(false)}
       className="tweetContent"
       ref={ref}
       style={{ gridRow: `span ${rowSpan}` }}
@@ -55,7 +58,7 @@ function GridItem({ tweet }) {
       <div className="openInNew">
         <OpenTweetBtn tweet={tweet} iconOnly={true} />
       </div>
-      <TweetContent tweet={tweet} isTooltip={false} autoPlay={false} />
+      <TweetContent tweet={tweet} isTooltip={false} autoPlay={autoPlay} />
     </div>
   );
 }
@@ -66,7 +69,7 @@ const Gallery = () => {
   return (
     <GalleryStyles isLight={theme.palette.type === "light"}>
       {tweets.map((tweet) => (
-        <GridItem tweet={tweet}></GridItem>
+        <GridItem key={tweet.id_str} tweet={tweet} />
       ))}
     </GalleryStyles>
   );
