@@ -6,7 +6,7 @@ import {
   Button,
 } from "@material-ui/core";
 import { FILTER_BY, SERVER_URL } from "../../utils/constants";
-import { useConfig, useSetTweets } from "../../providers/store";
+import { useConfig, useSetTweets, useLoading } from "../../providers/store";
 import SearchIcon from "@material-ui/icons/Search";
 import { Body1 } from "../common/styledComponents";
 import { geoDistanceKm } from "../../utils/distanceFromCoords";
@@ -24,7 +24,7 @@ export function SearchForm() {
     geolocation,
     resultType,
   } = useConfig();
-  const [loading, setLoading] = useState(false);
+  const { loading, setLoading } = useLoading();
   const setTweets = useSetTweets();
 
   const fetchSearchResults = async () => {
@@ -57,6 +57,7 @@ export function SearchForm() {
     const resp = await fetch(
       `${SERVER_URL}/api/search?term=${searchTerm}&num=${numTweets}&result_type=${resultType}${langParam}${mediaParam}${countryParam}${geocodeParam}`
     );
+    console.log("🌟🚨: fetchSearchResults -> resp", resp);
     const data = await resp.json();
     console.log("🌟🚨: fetchSearchResults -> data", data);
     setLoading(false);

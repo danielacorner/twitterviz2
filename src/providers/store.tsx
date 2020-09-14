@@ -113,7 +113,12 @@ export const useSetTweets = () => {
   const setGraphData = useStore(
     (state: GlobalStateStoreType) => state.setGraphData
   );
-  return (tweets: Tweet[]) => {
+  return (tweetsArg: Tweet[]) => {
+    const isError = !Array.isArray(tweetsArg);
+    if (isError) {
+      console.error(tweetsArg);
+    }
+    const tweets = isError ? [] : tweetsArg;
     const newTweets = replace
       ? tweets
       : uniqBy([...tweetsFromServer, ...tweets], (t) => t.id_str);
