@@ -7,6 +7,11 @@ export const TweetStyles = styled.div`
   grid-gap: ${PADDING}px;
   overflow: hidden;
   word-break: break-all;
+  .user_name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   .retweetedUser {
     display: grid;
     grid-auto-flow: column;

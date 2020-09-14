@@ -21,12 +21,12 @@ const BottomDrawer = () => {
   const selectedNode = useStore(
     (state: GlobalStateStoreType) => state.selectedNode
   );
-  const [offset, setOffset] = useState(0);
+  const [offsetY, setOffsetY] = useState(0);
   const { height } = useWindowSize();
 
   const handleWheel = (event) => {
-    const delta = offset - event.deltaY;
-    setOffset(
+    const delta = offsetY - event.deltaY;
+    setOffsetY(
       Math.max(
         DRAWER_HEIGHT - height * DRAWER_MAX_HEIGHT_MULTIPLIER,
         Math.min(DRAWER_HEIGHT - 100, delta)
@@ -43,7 +43,7 @@ const BottomDrawer = () => {
   }, []);
 
   return (
-    <BottomDrawerStyles offset={offset}>
+    <BottomDrawerStyles>
       <Drawer
         anchor="bottom"
         open={Boolean(selectedNode)}
@@ -54,7 +54,7 @@ const BottomDrawer = () => {
             style: {
               // backgroundColor: "transparent",
               // transform: `translateY(calc(-100vh + ${
-              //   DRAWER_HEIGHT - offset
+              //   DRAWER_HEIGHT - offsetY
               // }px))`,
             },
           },
@@ -68,7 +68,7 @@ const BottomDrawer = () => {
         }}
         style={{
           bottom: `-${(DRAWER_MAX_HEIGHT_MULTIPLIER - 1) * 100}vh`,
-          transform: `translateY(calc(100vh - ${DRAWER_HEIGHT - offset}px))`,
+          transform: `translateY(calc(100vh - ${DRAWER_HEIGHT - offsetY}px))`,
         }}
       >
         <DrawerContentStyles>
@@ -85,7 +85,7 @@ const BottomDrawer = () => {
               {selectedNode && (
                 <TweetContent
                   {...{
-                    offset,
+                    offsetY,
                     isTooltip: false,
                     tweet: selectedNode,
                   }}
@@ -94,23 +94,31 @@ const BottomDrawer = () => {
             </div>
           </div>
           {selectedNode?.user && (
-            <a
-              className="viewTweet"
-              style={{ transform: `translateY(${-offset}px)` }}
-              href={`https://www.twitter.com/${selectedNode.user.screen_name}/status/${selectedNode.id_str}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Button variant="outlined" endIcon={<OpenInNewIcon />}>
-                View tweet
-              </Button>
-            </a>
+            <OpenTweetBtn tweet={selectedNode} offsetY={offsetY} />
           )}
         </DrawerContentStyles>
       </Drawer>
     </BottomDrawerStyles>
   );
 };
+
+export const OpenTweetBtn = ({ tweet, offsetY = 0, iconOnly = false }) => (
+  <a
+    className="viewTweet"
+    style={{ transform: `translateY(${-offsetY}px)` }}
+    href={`https://www.twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`}
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    {iconOnly ? (
+      <OpenInNewIcon />
+    ) : (
+      <Button variant="outlined" endIcon={<OpenInNewIcon />}>
+        Open tweet
+      </Button>
+    )}
+  </a>
+);
 
 export default BottomDrawer;
 

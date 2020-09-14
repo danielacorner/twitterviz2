@@ -102,9 +102,8 @@ export default function TweetContent({
     >
       {retweetedUser && (
         <div className="retweetedUser">
-          <Body1 className="user_name">
-            {retweetedUser.name} <span className="pipe">|</span>
-          </Body1>
+          <Body1 className="user_name">{retweetedUser.name}</Body1>
+          <Body2 className="pipe">|</Body2>
           <a
             href={`https://twitter.com/${retweetedUser.screen_name}`}
             target="_blank"
@@ -117,10 +116,11 @@ export default function TweetContent({
           {!isTooltip && (
             <Button
               className="btnFetchRetweetedTimeline"
-              variant="outlined"
+              variant="contained"
+              color="primary"
               onClick={() => fetchTimeline(retweetedUser.id_str)}
             >
-              Fetch timeline
+              Fetch
             </Button>
           )}
         </div>

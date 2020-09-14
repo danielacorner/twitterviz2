@@ -80,18 +80,18 @@ const SelectGeolocation = ({ google }) => {
         <Button onClick={() => setIsModalOpen(true)}>
           <Input
             style={{ pointerEvents: "none" }}
-            value={geo ? `${JSON.stringify(geo)}` : "🗺 geolocation"}
+            value={geo ? `${JSON.stringify(geo)}` : "🗺 Geolocation"}
           />
-          <IconButton
-            className="btnClose"
-            disabled={!geo}
-            onClick={() => {
-              setConfig({ geolocation: null });
-            }}
-          >
-            {geo ? <LocationIcon /> : <LocationOffIcon />}
-          </IconButton>
         </Button>
+        <IconButton
+          className="btnClose"
+          disabled={!geo}
+          onClick={() => {
+            setConfig({ geolocation: null });
+          }}
+        >
+          {geo ? <LocationIcon /> : <LocationOffIcon />}
+        </IconButton>
       </Div>
 
       <Modal

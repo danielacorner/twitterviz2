@@ -5,6 +5,7 @@ import Wordcloud from "./Wordcloud/Wordcloud";
 import styled from "styled-components/macro";
 import { useConfig, TAB_INDICES } from "../providers/store";
 import Gallery from "./Gallery/Gallery";
+import { TABS_HEIGHT } from "../utils/constants";
 const Div = styled.div``;
 
 function a11yProps(index) {
@@ -29,9 +30,11 @@ export default function VisualizationTabs() {
         display: grid;
         place-items: center;
         grid-template-rows: auto 1fr;
+        max-height: 100vh;
         .tabs {
           width: 100%;
           display: grid;
+          height: ${TABS_HEIGHT}px;
           justify-content: center;
           box-shadow: 0px 2px 2px 0px #0000003d;
         }

@@ -17,3 +17,4 @@ export const FILTER_LEVELS = {
   none: "none",
 };
 export const CONTROLS_WIDTH = 220;
+export const TABS_HEIGHT = 48;

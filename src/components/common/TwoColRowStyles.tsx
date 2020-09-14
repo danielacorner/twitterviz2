@@ -9,7 +9,7 @@ export const TwoColRowStyles = styled.div`
 `;
 
 export const ControlTitle = styled(Typography).attrs({
-  variant: "div",
+  variant: "overline",
   color: "textSecondary",
 })`
   white-space: nowrap;
