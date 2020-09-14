@@ -171,7 +171,6 @@ export default function TweetContent({
         </Body2>
       )}
       <Body2 className="text">{textWithLinks}</Body2>
-
       <div className="allMedia">
         {mediaArr.map(({ type, id_str, poster, src }) => {
           return (

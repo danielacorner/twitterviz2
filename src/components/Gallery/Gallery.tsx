@@ -11,6 +11,7 @@ import {
   LOADING_SCROLLBAR_CSS,
 } from "../common/styledComponents";
 import { useMount } from "../../utils/utils";
+import BtnFavorite from "../common/BtnFavorite";
 
 /** smaller grid rows means finer but more time to compute layout */
 const GRID_ROW_PX = 10;
@@ -44,6 +45,13 @@ const GalleryStyles = styled.div`
     top: 0;
     right: 0;
   }
+  .btnFavorite {
+    transform: scale(0.8);
+    transform-origin: bottom right;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
   ${CUSTOM_SCROLLBAR_CSS}
   ${(props) => (props.loading ? LOADING_SCROLLBAR_CSS : "")}
 `;
@@ -67,6 +75,9 @@ function GridItem({ tweet }) {
         <OpenTweetBtn tweet={tweet} iconOnly={true} />
       </div>
       <TweetContent tweet={tweet} isTooltip={false} autoPlay={autoPlay} />
+      <div className="btnFavorite">
+        <BtnFavorite tweet={tweet} />
+      </div>
     </div>
   );
 }
