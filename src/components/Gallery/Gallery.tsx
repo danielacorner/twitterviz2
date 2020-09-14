@@ -9,16 +9,17 @@ import useContainerDimensions from "../../utils/useContainerDimensions";
 
 /** smaller grid rows means finer but more time to compute layout */
 const GRID_ROW_PX = 10;
+const MIN_TWEET_WIDTH = 300;
 
 const GalleryStyles = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(${MIN_TWEET_WIDTH}px, 1fr));
   grid-auto-flow: dense;
   align-items: center;
   grid-auto-rows: ${GRID_ROW_PX}px;
   width: 100%;
   .tweetContent {
-    width: 300px;
+    width: ${MIN_TWEET_WIDTH}px;
   }
   width: 100%;
   padding: 16px;
@@ -42,8 +43,9 @@ const GalleryStyles = styled.div`
 
 function GridItem({ tweet }) {
   const [ref, dimensions] = useContainerDimensions();
-  const rowSpan = Math.ceil((dimensions?.height || 300) / GRID_ROW_PX);
-  console.log("🌟🚨: GridItem -> rowSpan", rowSpan);
+  const rowSpan = Math.ceil(
+    (dimensions?.height || MIN_TWEET_WIDTH) / GRID_ROW_PX
+  );
   return (
     <div
       className="tweetContent"

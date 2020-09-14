@@ -7,6 +7,12 @@ export const TweetStyles = styled.div`
   grid-gap: ${PADDING}px;
   overflow: hidden;
   word-break: break-all;
+  .user_name,
+  .user_screen_name,
+  .location,
+  .inReplyTo {
+    font-size: 0.8em;
+  }
   .user_name {
     white-space: nowrap;
     overflow: hidden;
@@ -14,18 +20,24 @@ export const TweetStyles = styled.div`
   }
   .retweetedUser {
     display: grid;
-    grid-auto-flow: column;
-    align-items: start;
-    justify-content: flex-start;
+    width: 100%;
+    grid-template-columns: auto auto auto;
+    align-items: baseline;
+    justify-content: start;
     grid-gap: 4px;
-    .btnFetchRetweetedTimeline {
-      transform: scale(0.6) translateY(2px);
-      transform-origin: top left;
-    }
     transform-origin: left;
   }
-  .pipe {
-    margin: 0 0.5ch;
+  .btnFetchTimeline {
+    font-size: 0.6rem;
+    width: 42px;
+    min-width: 0;
+    padding: 0;
+    height: 20px;
+  }
+  .MuiSvgIcon-root {
+    height: 18px;
+    width: 18px;
+    align-self: center;
   }
   .userInfo {
     height: fit-content;
@@ -33,17 +45,13 @@ export const TweetStyles = styled.div`
     grid-auto-flow: column;
     justify-content: start;
     align-content: center;
-    align-items: center;
+    align-items: baseline;
+    grid-gap: 4px;
     ${(props) =>
       props.isRetweet
         ? "font-size: 0.75em; align-content: end; color: hsl(0, 0%, 50%);"
         : ""};
-    .MuiSvgIcon-root {
-      transform: scale(0.75);
-    }
-    .retweetedBy {
-      margin-right: 0.75ch;
-    }
+
     .username {
       overflow: hidden;
       white-space: nowrap;
@@ -56,17 +64,12 @@ export const TweetStyles = styled.div`
     place-content: start;
     grid-gap: 4px;
     height: 8px;
-    color: hsl(0, 0%, 50%);
     .location {
+      color: hsl(0, 0%, 50%);
       display: grid;
       grid-auto-flow: column;
-      font-size: 0.8em;
       transform: translateY(-6px);
       transform-origin: top left;
-      .MuiSvgIcon-root {
-        width: 0.8em;
-        height: 0.8em;
-      }
     }
   }
   .inReplyTo {
@@ -74,7 +77,6 @@ export const TweetStyles = styled.div`
     grid-auto-flow: column;
     justify-content: flex-start;
     align-items: center;
-    font-size: 0.8em;
     color: hsl(0, 0%, 50%);
     text-align: left;
     .MuiSvgIcon-root {

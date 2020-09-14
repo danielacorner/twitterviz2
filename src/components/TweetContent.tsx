@@ -15,7 +15,6 @@ export default function TweetContent({
   isTooltip,
   autoPlay = true,
 }) {
-  const { fetchTimeline } = useFetchTimeline();
   const {
     user,
     text,
@@ -103,46 +102,51 @@ export default function TweetContent({
       {retweetedUser && (
         <div className="retweetedUser">
           <Body1 className="user_name">{retweetedUser.name}</Body1>
-          <Body2 className="pipe">|</Body2>
           <a
             href={`https://twitter.com/${retweetedUser.screen_name}`}
             target="_blank"
             rel="noopener noreferrer"
+            className="user_screen_name"
           >
-            <Body2 className="user_screen_name">
-              {retweetedUser.screen_name}
-            </Body2>
+            @{retweetedUser.screen_name}
           </a>
-          {!isTooltip && (
-            <Button
-              className="btnFetchRetweetedTimeline"
-              variant="contained"
-              color="primary"
-              onClick={() => fetchTimeline(retweetedUser.id_str)}
-            >
-              Fetch
-            </Button>
-          )}
+          {!isTooltip && <BtnFetchTimeline user={retweetedUser} />}
         </div>
       )}
       <div className="userInfo">
         {retweetedUser && (
           <>
-            <RetweetedIcon /> <span className="retweetedBy">retweeted by </span>
+            <RetweetedIcon /> <div className="retweetedBy">by </div>
           </>
         )}
         <Body2 className="username">{user.name}</Body2>
-        <span className="pipe">|</span>
-        <Body2 className="handle">
-          <a
-            href={`https://twitter.com/${user.screen_name}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            @{user.screen_name}
-          </a>
-        </Body2>
+        <a
+          href={`https://twitter.com/${user.screen_name}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="user_screen_name"
+        >
+          @{user.screen_name}
+        </a>
+        <BtnFetchTimeline user={user} />
       </div>
+
+      {tweet.in_reply_to_screen_name && (
+        <>
+          <Body2 className="inReplyTo">
+            <ReplyIcon />
+            to
+            <a
+              style={{ marginLeft: "0.5ch" }}
+              href={`https://twitter.com/${tweet.in_reply_to_screen_name}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              @{tweet.in_reply_to_screen_name}
+            </a>
+          </Body2>
+        </>
+      )}
       {(user.location || entities?.place?.country_code) && (
         <Body2 className="locationInfo">
           {user.location && (
@@ -156,20 +160,6 @@ export default function TweetContent({
               | {countryCodes[entities?.place?.country_code]}
             </Body2>
           )}
-        </Body2>
-      )}
-      {tweet.in_reply_to_screen_name && (
-        <Body2 className="inReplyTo">
-          <ReplyIcon />
-          Replying to
-          <a
-            style={{ marginLeft: "0.5ch" }}
-            href={`https://twitter.com/${tweet.in_reply_to_screen_name}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            @{tweet.in_reply_to_screen_name}
-          </a>
         </Body2>
       )}
       <Body2 className="text">{textWithLinks}</Body2>
@@ -201,5 +191,20 @@ export default function TweetContent({
         })}
       </div>
     </TweetStyles>
+  );
+}
+
+function BtnFetchTimeline({ user }) {
+  const { fetchTimeline } = useFetchTimeline();
+
+  return (
+    <Button
+      className="btnFetchTimeline"
+      variant="outlined"
+      color="primary"
+      onClick={() => fetchTimeline(user.id_str)}
+    >
+      Fetch
+    </Button>
   );
 }
