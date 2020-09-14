@@ -17,9 +17,9 @@ const GalleryStyles = styled.div`
   grid-auto-flow: dense;
   align-items: center;
   grid-auto-rows: ${GRID_ROW_PX}px;
+  grid-column-gap: 6px;
   width: 100%;
   .tweetContent {
-    width: ${MIN_TWEET_WIDTH}px;
   }
   width: 100%;
   padding: 16px;
