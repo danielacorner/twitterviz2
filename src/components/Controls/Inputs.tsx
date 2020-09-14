@@ -5,7 +5,7 @@ import {
   InputLabel,
   Button,
 } from "@material-ui/core";
-import { FILTER_BY } from "../../utils/constants";
+import { FILTER_BY, SERVER_URL } from "../../utils/constants";
 import { useConfig, useSetTweets } from "../../providers/store";
 import SearchIcon from "@material-ui/icons/Search";
 import { Body1 } from "../common/styledComponents";
@@ -55,7 +55,7 @@ export function SearchForm() {
         },${searchRadius}km`
       : "";
     const resp = await fetch(
-      `/api/search?term=${searchTerm}&num=${numTweets}&result_type=${resultType}${langParam}${mediaParam}${countryParam}${geocodeParam}`
+      `${SERVER_URL}/api/search?term=${searchTerm}&num=${numTweets}&result_type=${resultType}${langParam}${mediaParam}${countryParam}${geocodeParam}`
     );
     const data = await resp.json();
     console.log("🌟🚨: fetchSearchResults -> data", data);
@@ -103,7 +103,7 @@ export function FetchUserTweetsForm() {
     }, 10 * 1000);
 
     const resp = await fetch(
-      `/api/user_timeline?screen_name=${userHandle}&num=${numTweets}`
+      `${SERVER_URL}/api/user_timeline?screen_name=${userHandle}&num=${numTweets}`
     );
     const data = await resp.json();
     setLoading(false);

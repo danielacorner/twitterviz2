@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useConfig, useSetTweets, useLoading } from "../providers/store";
+import { SERVER_URL } from "./constants";
 
 export function useWindowSize() {
   // (For SSR apps only?) Initialize state with undefined width/height so server and client renders match
@@ -41,7 +42,7 @@ export function useFetchTimeline() {
     setLoading(true);
     const timer = setTimeout(() => setLoading(false), 10 * 1000);
     const resp = await fetch(
-      `/api/user_timeline?id_str=${userId}&num=${numTweets}&mediaType=${mediaType}`
+      `${SERVER_URL}/api/user_timeline?id_str=${userId}&num=${numTweets}&mediaType=${mediaType}`
     );
     const data = await resp.json();
     setLoading(false);

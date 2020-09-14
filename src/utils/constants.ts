@@ -18,3 +18,8 @@ export const FILTER_LEVELS = {
 };
 export const CONTROLS_WIDTH = 220;
 export const TABS_HEIGHT = 48;
+
+export const SERVER_URL =
+  process.env.NODE_ENV === "development"
+    ? ""
+    : "https://twit-viz-api.herokuapp.com/";

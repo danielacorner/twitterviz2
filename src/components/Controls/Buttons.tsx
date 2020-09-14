@@ -3,6 +3,7 @@ import { Button, CircularProgress } from "@material-ui/core";
 import { useConfig, useSetTweets, useLoading } from "../../providers/store";
 import SearchIcon from "@material-ui/icons/Search";
 import { SwitchWithLabels } from "../common/styledComponents";
+import { SERVER_URL } from "../../utils/constants";
 
 export function BtnStreamNewTweets() {
   const {
@@ -34,8 +35,8 @@ export function BtnStreamNewTweets() {
 
     const resp = await fetch(
       geolocation
-        ? `/api/filter?num=${numTweets}&locations=${locations}${mediaParam}`
-        : `/api/stream?num=${numTweets}&filterLevel=${filterLevel}${mediaParam}${countryParam}${langParam}`
+        ? `${SERVER_URL}/api/filter?num=${numTweets}&locations=${locations}${mediaParam}`
+        : `${SERVER_URL}/api/stream?num=${numTweets}&filterLevel=${filterLevel}${mediaParam}${countryParam}${langParam}`
     );
 
     const data = await resp.json();
