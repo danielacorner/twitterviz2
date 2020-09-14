@@ -92,7 +92,7 @@ export const TweetStyles = styled.div`
       cursor: pointer;
     }
     display: grid;
-    max-height: calc(100vh - 100px);
+    ${(props) => (!props.isGallery ? "max-height: calc(100vh - 100px);" : "")}
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     ${(props) => (props.isVideo ? "grid-template-columns: 1fr;" : "")}
     grid-gap: ${PADDING}px;

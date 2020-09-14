@@ -9,7 +9,6 @@ import { useSetTweets, useLoading } from "./providers/store";
 import { query as q } from "faunadb";
 import { faunaClient } from "./providers/faunaProvider";
 import VisualizationTabs from "./components/VisualizationTabs";
-import { useTheme } from "@material-ui/core";
 import Controls from "./components/Controls/Controls";
 import { useIsLight } from "./providers/ThemeManager";
 

@@ -48,6 +48,7 @@ const GalleryStyles = styled.div`
   ${(props) => (props.loading ? LOADING_SCROLLBAR_CSS : "")}
 `;
 
+// TODO: use intersection observer to virtualize
 function GridItem({ tweet }) {
   const [ref, dimensions] = useContainerDimensions();
   const rowSpan = Math.ceil(

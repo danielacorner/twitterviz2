@@ -7,6 +7,7 @@ import ReplyIcon from "@material-ui/icons/Reply";
 import { TweetStyles } from "./TweetStyles";
 import { Body2, Body1 } from "./common/styledComponents";
 import BtnFetchTimeline from "./common/BtnFetchTimeline";
+import { TAB_INDICES, useConfig } from "../providers/store";
 
 export default function TweetContent({
   tweet,
@@ -97,8 +98,10 @@ export default function TweetContent({
       (videoRef.current as any).focus();
     }
   }, [autoPlay]);
+  const { tabIndex } = useConfig();
   return (
     <TweetStyles
+      isGallery={tabIndex === TAB_INDICES.GALLERY}
       isRetweet={Boolean(retweetedUser)}
       isTooltip={isTooltip}
       videoHeight={-offset + 270}
