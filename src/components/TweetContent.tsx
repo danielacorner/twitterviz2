@@ -4,10 +4,9 @@ import countryCodes from "../utils/countryCodes";
 import RetweetedIcon from "@material-ui/icons/CachedRounded";
 import LocationIcon from "@material-ui/icons/LocationOnRounded";
 import ReplyIcon from "@material-ui/icons/Reply";
-import { Button } from "@material-ui/core";
-import { useFetchTimeline } from "../utils/hooks";
 import { TweetStyles } from "./TweetStyles";
-import { Body2, Body1 } from "./common/DivStyles";
+import { Body2, Body1 } from "./common/styledComponents";
+import BtnFetchTimeline from "./common/BtnFetchTimeline";
 
 export default function TweetContent({
   tweet,
@@ -199,20 +198,5 @@ export default function TweetContent({
         })}
       </div>
     </TweetStyles>
-  );
-}
-
-function BtnFetchTimeline({ user }) {
-  const { fetchTimeline } = useFetchTimeline();
-
-  return (
-    <Button
-      className="btnFetchTimeline"
-      variant="outlined"
-      color="primary"
-      onClick={() => fetchTimeline(user.id_str)}
-    >
-      Fetch
-    </Button>
   );
 }

@@ -1,52 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button, CircularProgress } from "@material-ui/core";
-import { useConfig, useSetTweets } from "../../providers/store";
+import { useConfig, useSetTweets, useLoading } from "../../providers/store";
 import SearchIcon from "@material-ui/icons/Search";
-import { H5, SwitchWithLabels } from "../common/DivStyles";
-import SelectGeolocation from "./SelectGeolocation";
-import { SelectCountry, SelectLanguage } from "./Dropdowns";
-import {
-  FilterLevelCheckboxes,
-  MediaTypeCheckboxes,
-  RecentPopularMixedRadioBtns,
-} from "./Checkboxes";
-import { FetchUserTweetsForm, HowManyTweets, SearchForm } from "./Inputs";
-import { ControlTitle } from "../common/TwoColRowStyles";
+import { SwitchWithLabels } from "../common/styledComponents";
 
-const FetchTweetsControls = () => {
-  return (
-    <>
-      <H5>Fetch Tweets</H5>
-      <SwitchReplace />
-      <HowManyTweets />
-      <BtnStreamNewTweets />
-      <SearchForm />
-      <FetchUserTweetsForm />
-      <H5>Filter Incoming Tweets</H5>
-      <TweetFilterControls />
-    </>
-  );
-};
-
-export default FetchTweetsControls;
-
-function TweetFilterControls() {
-  return (
-    <>
-      <ControlTitle>Popular/Recent</ControlTitle>
-      <RecentPopularMixedRadioBtns />
-      <ControlTitle>Media</ControlTitle>
-      <MediaTypeCheckboxes />
-      <ControlTitle>Content Filter</ControlTitle>
-      <FilterLevelCheckboxes />
-      <SelectCountry />
-      <SelectGeolocation />
-      <SelectLanguage />
-    </>
-  );
-}
-
-function BtnStreamNewTweets() {
+export function BtnStreamNewTweets() {
   const {
     lang,
     countryCode,
@@ -55,9 +13,8 @@ function BtnStreamNewTweets() {
     mediaType,
     geolocation,
   } = useConfig();
+  const { loading, setLoading } = useLoading();
   const setTweets = useSetTweets();
-
-  const [loading, setLoading] = useState(false);
 
   const fetchNewTweets = async () => {
     setLoading(true);
@@ -98,12 +55,16 @@ function BtnStreamNewTweets() {
       color="primary"
       endIcon={<SearchIcon />}
     >
-      {loading ? <CircularProgress /> : "Stream Tweets"}
+      {loading ? (
+        <CircularProgress style={{ height: "24px", width: "24px" }} />
+      ) : (
+        "Stream Tweets"
+      )}
     </Button>
   );
 }
 
-function SwitchReplace() {
+export function SwitchReplace() {
   const { replace, setConfig } = useConfig();
   return (
     <SwitchWithLabels

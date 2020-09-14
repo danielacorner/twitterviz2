@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useConfig, useSetTweets } from "../providers/store";
+import { useConfig, useSetTweets, useLoading } from "../providers/store";
 
 export function useWindowSize() {
   // (For SSR apps only?) Initialize state with undefined width/height so server and client renders match
@@ -33,7 +33,7 @@ export function useWindowSize() {
 }
 
 export function useFetchTimeline() {
-  const [loading, setLoading] = useState(false);
+  const { loading, setLoading } = useLoading();
   const { numTweets, mediaType } = useConfig();
   const setTweets = useSetTweets();
 

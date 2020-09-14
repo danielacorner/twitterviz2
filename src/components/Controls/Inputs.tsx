@@ -2,22 +2,15 @@ import React, { useState, useEffect } from "react";
 import {
   TextField,
   CircularProgress,
-  IconButton,
   InputLabel,
+  Button,
 } from "@material-ui/core";
 import { FILTER_BY } from "../../utils/constants";
 import { useConfig, useSetTweets } from "../../providers/store";
 import SearchIcon from "@material-ui/icons/Search";
-import { Body1 } from "../common/DivStyles";
+import { Body1 } from "../common/styledComponents";
 import { geoDistanceKm } from "../../utils/distanceFromCoords";
-import styled from "styled-components/macro";
-import { TwoColRowStyles } from "../common/TwoColRowStyles";
-
-export const TwoColFormStyles = styled.form`
-  display: grid;
-  grid-auto-flow: column;
-  place-items: center;
-`;
+import { TwoColRowStyles, TwoColFormStyles } from "../common/TwoColRowStyles";
 
 // TODO: abstract forms
 export function SearchForm() {
@@ -84,13 +77,14 @@ export function SearchForm() {
         onChange={(e) => setConfig({ searchTerm: e.target.value })}
         type="text"
       />
-      <IconButton
+      <Button
+        variant="contained"
         color="primary"
         disabled={loading || searchTerm === ""}
         type="submit"
       >
         <SearchIcon />
-      </IconButton>
+      </Button>
     </TwoColFormStyles>
   );
 }
@@ -140,13 +134,14 @@ export function FetchUserTweetsForm() {
           type="text"
         />
       </div>
-      <IconButton
+      <Button
+        variant="contained"
         color="primary"
         disabled={loading || !userHandle}
         type="submit"
       >
         <SearchIcon />
-      </IconButton>
+      </Button>
     </TwoColFormStyles>
   );
 }

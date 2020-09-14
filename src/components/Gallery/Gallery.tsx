@@ -1,11 +1,15 @@
 import React, { useState } from "react";
-import { useTweets } from "../../providers/store";
+import { useTweets, useLoading } from "../../providers/store";
 import styled from "styled-components/macro";
 import TweetContent from "../TweetContent";
 import { TABS_HEIGHT } from "../../utils/constants";
 import { useTheme } from "@material-ui/core";
 import { OpenTweetBtn } from "../BottomDrawer/BottomDrawer";
 import useContainerDimensions from "../../utils/useContainerDimensions";
+import {
+  CUSTOM_SCROLLBAR_CSS,
+  LOADING_SCROLLBAR_CSS,
+} from "../common/styledComponents";
 
 /** smaller grid rows means finer but more time to compute layout */
 const GRID_ROW_PX = 10;
@@ -39,6 +43,8 @@ const GalleryStyles = styled.div`
     top: 0;
     right: 0;
   }
+  ${CUSTOM_SCROLLBAR_CSS}
+  ${(props) => (props.loading ? LOADING_SCROLLBAR_CSS : "")}
 `;
 
 function GridItem({ tweet }) {
@@ -66,8 +72,9 @@ function GridItem({ tweet }) {
 const Gallery = () => {
   const tweets = useTweets();
   const theme = useTheme();
+  const { loading } = useLoading();
   return (
-    <GalleryStyles isLight={theme.palette.type === "light"}>
+    <GalleryStyles loading={loading} isLight={theme.palette.type === "light"}>
       {tweets.map((tweet) => (
         <GridItem key={tweet.id_str} tweet={tweet} />
       ))}

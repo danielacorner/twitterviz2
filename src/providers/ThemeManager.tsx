@@ -1,7 +1,7 @@
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import React, { useState } from "react";
 import styled from "styled-components/macro";
-import { SwitchWithLabels } from "../components/common/DivStyles";
+import { SwitchWithLabels } from "../components/common/styledComponents";
 
 const ThemeManagerStyles = styled.div`
   .switchWrapper {

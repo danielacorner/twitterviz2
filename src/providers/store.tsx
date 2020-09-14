@@ -24,6 +24,8 @@ export type GlobalStateStoreType = {
   setTweetsFromServer: (tweets) => void;
   config: AppConfig;
   setConfig: (newConfig: Partial<AppConfig>) => void;
+  loading: boolean;
+  setLoading: (newLoading: boolean) => void;
   wordcloudConfig: WordcloudConfig;
   setWordcloudConfig: (newConfig: Partial<WordcloudConfig>) => void;
 };
@@ -45,6 +47,8 @@ const [useStore] = create(
       setTweetsFromServer: (tweets) =>
         set((state) => ({ tweetsFromServer: tweets })),
       setGraphData: (tweets) => set((state) => ({ graphData: tweets })),
+      loading: false,
+      setLoading: (loading) => set((state) => ({ loading })),
       config: {
         is3d: false,
         colorBy: COLOR_BY.media as keyof typeof COLOR_BY | null,
@@ -91,6 +95,11 @@ export const useSetTooltipNode = () =>
   useStore((state: GlobalStateStoreType) => state.setTooltipNode);
 export const useGraphData = () =>
   useStore((state: GlobalStateStoreType) => state.graphData);
+export const useLoading = () =>
+  useStore((state: GlobalStateStoreType) => ({
+    loading: state.loading,
+    setLoading: state.setLoading,
+  }));
 
 /** transform and save tweets to store */
 export const useSetTweets = () => {
@@ -153,6 +162,7 @@ export type AppConfig = {
 
 export const useConfig = () => {
   return {
+    loading: useStore((state: GlobalStateStoreType) => state.loading),
     is3d: useStore((state: GlobalStateStoreType) => state.config.is3d),
     colorBy: useStore((state: GlobalStateStoreType) => state.config.colorBy),
     lang: useStore((state: GlobalStateStoreType) => state.config.lang),

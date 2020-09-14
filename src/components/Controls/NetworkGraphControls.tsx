@@ -2,7 +2,7 @@ import React from "react";
 import { MenuItem, Select, InputLabel, FormControl } from "@material-ui/core";
 import { COLOR_BY } from "../../utils/constants";
 import { useConfig, AppConfig } from "../../providers/store";
-import { H5, SwitchWithLabels } from "../common/DivStyles";
+import { H5, SwitchWithLabels } from "../common/styledComponents";
 
 const NetworkGraphControls = () => {
   return (

@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import { CONTROLS_WIDTH } from "./utils/constants";
-import Controls from "./components/Controls/Controls";
+import { CONTROLS_PADDING_INNER } from "./components/Controls/ControlsStyles";
 import styled from "styled-components/macro";
 import BottomDrawer from "./components/BottomDrawer/BottomDrawer";
 import { useMount } from "./utils/utils";
@@ -10,12 +10,13 @@ import { query as q } from "faunadb";
 import { faunaClient } from "./providers/faunaProvider";
 import VisualizationTabs from "./components/VisualizationTabs";
 import { useTheme } from "@material-ui/core";
+import Controls from "./components/Controls/Controls";
 
 const AppStyles = styled.div`
   transition: background 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
   background: ${(props) => (props.isLight ? "white" : "hsl(0,0%,10%)")};
   display: grid;
-  grid-template-columns: ${CONTROLS_WIDTH}px 1fr;
+  grid-template-columns: ${CONTROLS_WIDTH + CONTROLS_PADDING_INNER * 2}px 1fr;
   min-height: 100vh;
   * {
     margin: 0;
