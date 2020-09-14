@@ -10,6 +10,7 @@ import {
   CUSTOM_SCROLLBAR_CSS,
   LOADING_SCROLLBAR_CSS,
 } from "../common/styledComponents";
+import { useMount } from "../../utils/utils";
 
 /** smaller grid rows means finer but more time to compute layout */
 const GRID_ROW_PX = 10;
@@ -78,8 +79,54 @@ const Gallery = () => {
       {tweets.map((tweet) => (
         <GridItem key={tweet.id_str} tweet={tweet} />
       ))}
+      {loading && <ScrollMoreIndicator />}
     </GalleryStyles>
   );
 };
 
 export default Gallery;
+
+const ScrollMoreStyles = styled.div`
+  position: fixed;
+  z-index: 99999;
+  bottom: 4px;
+  right: 4px;
+  display: grid;
+  grid-auto-flow: row;
+  grid-gap: 8px;
+  transition: all 0.3s ease-in;
+  opacity: ${(props) => (props.mounted ? 1 : 0)};
+  .dot {
+    height: 12px;
+    width: 12px;
+    border-radius: 99px;
+    background: hsla(0, 0%, 90%);
+    animation: inOut 0.5s cubic-bezier(0.16, 0.41, 0.15, 1.01) infinite
+      alternate-reverse;
+    &:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    &:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+  }
+  @keyframes inOut {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+`;
+function ScrollMoreIndicator() {
+  const [mounted, setMounted] = useState(false);
+  useMount(() => setMounted(true));
+  return (
+    <ScrollMoreStyles mounted={mounted}>
+      <div className="dot"></div>
+      <div className="dot"></div>
+      <div className="dot"></div>
+    </ScrollMoreStyles>
+  );
+}

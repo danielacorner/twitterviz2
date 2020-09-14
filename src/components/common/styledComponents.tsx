@@ -80,6 +80,7 @@ export const CUSTOM_SCROLLBAR_CSS = `
     box-sizing: border-box;
     background-clip: padding-box;
     padding: 10px;
+    transition: all 0.5s ease;
   }
   &::-webkit-scrollbar-thumb:hover {
     background-color: rgba(88, 89, 91, 0.6);
@@ -88,16 +89,18 @@ export const CUSTOM_SCROLLBAR_CSS = `
   &::-webkit-scrollbar-corner {
     background: none;
   }
+
 }
 `;
 export const LOADING_SCROLLBAR_CSS = `
-&::-webkit-scrollbar {
-  width: 16px;
-  background: none;
-}
 &::-webkit-scrollbar-thumb {
-  border: 4px dashed white;
-  border-radius: 99px;
-  background-color: rgba(88, 89, 91, 0.8);
+  background: linear-gradient(47deg, #31bd9a90, #09614b90);
+  background-size: 105% 105%;
+  -webkit-animation: background-animate 0.2s ease infinite;
+  -moz-animation: background-animate 0.2s ease infinite;
+  -o-animation: background-animate 0.2s ease infinite;
+  animation: background-animate 0.2s ease infinite;
+}
+
 }
 `;
