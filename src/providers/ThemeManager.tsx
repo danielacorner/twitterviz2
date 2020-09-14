@@ -1,4 +1,8 @@
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import {
+  createMuiTheme,
+  ThemeProvider,
+  useTheme,
+} from "@material-ui/core/styles";
 import React, { useState } from "react";
 import styled from "styled-components/macro";
 import { SwitchWithLabels } from "../components/common/styledComponents";
@@ -59,3 +63,8 @@ export default function ThemeManager({ children }) {
     </ThemeManagerStyles>
   );
 }
+
+export const useIsLight = () => {
+  const theme = useTheme();
+  return theme.palette.type === "light";
+};

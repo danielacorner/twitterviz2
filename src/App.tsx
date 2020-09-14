@@ -11,6 +11,7 @@ import { faunaClient } from "./providers/faunaProvider";
 import VisualizationTabs from "./components/VisualizationTabs";
 import { useTheme } from "@material-ui/core";
 import Controls from "./components/Controls/Controls";
+import { useIsLight } from "./providers/ThemeManager";
 
 const AppStyles = styled.div`
   ${(props) => (props.loading ? "cursor: wait;" : "")}
@@ -33,14 +34,10 @@ const AppStyles = styled.div`
 
 function App() {
   useFetchTweetsOnMount();
-  const theme = useTheme();
+  const isLight = useIsLight();
   const { loading } = useLoading();
   return (
-    <AppStyles
-      loading={loading}
-      isLight={theme.palette.type === "light"}
-      className="App"
-    >
+    <AppStyles loading={loading} isLight={isLight} className="App">
       <Controls />
       <VisualizationTabs />
       <BottomDrawer />
