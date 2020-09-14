@@ -40,6 +40,8 @@ export function BtnStreamNewTweets() {
     );
 
     const data = await resp.json();
+    console.log("🌟🚨: fetchNewTweets -> resp", resp);
+    console.log("🌟🚨: fetchNewTweets -> data", data);
     setLoading(false);
     clearTimeout(timer);
 
