@@ -1,7 +1,7 @@
 import React from "react";
-import { Button, CircularProgress } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import { useConfig, useSetTweets, useLoading } from "../../providers/store";
-import SearchIcon from "@material-ui/icons/Search";
+import DiceIcon from "@material-ui/icons/Casino";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import { SwitchWithLabels } from "../common/styledComponents";
 import { SERVER_URL } from "../../utils/constants";
@@ -52,19 +52,14 @@ export function BtnStreamNewTweets() {
 
   return (
     <Button
-      type="submit"
       className="btnFetch"
       disabled={loading}
       onClick={fetchNewTweets}
       variant="contained"
       color="primary"
-      endIcon={<SearchIcon />}
+      endIcon={<DiceIcon className="diceIcon" />}
     >
-      {loading ? (
-        <CircularProgress style={{ height: "24px", width: "24px" }} />
-      ) : (
-        "Stream Tweets"
-      )}
+      Stream Tweets
     </Button>
   );
 }
@@ -98,15 +93,11 @@ export function BtnFetchFavorites() {
       className="btnFetch"
       disabled={loading}
       onClick={fetchNewTweets}
-      variant="contained"
-      color="primary"
+      variant="outlined"
+      color="secondary"
       endIcon={<FavoriteIcon />}
     >
-      {loading ? (
-        <CircularProgress style={{ height: "24px", width: "24px" }} />
-      ) : (
-        "Show Favorites"
-      )}
+      Favorites
     </Button>
   );
 }

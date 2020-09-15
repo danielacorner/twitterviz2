@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, useTheme } from "@material-ui/core";
-import { useConfig } from "../../providers/store";
+import { useConfig, useLoading } from "../../providers/store";
 import { H5 } from "../common/styledComponents";
 import SelectGeolocation from "./SelectGeolocation";
 import { SelectCountry, SelectLanguage } from "./Dropdowns";
@@ -26,8 +26,9 @@ const Controls = () => {
     console.log("TODO");
   };
   const theme = useTheme();
+  const { loading } = useLoading();
   return (
-    <ControlsStyles isLight={theme.palette.type === "light"}>
+    <ControlsStyles loading={loading} isLight={theme.palette.type === "light"}>
       <VizSpecificControls />
       <FetchTweetsControls />
       <Button

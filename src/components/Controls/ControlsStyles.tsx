@@ -50,6 +50,20 @@ const ControlsStyles = styled.div`
   [class*="TwoColRowStyles"] {
     width: 100%;
   }
+  .diceIcon {
+    transition: all 0.3s ease;
+    animation: ${(props) =>
+      props.loading ? "spin 0.8s ease-in-out infinite" : ""};
+    transform: scale(1.1);
+  }
+  @keyframes spin {
+    from {
+      transform: scale(1.1) rotate(0turn);
+    }
+    to {
+      transform: scale(1.1) rotate(1turn);
+    }
+  }
 `;
 
 export default ControlsStyles;

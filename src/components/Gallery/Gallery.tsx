@@ -16,6 +16,7 @@ import BtnFavorite from "../common/BtnFavorite";
 /** smaller grid rows means finer but more time to compute layout */
 const GRID_ROW_PX = 10;
 const MIN_TWEET_WIDTH = 300;
+const GRID_GAP = 12;
 
 const GalleryStyles = styled.div`
   display: grid;
@@ -23,7 +24,7 @@ const GalleryStyles = styled.div`
   grid-auto-flow: dense;
   align-items: center;
   grid-auto-rows: ${GRID_ROW_PX}px;
-  grid-column-gap: 6px;
+  grid-column-gap: ${GRID_GAP}px;
   width: 100%;
   .tweetContent {
   }
@@ -60,7 +61,7 @@ const GalleryStyles = styled.div`
 function GridItem({ tweet }) {
   const [ref, dimensions] = useContainerDimensions();
   const rowSpan = Math.ceil(
-    (dimensions?.height || MIN_TWEET_WIDTH) / GRID_ROW_PX
+    ((dimensions?.height || MIN_TWEET_WIDTH) + GRID_GAP) / GRID_ROW_PX
   );
   const [autoPlay, setAutoPlay] = useState(false);
   return (
