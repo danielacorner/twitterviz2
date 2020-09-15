@@ -1,5 +1,6 @@
 import styled from "styled-components/macro";
 import { PADDING } from "../utils/utils";
+import playArrowSvg from "./icon-play-white.svg";
 
 export const TweetStyles = styled.div`
   position: relative;
@@ -101,8 +102,29 @@ export const TweetStyles = styled.div`
     }
     video {
       transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
-      height: ${(props) => props.videoHeight}px;
+      height: ${(props) =>
+        props.isBottomDrawer ? props.videoHeight + "px" : "auto"};
       width: 100%;
+    }
+  }
+  .poster {
+    height: fit-content;
+    width: 100%;
+    position: relative;
+    img {
+      width: 100%;
+      height: auto;
+    }
+    &:after {
+      content: "";
+      position: absolute;
+      top: calc(50% - 48px);
+      left: calc(50% - 48px);
+      background-image: url(${playArrowSvg});
+      background-position: center;
+      background-repeat: no-repeat;
+      width: 96px;
+      height: 96px;
     }
   }
 `;

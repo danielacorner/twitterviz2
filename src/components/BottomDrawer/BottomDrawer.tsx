@@ -86,8 +86,8 @@ const BottomDrawer = () => {
                 <TweetContent
                   {...{
                     offsetY,
-                    isTooltip: false,
                     tweet: selectedNode,
+                    isBottomDrawer: true,
                   }}
                 />
               )}

@@ -12,8 +12,9 @@ import { TAB_INDICES, useConfig } from "../providers/store";
 export default function TweetContent({
   tweet,
   offset = 0,
-  isTooltip,
   autoPlay = true,
+  isTooltip = false,
+  isBottomDrawer = false,
 }) {
   const {
     user,
@@ -104,6 +105,7 @@ export default function TweetContent({
       isGallery={tabIndex === TAB_INDICES.GALLERY}
       isRetweet={Boolean(retweetedUser)}
       isTooltip={isTooltip}
+      isBottomDrawer={isBottomDrawer}
       videoHeight={-offset + 270}
       isVideo={extended_entities?.media[0]?.type === "video"}
     >
@@ -176,15 +178,20 @@ export default function TweetContent({
           return (
             <div className="media" key={id_str}>
               {type === "video" ? (
-                <video
-                  ref={videoRef}
-                  key={`${autoPlay}`} /* re-render when autoplay changes */
-                  controls={true}
-                  poster={poster}
-                  src={src}
-                  autoPlay={autoPlay}
-                  loop={true}
-                ></video>
+                autoPlay ? (
+                  <video
+                    ref={videoRef}
+                    controls={true}
+                    poster={poster}
+                    src={src}
+                    autoPlay={true}
+                    loop={true}
+                  />
+                ) : (
+                  <div className="poster">
+                    <img src={poster} alt="" />
+                  </div>
+                )
               ) : (
                 <a
                   className="imgLink"
