@@ -13,7 +13,7 @@ import Controls from "./components/Controls/Controls";
 import { useIsLight } from "./providers/ThemeManager";
 
 const AppStyles = styled.div`
-  ${(props) => (props.loading ? "cursor: wait;" : "")}
+  ${(props) => (props.isLoading ? "cursor: wait;" : "")}
   transition: background 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
   background: ${(props) => (props.isLight ? "white" : "hsl(0,0%,10%)")};
   display: grid;
@@ -36,7 +36,7 @@ function App() {
   const isLight = useIsLight();
   const { loading } = useLoading();
   return (
-    <AppStyles loading={loading} isLight={isLight} className="App">
+    <AppStyles isLoading={loading} isLight={isLight} className="App">
       <Controls />
       <VisualizationTabs />
       <BottomDrawer />

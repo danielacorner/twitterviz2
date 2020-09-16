@@ -73,13 +73,15 @@ const SelectGeolocation = ({ google }) => {
         }}
         open={isModalOpen}
       >
-        {isModalOpen && (
+        {isModalOpen ? (
           <MapPopup
             {...{
               setIsModalOpen,
               google,
             }}
           />
+        ) : (
+          <></>
         )}
       </Modal>
     </>

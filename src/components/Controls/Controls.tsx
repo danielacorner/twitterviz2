@@ -28,7 +28,10 @@ const Controls = () => {
   const theme = useTheme();
   const { loading } = useLoading();
   return (
-    <ControlsStyles loading={loading} isLight={theme.palette.type === "light"}>
+    <ControlsStyles
+      isLoading={loading}
+      isLight={theme.palette.type === "light"}
+    >
       <VizSpecificControls />
       <FetchTweetsControls />
       <Button

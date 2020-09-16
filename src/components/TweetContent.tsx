@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { getMediaArr } from "../utils/utils";
+import { getMediaArr, MediaItem } from "../utils/utils";
 import countryCodes from "../utils/countryCodes";
 import RetweetedIcon from "@material-ui/icons/CachedRounded";
 import LocationIcon from "@material-ui/icons/LocationOnRounded";
@@ -8,6 +8,7 @@ import { TweetStyles } from "./TweetStyles";
 import { Body2, Body1 } from "./common/styledComponents";
 import BtnFetchTimeline from "./common/BtnFetchTimeline";
 import { TAB_INDICES, useConfig } from "../providers/store";
+import useContainerDimensions from "../utils/useContainerDimensions";
 
 export default function TweetContent({
   tweet,
@@ -92,16 +93,11 @@ export default function TweetContent({
       )
     );
 
-  // focus the video player when it starts playing
-  const videoRef = useRef();
-  useEffect(() => {
-    if (videoRef.current && autoPlay) {
-      (videoRef.current as any).focus();
-    }
-  }, [autoPlay]);
   const { tabIndex } = useConfig();
+  const [ref, dimensions] = useContainerDimensions();
   return (
     <TweetStyles
+      ref={ref}
       isGallery={tabIndex === TAB_INDICES.GALLERY}
       isRetweet={Boolean(retweetedUser)}
       isTooltip={isTooltip}
@@ -174,38 +170,71 @@ export default function TweetContent({
       )}
       <Body2 className="text">{textWithLinks}</Body2>
       <div className="allMedia">
-        {mediaArr.map(({ type, id_str, poster, src }) => {
+        {mediaArr.map((mediaItem) => {
           return (
-            <div className="media" key={id_str}>
-              {type === "video" ? (
-                autoPlay ? (
-                  <video
-                    ref={videoRef}
-                    controls={true}
-                    poster={poster}
-                    src={src}
-                    autoPlay={true}
-                    loop={true}
-                  />
-                ) : (
-                  <div className="poster">
-                    <img src={poster} alt="" />
-                  </div>
-                )
-              ) : (
-                <a
-                  className="imgLink"
-                  href={src}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img src={src} alt="" />
-                </a>
-              )}
-            </div>
+            <Media
+              key={mediaItem.id_str}
+              {...mediaItem}
+              {...{ autoPlay, containerWidth: dimensions?.width || 0 }}
+            />
           );
         })}
       </div>
     </TweetStyles>
+  );
+}
+
+type MediaProps = MediaItem & {
+  autoPlay: boolean;
+  containerWidth: number;
+};
+function Media({ autoPlay, containerWidth, ...mediaItem }: MediaProps) {
+  const { poster, src, type, sizes } = mediaItem;
+  // focus the video player when it starts playing
+  const videoRef = useRef();
+  useEffect(() => {
+    if (videoRef.current && autoPlay) {
+      (videoRef.current as any).focus();
+    }
+  }, [autoPlay]);
+
+  return (
+    <div className="media">
+      {type === "video" ? (
+        autoPlay ? (
+          <video
+            ref={videoRef}
+            controls={true}
+            poster={poster}
+            src={src}
+            autoPlay={true}
+            loop={true}
+          />
+        ) : (
+          <div className="poster">
+            <img
+              src={poster}
+              alt=""
+              width={containerWidth}
+              height={(containerWidth * sizes.large.h) / sizes.large.w}
+            />
+          </div>
+        )
+      ) : (
+        <a
+          className="imgLink"
+          href={src}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            src={src}
+            alt=""
+            width={containerWidth}
+            height={(containerWidth * sizes.large.h) / sizes.large.w}
+          />
+        </a>
+      )}
+    </div>
   );
 }

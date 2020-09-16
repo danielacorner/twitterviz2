@@ -54,7 +54,7 @@ const GalleryStyles = styled.div`
     right: 0;
   }
   ${CUSTOM_SCROLLBAR_CSS}
-  ${(props) => (props.loading ? LOADING_SCROLLBAR_CSS : "")}
+  ${(props) => (props.isLoading ? LOADING_SCROLLBAR_CSS : "")}
 `;
 
 // TODO: use intersection observer to virtualize
@@ -88,11 +88,11 @@ const Gallery = () => {
   const theme = useTheme();
   const { loading } = useLoading();
   return (
-    <GalleryStyles loading={loading} isLight={theme.palette.type === "light"}>
+    <GalleryStyles isLoading={loading} isLight={theme.palette.type === "light"}>
       {tweets.map((tweet) => (
         <GridItem key={tweet.id_str} tweet={tweet} />
       ))}
-      {loading && <ScrollMoreIndicator />}
+      {loading ? <ScrollMoreIndicator /> : null}
     </GalleryStyles>
   );
 };
