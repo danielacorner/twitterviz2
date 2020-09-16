@@ -38,35 +38,6 @@ const MapContainerStyles = styled.div`
 const SelectGeolocation = ({ google }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { geolocation: geo, setConfig } = useConfig();
-  const [initialCenter, setInitialCenter] = useState({
-    lat: geo ? (geo.latitude.left + geo.latitude.right) / 2 : 0,
-    lng: geo ? (geo.longitude.left + geo.longitude.right) / 2 : 0,
-  });
-  const [currentGeo, setCurrentGeo] = useState(geo);
-
-  useMount(() => {
-    if (!geo) {
-      navigator.geolocation.getCurrentPosition((res) => {
-        setInitialCenter({
-          lat: res.coords.latitude,
-          lng: res.coords.longitude,
-        });
-      });
-    }
-  });
-
-  const handleConfirmGeolocation = () => {
-    setConfig({ geolocation: currentGeo });
-    setIsModalOpen(false);
-  };
-
-  const onDragEnd = (mapProps, map) => {
-    const bounds = map.getBounds();
-    setCurrentGeo({
-      latitude: { left: bounds.Va.i, right: bounds.Va.j },
-      longitude: { left: bounds.Za.i, right: bounds.Za.j },
-    });
-  };
 
   return (
     <>
@@ -93,7 +64,6 @@ const SelectGeolocation = ({ google }) => {
           {geo ? <LocationIcon /> : <LocationOffIcon />}
         </IconButton>
       </Div>
-
       <Modal
         style={{
           top: MODAL_PADDING,
@@ -103,31 +73,14 @@ const SelectGeolocation = ({ google }) => {
         }}
         open={isModalOpen}
       >
-        <MapContainerStyles>
-          <Map
-            google={google}
-            style={{ width: "100%", height: "100%" }}
-            initialCenter={initialCenter}
-            onDragend={onDragEnd}
-            onZoomChanged={onDragEnd}
-          />
-          <Button
-            className="btnConfirmLocation"
-            variant="contained"
-            onClick={handleConfirmGeolocation}
-            disabled={!currentGeo}
-          >
-            Select the current visible area
-          </Button>
-          <IconButton
-            className="btnClose"
-            onClick={() => {
-              setIsModalOpen(false);
+        {isModalOpen && (
+          <MapPopup
+            {...{
+              setIsModalOpen,
+              google,
             }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </MapContainerStyles>
+          />
+        )}
       </Modal>
     </>
   );
@@ -136,3 +89,81 @@ const SelectGeolocation = ({ google }) => {
 export default GoogleApiWrapper({
   apiKey: process.env.REACT_APP_GOOGLE_API_KEY,
 })(SelectGeolocation);
+
+function MapPopup({ setIsModalOpen, google }) {
+  const { geolocation: geo, setConfig } = useConfig();
+  const [initialCenter, setInitialCenter] = useState(getCenterFromGeo(geo));
+  const [currentGeo, setCurrentGeo] = useState(geo);
+
+  useMount(() => {
+    if (!geo) {
+      navigator.geolocation.getCurrentPosition((res) => {
+        setInitialCenter({
+          lat: res.coords.latitude,
+          lng: res.coords.longitude,
+        });
+      });
+    } else {
+      setInitialCenter(getCenterFromGeo(geo));
+    }
+  });
+
+  const handleConfirmGeolocation = () => {
+    setConfig({ geolocation: currentGeo });
+    setIsModalOpen(false);
+  };
+
+  const onDragEnd = (mapProps, map) => {
+    const bounds = map.getBounds();
+
+    setCurrentGeo({
+      latitude: { left: bounds.Za.i, right: bounds.Za.j },
+      longitude: { left: bounds.Va.i, right: bounds.Va.j },
+    });
+  };
+
+  return (
+    <MapContainerStyles
+      key={initialCenter} // re-render if we get the user's location
+    >
+      <Map
+        google={google}
+        style={{
+          width: "100%",
+          height: "100%",
+        }}
+        centerAroundCurrentLocation={!initialCenter}
+        {...(geo ? {} : { center: initialCenter })}
+        // center={geo ? center : initialCenter}
+        initialCenter={initialCenter}
+        onDragend={onDragEnd}
+        onZoomChanged={onDragEnd}
+      />
+      <Button
+        className="btnConfirmLocation"
+        variant="contained"
+        onClick={handleConfirmGeolocation}
+        disabled={!currentGeo}
+      >
+        Select the current visible area
+      </Button>
+      <IconButton
+        className="btnClose"
+        onClick={() => {
+          setIsModalOpen(false);
+        }}
+      >
+        <CloseIcon />
+      </IconButton>
+    </MapContainerStyles>
+  );
+}
+function getCenterFromGeo(geo: {
+  latitude: { left: number; right: number };
+  longitude: { left: number; right: number };
+}): { lat: number; lng: number } | (() => { lat: number; lng: number }) {
+  return {
+    lat: geo ? (geo.latitude.left + geo.latitude.right) / 2 : 0,
+    lng: geo ? (geo.longitude.left + geo.longitude.right) / 2 : 0,
+  };
+}
