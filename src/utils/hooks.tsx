@@ -52,3 +52,23 @@ export function useFetchTimeline() {
 
   return { loading, fetchTimeline };
 }
+
+export function useFetchLikes() {
+  const { loading, setLoading } = useLoading();
+  const { numTweets, mediaType } = useConfig();
+  const setTweets = useSetTweets();
+
+  const fetchLikes = async (userId: string) => {
+    setLoading(true);
+    const timer = setTimeout(() => setLoading(false), 10 * 1000);
+    const resp = await fetch(
+      `${SERVER_URL}/api/user_likes?id_str=${userId}&num=${numTweets}&mediaType=${mediaType}`
+    );
+    const data = await resp.json();
+    setLoading(false);
+    window.clearTimeout(timer);
+    setTweets(data);
+  };
+
+  return { loading, fetchLikes };
+}
