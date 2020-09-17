@@ -118,83 +118,83 @@ export function transformTweetsIntoGraphData(tweetsArg: Tweet[]): GraphData {
 
   // tweets link to other tweets by their user id
   // for each tweet, link the tweet to...
-  const links = tweets.reduce((acc, t) => {
-    // - reply recipient
-    const replyRecipientUserId = t.in_reply_to_user_id_str;
+  // const links = tweets.reduce((acc, t) => {
+  //   // - reply recipient
+  //   const replyRecipientUserId = t.in_reply_to_user_id_str;
 
-    // - mentioned users
-    const mentionedUserIds = (
-      (t.extended_tweet || t).entities?.user_mentions || []
-    )
-      .map(
-        (user) =>
-          tweets.find(
-            (tweet) => tweet.isUserNode && tweet.user.id_str === user.id_str
-          )?.id_str
-      )
-      .filter(Boolean);
+  //   // - mentioned users
+  //   const mentionedUserIds = (
+  //     (t.extended_tweet || t).entities?.user_mentions || []
+  //   )
+  //     .map(
+  //       (user) =>
+  //         tweets.find(
+  //           (tweet) => tweet.isUserNode && tweet.user.id_str === user.id_str
+  //         )?.id_str
+  //     )
+  //     .filter(Boolean);
 
-    // users using the same hashtags
-    // for each hashtag,
-    const allHashtagRelatedTweetIds: string[] = Object.entries(
-      tweetIdsByHashtag
-    ).reduce((acc, [hashtag, tweets]) => {
-      // for each hashtag shared by many tweets
+  //   // users using the same hashtags
+  //   // for each hashtag,
+  //   const allHashtagRelatedTweetIds: string[] = Object.entries(
+  //     tweetIdsByHashtag
+  //   ).reduce((acc, [hashtag, tweets]) => {
+  //     // for each hashtag shared by many tweets
 
-      if (tweets.length > 1) {
-        // save all sets of links between these tweets
-        tweets.forEach((tweet) => {
-          acc = [...acc, tweet.id_str];
-        });
-      }
-      return acc;
-    }, [] as string[]);
+  //     if (tweets.length > 1) {
+  //       // save all sets of links between these tweets
+  //       tweets.forEach((tweet) => {
+  //         acc = [...acc, tweet.id_str];
+  //       });
+  //     }
+  //     return acc;
+  //   }, [] as string[]);
 
-    // - tweets of users that liked this tweet
+  //   // - tweets of users that liked this tweet
 
-    // - tweets of retweeted user
-    // const retweetedUser = t.map([...mentions, replyRecipient]);
+  //   // - tweets of retweeted user
+  //   // const retweetedUser = t.map([...mentions, replyRecipient]);
 
-    // Link this tweet to userIds: poster, replied, mentioned, retweeted
-    const relatedUserIds = uniq([
-      ...(t.user?.id_str ? [t.user.id_str] : []),
-      ...(replyRecipientUserId ? [replyRecipientUserId] : []),
-      ...mentionedUserIds,
-    ]);
-    const relatedTweetIds = uniq(allHashtagRelatedTweetIds);
-    // create a link if we find the users in our dataset
-    tweets.forEach((tweet) => {
-      // link each tweet to each user node
-      relatedUserIds.forEach((relatedUserId) => {
-        if (relatedUserId === tweet.user.id_str) {
-          acc = [
-            ...acc,
-            {
-              // target = the user node, (isUserNode && id_str is user.id_str)
-              target: +relatedUserId,
-              // source = this tweet
-              source: +t.id,
-            },
-          ];
-        }
-      });
-      relatedTweetIds.forEach((relatedTweetId) => {
-        if (relatedTweetId === tweet.id_str) {
-          acc = [
-            ...acc,
-            {
-              // target = the related tweet node
-              target: +relatedTweetId,
-              // source = this tweet
-              source: +tweet.id_str,
-            },
-          ];
-        }
-      });
-    });
+  //   // Link this tweet to userIds: poster, replied, mentioned, retweeted
+  //   const relatedUserIds = uniq([
+  //     ...(t.user?.id_str ? [t.user.id_str] : []),
+  //     ...(replyRecipientUserId ? [replyRecipientUserId] : []),
+  //     ...mentionedUserIds,
+  //   ]);
+  //   const relatedTweetIds = uniq(allHashtagRelatedTweetIds);
+  //   // create a link if we find the users in our dataset
+  //   tweets.forEach((tweet) => {
+  //     // link each tweet to each user node
+  //     relatedUserIds.forEach((relatedUserId) => {
+  //       if (relatedUserId === tweet.user.id_str) {
+  //         acc = [
+  //           ...acc,
+  //           {
+  //             // target = the user node, (isUserNode && id_str is user.id_str)
+  //             target: +relatedUserId,
+  //             // source = this tweet
+  //             source: +t.id,
+  //           },
+  //         ];
+  //       }
+  //     });
+  //     relatedTweetIds.forEach((relatedTweetId) => {
+  //       if (relatedTweetId === tweet.id_str) {
+  //         acc = [
+  //           ...acc,
+  //           {
+  //             // target = the related tweet node
+  //             target: +relatedTweetId,
+  //             // source = this tweet
+  //             source: +tweet.id_str,
+  //           },
+  //         ];
+  //       }
+  //     });
+  //   });
 
-    return acc;
-  }, [] as Link[]);
+  //   return acc;
+  // }, [] as Link[]);
 
   // graph payload
   // const data = {
@@ -205,7 +205,7 @@ export function transformTweetsIntoGraphData(tweetsArg: Tweet[]): GraphData {
   //     { source: 1, target: 3 },
   //   ],
   // };
-  console.log({ links });
+  // console.log({ links });
   return {
     graph: {
       nodes: tweets
