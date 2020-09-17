@@ -24,7 +24,7 @@ import {
   BtnStreamNewTweets,
   BtnFetchFavorites,
 } from "./Buttons";
-import { getSavedDatasets } from "../common/BtnFavorite";
+import { useSavedDatasets } from "../common/BtnFavorite";
 import { SERVER_URL } from "../../utils/constants";
 
 const Controls = () => {
@@ -62,7 +62,7 @@ export default Controls;
 
 function BtnSaveData() {
   const tweets = useTweets();
-  const { addSave } = getSavedDatasets();
+  const { addSave } = useSavedDatasets();
   return (
     <Button
       variant="contained"
@@ -81,7 +81,7 @@ function BtnLoadData() {
   const ref = useRef();
   const { loading, setLoading } = useLoading();
 
-  const { saves } = getSavedDatasets();
+  const { saves } = useSavedDatasets();
 
   const fetchTweetsByIds = async (savesIdx) => {
     setLoading(true);
@@ -104,7 +104,6 @@ function BtnLoadData() {
   return (
     <>
       <Button
-        key={saves.length}
         ref={ref}
         disabled={saves.length === 0 || loading}
         variant="outlined"
@@ -138,13 +137,11 @@ function BtnLoadData() {
 function BtnDeleteData() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const ref = useRef();
-  const { deleteSaved, saves } = getSavedDatasets();
-  const [key, setKey] = useState(Math.random());
+  const { deleteSaved, saves } = useSavedDatasets();
   const { loading } = useLoading();
   return (
     <>
       <Button
-        key={key}
         ref={ref}
         disabled={saves.length === 0 || loading}
         variant="outlined"
@@ -166,7 +163,6 @@ function BtnDeleteData() {
             onClick={() => {
               deleteSaved(idx);
               setIsMenuOpen(false);
-              setKey(Math.random());
             }}
           >
             Set {idx + 1}

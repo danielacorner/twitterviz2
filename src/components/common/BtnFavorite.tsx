@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { IconButton } from "@material-ui/core";
 import FavoriteIcon from "@material-ui/icons/Favorite";
+import { useStoredSaves } from "../../providers/store";
 
 export default function BtnFavorite({ tweet }) {
   const { favorites, toggleFavorite } = getFavorites();
@@ -46,31 +47,27 @@ export function getFavorites() {
 }
 
 /** returns array of arrays of saved tweet ids */
-export function getSavedDatasets(): {
+export function useSavedDatasets(): {
   saves: string[][];
   setSaves: Function;
   deleteSaved: Function;
   addSave: Function;
 } {
-  const getSavs = () =>
-    JSON.parse(window.localStorage.getItem("saves") || "[]");
+  const { saves, setSaves } = useStoredSaves();
 
-  const saves = getSavs();
+  useEffect(() => {
+    window.localStorage.setItem("saves", JSON.stringify(saves));
+  }, [saves]);
 
-  const setSaves = (newSaves) =>
-    window.localStorage.setItem("saves", JSON.stringify(newSaves));
-
-  const addSave = (newSave) => {
-    const savs = getSavs();
-    setSaves([...savs, newSave]);
+  const addSave = (newSave: string[]) => {
+    setSaves([...saves, newSave]);
   };
 
-  const deleteSaved = (savesIdx) => {
-    const savs = getSavs();
+  const deleteSaved = (savesIdx: number) => {
     const newSaves =
-      savs.length === 0
-        ? savs
-        : [...savs.slice(0, savesIdx), ...savs.slice(savesIdx + 1)];
+      saves.length === 0
+        ? saves
+        : [...saves.slice(0, savesIdx), ...saves.slice(savesIdx + 1)];
     setSaves(newSaves);
   };
   return { saves, setSaves, addSave, deleteSaved };

@@ -11,9 +11,6 @@ export default function BtnFetchTimeline({ user }: { user: Partial<User> }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isLight = useIsLight();
   const ref = useRef();
-  const handleFetchTimeline = () => fetchTimeline(user.id_str);
-  // const handleFetchMedia = () => fetchMedia(user.id_str)
-  const handleFetchLikes = () => fetchLikes(user.id_str);
   return (
     <>
       <Tooltip title="right-click for more options">
@@ -25,7 +22,7 @@ export default function BtnFetchTimeline({ user }: { user: Partial<User> }) {
             border: "1px solid cornflowerblue",
             color: `hsl(200,50%,${isLight ? 30 : 70}%)`,
           }}
-          onClick={handleFetchTimeline}
+          onClick={() => fetchTimeline(user.id_str)}
           onContextMenu={(e) => {
             e.preventDefault();
             setIsMenuOpen(true);
@@ -41,9 +38,23 @@ export default function BtnFetchTimeline({ user }: { user: Partial<User> }) {
         }}
         open={isMenuOpen}
       >
-        <MenuItem onClick={handleFetchTimeline}>Tweets</MenuItem>
+        <MenuItem
+          onClick={() => {
+            fetchTimeline(user.id_str);
+            setIsMenuOpen(false);
+          }}
+        >
+          Tweets
+        </MenuItem>
         {/* <MenuItem onClick={handleFetchMedia}>Media</MenuItem> */}
-        <MenuItem onClick={handleFetchLikes}>Likes</MenuItem>
+        <MenuItem
+          onClick={() => {
+            fetchLikes(user.id_str);
+            setIsMenuOpen(false);
+          }}
+        >
+          Likes
+        </MenuItem>
       </Menu>
     </>
   );

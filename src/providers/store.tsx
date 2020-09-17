@@ -28,6 +28,8 @@ export type GlobalStateStoreType = {
   setLoading: (newLoading: boolean) => void;
   wordcloudConfig: WordcloudConfig;
   setWordcloudConfig: (newConfig: Partial<WordcloudConfig>) => void;
+  savedDatasets: string[][];
+  setSavedDatasets: (newSaves: string[][]) => void;
 };
 
 const [useStore] = create(
@@ -78,6 +80,9 @@ const [useStore] = create(
         set((state) => ({
           wordcloudConfig: { ...state.wordcloudConfig, ...newConfig },
         })),
+      savedDatasets: JSON.parse(window.localStorage.getItem("saves") || "[]"),
+      setSavedDatasets: (newSaves) =>
+        set((state) => ({ savedDatasets: newSaves })),
     } as GlobalStateStoreType)
 );
 
@@ -99,6 +104,11 @@ export const useLoading = () =>
   useStore((state: GlobalStateStoreType) => ({
     loading: state.loading,
     setLoading: state.setLoading,
+  }));
+export const useStoredSaves = () =>
+  useStore((state: GlobalStateStoreType) => ({
+    saves: state.savedDatasets,
+    setSaves: state.setSavedDatasets,
   }));
 
 /** transform and save tweets to store */
