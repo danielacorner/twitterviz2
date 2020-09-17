@@ -41,8 +41,8 @@ export function BtnStreamNewTweets() {
         : `${SERVER_URL}/api/stream?num=${numTweets}&filterLevel=${filterLevel}${mediaParam}${countryParam}${langParam}`
     );
 
-    const data = await resp.json();
     console.log("🌟🚨: fetchNewTweets -> resp", resp);
+    const data = await resp.json();
     console.log("🌟🚨: fetchNewTweets -> data", data);
     setLoading(false);
     clearTimeout(timer);
@@ -68,7 +68,7 @@ export function BtnFetchFavorites() {
   const { loading, setLoading } = useLoading();
   const setTweets = useSetTweets();
 
-  const fetchNewTweets = async () => {
+  const fetchTweetsByIds = async () => {
     setLoading(true);
     // after 10 seconds, stop loading
     const timer = setTimeout(() => {
@@ -92,7 +92,7 @@ export function BtnFetchFavorites() {
       type="submit"
       className="btnFetch"
       disabled={loading}
-      onClick={fetchNewTweets}
+      onClick={fetchTweetsByIds}
       variant="outlined"
       color="secondary"
       endIcon={<FavoriteIcon />}
