@@ -199,7 +199,13 @@ function Media({ autoPlay, containerWidth, ...mediaItem }: MediaProps) {
   }, [autoPlay]);
 
   return (
-    <div className="media">
+    <div
+      className="media"
+      style={{
+        height: (containerWidth * sizes.large.h) / sizes.large.w,
+        width: containerWidth,
+      }}
+    >
       {type === "video" ? (
         autoPlay ? (
           <video
@@ -209,10 +215,19 @@ function Media({ autoPlay, containerWidth, ...mediaItem }: MediaProps) {
             src={src}
             autoPlay={true}
             loop={true}
+            width={containerWidth}
+            height={(containerWidth * sizes.large.h) / sizes.large.w}
           />
         ) : (
-          <div className="poster">
+          <div
+            className="poster"
+            style={{
+              height: (containerWidth * sizes.large.h) / sizes.large.w,
+              width: containerWidth,
+            }}
+          >
             <img
+              loading="lazy"
               src={poster}
               alt=""
               width={containerWidth}
@@ -228,6 +243,7 @@ function Media({ autoPlay, containerWidth, ...mediaItem }: MediaProps) {
           rel="noopener noreferrer"
         >
           <img
+            loading="lazy"
             src={src}
             alt=""
             width={containerWidth}
