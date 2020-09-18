@@ -28,8 +28,8 @@ export type GlobalStateStoreType = {
   setLoading: (newLoading: boolean) => void;
   wordcloudConfig: WordcloudConfig;
   setWordcloudConfig: (newConfig: Partial<WordcloudConfig>) => void;
-  savedDatasets: string[][];
-  setSavedDatasets: (newSaves: string[][]) => void;
+  savedDatasets: { saveName: string; ids: string[] }[];
+  setSavedDatasets: (newSaves: { saveName: string; ids: string[] }[]) => void;
 };
 
 const [useStore] = create(

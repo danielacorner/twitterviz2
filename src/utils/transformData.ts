@@ -1,7 +1,6 @@
 //
 
 import { Tweet } from "../types";
-import { uniq } from "lodash";
 // each Tweet node links to one or more User nodes: poster, replied, mentioned, retweeted
 // Tweet nodes link to each other via Hashtags
 
@@ -45,22 +44,22 @@ export function transformTweetsIntoGraphData(tweetsArg: Tweet[]): GraphData {
   //   }
   // });
 
-  const tweetIdsByHashtag: {
-    [hashtag: string]: Tweet[];
-  } = tweets.reduce(
-    (acc, tweet) => {
-      const hashtagsInTweet =
-        (tweet.extended_tweet || tweet)?.entities?.hashtags || [];
+  // const tweetIdsByHashtag: {
+  //   [hashtag: string]: Tweet[];
+  // } = tweets.reduce(
+  //   (acc, tweet) => {
+  //     const hashtagsInTweet =
+  //       (tweet.extended_tweet || tweet)?.entities?.hashtags || [];
 
-      hashtagsInTweet.forEach((hashtag) => {
-        acc = { ...acc, [hashtag]: [...(acc[hashtag] ? acc[hashtag] : [])] };
-      });
-      return acc;
-    },
-    {} as {
-      [hashtag: string]: Tweet[];
-    }
-  );
+  //     hashtagsInTweet.forEach((hashtag) => {
+  //       acc = { ...acc, [hashtag]: [...(acc[hashtag] ? acc[hashtag] : [])] };
+  //     });
+  //     return acc;
+  //   },
+  //   {} as {
+  //     [hashtag: string]: Tweet[];
+  //   }
+  // );
 
   // list of hashtags by user id
   // type HashtagWithTweetType = { hashtag: string; tweetId: string };

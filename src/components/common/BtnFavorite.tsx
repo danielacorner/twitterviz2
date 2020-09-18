@@ -48,7 +48,7 @@ export function getFavorites() {
 
 /** returns array of arrays of saved tweet ids */
 export function useSavedDatasets(): {
-  saves: string[][];
+  saves: { saveName: string; ids: string[] }[];
   setSaves: Function;
   deleteSaved: Function;
   addSave: Function;
@@ -59,7 +59,7 @@ export function useSavedDatasets(): {
     window.localStorage.setItem("saves", JSON.stringify(saves));
   }, [saves]);
 
-  const addSave = (newSave: string[]) => {
+  const addSave = (newSave: { saveName: string; ids: string[] }) => {
     setSaves([...saves, newSave]);
   };
 

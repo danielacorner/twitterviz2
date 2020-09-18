@@ -1,8 +1,9 @@
 import styled from "styled-components/macro";
-export const CONTROLS_PADDING_INNER = 12;
-export const FORM_HEIGHT = 40;
+import { CUSTOM_SCROLLBAR_CSS } from "../common/styledComponents";
+import { CONTROLS_PADDING_INNER, FORM_HEIGHT } from "../../utils/constants";
 
 const ControlsStyles = styled.div`
+  ${CUSTOM_SCROLLBAR_CSS}
   background: ${(props) => (props.isLight ? "hsl(0,0%,90%)" : "hsl(0,0%,15%)")};
   width: 100%;
   overflow: hidden auto;
@@ -45,7 +46,8 @@ const ControlsStyles = styled.div`
     height: 100%;
     width: 100%;
   }
-  padding: ${CONTROLS_PADDING_INNER}px;
+  padding: ${CONTROLS_PADDING_INNER}px ${CONTROLS_PADDING_INNER + 2}px
+    ${CONTROLS_PADDING_INNER}px ${CONTROLS_PADDING_INNER - 2}px;
   border-right: 1px solid black;
   [class*="TwoColRowStyles"] {
     width: 100%;

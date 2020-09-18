@@ -1,7 +1,6 @@
 import React from "react";
 import "./App.css";
-import { CONTROLS_WIDTH } from "./utils/constants";
-import { CONTROLS_PADDING_INNER } from "./components/Controls/ControlsStyles";
+import { CONTROLS_WIDTH, CONTROLS_PADDING_INNER } from "./utils/constants";
 import styled from "styled-components/macro";
 import BottomDrawer from "./components/BottomDrawer/BottomDrawer";
 import { useMount } from "./utils/utils";

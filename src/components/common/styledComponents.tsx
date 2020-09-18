@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components/macro";
 import { Typography, Switch } from "@material-ui/core";
-import { FORM_HEIGHT } from "../Controls/ControlsStyles";
+import { FORM_HEIGHT } from "../../utils/constants";
 
 export const Div = styled.div`
   display: grid;

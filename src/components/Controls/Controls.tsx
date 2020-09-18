@@ -1,12 +1,20 @@
-import React, { useState, useRef } from "react";
-import { Button, useTheme, Menu, MenuItem } from "@material-ui/core";
+import React, { useState } from "react";
+import {
+  Button,
+  useTheme,
+  TextField,
+  ListItem,
+  List,
+  IconButton,
+  Tooltip,
+} from "@material-ui/core";
 import {
   useConfig,
   useLoading,
   useTweets,
   useSetTweets,
 } from "../../providers/store";
-import { H5 } from "../common/styledComponents";
+import { H5, Body2, CUSTOM_SCROLLBAR_CSS } from "../common/styledComponents";
 import SelectGeolocation from "./SelectGeolocation";
 import { SelectCountry, SelectLanguage } from "./Dropdowns";
 import {
@@ -15,7 +23,7 @@ import {
   RecentPopularMixedRadioBtns,
 } from "./Checkboxes";
 import { FetchUserTweetsForm, HowManyTweets, SearchForm } from "./Inputs";
-import { ControlTitle } from "../common/TwoColRowStyles";
+import { ControlTitle, TwoColFormStyles } from "../common/TwoColRowStyles";
 import ControlsStyles from "./ControlsStyles";
 import WordcloudControls from "./WordcloudControls";
 import NetworkGraphControls from "./NetworkGraphControls";
@@ -26,6 +34,11 @@ import {
 } from "./Buttons";
 import { useSavedDatasets } from "../common/BtnFavorite";
 import { SERVER_URL } from "../../utils/constants";
+import SaveIcon from "@material-ui/icons/Save";
+import ClearIcon from "@material-ui/icons/Clear";
+import styled from "styled-components/macro";
+
+const Div = styled.div``;
 
 const Controls = () => {
   // TODO
@@ -41,11 +54,7 @@ const Controls = () => {
     >
       <VizSpecificControls />
       <FetchTweetsControls />
-      <div className="saveData section">
-        <BtnSaveData />
-        <BtnLoadData />
-        <BtnDeleteData />
-      </div>
+      <SaveDataControls />
       <Button
         variant="contained"
         color="primary"
@@ -60,37 +69,60 @@ const Controls = () => {
 
 export default Controls;
 
-function BtnSaveData() {
-  const tweets = useTweets();
-  const { addSave } = useSavedDatasets();
+function SaveDataControls() {
   return (
-    <Button
-      variant="contained"
-      color="secondary"
-      disabled={tweets.length === 0}
-      onClick={() => addSave(tweets.map((t) => t.id_str))}
-    >
-      Save This Dataset
-    </Button>
+    <div className="saveData section">
+      <SaveDataForm />
+      <SavedDatasetsList />
+    </div>
   );
 }
 
-function BtnLoadData() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+function SaveDataForm() {
+  const tweets = useTweets();
+  const { addSave } = useSavedDatasets();
+  const [dataName, setDataName] = useState("");
+  return (
+    <TwoColFormStyles
+      onSubmit={(e) => {
+        e.preventDefault();
+        addSave({ saveName: dataName, ids: tweets.map((t) => t.id_str) });
+      }}
+    >
+      <TextField
+        label={"Save set as.."}
+        value={dataName}
+        onChange={(e) => setDataName(e.target.value)}
+        type="text"
+      />
+      <Button
+        type="submit"
+        variant="contained"
+        color="secondary"
+        disabled={tweets.length === 0}
+      >
+        <SaveIcon />
+      </Button>
+    </TwoColFormStyles>
+  );
+}
+
+function SavedDatasetsList() {
   const setTweets = useSetTweets();
-  const ref = useRef();
   const { loading, setLoading } = useLoading();
 
-  const { saves } = useSavedDatasets();
+  const { deleteSaved, saves } = useSavedDatasets();
 
-  const fetchTweetsByIds = async (savesIdx) => {
+  const fetchTweetsBySavIdx = async (savesIdx) => {
     setLoading(true);
     // after 10 seconds, stop loading
     const timer = setTimeout(() => {
       setLoading(false);
     }, 10 * 1000);
 
-    const resp = await fetch(`${SERVER_URL}/api/get?ids=${saves[savesIdx]}`);
+    const resp = await fetch(
+      `${SERVER_URL}/api/get?ids=${saves[savesIdx].ids}`
+    );
 
     const tweetsResponses = await resp.json();
     const data = tweetsResponses.map((d) => d.data);
@@ -102,74 +134,57 @@ function BtnLoadData() {
   };
 
   return (
-    <>
-      <Button
-        ref={ref}
-        disabled={saves.length === 0 || loading}
-        variant="outlined"
-        color="secondary"
-        onClick={() => setIsMenuOpen(true)}
-      >
-        Load Dataset
-      </Button>
-      <Menu
-        anchorEl={ref.current}
-        onBackdropClick={() => {
-          setIsMenuOpen(false);
-        }}
-        open={isMenuOpen}
-      >
-        {saves.map((saveSet, idx) => (
-          <MenuItem
-            key={idx}
-            onClick={() => {
-              fetchTweetsByIds(idx);
-              setIsMenuOpen(false);
-            }}
-          >
-            Set {idx + 1}
-          </MenuItem>
+    <Div
+      css={`
+        max-height: 4.5rem;
+        border: 1px solid grey;
+        ${CUSTOM_SCROLLBAR_CSS};
+        button {
+          width: fit-content;
+          margin: 0;
+          min-width: 0;
+          &.fetch {
+            font-size: 0.7em;
+            padding: 0 2px;
+            border: 1px solid cornflowerblue;
+          }
+        }
+        ul {
+          padding: 0;
+        }
+        li {
+          display: grid;
+          grid-template-columns: 1fr auto auto;
+          padding-right: 8px;
+        }
+      `}
+    >
+      <List>
+        {saves.map(({ saveName }, idx) => (
+          <ListItem key={idx}>
+            <Body2>{saveName}</Body2>
+            <Button
+              disabled={loading}
+              className="fetch"
+              onClick={() => {
+                fetchTweetsBySavIdx(idx);
+              }}
+            >
+              FETCH
+            </Button>
+            <Tooltip title="Delete">
+              <IconButton
+                disabled={loading}
+                size="small"
+                onClick={() => deleteSaved(idx)}
+              >
+                <ClearIcon />
+              </IconButton>
+            </Tooltip>
+          </ListItem>
         ))}
-      </Menu>
-    </>
-  );
-}
-function BtnDeleteData() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const ref = useRef();
-  const { deleteSaved, saves } = useSavedDatasets();
-  const { loading } = useLoading();
-  return (
-    <>
-      <Button
-        ref={ref}
-        disabled={saves.length === 0 || loading}
-        variant="outlined"
-        color="secondary"
-        onClick={() => setIsMenuOpen(true)}
-      >
-        Delete Dataset
-      </Button>
-      <Menu
-        anchorEl={ref.current}
-        onBackdropClick={() => {
-          setIsMenuOpen(false);
-        }}
-        open={isMenuOpen}
-      >
-        {saves.map((saveSet, idx) => (
-          <MenuItem
-            key={idx}
-            onClick={() => {
-              deleteSaved(idx);
-              setIsMenuOpen(false);
-            }}
-          >
-            Set {idx + 1}
-          </MenuItem>
-        ))}
-      </Menu>
-    </>
+      </List>
+    </Div>
   );
 }
 
