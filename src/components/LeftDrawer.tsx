@@ -15,6 +15,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Controls from "./Controls/Controls";
+import styled from "styled-components/macro";
 
 const drawerWidth = 240;
 
@@ -70,7 +71,7 @@ const useStyles = makeStyles((theme: Theme) =>
       //   easing: theme.transitions.easing.sharp,
       //   duration: theme.transitions.duration.leavingScreen,
       // }),
-      marginLeft: -drawerWidth - theme.spacing(1),
+      marginLeft: -drawerWidth - theme.spacing(1) + 64,
     },
     contentShift: {
       // transition: theme.transitions.create("margin", {
@@ -82,11 +83,16 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+const Div = styled.div`
+  .MuiPaper-root {
+  }
+`;
+
 /** https://material-ui.com/components/drawers/#persistent-drawer */
 export default function LeftDrawer() {
   const classes = useStyles();
   const theme = useTheme();
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(window.innerWidth > 600);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -97,7 +103,14 @@ export default function LeftDrawer() {
   };
 
   return (
-    <div className={classes.root}>
+    <Div
+      css={`
+        ${open
+          ? ""
+          : ".MuiPaper-root{ transform: translateX(-182px) !important }"}
+      `}
+      className={classes.root}
+    >
       <CssBaseline />
       <AppBar
         color={"transparent"}
@@ -128,6 +141,12 @@ export default function LeftDrawer() {
         classes={{
           paper: classes.drawerPaper,
         }}
+        PaperProps={{
+          style: {
+            transform: `translateX(${open ? 0 : -170}px)`,
+            visibility: "visible",
+          },
+        }}
       >
         <div className={classes.drawerHeader}>
           <IconButton className={classes.button} onClick={handleDrawerClose}>
@@ -147,6 +166,6 @@ export default function LeftDrawer() {
       >
         <div className={classes.drawerHeader} />
       </main>
-    </div>
+    </Div>
   );
 }
