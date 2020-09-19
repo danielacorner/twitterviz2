@@ -223,7 +223,7 @@ function FetchTweetsControls() {
 function TweetFilterControls() {
   return (
     <>
-      <ControlTitle>Popular/Recent</ControlTitle>
+      <ControlTitle>Recent/Popular</ControlTitle>
       <RecentPopularMixedRadioBtns />
       <ControlTitle>Media</ControlTitle>
       <MediaTypeCheckboxes />

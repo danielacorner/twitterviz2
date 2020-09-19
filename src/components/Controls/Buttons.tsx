@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "@material-ui/core";
+import { Button, Tooltip } from "@material-ui/core";
 import {
   useConfig,
   useSetTweets,
@@ -109,9 +109,15 @@ function CollapsibleButton({ text, icon, disabled, ...props }) {
   const { isDrawerOpen } = useIsLeftDrawerOpen();
 
   return (
-    <Button disabled={disabled} endIcon={isDrawerOpen ? icon : null} {...props}>
-      {isDrawerOpen ? text : icon}
-    </Button>
+    <Tooltip title={isDrawerOpen ? "" : text}>
+      <Button
+        disabled={disabled}
+        endIcon={isDrawerOpen ? icon : null}
+        {...props}
+      >
+        {isDrawerOpen ? text : icon}
+      </Button>
+    </Tooltip>
   );
 }
 

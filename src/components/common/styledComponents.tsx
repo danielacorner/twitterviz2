@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components/macro";
-import { Typography, Switch } from "@material-ui/core";
+import { Typography, Switch, Tooltip } from "@material-ui/core";
 import { FORM_HEIGHT } from "../../utils/constants";
 import { useIsLeftDrawerOpen } from "../../providers/store";
 
@@ -47,9 +47,11 @@ export const CollapsibleSwitchWithLabels = ({
         height: ${FORM_HEIGHT}px;
       `}
     >
-      {isDrawerOpen && <Body1>{labelLeft}</Body1>}
-      <Switch onChange={onChange} checked={checked} {...props} />
-      {isDrawerOpen && <Body1>{labelRight}</Body1>}
+      <Body1>{labelLeft}</Body1>
+      <Tooltip title={isDrawerOpen ? "" : `${labelLeft}/${labelRight}`}>
+        <Switch onChange={onChange} checked={checked} {...props} />
+      </Tooltip>
+      <Body1>{labelRight}</Body1>
     </Div>
   );
 };
