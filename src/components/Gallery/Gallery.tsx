@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useTweets, useLoading } from "../../providers/store";
+import { useTweets, useLoading, useDeleteTweet } from "../../providers/store";
 import styled from "styled-components/macro";
 import TweetContent from "../TweetContent";
 import { TABS_HEIGHT } from "../../utils/constants";
@@ -12,6 +12,8 @@ import {
 } from "../common/styledComponents";
 import { useMount } from "../../utils/utils";
 import BtnFavorite from "../common/BtnFavorite";
+import { Tweet } from "../../../types/types-cogeden";
+import CloseIcon from "@material-ui/icons/Close";
 
 /** smaller grid rows means finer but more time to compute layout */
 const GRID_ROW_PX = 20;
@@ -46,6 +48,16 @@ const GalleryStyles = styled.div`
     top: 0;
     right: 0;
   }
+  .deleteTweet {
+    transform: scale(0.8);
+    transform-origin: top left;
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+    color: tomato;
+    opacity: 0.5;
+  }
   .btnFavorite {
     transform: scale(0.8);
     transform-origin: bottom right;
@@ -72,12 +84,20 @@ function GridItem({ tweet }) {
       <div className="openInNew">
         <OpenTweetBtn tweet={tweet} iconOnly={true} />
       </div>
+      <div className="deleteTweet">
+        <DeleteTweetBtn tweet={tweet} />
+      </div>
       <TweetContent tweet={tweet} isTooltip={false} autoPlay={false} />
       <div className="btnFavorite">
         <BtnFavorite tweet={tweet} />
       </div>
     </div>
   );
+}
+
+function DeleteTweetBtn({ tweet }: { tweet: Tweet }) {
+  const deleteTweet = useDeleteTweet();
+  return <CloseIcon onClick={() => deleteTweet(tweet.id_str)} />;
 }
 
 const Gallery = () => {

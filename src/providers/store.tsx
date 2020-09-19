@@ -161,6 +161,24 @@ export const useAddTweets = () => {
   };
 };
 
+/** delete a tweet from store */
+export const useDeleteTweet = () => {
+  const tweetsFromServer = useStore(
+    (state: GlobalStateStoreType) => state.tweetsFromServer
+  );
+  const setTweetsFromServer = useStore(
+    (state: GlobalStateStoreType) => state.setTweetsFromServer
+  );
+  const setGraphData = useStore(
+    (state: GlobalStateStoreType) => state.setGraphData
+  );
+  return (tweetId: string) => {
+    const newTweets = tweetsFromServer.filter((t) => t.id_str !== tweetId);
+    setTweetsFromServer(newTweets);
+    setGraphData(transformTweetsIntoGraphData(newTweets));
+  };
+};
+
 export type AppConfig = {
   is3d: boolean;
   colorBy: keyof typeof COLOR_BY | null;
