@@ -100,6 +100,8 @@ export default function LeftDrawer() {
     <div className={classes.root}>
       <CssBaseline />
       <AppBar
+        color={"transparent"}
+        style={{ top: -64 }}
         position="fixed"
         className={clsx(classes.appBar, {
           [classes.appBarShift]: open,
@@ -107,6 +109,7 @@ export default function LeftDrawer() {
       >
         <Toolbar>
           <IconButton
+            style={{ marginTop: 74 }}
             color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpen}

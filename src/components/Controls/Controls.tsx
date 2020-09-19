@@ -201,7 +201,7 @@ function FetchTweetsControls() {
   return (
     <>
       <div className="fetchTweets section">
-        <H5>Fetch Tweets</H5>
+        <H5 style={{ pointerEvents: "none" }}>Fetch Tweets</H5>
         <SwitchReplace />
         <HowManyTweets />
         <BtnStreamNewTweets />

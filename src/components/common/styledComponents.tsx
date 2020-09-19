@@ -8,13 +8,13 @@ export const Div = styled.div`
   place-items: center;
 `;
 
-export const H5 = ({ children }) => (
-  <Typography color="textPrimary" variant="h5">
+export const H5 = ({ children, ...props }) => (
+  <Typography color="textPrimary" variant="h5" {...props}>
     {children}
   </Typography>
 );
-export const H6 = ({ children }) => (
-  <Typography color="textPrimary" variant="h6">
+export const H6 = ({ children, ...props }) => (
+  <Typography color="textPrimary" variant="h6" {...props}>
     {children}
   </Typography>
 );
