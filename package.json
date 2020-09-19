@@ -30,6 +30,7 @@
     "three": "^0.119.1",
     "typescript": "~3.7.2",
     "use-why-did-you-update": "^0.1.0",
+    "video-react": "^0.14.1",
     "zustand": "^2.2.3"
   },
   "eslintConfig": {

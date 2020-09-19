@@ -63,11 +63,9 @@ function GridItem({ tweet }) {
   const rowSpan = Math.ceil(
     ((dimensions?.height || MIN_TWEET_WIDTH) + GRID_GAP) / GRID_ROW_PX
   );
-  const [autoPlay, setAutoPlay] = useState(false);
   return (
     <div
-      onMouseEnter={() => setAutoPlay(true)}
-      onMouseLeave={() => setAutoPlay(false)}
+
       className="tweetContent"
       ref={ref}
       style={{ gridRow: `span ${rowSpan}` }}
@@ -75,7 +73,7 @@ function GridItem({ tweet }) {
       <div className="openInNew">
         <OpenTweetBtn tweet={tweet} iconOnly={true} />
       </div>
-      <TweetContent tweet={tweet} isTooltip={false} autoPlay={autoPlay} />
+      <TweetContent tweet={tweet} isTooltip={false} autoPlay={false} />
       <div className="btnFavorite">
         <BtnFavorite tweet={tweet} />
       </div>

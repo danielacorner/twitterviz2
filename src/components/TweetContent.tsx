@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { getMediaArr, MediaItem } from "../utils/utils";
 import countryCodes from "../utils/countryCodes";
 import RetweetedIcon from "@material-ui/icons/CachedRounded";
@@ -9,6 +9,11 @@ import { Body2, Body1 } from "./common/styledComponents";
 import BtnFetchTimeline from "./common/BtnFetchTimeline";
 import { TAB_INDICES, useConfig } from "../providers/store";
 import useContainerDimensions from "../utils/useContainerDimensions";
+import styled from "styled-components/macro";
+import { Menu, IconButton, MenuItem } from "@material-ui/core";
+import HighQualityIcon from "@material-ui/icons/HighQuality";
+import { Variant } from "../types";
+import { Player } from "video-react";
 
 export default function TweetContent({
   tweet,
@@ -172,7 +177,7 @@ export default function TweetContent({
       <div className="allMedia">
         {mediaArr.map((mediaItem) => {
           return (
-            <Media
+            <MediaContent
               key={mediaItem.id_str}
               {...mediaItem}
               {...{ autoPlay, containerWidth: dimensions?.width || 0 }}
@@ -188,8 +193,9 @@ type MediaProps = MediaItem & {
   autoPlay: boolean;
   containerWidth: number;
 };
-function Media({ autoPlay, containerWidth, ...mediaItem }: MediaProps) {
+function MediaContent({ autoPlay, containerWidth, ...mediaItem }: MediaProps) {
   const { poster, src, type, sizes } = mediaItem;
+
   // focus the video player when it starts playing
   const videoRef = useRef();
   useEffect(() => {
@@ -198,26 +204,27 @@ function Media({ autoPlay, containerWidth, ...mediaItem }: MediaProps) {
     }
   }, [autoPlay]);
 
+  // play video on first click
+  const [clickedOnce, setClickedOnce] = useState(false);
+  const handleClick = () => {
+    if (!clickedOnce) {
+      setClickedOnce(true);
+    }
+  };
+
   return (
     <div
+      onClick={handleClick}
       className="media"
       style={{
         height: (containerWidth * sizes.large.h) / sizes.large.w,
         width: containerWidth,
+        position: "relative",
       }}
     >
       {type === "video" ? (
-        autoPlay ? (
-          <video
-            ref={videoRef}
-            controls={true}
-            poster={poster}
-            src={src}
-            autoPlay={true}
-            loop={true}
-            width={containerWidth}
-            height={(containerWidth * sizes.large.h) / sizes.large.w}
-          />
+        autoPlay || clickedOnce ? (
+          <VideoWithControls {...{ videoRef, containerWidth, mediaItem }} />
         ) : (
           <div
             className="poster"
@@ -252,5 +259,107 @@ function Media({ autoPlay, containerWidth, ...mediaItem }: MediaProps) {
         </a>
       )}
     </div>
+  );
+}
+
+const VideoStyles = styled.div`
+  .video-react-controls-enabled {
+  }
+  .video-react-icon-fullscreen {
+    min-width: 56px;
+  }
+  .video-react-control:before {
+    margin-left: -14px;
+  }
+`;
+function VideoWithControls({
+  videoRef,
+  containerWidth,
+  mediaItem,
+}: {
+  videoRef: { current: any };
+  containerWidth: number;
+  mediaItem: MediaItem;
+}) {
+  const { variants, sizes, poster } = mediaItem;
+
+  const [bitrate, setBitrate] = useState(
+    variants[variants.length - 1].bitrate || 0
+  );
+  return (
+    <VideoStyles>
+      <Player
+        style={{ paddingTop: 0 }}
+        ref={videoRef}
+        controls={true}
+        src={variants.find((v) => v.bitrate === bitrate).url}
+        poster={poster}
+        autoPlay={true}
+        loop={true}
+        width={containerWidth}
+        height={(containerWidth * sizes.large.h) / sizes.large.w}
+      ></Player>
+      <BitrateControls
+        {...{
+          bitrate,
+          setBitrate,
+          variants,
+        }}
+      />
+    </VideoStyles>
+  );
+}
+
+const BitrateStyles = styled.div`
+  position: absolute;
+  bottom: 5px;
+  right: 6px;
+`;
+function BitrateControls({
+  bitrate,
+  setBitrate,
+  variants,
+}: {
+  bitrate: number;
+  setBitrate: Function;
+  variants: Variant[];
+}) {
+  // open/close the bitrate menu
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const ref = useRef();
+
+  return (
+    <BitrateStyles>
+      <IconButton
+        size="small"
+        ref={ref}
+        onClick={() => setIsMenuOpen((p) => !p)}
+      >
+        <HighQualityIcon />
+      </IconButton>
+      <Menu
+        anchorEl={ref.current}
+        open={isMenuOpen}
+        onChange={(event) => {
+          console.log("🌟🚨: event", event);
+          setBitrate((event.target as any).value);
+        }}
+        onBackdropClick={() => setIsMenuOpen(false)}
+      >
+        {variants.map((variant) => (
+          <MenuItem
+            {...(variant.bitrate === bitrate
+              ? { disabled: true, style: { background: "hsl(0,0%,50%)" } }
+              : {})}
+            onClick={() => setBitrate(variant.bitrate)}
+            key={variant.url}
+            value={variant.url}
+          >
+            {variant.bitrate || 0}
+          </MenuItem>
+        ))}
+      </Menu>
+    </BitrateStyles>
   );
 }

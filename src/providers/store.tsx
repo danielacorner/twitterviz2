@@ -6,6 +6,7 @@ import {
   transformTweetsIntoGraphData,
 } from "../utils/transformData";
 import { COLOR_BY, FILTER_LEVELS, FILTER_BY } from "../utils/constants";
+import mockTweets from "../tweets.json";
 
 export const TAB_INDICES = {
   NETWORKGRAPH: 0,
@@ -39,7 +40,8 @@ const [useStore] = create(
         graph: { nodes: [], links: [] },
         users: [],
       } as GraphData,
-      tweetsFromServer: [] as Tweet[],
+      tweetsFromServer:
+        process.env.NODE_ENV === "development" ? mockTweets : ([] as Tweet[]),
       selectedNode: null as Tweet | null,
       setSelectedNode: (node: Tweet | null) =>
         set((state) => ({ selectedNode: node })),

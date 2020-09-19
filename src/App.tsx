@@ -10,6 +10,7 @@ import { faunaClient } from "./providers/faunaProvider";
 import VisualizationTabs from "./components/VisualizationTabs";
 import Controls from "./components/Controls/Controls";
 import { useIsLight } from "./providers/ThemeManager";
+import "./video-react.css"; // import video-react css
 
 const AppStyles = styled.div`
   ${(props) => (props.isLoading ? "cursor: wait;" : "")}
@@ -54,6 +55,10 @@ function useFetchTweetsOnMount() {
 
   // fetch tweets from DB on mount
   useMount(() => {
+    if (process.env.NODE_ENV === "development") {
+      return;
+    }
+
     faunaClient
       .query(
         q.Map(

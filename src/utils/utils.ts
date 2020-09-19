@@ -1,8 +1,9 @@
 import { useEffect } from "react";
-
+import { Variant } from "../types";
 export const PADDING = 6;
 
 export type MediaItem = {
+  variants: Variant[];
   src: string;
   poster?: string;
   type: string;
@@ -15,24 +16,18 @@ export type MediaItem = {
   };
 };
 
-export function getMediaArr(node): MediaItem[] {
+export function getMediaArr(tweet: any): MediaItem[] {
   return (
-    node.extended_entities?.media.map((media) => ({
+    tweet.extended_entities?.media.map((media) => ({
       ...media,
+      variants: media.video_info?.variants.filter(
+        ({ content_type }) => content_type === "video/mp4"
+      ),
       src:
         media?.type === "video"
-          ? media.video_info?.variants
-              .filter(({ content_type }) => content_type === "video/mp4")
-              .reduce((acc, cur) => {
-                // return biggest bitrate
-                if (!acc && cur.bitrate) {
-                  return cur;
-                } else if (cur.bitrate && cur.bitrate > acc.bitrate) {
-                  return cur;
-                } else {
-                  return acc;
-                }
-              }, null).url
+          ? media.video_info?.variants.filter(
+              ({ content_type }) => content_type === "video/mp4"
+            )
           : media.media_url_https,
       poster: media.media_url_https,
     })) || []
