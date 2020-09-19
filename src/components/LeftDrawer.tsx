@@ -8,10 +8,7 @@ import {
 } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Controls from "./Controls/Controls";
@@ -51,11 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
     drawerPaper: {
       width: drawerWidth,
     },
-    button: {
-      position: "absolute",
-      top: 8,
-      right: 8,
-    },
+
     drawerHeader: {
       display: "flex",
       alignItems: "center",
@@ -83,23 +76,15 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const Div = styled.div`
-  .MuiPaper-root {
-  }
-`;
+const Div = styled.div``;
 
 /** https://material-ui.com/components/drawers/#persistent-drawer */
 export default function LeftDrawer() {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = useState(window.innerWidth > 600);
-
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
+  const toggleOpen = () => {
+    setOpen((p) => !p);
   };
 
   return (
@@ -108,31 +93,17 @@ export default function LeftDrawer() {
         ${open
           ? ""
           : ".MuiPaper-root{ transform: translateX(-182px) !important }"}
+        .btnChevron {
+          position: absolute;
+          top: 8px;
+          right: 8px;
+          transform: rotate(${open ? 0 : 180}deg);
+        }
       `}
       className={classes.root}
     >
       <CssBaseline />
-      <AppBar
-        color={"transparent"}
-        style={{ top: -64 }}
-        position="fixed"
-        className={clsx(classes.appBar, {
-          [classes.appBarShift]: open,
-        })}
-      >
-        <Toolbar>
-          <IconButton
-            style={{ marginTop: 74 }}
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            className={clsx(classes.menuButton, open && classes.hide)}
-          >
-            <MenuIcon />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
+
       <Drawer
         className={classes.drawer}
         variant="persistent"
@@ -149,7 +120,7 @@ export default function LeftDrawer() {
         }}
       >
         <div className={classes.drawerHeader}>
-          <IconButton className={classes.button} onClick={handleDrawerClose}>
+          <IconButton className={"btnChevron"} onClick={toggleOpen}>
             {theme.direction === "ltr" ? (
               <ChevronLeftIcon />
             ) : (
