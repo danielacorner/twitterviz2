@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components/macro";
 import { Typography, Switch } from "@material-ui/core";
 import { FORM_HEIGHT } from "../../utils/constants";
+import { useIsLeftDrawerOpen } from "../../providers/store";
 
 export const Div = styled.div`
   display: grid;
@@ -28,27 +29,30 @@ export const Body2 = ({ children, ...props }) => (
     {children}
   </Typography>
 );
-export const SwitchWithLabels = ({
+export const CollapsibleSwitchWithLabels = ({
   labelLeft,
   labelRight,
   onChange,
   checked,
   ...props
-}) => (
-  <Div
-    css={`
-      display: grid;
-      grid-auto-flow: column;
-      align-items: center;
-      justify-content: center;
-      height: ${FORM_HEIGHT}px;
-    `}
-  >
-    <Body1>{labelLeft}</Body1>
-    <Switch onChange={onChange} checked={checked} {...props} />
-    <Body1>{labelRight}</Body1>
-  </Div>
-);
+}) => {
+  const { isDrawerOpen } = useIsLeftDrawerOpen();
+  return (
+    <Div
+      css={`
+        display: grid;
+        grid-auto-flow: column;
+        align-items: center;
+        justify-content: center;
+        height: ${FORM_HEIGHT}px;
+      `}
+    >
+      {isDrawerOpen && <Body1>{labelLeft}</Body1>}
+      <Switch onChange={onChange} checked={checked} {...props} />
+      {isDrawerOpen && <Body1>{labelRight}</Body1>}
+    </Div>
+  );
+};
 
 export const CUSTOM_SCROLLBAR_CSS = `
 @supports (overflow: overlay){

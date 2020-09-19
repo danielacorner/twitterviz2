@@ -18,12 +18,34 @@ const ControlsStyles = styled.div`
   }
   input {
     margin: auto;
-    height: ${FORM_HEIGHT};
+    height: ${FORM_HEIGHT}px;
   }
   button {
-    width: calc(100% - 20px);
-    margin: 0 10px;
-    height: ${FORM_HEIGHT};
+    width: ${(props) =>
+      props.isDrawerOpen
+        ? `calc(100% - ${FORM_HEIGHT / 2}px)`
+        : `${FORM_HEIGHT}px`};
+    margin: ${(props) => (props.isDrawerOpen ? "0 10px" : "0 0 0 auto")};
+    height: ${FORM_HEIGHT}px;
+    min-width: 0;
+  }
+  .MuiFormControlLabel-root {
+    ${(props) => (props.isDrawerOpen ? "" : "margin-right: 0;")}
+  }
+  [class*="Checkboxes__RadioBtnsStyles"] {
+    ${(props) => (props.isDrawerOpen ? "" : "margin-right: -8px;")}
+  }
+  .checkboxes {
+    display: grid;
+    max-width: ${(props) => (props.isDrawerOpen ? 200 : FORM_HEIGHT)}px;
+    ${(props) =>
+      props.isDrawerOpen
+        ? "grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));"
+        : "margin-left: auto;"};
+  }
+  .MuiFormGroup-root {
+    ${(props) =>
+      props.isDrawerOpen ? "" : `width: ${FORM_HEIGHT}px; margin: 0 0 0 auto;`};
   }
   h5 {
     padding-bottom: 12px;

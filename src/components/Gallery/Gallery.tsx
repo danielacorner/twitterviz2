@@ -29,7 +29,7 @@ const GalleryStyles = styled.div`
   .tweetContent {
   }
   width: 100%;
-  padding: 16px;
+  padding: 18px;
   height: calc(100vh - ${TABS_HEIGHT}px);
   overflow-y: scroll;
   .tweetContent {

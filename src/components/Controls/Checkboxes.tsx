@@ -6,7 +6,7 @@ import {
   RadioGroup,
 } from "@material-ui/core";
 import { FILTER_LEVELS } from "../../utils/constants";
-import { useConfig } from "../../providers/store";
+import { useConfig, useIsLeftDrawerOpen } from "../../providers/store";
 import { Body1 } from "../common/styledComponents";
 import styled from "styled-components/macro";
 
@@ -17,6 +17,8 @@ export function RecentPopularMixedRadioBtns() {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setConfig({ resultType: event.target.value as any });
   };
+  const { isDrawerOpen } = useIsLeftDrawerOpen();
+
   return (
     <RadioBtnsStyles>
       <RadioGroup
@@ -29,17 +31,17 @@ export function RecentPopularMixedRadioBtns() {
         <FormControlLabel
           value="mixed"
           control={<Radio />}
-          label={<Body1>Mixed</Body1>}
+          label={isDrawerOpen ? <Body1>Mixed</Body1> : null}
         />
         <FormControlLabel
           value="recent"
           control={<Radio />}
-          label={<Body1>Recent</Body1>}
+          label={isDrawerOpen ? <Body1>Recent</Body1> : null}
         />
         <FormControlLabel
           value="popular"
           control={<Radio />}
-          label={<Body1>Popular</Body1>}
+          label={isDrawerOpen ? <Body1>Popular</Body1> : null}
         />
       </RadioGroup>
     </RadioBtnsStyles>
@@ -53,6 +55,8 @@ export function FilterLevelCheckboxes() {
       filterLevel: event.target.value as keyof typeof FILTER_LEVELS,
     });
   };
+  const { isDrawerOpen } = useIsLeftDrawerOpen();
+
   return (
     <RadioBtnsStyles>
       <RadioGroup
@@ -65,27 +69,23 @@ export function FilterLevelCheckboxes() {
         <FormControlLabel
           value={FILTER_LEVELS.medium}
           control={<Radio />}
-          label={<Body1>Medium</Body1>}
+          label={isDrawerOpen ? <Body1>Medium</Body1> : null}
         />
         <FormControlLabel
           value={FILTER_LEVELS.low}
           control={<Radio />}
-          label={<Body1>Low</Body1>}
+          label={isDrawerOpen ? <Body1>Low</Body1> : null}
         />
         <FormControlLabel
           value={FILTER_LEVELS.none}
           control={<Radio />}
-          label={<Body1>None</Body1>}
+          label={isDrawerOpen ? <Body1>None</Body1> : null}
         />
       </RadioGroup>
     </RadioBtnsStyles>
   );
 }
-const MediaTypeCheckboxesStyles = styled.div`
-  display: grid;
-  max-width: 200px;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-`;
+const MediaTypeCheckboxesStyles = styled.div``;
 
 export function MediaTypeCheckboxes() {
   const {
@@ -94,6 +94,8 @@ export function MediaTypeCheckboxes() {
     setConfig,
     isAllChecked,
   } = useConfig();
+
+  const { isDrawerOpen } = useIsLeftDrawerOpen();
 
   return (
     <MediaTypeCheckboxesStyles className="checkboxes">
@@ -105,7 +107,7 @@ export function MediaTypeCheckboxes() {
             name="checkedA"
           />
         }
-        label={<Body1>All</Body1>}
+        label={isDrawerOpen ? <Body1>All</Body1> : null}
       />
       <FormControlLabel
         control={
@@ -116,7 +118,7 @@ export function MediaTypeCheckboxes() {
             name="checkedA"
           />
         }
-        label={<Body1>Video</Body1>}
+        label={isDrawerOpen ? <Body1>Video</Body1> : null}
       />
       <FormControlLabel
         control={
@@ -127,7 +129,7 @@ export function MediaTypeCheckboxes() {
             name="checkedA"
           />
         }
-        label={<Body1>Image</Body1>}
+        label={isDrawerOpen ? <Body1>Image</Body1> : null}
       />
     </MediaTypeCheckboxesStyles>
   );

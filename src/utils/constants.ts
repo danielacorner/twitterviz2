@@ -25,4 +25,4 @@ export const SERVER_URL =
     : "https://twit-viz-api.herokuapp.com";
 
 export const CONTROLS_PADDING_INNER = 14;
-export const FORM_HEIGHT = 40;
+export const FORM_HEIGHT = 36;

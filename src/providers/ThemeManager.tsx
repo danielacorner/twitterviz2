@@ -5,7 +5,7 @@ import {
 } from "@material-ui/core/styles";
 import React, { useState } from "react";
 import styled from "styled-components/macro";
-import { SwitchWithLabels } from "../components/common/styledComponents";
+import { CollapsibleSwitchWithLabels } from "../components/common/styledComponents";
 
 const ThemeManagerStyles = styled.div`
   .switchWrapper {
@@ -50,7 +50,7 @@ export default function ThemeManager({ children }) {
     <ThemeManagerStyles>
       <ThemeProvider theme={darkTheme}>
         <div className="switchWrapper">
-          <SwitchWithLabels
+          <CollapsibleSwitchWithLabels
             labelLeft="Light"
             labelRight="Dark"
             className="themeSwitch"

@@ -1,9 +1,14 @@
 import React from "react";
 import { Button } from "@material-ui/core";
-import { useConfig, useSetTweets, useLoading } from "../../providers/store";
+import {
+  useConfig,
+  useSetTweets,
+  useLoading,
+  useIsLeftDrawerOpen,
+} from "../../providers/store";
 import DiceIcon from "@material-ui/icons/Casino";
 import FavoriteIcon from "@material-ui/icons/Favorite";
-import { SwitchWithLabels } from "../common/styledComponents";
+import { CollapsibleSwitchWithLabels } from "../common/styledComponents";
 import { SERVER_URL } from "../../utils/constants";
 import { getFavorites } from "../common/BtnFavorite";
 
@@ -51,16 +56,15 @@ export function BtnStreamNewTweets() {
   };
 
   return (
-    <Button
-      className="btnFetch"
+    <CollapsibleButton
+      text={"Stream Tweets"}
+      icon={<DiceIcon className="diceIcon" />}
       disabled={loading}
       onClick={fetchNewTweets}
+      className="btnFetch"
       variant="contained"
       color="primary"
-      endIcon={<DiceIcon className="diceIcon" />}
-    >
-      Stream Tweets
-    </Button>
+    />
   );
 }
 
@@ -88,16 +92,25 @@ export function BtnFetchFavorites() {
   };
 
   return (
-    <Button
+    <CollapsibleButton
+      text={"Favorites"}
+      icon={<FavoriteIcon />}
       type="submit"
       className="btnFetch"
       disabled={loading}
       onClick={fetchTweetsByIds}
       variant="outlined"
       color="secondary"
-      endIcon={<FavoriteIcon />}
-    >
-      Favorites
+    />
+  );
+}
+
+function CollapsibleButton({ text, icon, disabled, ...props }) {
+  const { isDrawerOpen } = useIsLeftDrawerOpen();
+
+  return (
+    <Button disabled={disabled} endIcon={isDrawerOpen ? icon : null} {...props}>
+      {isDrawerOpen ? text : icon}
     </Button>
   );
 }
@@ -105,7 +118,7 @@ export function BtnFetchFavorites() {
 export function SwitchReplace() {
   const { replace, setConfig } = useConfig();
   return (
-    <SwitchWithLabels
+    <CollapsibleSwitchWithLabels
       labelLeft="Add"
       labelRight="Replace"
       onChange={() => setConfig({ replace: !replace })}

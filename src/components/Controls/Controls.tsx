@@ -13,6 +13,7 @@ import {
   useLoading,
   useTweets,
   useSetTweets,
+  useIsLeftDrawerOpen,
 } from "../../providers/store";
 import { H5, Body2, CUSTOM_SCROLLBAR_CSS } from "../common/styledComponents";
 import SelectGeolocation from "./SelectGeolocation";
@@ -47,8 +48,10 @@ const Controls = () => {
   };
   const theme = useTheme();
   const { loading } = useLoading();
+  const { isDrawerOpen } = useIsLeftDrawerOpen();
   return (
     <ControlsStyles
+      isDrawerOpen={isDrawerOpen}
       isLoading={loading}
       isLight={theme.palette.type === "light"}
     >

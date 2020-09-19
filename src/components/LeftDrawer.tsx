@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import clsx from "clsx";
 import {
   makeStyles,
@@ -13,6 +13,7 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Controls from "./Controls/Controls";
 import styled from "styled-components/macro";
+import { useIsLeftDrawerOpen } from "../providers/store";
 
 const drawerWidth = 240;
 
@@ -82,9 +83,12 @@ const Div = styled.div``;
 export default function LeftDrawer() {
   const classes = useStyles();
   const theme = useTheme();
-  const [open, setOpen] = useState(window.innerWidth > 600);
+  const {
+    isDrawerOpen: open,
+    setIsDrawerOpen: setOpen,
+  } = useIsLeftDrawerOpen();
   const toggleOpen = () => {
-    setOpen((p) => !p);
+    setOpen(!open);
   };
 
   return (

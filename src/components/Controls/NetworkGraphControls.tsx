@@ -2,7 +2,7 @@ import React from "react";
 import { MenuItem, Select, InputLabel, FormControl } from "@material-ui/core";
 import { COLOR_BY } from "../../utils/constants";
 import { useConfig, AppConfig } from "../../providers/store";
-import { H5, SwitchWithLabels } from "../common/styledComponents";
+import { H5, CollapsibleSwitchWithLabels } from "../common/styledComponents";
 
 const NetworkGraphControls = () => {
   return (
@@ -19,7 +19,7 @@ export default NetworkGraphControls;
 function Switch3D() {
   const { is3d, setConfig } = useConfig();
   return (
-    <SwitchWithLabels
+    <CollapsibleSwitchWithLabels
       labelLeft="2D"
       labelRight="3D"
       onChange={() => setConfig({ is3d: !is3d })}

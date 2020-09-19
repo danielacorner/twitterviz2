@@ -31,6 +31,8 @@ export type GlobalStateStoreType = {
   setWordcloudConfig: (newConfig: Partial<WordcloudConfig>) => void;
   savedDatasets: { saveName: string; ids: string[] }[];
   setSavedDatasets: (newSaves: { saveName: string; ids: string[] }[]) => void;
+  isDrawerOpen: boolean;
+  setIsDrawerOpen: (next: boolean) => void;
 };
 
 const [useStore] = create(
@@ -69,6 +71,8 @@ const [useStore] = create(
         numTweets: 50,
         tabIndex: TAB_INDICES.GALLERY,
       },
+      isDrawerOpen: window.innerWidth > 600,
+      setIsDrawerOpen: (next) => set((state) => ({ isDrawerOpen: next })),
       /** overwrite any values passed in */
       setConfig: (newConfig) =>
         set((state) => ({ config: { ...state.config, ...newConfig } })),
@@ -285,3 +289,13 @@ export function useMediaType(): string | null {
     ? FILTER_BY.videoOnly
     : null;
 }
+
+export const useIsLeftDrawerOpen = () => {
+  const isDrawerOpen = useStore(
+    (state: GlobalStateStoreType) => state.isDrawerOpen
+  );
+  const setIsDrawerOpen = useStore(
+    (state: GlobalStateStoreType) => state.setIsDrawerOpen
+  );
+  return { isDrawerOpen, setIsDrawerOpen };
+};
