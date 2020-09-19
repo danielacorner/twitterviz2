@@ -271,6 +271,22 @@ const VideoStyles = styled.div`
   .video-react-control:before {
     margin-left: -14px;
   }
+  .video-react-slider {
+    padding: 10px;
+    background: none;
+  }
+  .video-react-progress-holder {
+  }
+  .video-react-play-progress {
+    top: calc(50% - 2px) !important;
+  }
+  .video-react-load-progress {
+    padding: 10px;
+    opacity: 0;
+    div {
+      top: calc(50% - 2px);
+    }
+  }
 `;
 function VideoWithControls({
   videoRef,
