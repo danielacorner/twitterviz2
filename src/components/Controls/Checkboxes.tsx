@@ -4,6 +4,7 @@ import {
   Checkbox,
   Radio,
   RadioGroup,
+  Tooltip,
 } from "@material-ui/core";
 import { FILTER_LEVELS } from "../../utils/constants";
 import { useConfig, useIsLeftDrawerOpen } from "../../providers/store";
@@ -17,7 +18,6 @@ export function RecentPopularMixedRadioBtns() {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setConfig({ resultType: event.target.value as any });
   };
-  const { isDrawerOpen } = useIsLeftDrawerOpen();
 
   return (
     <RadioBtnsStyles>
@@ -28,20 +28,23 @@ export function RecentPopularMixedRadioBtns() {
         onChange={handleChange}
         row={true}
       >
-        <FormControlLabel
+        <FormControlLabelCollapsible
+          groupTitle="Recent/Popular"
           value="mixed"
           control={<Radio />}
-          label={isDrawerOpen ? <Body1>Mixed</Body1> : null}
+          label={<Body1>Mixed</Body1>}
         />
-        <FormControlLabel
+        <FormControlLabelCollapsible
+          groupTitle="Recent/Popular"
           value="recent"
           control={<Radio />}
-          label={isDrawerOpen ? <Body1>Recent</Body1> : null}
+          label={<Body1>Recent</Body1>}
         />
-        <FormControlLabel
+        <FormControlLabelCollapsible
+          groupTitle="Recent/Popular"
           value="popular"
           control={<Radio />}
-          label={isDrawerOpen ? <Body1>Popular</Body1> : null}
+          label={<Body1>Popular</Body1>}
         />
       </RadioGroup>
     </RadioBtnsStyles>
@@ -55,7 +58,6 @@ export function FilterLevelCheckboxes() {
       filterLevel: event.target.value as keyof typeof FILTER_LEVELS,
     });
   };
-  const { isDrawerOpen } = useIsLeftDrawerOpen();
 
   return (
     <RadioBtnsStyles>
@@ -66,20 +68,23 @@ export function FilterLevelCheckboxes() {
         onChange={handleChange}
         row={true}
       >
-        <FormControlLabel
+        <FormControlLabelCollapsible
+          groupTitle="Content Filter"
           value={FILTER_LEVELS.medium}
           control={<Radio />}
-          label={isDrawerOpen ? <Body1>Medium</Body1> : null}
+          label={<Body1>Medium</Body1>}
         />
-        <FormControlLabel
+        <FormControlLabelCollapsible
+          groupTitle="Content Filter"
           value={FILTER_LEVELS.low}
           control={<Radio />}
-          label={isDrawerOpen ? <Body1>Low</Body1> : null}
+          label={<Body1>Low</Body1>}
         />
-        <FormControlLabel
+        <FormControlLabelCollapsible
+          groupTitle="Content Filter"
           value={FILTER_LEVELS.none}
           control={<Radio />}
-          label={isDrawerOpen ? <Body1>None</Body1> : null}
+          label={<Body1>None</Body1>}
         />
       </RadioGroup>
     </RadioBtnsStyles>
@@ -95,11 +100,10 @@ export function MediaTypeCheckboxes() {
     isAllChecked,
   } = useConfig();
 
-  const { isDrawerOpen } = useIsLeftDrawerOpen();
-
   return (
     <MediaTypeCheckboxesStyles className="checkboxes">
-      <FormControlLabel
+      <FormControlLabelCollapsible
+        groupTitle="Media"
         control={
           <Checkbox
             checked={isAllChecked}
@@ -107,9 +111,10 @@ export function MediaTypeCheckboxes() {
             name="checkedA"
           />
         }
-        label={isDrawerOpen ? <Body1>All</Body1> : null}
+        label={<Body1>All</Body1>}
       />
-      <FormControlLabel
+      <FormControlLabelCollapsible
+        groupTitle="Media"
         control={
           <Checkbox
             disabled={isAllChecked}
@@ -118,9 +123,10 @@ export function MediaTypeCheckboxes() {
             name="checkedA"
           />
         }
-        label={isDrawerOpen ? <Body1>Video</Body1> : null}
+        label={<Body1>Video</Body1>}
       />
-      <FormControlLabel
+      <FormControlLabelCollapsible
+        groupTitle="Media"
         control={
           <Checkbox
             disabled={isAllChecked}
@@ -129,8 +135,40 @@ export function MediaTypeCheckboxes() {
             name="checkedA"
           />
         }
-        label={isDrawerOpen ? <Body1>Image</Body1> : null}
+        label={<Body1>Image</Body1>}
       />
     </MediaTypeCheckboxesStyles>
+  );
+}
+
+function FormControlLabelCollapsible({
+  control,
+  label,
+  groupTitle = "",
+  ...props
+}) {
+  const { isDrawerOpen } = useIsLeftDrawerOpen();
+
+  return (
+    <FormControlLabel
+      {...{
+        control: isDrawerOpen ? (
+          control
+        ) : (
+          <Tooltip
+            title={
+              <>
+                {groupTitle}
+                {label}
+              </>
+            }
+          >
+            {control}
+          </Tooltip>
+        ),
+        label: isDrawerOpen ? label : null,
+        ...props,
+      }}
+    />
   );
 }
