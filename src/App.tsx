@@ -1,6 +1,5 @@
 import React from "react";
 import "./App.css";
-import { CONTROLS_WIDTH, CONTROLS_PADDING_INNER } from "./utils/constants";
 import styled from "styled-components/macro";
 import BottomDrawer from "./components/BottomDrawer/BottomDrawer";
 import { useMount } from "./utils/utils";
@@ -8,16 +7,16 @@ import { useSetTweets, useLoading } from "./providers/store";
 import { query as q } from "faunadb";
 import { faunaClient } from "./providers/faunaProvider";
 import VisualizationTabs from "./components/VisualizationTabs";
-import Controls from "./components/Controls/Controls";
 import { useIsLight } from "./providers/ThemeManager";
 import "./video-react.css"; // import video-react css
+import LeftDrawer from "./components/LeftDrawer";
 
 const AppStyles = styled.div`
   ${(props) => (props.isLoading ? "cursor: wait;" : "")}
   transition: background 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
   background: ${(props) => (props.isLight ? "white" : "hsl(0,0%,10%)")};
   display: grid;
-  grid-template-columns: ${CONTROLS_WIDTH + CONTROLS_PADDING_INNER * 2}px 1fr;
+  grid-template-columns: auto 1fr;
   min-height: 100vh;
   * {
     margin: 0;
@@ -37,7 +36,7 @@ function App() {
   const { loading } = useLoading();
   return (
     <AppStyles isLoading={loading} isLight={isLight} className="App">
-      <Controls />
+      <LeftDrawer />
       <VisualizationTabs />
       <BottomDrawer />
     </AppStyles>

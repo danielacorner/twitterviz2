@@ -14,9 +14,9 @@ import { useMount } from "../../utils/utils";
 import BtnFavorite from "../common/BtnFavorite";
 
 /** smaller grid rows means finer but more time to compute layout */
-const GRID_ROW_PX = 10;
+const GRID_ROW_PX = 20;
 const MIN_TWEET_WIDTH = 300;
-const GRID_GAP = 12;
+const GRID_GAP = 24;
 
 const GalleryStyles = styled.div`
   display: grid;
@@ -65,7 +65,6 @@ function GridItem({ tweet }) {
   );
   return (
     <div
-
       className="tweetContent"
       ref={ref}
       style={{ gridRow: `span ${rowSpan}` }}
