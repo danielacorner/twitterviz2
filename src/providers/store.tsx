@@ -38,10 +38,13 @@ export type GlobalStateStoreType = {
 const [useStore] = create(
   (set) =>
     ({
-      graphData: {
-        graph: { nodes: [], links: [] },
-        users: [],
-      } as GraphData,
+      graphData:
+        process.env.NODE_ENV === "development"
+          ? transformTweetsIntoGraphData(mockTweets as Tweet[])
+          : ({
+              graph: { nodes: [], links: [] },
+              users: [],
+            } as GraphData),
       tweetsFromServer:
         process.env.NODE_ENV === "development" ? mockTweets : ([] as Tweet[]),
       selectedNode: null as Tweet | null,
@@ -57,7 +60,7 @@ const [useStore] = create(
       setLoading: (loading) => set((state) => ({ loading })),
       config: {
         is3d: false,
-        colorBy: COLOR_BY.media as keyof typeof COLOR_BY | null,
+        colorBy: COLOR_BY.mediaType as keyof typeof COLOR_BY | null,
         lang: "All",
         countryCode: "All",
         resultType: "mixed",
@@ -69,7 +72,7 @@ const [useStore] = create(
         filterLevel: FILTER_LEVELS.none,
         searchTerm: "",
         numTweets: 50,
-        tabIndex: TAB_INDICES.GALLERY,
+        tabIndex: TAB_INDICES.NETWORKGRAPH,
       },
       isDrawerOpen: window.innerWidth > 600,
       setIsDrawerOpen: (next) => set((state) => ({ isDrawerOpen: next })),
@@ -94,7 +97,7 @@ const [useStore] = create(
 
 export default useStore;
 
-export const useTweets = () =>
+export const useTweets = (): Tweet[] =>
   useStore((state: GlobalStateStoreType) => state.tweetsFromServer);
 export const useSelectedNode = () =>
   useStore((state: GlobalStateStoreType) => state.selectedNode);

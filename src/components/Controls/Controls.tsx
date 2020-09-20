@@ -42,10 +42,6 @@ import styled from "styled-components/macro";
 const Div = styled.div``;
 
 const Controls = () => {
-  // TODO
-  const createLinks = () => {
-    console.log("TODO");
-  };
   const theme = useTheme();
   const { loading } = useLoading();
   const { isDrawerOpen } = useIsLeftDrawerOpen();
@@ -58,14 +54,6 @@ const Controls = () => {
       <VizSpecificControls />
       <FetchTweetsControls />
       <SaveDataControls />
-      <Button
-        variant="contained"
-        color="primary"
-        disabled={true}
-        onClick={createLinks}
-      >
-        Link Nodes
-      </Button>
     </ControlsStyles>
   );
 };

@@ -1,15 +1,33 @@
 import React from "react";
-import { MenuItem, Select, InputLabel, FormControl } from "@material-ui/core";
+import {
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+  Button,
+} from "@material-ui/core";
 import { COLOR_BY } from "../../utils/constants";
 import { useConfig, AppConfig } from "../../providers/store";
 import { H5, CollapsibleSwitchWithLabels } from "../common/styledComponents";
 
 const NetworkGraphControls = () => {
+  // TODO
+  const createLinks = () => {
+    console.log("TODO");
+  };
   return (
     <>
-      <H5>Network Graph Controls</H5>
+      <H5 style={{ pointerEvents: "none" }}>Network Graph Controls</H5>
       <Switch3D />
       <SelectColorBy />
+      <Button
+        variant="contained"
+        color="primary"
+        disabled={true}
+        onClick={createLinks}
+      >
+        Link Nodes
+      </Button>
     </>
   );
 };

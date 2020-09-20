@@ -35,7 +35,7 @@ export default function VisualizationTabs() {
           width: 100%;
           display: grid;
           height: ${TABS_HEIGHT}px;
-          justify-content: center;
+          justify-content: start;
           box-shadow: 0px 2px 2px 0px #0000003d;
         }
       `}

@@ -132,6 +132,7 @@ export default function LeftDrawer() {
             )}
           </IconButton>
         </div>
+
         <Controls />
       </Drawer>
       <main

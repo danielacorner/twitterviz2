@@ -10,8 +10,8 @@ import { CollapsibleSwitchWithLabels } from "../components/common/styledComponen
 const ThemeManagerStyles = styled.div`
   .switchWrapper {
     position: fixed;
-    bottom: 4px;
-    left: 12px;
+    top: 4px;
+    right: 12px;
     display: grid;
     grid-auto-flow: column;
     align-items: center;

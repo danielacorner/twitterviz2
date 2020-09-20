@@ -1,5 +1,10 @@
-import React, { useState } from "react";
-import { useTweets, useLoading, useDeleteTweet } from "../../providers/store";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  useConfig,
+  useTweets,
+  useLoading,
+  useDeleteTweet,
+} from "../../providers/store";
 import styled from "styled-components/macro";
 import TweetContent from "../TweetContent";
 import { TABS_HEIGHT } from "../../utils/constants";
@@ -102,10 +107,33 @@ function DeleteTweetBtn({ tweet }: { tweet: Tweet }) {
 
 const Gallery = () => {
   const tweets = useTweets();
+  const prevTweets: Tweet[] = usePrevious(tweets || []);
   const theme = useTheme();
   const { loading } = useLoading();
+
+  // when we stream tweets,
+  // if in "replace" mode,
+  // scroll to top
+  const ref = useRef();
+  const { replace } = useConfig();
+  useEffect(() => {
+    const didJustDeleteOneTweet =
+      prevTweets && Math.abs(tweets.length - (prevTweets?.length || 0)) === 1;
+    if (
+      !didJustDeleteOneTweet &&
+      replace &&
+      tweets.length !== 0 &&
+      ref.current
+    ) {
+      (ref.current as any).scrollTop = 0;
+    }
+  }, [tweets, prevTweets, replace]);
   return (
-    <GalleryStyles isLoading={loading} isLight={theme.palette.type === "light"}>
+    <GalleryStyles
+      ref={ref}
+      isLoading={loading}
+      isLight={theme.palette.type === "light"}
+    >
       {tweets.map((tweet) => (
         <GridItem key={tweet.id_str} tweet={tweet} />
       ))}
@@ -159,4 +187,18 @@ function ScrollMoreIndicator() {
       <div className="dot"></div>
     </ScrollMoreStyles>
   );
+}
+
+function usePrevious(value): typeof value {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  const ref = useRef();
+
+  // Store current value in ref
+  useEffect(() => {
+    ref.current = value;
+  }, [value]); // Only re-run if value changes
+
+  // Return previous value (happens before update in useEffect above)
+  return ref.current;
 }

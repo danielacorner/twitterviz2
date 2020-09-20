@@ -7,6 +7,7 @@ import useStore from "../providers/store";
 import useContainerDimensions from "../utils/useContainerDimensions";
 import { useWindowSize } from "../utils/hooks";
 import { CONTROLS_WIDTH } from "../utils/constants";
+import { useIsLight } from "../providers/ThemeManager";
 
 const AVATAR_WIDTH = 46;
 const TOOLTIP_WIDTH = 380;
@@ -18,7 +19,7 @@ const TooltipStyles = styled.div`
   opacity: 0.9;
   pointer-events: none;
   border-radius: 4px;
-  background: white;
+  background: ${(props) => (props.isLight ? "white" : "black")};
   width: ${TOOLTIP_WIDTH}px;
   height: fit-content;
   box-shadow: 1px 1px 8px hsla(0, 0%, 0%, 0.5);
@@ -95,9 +96,10 @@ const NodeTooltip = () => {
   });
 
   const tweet = tooltipNode || lastTooltipNode.current;
+  const isLight = useIsLight();
   return (
     <animated.div style={springToMousePosition}>
-      <TooltipStyles ref={ref}>
+      <TooltipStyles ref={ref} isLight={isLight}>
         <div className="profileAndContent">
           <AvatarStyles>
             <img src={tweet?.user.profile_image_url_https} alt="" />

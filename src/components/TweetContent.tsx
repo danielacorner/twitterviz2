@@ -199,7 +199,7 @@ function MediaContent({ autoPlay, containerWidth, ...mediaItem }: MediaProps) {
   // focus the video player when it starts playing
   const videoRef = useRef();
   useEffect(() => {
-    if (videoRef.current && autoPlay) {
+    if (videoRef.current && (videoRef.current as any).focus && autoPlay) {
       (videoRef.current as any).focus();
     }
   }, [autoPlay]);
