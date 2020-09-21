@@ -56,55 +56,55 @@ export function useForceGraphProps() {
     cooldownTime: is3d ? 10000 : 1000,
     nodeRelSize: NODE_SIZE,
     nodeColor: (node) => getNodeColor(node, colorBy),
-
     onEngineStop: () =>
       fgRef.current && !is3d ? (fgRef.current as any).zoomToFit(400) : null,
-    ...(colorBy === COLOR_BY.profilePhoto
-      ? // show profile photo
-        {
-          nodeCanvasObject: (node, ctx) => {
-            const img = new Image(NODE_SIZE, NODE_SIZE);
-            img.src = node.user.profile_image_url_https;
-            ctx.drawImage(img, node.x, node.y);
-          },
+    nodeCanvasObject: (node, ctx) => {
+      if (colorBy === COLOR_BY.profilePhoto) {
+        // show profile photo
+        drawProfilePhoto(node, ctx);
+      } else if (colorBy === COLOR_BY.media) {
+        // show media
+        const mediaArr = getMediaArr(node);
+        if (!mediaArr[0]) {
+          // draw an empty circle if there's no media
+          ctx.beginPath();
+          ctx.arc(node.x, node.y, NODE_SIZE / 2, 0, Math.PI * 2);
+          // stroke styles https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/stroke
+          ctx.strokeStyle = "cornflowerblue";
+          ctx.stroke();
+        } else {
+          const image = mediaArr[0];
+          const small = image.sizes.small;
+          const hwRatio = small.h / small.w;
+          const imgHeight = NODE_SIZE * hwRatio * 2;
+          const imgWidth = NODE_SIZE * 2;
+
+          // show the first image/video preview
+
+          const ctxImg = new Image(imgWidth, imgHeight);
+          ctxImg.src = image.poster || image.src;
+
+          // drawImage https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+          ctx.drawImage(
+            ctxImg,
+            node.x - imgWidth / 2,
+            node.y - imgHeight / 2,
+            imgWidth,
+            imgHeight
+          );
         }
-      : colorBy === COLOR_BY.media
-      ? // show media
-        {
-          nodeCanvasObject: (node, ctx) => {
-            const mediaArr = getMediaArr(node);
-            if (!mediaArr[0]) {
-              // draw a circle if there's no media
-
-              ctx.beginPath();
-              ctx.arc(node.x, node.y, NODE_SIZE / 2, 0, Math.PI * 2);
-              // stroke styles https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/stroke
-              ctx.strokeStyle = "cornflowerblue";
-              ctx.stroke();
-            } else {
-              const image = mediaArr[0];
-              const small = image.sizes.small;
-              const hwRatio = small.h / small.w;
-              const imgHeight = NODE_SIZE * hwRatio * 2;
-              const imgWidth = NODE_SIZE * 2;
-
-              // show the first image/video preview
-
-              const ctxImg = new Image(imgWidth, imgHeight);
-              ctxImg.src = image.poster || image.src;
-
-              // drawImage https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
-              ctx.drawImage(
-                ctxImg,
-                node.x - imgWidth / 2,
-                node.y - imgHeight / 2,
-                imgWidth,
-                imgHeight
-              );
-            }
-          },
-        }
-      : {}),
+      } else if (node.isUserNode) {
+        // draw profile photo if it's a user node
+        drawProfilePhoto(node, ctx);
+      } else {
+        // draw circle
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, NODE_SIZE / 2, 0, Math.PI * 2);
+        // stroke styles https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/stroke
+        ctx.fillStyle = getNodeColor(node, colorBy);
+        ctx.fill();
+      }
+    },
     nodeThreeObject:
       colorBy === COLOR_BY.mediaType
         ? null
@@ -172,6 +172,12 @@ export function useForceGraphProps() {
     onBackgroundClick,
   };
   return { fgRef, forceGraphProps };
+}
+
+function drawProfilePhoto(node: any, ctx: any) {
+  const img = new Image(NODE_SIZE, NODE_SIZE);
+  img.src = node.user.profile_image_url_https;
+  ctx.drawImage(img, node.x, node.y);
 }
 
 function getNodeColor(node, colorBy) {
