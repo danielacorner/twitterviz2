@@ -17,8 +17,8 @@ import {
 } from "../common/styledComponents";
 import { useMount } from "../../utils/utils";
 import BtnFavorite from "../common/BtnFavorite";
-import { Tweet } from "../../../types/types-cogeden";
 import CloseIcon from "@material-ui/icons/Close";
+import { Tweet } from "../../types";
 
 /** smaller grid rows means finer but more time to compute layout */
 const GRID_ROW_PX = 20;

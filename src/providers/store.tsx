@@ -1,12 +1,13 @@
 import create from "zustand";
 import { uniqBy } from "lodash";
-import { Tweet } from "../types";
+import { Tweet, User } from "../types";
 import {
   GraphData,
   transformTweetsIntoGraphData,
 } from "../utils/transformData";
 import { COLOR_BY, FILTER_LEVELS, FILTER_BY } from "../utils/constants";
 import mockTweets from "../tweets.json";
+import { EMPTY_TWEET } from "../utils/emptyTweet";
 
 export const TAB_INDICES = {
   NETWORKGRAPH: 0,
@@ -346,9 +347,20 @@ export const useUserNodes = () => {
       ...graphData,
       graph: {
         ...graphData.graph,
-        nodes: [...graphData.tweets, ...graphData.users],
+        nodes: [
+          ...graphData.tweets,
+          ...graphData.users.map(mapUserIntoUserNode),
+        ],
       },
     });
   };
   return { hideUserNodes, showUserNodes };
 };
+
+function mapUserIntoUserNode(user: User): Tweet {
+  return {
+    ...EMPTY_TWEET,
+    user,
+    isUserNode: true,
+  };
+}
