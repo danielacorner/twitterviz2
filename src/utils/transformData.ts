@@ -16,7 +16,11 @@ import { Tweet } from "../types";
 type Link = { source: string | number; target: string | number };
 type User = Tweet["user"];
 type GraphOfTweets = { nodes: Tweet[]; links: Link[] };
-export type GraphData = { graph: GraphOfTweets; users: User[] };
+export type GraphData = {
+  graph: GraphOfTweets;
+  users: User[];
+  tweets: Tweet[];
+};
 export function transformTweetsIntoGraphData(tweetsArg: Tweet[]): GraphData {
   const tweets = tweetsArg.map((tweet) => ({
     ...tweet,
@@ -205,15 +209,17 @@ export function transformTweetsIntoGraphData(tweetsArg: Tweet[]): GraphData {
   //   ],
   // };
   // console.log({ links });
+  const tweetsWithUser = tweets
+    .map((t) => ({ ...t, id: +t.user?.id_str }))
+    .filter((t) => Boolean(t.id));
   return {
     graph: {
-      nodes: tweets
-        .map((t) => ({ ...t, id: +t.user?.id_str }))
-        .filter((t) => Boolean(t.id)),
+      nodes: tweetsWithUser,
       // links: [],
       links: [],
       // links: uniqBy(links, (l) => JSON.stringify(l)),
     },
     users,
+    tweets: tweetsWithUser,
   };
 }

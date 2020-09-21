@@ -44,6 +44,7 @@ const [useStore] = create(
           : ({
               graph: { nodes: [], links: [] },
               users: [],
+              tweets: [],
             } as GraphData),
       tweetsFromServer:
         process.env.NODE_ENV === "development" ? mockTweets : ([] as Tweet[]),
@@ -59,6 +60,7 @@ const [useStore] = create(
       loading: false,
       setLoading: (loading) => set((state) => ({ loading })),
       config: {
+        areUserNodesVisible: false,
         is3d: false,
         colorBy: COLOR_BY.mediaType as keyof typeof COLOR_BY | null,
         lang: "All",
@@ -184,6 +186,7 @@ export const useDeleteTweet = () => {
 
 export type AppConfig = {
   is3d: boolean;
+  areUserNodesVisible: boolean;
   colorBy: keyof typeof COLOR_BY | null;
   lang: string;
   resultType: "mixed" | "recent" | "popular";
@@ -206,6 +209,9 @@ export const useConfig = () => {
   return {
     loading: useStore((state: GlobalStateStoreType) => state.loading),
     is3d: useStore((state: GlobalStateStoreType) => state.config.is3d),
+    areUserNodesVisible: useStore(
+      (state: GlobalStateStoreType) => state.config.areUserNodesVisible
+    ),
     colorBy: useStore((state: GlobalStateStoreType) => state.config.colorBy),
     lang: useStore((state: GlobalStateStoreType) => state.config.lang),
     countryCode: useStore(
@@ -319,4 +325,30 @@ export const useIsLeftDrawerOpen = () => {
     (state: GlobalStateStoreType) => state.setIsDrawerOpen
   );
   return { isDrawerOpen, setIsDrawerOpen };
+};
+
+export const useUserNodes = () => {
+  const setGraphData = useStore(
+    (state: GlobalStateStoreType) => state.setGraphData
+  );
+  const tweets = useTweets();
+
+  const hideUserNodes = () => {
+    const graphData = transformTweetsIntoGraphData(tweets);
+    setGraphData({
+      ...graphData,
+      graph: { ...graphData.graph, nodes: graphData.tweets },
+    });
+  };
+  const showUserNodes = () => {
+    const graphData = transformTweetsIntoGraphData(tweets);
+    setGraphData({
+      ...graphData,
+      graph: {
+        ...graphData.graph,
+        nodes: [...graphData.tweets, ...graphData.users],
+      },
+    });
+  };
+  return { hideUserNodes, showUserNodes };
 };

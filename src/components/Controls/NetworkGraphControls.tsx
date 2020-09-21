@@ -7,9 +7,12 @@ import {
   Button,
 } from "@material-ui/core";
 import { COLOR_BY } from "../../utils/constants";
-import { useConfig, AppConfig } from "../../providers/store";
+import { useConfig, AppConfig, useUserNodes } from "../../providers/store";
 import { H5, CollapsibleSwitchWithLabels } from "../common/styledComponents";
 
+/** react-force-graph docs
+ * https://www.npmjs.com/package/react-force-graph
+ */
 const NetworkGraphControls = () => {
   // TODO
   const createLinks = () => {
@@ -19,6 +22,7 @@ const NetworkGraphControls = () => {
     <>
       <H5 style={{ pointerEvents: "none" }}>Network Graph Controls</H5>
       <Switch3D />
+      <SwitchUserNodes />
       <SelectColorBy />
       <Button
         variant="contained"
@@ -42,6 +46,26 @@ function Switch3D() {
       labelRight="3D"
       onChange={() => setConfig({ is3d: !is3d })}
       checked={is3d}
+    />
+  );
+}
+
+function SwitchUserNodes() {
+  const { areUserNodesVisible, setConfig } = useConfig();
+  const { hideUserNodes, showUserNodes } = useUserNodes();
+  return (
+    <CollapsibleSwitchWithLabels
+      labelLeft="Hide Users"
+      labelRight="Show Users"
+      onChange={() => {
+        if (areUserNodesVisible) {
+          hideUserNodes();
+        } else {
+          showUserNodes();
+        }
+        setConfig({ areUserNodesVisible: !areUserNodesVisible });
+      }}
+      checked={areUserNodesVisible}
     />
   );
 }
