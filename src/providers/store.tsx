@@ -4,11 +4,10 @@ import { Tweet } from "../types";
 import {
   GraphData,
   transformTweetsIntoGraphData,
-  Link,
 } from "../utils/transformData";
 import { COLOR_BY, FILTER_LEVELS, FILTER_BY } from "../utils/constants";
 import mockTweets from "../tweets.json";
-import { EMPTY_TWEET } from "../utils/emptyTweet";
+import { useEffect, useRef } from "react";
 
 export const TAB_INDICES = {
   NETWORKGRAPH: 0,
@@ -36,13 +35,33 @@ export type GlobalStateStoreType = {
   isDrawerOpen: boolean;
   setIsDrawerOpen: (next: boolean) => void;
 };
+export type AppConfig = {
+  is3d: boolean;
+  showUserNodes: boolean;
+  colorBy: keyof typeof COLOR_BY | null;
+  lang: string;
+  resultType: "mixed" | "recent" | "popular";
+  geolocation: {
+    latitude: { left: number; right: number };
+    longitude: { left: number; right: number };
+  } | null;
+  countryCode: string;
+  isAllChecked: boolean;
+  isVideoChecked: boolean;
+  isImageChecked: boolean;
+  replace: boolean;
+  tabIndex: number;
+  filterLevel: keyof typeof FILTER_LEVELS;
+  searchTerm: string;
+  numTweets: number;
+};
 
 const [useStore] = create(
   (set) =>
     ({
       graphData:
         process.env.NODE_ENV === "development"
-          ? transformTweetsIntoGraphData(mockTweets as Tweet[])
+          ? transformTweetsIntoGraphData(mockTweets as Tweet[], false)
           : ({
               graph: { nodes: [], links: [] },
               users: [],
@@ -62,7 +81,7 @@ const [useStore] = create(
       loading: false,
       setLoading: (loading) => set((state) => ({ loading })),
       config: {
-        areUserNodesVisible: false,
+        showUserNodes: false,
         is3d: false,
         colorBy: COLOR_BY.mediaType as keyof typeof COLOR_BY | null,
         lang: "All",
@@ -101,118 +120,12 @@ const [useStore] = create(
 
 export default useStore;
 
-export const useTweets = (): Tweet[] =>
-  useStore((state: GlobalStateStoreType) => state.tweetsFromServer);
-export const useSelectedNode = () =>
-  useStore((state: GlobalStateStoreType) => state.selectedNode);
-export const useSetSelectedNode = () =>
-  useStore((state: GlobalStateStoreType) => state.setSelectedNode);
-export const useTooltipNode = () =>
-  useStore((state: GlobalStateStoreType) => state.tooltipNode);
-export const useSetTooltipNode = () =>
-  useStore((state: GlobalStateStoreType) => state.setTooltipNode);
-export const useGraphData = () =>
-  useStore((state: GlobalStateStoreType) => state.graphData);
-export const useLoading = () =>
-  useStore((state: GlobalStateStoreType) => ({
-    loading: state.loading,
-    setLoading: state.setLoading,
-  }));
-export const useStoredSaves = () =>
-  useStore((state: GlobalStateStoreType) => ({
-    saves: state.savedDatasets,
-    setSaves: state.setSavedDatasets,
-  }));
-
-/** transform and save tweets to store */
-export const useSetTweets = () => {
-  const { replace } = useConfig();
-  const tweetsFromServer = useStore(
-    (state: GlobalStateStoreType) => state.tweetsFromServer
-  );
-  const setTweetsFromServer = useStore(
-    (state: GlobalStateStoreType) => state.setTweetsFromServer
-  );
-  const setGraphData = useStore(
-    (state: GlobalStateStoreType) => state.setGraphData
-  );
-  return (tweetsArg: Tweet[]) => {
-    const isError = !Array.isArray(tweetsArg);
-    if (isError) {
-      console.error(tweetsArg);
-    }
-    const tweets = isError ? [] : tweetsArg;
-    const newTweets = replace
-      ? tweets
-      : uniqBy([...tweetsFromServer, ...tweets], (t) => t.id_str);
-    setTweetsFromServer(newTweets);
-    setGraphData(transformTweetsIntoGraphData(newTweets));
-  };
-};
-
-/** transform and add tweets to store */
-export const useAddTweets = () => {
-  const tweetsFromServer = useStore(
-    (state: GlobalStateStoreType) => state.tweetsFromServer
-  );
-  const setTweetsFromServer = useStore(
-    (state: GlobalStateStoreType) => state.setTweetsFromServer
-  );
-  const setGraphData = useStore(
-    (state: GlobalStateStoreType) => state.setGraphData
-  );
-  return (tweets: Tweet[]) => {
-    const newTweets = uniqBy([...tweetsFromServer, ...tweets], (t) => t.id_str);
-    setTweetsFromServer(newTweets);
-    setGraphData(transformTweetsIntoGraphData(newTweets));
-  };
-};
-
-/** delete a tweet from store */
-export const useDeleteTweet = () => {
-  const tweetsFromServer = useStore(
-    (state: GlobalStateStoreType) => state.tweetsFromServer
-  );
-  const setTweetsFromServer = useStore(
-    (state: GlobalStateStoreType) => state.setTweetsFromServer
-  );
-  const setGraphData = useStore(
-    (state: GlobalStateStoreType) => state.setGraphData
-  );
-  return (tweetId: string) => {
-    const newTweets = tweetsFromServer.filter((t) => t.id_str !== tweetId);
-    setTweetsFromServer(newTweets);
-    setGraphData(transformTweetsIntoGraphData(newTweets));
-  };
-};
-
-export type AppConfig = {
-  is3d: boolean;
-  areUserNodesVisible: boolean;
-  colorBy: keyof typeof COLOR_BY | null;
-  lang: string;
-  resultType: "mixed" | "recent" | "popular";
-  geolocation: {
-    latitude: { left: number; right: number };
-    longitude: { left: number; right: number };
-  } | null;
-  countryCode: string;
-  isAllChecked: boolean;
-  isVideoChecked: boolean;
-  isImageChecked: boolean;
-  replace: boolean;
-  tabIndex: number;
-  filterLevel: keyof typeof FILTER_LEVELS;
-  searchTerm: string;
-  numTweets: number;
-};
-
 export const useConfig = () => {
   return {
     loading: useStore((state: GlobalStateStoreType) => state.loading),
     is3d: useStore((state: GlobalStateStoreType) => state.config.is3d),
-    areUserNodesVisible: useStore(
-      (state: GlobalStateStoreType) => state.config.areUserNodesVisible
+    showUserNodes: useStore(
+      (state: GlobalStateStoreType) => state.config.showUserNodes
     ),
     colorBy: useStore((state: GlobalStateStoreType) => state.config.colorBy),
     lang: useStore((state: GlobalStateStoreType) => state.config.lang),
@@ -256,6 +169,95 @@ export const useConfig = () => {
     mediaType: useMediaType(),
     allowedMediaTypes: useAllowedMediaTypes(),
     setConfig: useStore((state: GlobalStateStoreType) => state.setConfig),
+  };
+};
+
+export const useTweets = (): Tweet[] =>
+  useStore((state: GlobalStateStoreType) => state.tweetsFromServer);
+export const useSelectedNode = () =>
+  useStore((state: GlobalStateStoreType) => state.selectedNode);
+export const useSetSelectedNode = () =>
+  useStore((state: GlobalStateStoreType) => state.setSelectedNode);
+export const useTooltipNode = () =>
+  useStore((state: GlobalStateStoreType) => state.tooltipNode);
+export const useSetTooltipNode = () =>
+  useStore((state: GlobalStateStoreType) => state.setTooltipNode);
+export const useGraphData = () =>
+  useStore((state: GlobalStateStoreType) => state.graphData);
+export const useLoading = () =>
+  useStore((state: GlobalStateStoreType) => ({
+    loading: state.loading,
+    setLoading: state.setLoading,
+  }));
+export const useStoredSaves = () =>
+  useStore((state: GlobalStateStoreType) => ({
+    saves: state.savedDatasets,
+    setSaves: state.setSavedDatasets,
+  }));
+
+/** transform and save tweets to store */
+export const useSetTweets = () => {
+  const { replace } = useConfig();
+  const tweetsFromServer = useStore(
+    (state: GlobalStateStoreType) => state.tweetsFromServer
+  );
+  const setTweetsFromServer = useStore(
+    (state: GlobalStateStoreType) => state.setTweetsFromServer
+  );
+  const setGraphData = useStore(
+    (state: GlobalStateStoreType) => state.setGraphData
+  );
+  const { showUserNodes } = useConfig();
+  return (tweetsArg: Tweet[]) => {
+    const isError = !Array.isArray(tweetsArg);
+    if (isError) {
+      console.error(tweetsArg);
+    }
+    const tweets = isError ? [] : tweetsArg;
+    const newTweets = replace
+      ? tweets
+      : uniqBy([...tweetsFromServer, ...tweets], (t) => t.id_str);
+    setTweetsFromServer(newTweets);
+
+    setGraphData(transformTweetsIntoGraphData(newTweets, showUserNodes));
+  };
+};
+
+/** transform and add tweets to store */
+export const useAddTweets = () => {
+  const tweetsFromServer = useStore(
+    (state: GlobalStateStoreType) => state.tweetsFromServer
+  );
+  const setTweetsFromServer = useStore(
+    (state: GlobalStateStoreType) => state.setTweetsFromServer
+  );
+  const setGraphData = useStore(
+    (state: GlobalStateStoreType) => state.setGraphData
+  );
+  const { showUserNodes } = useConfig();
+  return (tweets: Tweet[]) => {
+    const newTweets = uniqBy([...tweetsFromServer, ...tweets], (t) => t.id_str);
+    setTweetsFromServer(newTweets);
+    setGraphData(transformTweetsIntoGraphData(newTweets, showUserNodes));
+  };
+};
+
+/** delete a tweet from store */
+export const useDeleteTweet = () => {
+  const tweetsFromServer = useStore(
+    (state: GlobalStateStoreType) => state.tweetsFromServer
+  );
+  const setTweetsFromServer = useStore(
+    (state: GlobalStateStoreType) => state.setTweetsFromServer
+  );
+  const setGraphData = useStore(
+    (state: GlobalStateStoreType) => state.setGraphData
+  );
+  const { showUserNodes } = useConfig();
+  return (tweetId: string) => {
+    const newTweets = tweetsFromServer.filter((t) => t.id_str !== tweetId);
+    setTweetsFromServer(newTweets);
+    setGraphData(transformTweetsIntoGraphData(newTweets, showUserNodes));
   };
 };
 
@@ -329,66 +331,22 @@ export const useIsLeftDrawerOpen = () => {
   return { isDrawerOpen, setIsDrawerOpen };
 };
 
-export const useUserNodes = () => {
-  const setGraphData = useStore(
-    (state: GlobalStateStoreType) => state.setGraphData
-  );
+export const useRecomputeGraph = () => {
   const tweets = useTweets();
-
-  const hideUserNodes = () => {
-    const graphData = transformTweetsIntoGraphData(tweets);
-    setGraphData({
-      ...graphData,
-      graph: { ...graphData.graph, nodes: graphData.tweets },
-    });
-  };
-  const showUserNodes = () => {
-    const graphData = transformTweetsIntoGraphData(tweets);
-
-    const { userLinks, userNodes } = getUserNodes(graphData);
-    console.log("🌟🚨: showUserNodes -> { userLinks, userNodes }", {
-      userLinks,
-      userNodes,
-    });
-
-    const graphDataWithUsers = {
-      ...graphData,
-      graph: {
-        nodes: [...graphData.tweets, ...userNodes],
-        // link user nodes to their tweets
-        links: [
-          ...graphData.graph.links,
-          // one link for each tweet, from its user node to it
-          ...userLinks,
-        ],
-      },
-    };
-    console.log(
-      "🌟🚨: showUserNodes -> graphDataWithUsers",
-      graphDataWithUsers
-    );
-    setGraphData(graphDataWithUsers);
-  };
-  return { hideUserNodes, showUserNodes };
+  const setTweets = useSetTweets();
+  return () => setTweets(tweets);
 };
 
-function getUserNodes(
-  graphData: GraphData
-): { userLinks: Link[]; userNodes: Tweet[] } {
-  const userLinks = graphData.tweets.map((t) => ({
-    // source: its user
-    source: Number(t.user.id_str),
-    // target: the tweet
-    target: Number(t.id_str),
-  }));
-  console.log("🌟🚨🌟🚨🌟🚨: userLinks", JSON.stringify(userLinks));
-  const userNodes: Tweet[] = graphData.users.map((user) => ({
-    ...EMPTY_TWEET,
-    id: Number(user.id_str),
-    id_str: user.id_str,
-    user,
-    isUserNode: true,
-  }));
+export function usePrevious(value): typeof value {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  const ref = useRef();
 
-  return { userLinks, userNodes };
+  // Store current value in ref
+  useEffect(() => {
+    ref.current = value;
+  }, [value]); // Only re-run if value changes
+
+  // Return previous value (happens before update in useEffect above)
+  return ref.current;
 }

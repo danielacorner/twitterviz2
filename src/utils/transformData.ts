@@ -1,6 +1,7 @@
 //
 
 import { Tweet } from "../types";
+import { EMPTY_TWEET } from "./emptyTweet";
 // each Tweet node links to one or more User nodes: poster, replied, mentioned, retweeted
 // Tweet nodes link to each other via Hashtags
 
@@ -21,205 +22,68 @@ export type GraphData = {
   users: User[];
   tweets: Tweet[];
 };
-export function transformTweetsIntoGraphData(tweets: Tweet[]): GraphData {
-  // list of all user that tweeted
+export function transformTweetsIntoGraphData(
+  tweets: Tweet[],
+  showUserNodes: boolean
+): GraphData {
   const users = tweets.map((t) => t.user).filter(Boolean);
-  // const tweetsByUser: { [userId: string]: Tweet } = tweets.reduce(
-  //   (acc, t) => ({
-  //     ...acc,
-  //     ...(t?.user?.id_str ? { [t.user.id_str]: t } : {}),
-  //   }),
-  //   {} as { [userId: string]: Tweet }
-  // );
-
-  // // for each user, make a isUserNode: true node
-  // users.forEach((user) => {
-  //   if (tweetsByUser[user.id_str]) {
-  //     tweets.push({
-  //       ...tweetsByUser[user.id_str],
-  //       isUserNode: true,
-  //       // the id_str becomes the user's id_str
-  //       id: +user.id_str,
-  //     });
-  //   }
-  // });
-
-  // const tweetIdsByHashtag: {
-  //   [hashtag: string]: Tweet[];
-  // } = tweets.reduce(
-  //   (acc, tweet) => {
-  //     const hashtagsInTweet =
-  //       (tweet.extended_tweet || tweet)?.entities?.hashtags || [];
-
-  //     hashtagsInTweet.forEach((hashtag) => {
-  //       acc = { ...acc, [hashtag]: [...(acc[hashtag] ? acc[hashtag] : [])] };
-  //     });
-  //     return acc;
-  //   },
-  //   {} as {
-  //     [hashtag: string]: Tweet[];
-  //   }
-  // );
-
-  // list of hashtags by user id
-  // type HashtagWithTweetType = { hashtag: string; tweetId: string };
-  // const allHashtagsWithTweet: HashtagWithTweetType[] = tweets.reduce(
-  //   (acc: HashtagWithTweetType[], t: Tweet) => {
-  //     const hashtagsInTweet = (t.extended_tweet || t).entities.hashtags;
-  //     const hashtagsWithUsers: HashtagWithTweetType[] = (
-  //       hashtagsInTweet || []
-  //     ).map((hashtag) => ({
-  //       hashtag: String(hashtag.text),
-  //       tweetId: t.id_str,
-  //     }));
-
-  //     return [...acc, ...hashtagsWithUsers];
-  //   },
-  //   [] as HashtagWithTweetType[]
-  // );
-  // type HashtagWithUserType = { hashtag: string; userId: string };
-  // const allHashtagsWithUser: HashtagWithUserType[] = tweets.reduce(
-  //   (acc: HashtagWithUserType[], t: Tweet) => {
-  //     const hashtagsInTweet = (t.extended_tweet || t).entities.hashtags;
-  //     const hashtagsWithUsers: HashtagWithUserType[] = (
-  //       hashtagsInTweet || []
-  //     ).map((hashtag) => ({
-  //       hashtag: String(hashtag.text),
-  //       userId: t.user.id_str,
-  //     }));
-
-  //     return [...acc, ...hashtagsWithUsers];
-  //   },
-  //   [] as HashtagWithUserType[]
-  // );
-
-  // const { allHashtags, allHashtagUserIds } = allHashtagsWithUser.reduce(
-  //   (acc, { hashtag, userId }) => ({
-  //     allHashtags: [...acc.allHashtags, hashtag],
-  //     allHashtagUserIds: [...acc.allHashtagUserIds, userId],
-  //   }),
-  //   {} as { allHashtags: string[]; allHashtagUserIds: string[] }
-  // );
-
-  // const allTweetUserIds = tweets.map((t) => t.user.id_str);
-  // // list of all users that were replied to
-  // const allReplyRecipientIds: string[] = tweets.reduce(
-  //   (acc, t) => [...acc, t.in_reply_to_user_id_str],
-  //   []
-  // );
-  // // list of users mentioned
-  // const allMentionedUserIds: string[] = tweets.reduce(
-  //   (acc, t) => [...acc, t.entities.user_mentions.map((user) => user.id_str)],
-  //   []
-  // );
-
-  // const allUserIds = [...allReplyRecipientIds, ...allMentionedUserIds];
-
-  // tweets link to other tweets by their user id
-  // for each tweet, link the tweet to...
-  // const links = tweets.reduce((acc, t) => {
-  //   // - reply recipient
-  //   const replyRecipientUserId = t.in_reply_to_user_id_str;
-
-  //   // - mentioned users
-  //   const mentionedUserIds = (
-  //     (t.extended_tweet || t).entities?.user_mentions || []
-  //   )
-  //     .map(
-  //       (user) =>
-  //         tweets.find(
-  //           (tweet) => tweet.isUserNode && tweet.user.id_str === user.id_str
-  //         )?.id_str
-  //     )
-  //     .filter(Boolean);
-
-  //   // users using the same hashtags
-  //   // for each hashtag,
-  //   const allHashtagRelatedTweetIds: string[] = Object.entries(
-  //     tweetIdsByHashtag
-  //   ).reduce((acc, [hashtag, tweets]) => {
-  //     // for each hashtag shared by many tweets
-
-  //     if (tweets.length > 1) {
-  //       // save all sets of links between these tweets
-  //       tweets.forEach((tweet) => {
-  //         acc = [...acc, tweet.id_str];
-  //       });
-  //     }
-  //     return acc;
-  //   }, [] as string[]);
-
-  //   // - tweets of users that liked this tweet
-
-  //   // - tweets of retweeted user
-  //   // const retweetedUser = t.map([...mentions, replyRecipient]);
-
-  //   // Link this tweet to userIds: poster, replied, mentioned, retweeted
-  //   const relatedUserIds = uniq([
-  //     ...(t.user?.id_str ? [t.user.id_str] : []),
-  //     ...(replyRecipientUserId ? [replyRecipientUserId] : []),
-  //     ...mentionedUserIds,
-  //   ]);
-  //   const relatedTweetIds = uniq(allHashtagRelatedTweetIds);
-  //   // create a link if we find the users in our dataset
-  //   tweets.forEach((tweet) => {
-  //     // link each tweet to each user node
-  //     relatedUserIds.forEach((relatedUserId) => {
-  //       if (relatedUserId === tweet.user.id_str) {
-  //         acc = [
-  //           ...acc,
-  //           {
-  //             // target = the user node, (isUserNode && id_str is user.id_str)
-  //             target: +relatedUserId,
-  //             // source = this tweet
-  //             source: +t.id,
-  //           },
-  //         ];
-  //       }
-  //     });
-  //     relatedTweetIds.forEach((relatedTweetId) => {
-  //       if (relatedTweetId === tweet.id_str) {
-  //         acc = [
-  //           ...acc,
-  //           {
-  //             // target = the related tweet node
-  //             target: +relatedTweetId,
-  //             // source = this tweet
-  //             source: +tweet.id_str,
-  //           },
-  //         ];
-  //       }
-  //     });
-  //   });
-
-  //   return acc;
-  // }, [] as Link[]);
-
-  // graph payload
-  // const data = {
-  //   nodes: [
-  //     { id: 1 }, { id: 2 }, { id: 3 }],
-  //   links: [
-  //     { source: 1, target: 2 },
-  //     { source: 1, target: 3 },
-  //   ],
-  // };
-  // console.log({ links });
 
   // filter out tweets without users
-  const tweetsWithUser = tweets
+  const tweetsWithUser: Tweet[] = tweets
     // id <- +id_str
     .map((t) => ({ ...t, id: Number(t.id_str) }))
     .filter((t) => Boolean(t.user?.id_str));
 
+  // graph with no links
+  let graph = {
+    nodes: tweetsWithUser,
+    // links: [],
+    links: [],
+    // links: uniqBy(links, (l) => JSON.stringify(l)),
+  };
+
+  if (showUserNodes) {
+    // add nodes for each user & links to their tweets
+    const { userLinks, userNodes } = getUserNodes({
+      graph,
+      users,
+      tweets: tweetsWithUser,
+    });
+
+    graph = {
+      nodes: [...graph.nodes, ...userNodes],
+      // link user nodes to their tweets
+      links: [
+        ...graph.links,
+        // one link for each tweet, from its user node to it
+        ...userLinks,
+      ],
+    };
+  }
+
   return {
-    graph: {
-      nodes: tweetsWithUser,
-      // links: [],
-      links: [],
-      // links: uniqBy(links, (l) => JSON.stringify(l)),
-    },
+    graph,
     users,
     tweets: tweetsWithUser,
   };
+}
+
+function getUserNodes(
+  graphData: GraphData
+): { userLinks: Link[]; userNodes: Tweet[] } {
+  const userLinks = graphData.tweets.map((t) => ({
+    // source: its user
+    source: Number(t.user.id_str),
+    // target: the tweet
+    target: Number(t.id_str),
+  }));
+  const userNodes: Tweet[] = graphData.users.map((user) => ({
+    ...EMPTY_TWEET,
+    id: Number(user.id_str),
+    id_str: user.id_str,
+    user,
+    isUserNode: true,
+  }));
+
+  return { userLinks, userNodes };
 }

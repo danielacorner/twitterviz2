@@ -7,7 +7,7 @@ import {
   Button,
 } from "@material-ui/core";
 import { COLOR_BY } from "../../utils/constants";
-import { useConfig, AppConfig, useUserNodes } from "../../providers/store";
+import { useConfig, AppConfig, useRecomputeGraph } from "../../providers/store";
 import { H5, CollapsibleSwitchWithLabels } from "../common/styledComponents";
 
 /** react-force-graph docs
@@ -51,21 +51,18 @@ function Switch3D() {
 }
 
 function SwitchUserNodes() {
-  const { areUserNodesVisible, setConfig } = useConfig();
-  const { hideUserNodes, showUserNodes } = useUserNodes();
+  const { showUserNodes, setConfig } = useConfig();
+  const recomputeNodes = useRecomputeGraph();
+
   return (
     <CollapsibleSwitchWithLabels
       labelLeft="Hide Users"
       labelRight="Show Users"
       onChange={() => {
-        if (areUserNodesVisible) {
-          hideUserNodes();
-        } else {
-          showUserNodes();
-        }
-        setConfig({ areUserNodesVisible: !areUserNodesVisible });
+        setConfig({ showUserNodes: !showUserNodes });
+        setTimeout(recomputeNodes);
       }}
-      checked={areUserNodesVisible}
+      checked={showUserNodes}
     />
   );
 }

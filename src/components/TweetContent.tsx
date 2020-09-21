@@ -358,23 +358,24 @@ function BitrateControls({
         anchorEl={ref.current}
         open={isMenuOpen}
         onChange={(event) => {
-          console.log("🌟🚨: event", event);
           setBitrate((event.target as any).value);
         }}
         onBackdropClick={() => setIsMenuOpen(false)}
       >
-        {variants.map((variant) => (
-          <MenuItem
-            {...(variant.bitrate === bitrate
-              ? { disabled: true, style: { background: "hsl(0,0%,50%)" } }
-              : {})}
-            onClick={() => setBitrate(variant.bitrate)}
-            key={variant.url}
-            value={variant.url}
-          >
-            {variant.bitrate || 0}
-          </MenuItem>
-        ))}
+        {variants
+          .sort((a, b) => a.bitrate - b.bitrate)
+          .map((variant) => (
+            <MenuItem
+              {...(variant.bitrate === bitrate
+                ? { disabled: true, style: { background: "hsl(0,0%,50%)" } }
+                : {})}
+              onClick={() => setBitrate(variant.bitrate)}
+              key={variant.url}
+              value={variant.url}
+            >
+              {variant.bitrate || 0}
+            </MenuItem>
+          ))}
       </Menu>
     </BitrateStyles>
   );

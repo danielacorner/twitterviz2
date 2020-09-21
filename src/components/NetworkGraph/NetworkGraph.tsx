@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   ForceGraph2D,
   ForceGraph3D,
@@ -9,7 +9,12 @@ import NodeTooltip from "../NodeTooltip";
 // https://www.npmjs.com/package/react-force-graph
 import styled from "styled-components/macro";
 import { useForceGraphProps } from "./useForceGraphProps";
-import { useConfig, useGraphData } from "../../providers/store";
+import {
+  useConfig,
+  useGraphData,
+  useRecomputeGraph,
+  usePrevious,
+} from "../../providers/store";
 
 const GraphStyles = styled.div`
   width: 100%;
@@ -25,10 +30,18 @@ const NetworkGraph = () => {
 };
 
 function Graph() {
+  const recompute = useRecomputeGraph();
+
   const { fgRef, forceGraphProps } = useForceGraphProps();
   const { graph: graphData } = useGraphData();
-  console.log("v🌟🚨🌟🚨🌟🚨🌟🚨🌟🚨: Graph -> graphData", graphData);
-  const { is3d } = useConfig();
+  const { is3d, showUserNodes } = useConfig();
+  const prevShowUserNodes = usePrevious(showUserNodes);
+  useEffect(() => {
+    if (showUserNodes !== prevShowUserNodes) {
+      setTimeout(recompute);
+    }
+    // eslint-disable-next-line
+  }, [showUserNodes]);
   return (
     <>
       {is3d ? (

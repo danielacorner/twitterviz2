@@ -53,7 +53,7 @@ export function useForceGraphProps() {
     height,
     onNodeHover,
     onNodeClick,
-    nodeAutoColorBy: "group",
+    // nodeAutoColorBy: "group",
     cooldownTime: is3d ? 10000 : 1000,
     nodeRelSize: NODE_SIZE,
     nodeColor: (node) => getNodeColor(node, colorBy),
@@ -108,6 +108,7 @@ export function useForceGraphProps() {
     },
     linkColor: "hsla(0,0%,60%,1)",
     linkOpacity: 1,
+    linkWidth: 2,
     nodeThreeObject:
       colorBy === COLOR_BY.mediaType
         ? null

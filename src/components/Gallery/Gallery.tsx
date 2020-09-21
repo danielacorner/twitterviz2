@@ -4,6 +4,7 @@ import {
   useTweets,
   useLoading,
   useDeleteTweet,
+  usePrevious,
 } from "../../providers/store";
 import styled from "styled-components/macro";
 import TweetContent from "../TweetContent";
@@ -187,18 +188,4 @@ function ScrollMoreIndicator() {
       <div className="dot"></div>
     </ScrollMoreStyles>
   );
-}
-
-function usePrevious(value): typeof value {
-  // The ref object is a generic container whose current property is mutable ...
-  // ... and can hold any value, similar to an instance property on a class
-  const ref = useRef();
-
-  // Store current value in ref
-  useEffect(() => {
-    ref.current = value;
-  }, [value]); // Only re-run if value changes
-
-  // Return previous value (happens before update in useEffect above)
-  return ref.current;
 }
