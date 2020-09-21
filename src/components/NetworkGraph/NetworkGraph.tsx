@@ -27,6 +27,7 @@ const NetworkGraph = () => {
 function Graph() {
   const { fgRef, forceGraphProps } = useForceGraphProps();
   const { graph: graphData } = useGraphData();
+  console.log("v🌟🚨🌟🚨🌟🚨🌟🚨🌟🚨: Graph -> graphData", graphData);
   const { is3d } = useConfig();
   return (
     <>

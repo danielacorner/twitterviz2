@@ -1,9 +1,10 @@
 import create from "zustand";
 import { uniqBy } from "lodash";
-import { Tweet, User } from "../types";
+import { Tweet } from "../types";
 import {
   GraphData,
   transformTweetsIntoGraphData,
+  Link,
 } from "../utils/transformData";
 import { COLOR_BY, FILTER_LEVELS, FILTER_BY } from "../utils/constants";
 import mockTweets from "../tweets.json";
@@ -343,24 +344,51 @@ export const useUserNodes = () => {
   };
   const showUserNodes = () => {
     const graphData = transformTweetsIntoGraphData(tweets);
-    setGraphData({
+
+    const { userLinks, userNodes } = getUserNodes(graphData);
+    console.log("🌟🚨: showUserNodes -> { userLinks, userNodes }", {
+      userLinks,
+      userNodes,
+    });
+
+    const graphDataWithUsers = {
       ...graphData,
       graph: {
-        ...graphData.graph,
-        nodes: [
-          ...graphData.tweets,
-          ...graphData.users.map(mapUserIntoUserNode),
+        nodes: [...graphData.tweets, ...userNodes],
+        // link user nodes to their tweets
+        links: [
+          ...graphData.graph.links,
+          // one link for each tweet, from its user node to it
+          ...userLinks,
         ],
       },
-    });
+    };
+    console.log(
+      "🌟🚨: showUserNodes -> graphDataWithUsers",
+      graphDataWithUsers
+    );
+    setGraphData(graphDataWithUsers);
   };
   return { hideUserNodes, showUserNodes };
 };
 
-function mapUserIntoUserNode(user: User): Tweet {
-  return {
+function getUserNodes(
+  graphData: GraphData
+): { userLinks: Link[]; userNodes: Tweet[] } {
+  const userLinks = graphData.tweets.map((t) => ({
+    // source: its user
+    source: Number(t.user.id_str),
+    // target: the tweet
+    target: Number(t.id_str),
+  }));
+  console.log("🌟🚨🌟🚨🌟🚨: userLinks", JSON.stringify(userLinks));
+  const userNodes: Tweet[] = graphData.users.map((user) => ({
     ...EMPTY_TWEET,
+    id: Number(user.id_str),
+    id_str: user.id_str,
     user,
     isUserNode: true,
-  };
+  }));
+
+  return { userLinks, userNodes };
 }

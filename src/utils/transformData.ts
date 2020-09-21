@@ -13,7 +13,7 @@ import { Tweet } from "../types";
 // 3. retweeted user's other tweets
 // 4. replied-to users' other tweets
 // 5. tweets sharing a hashtag
-type Link = { source: string | number; target: string | number };
+export type Link = { source: string | number; target: string | number };
 type User = Tweet["user"];
 type GraphOfTweets = { nodes: Tweet[]; links: Link[] };
 export type GraphData = {
@@ -21,11 +21,7 @@ export type GraphData = {
   users: User[];
   tweets: Tweet[];
 };
-export function transformTweetsIntoGraphData(tweetsArg: Tweet[]): GraphData {
-  const tweets = tweetsArg.map((tweet) => ({
-    ...tweet,
-    id: +tweet.id_str,
-  }));
+export function transformTweetsIntoGraphData(tweets: Tweet[]): GraphData {
   // list of all user that tweeted
   const users = tweets.map((t) => t.user).filter(Boolean);
   // const tweetsByUser: { [userId: string]: Tweet } = tweets.reduce(
@@ -209,9 +205,13 @@ export function transformTweetsIntoGraphData(tweetsArg: Tweet[]): GraphData {
   //   ],
   // };
   // console.log({ links });
+
+  // filter out tweets without users
   const tweetsWithUser = tweets
-    .map((t) => ({ ...t, id: +t.user?.id_str }))
-    .filter((t) => Boolean(t.id));
+    // id <- +id_str
+    .map((t) => ({ ...t, id: Number(t.id_str) }))
+    .filter((t) => Boolean(t.user?.id_str));
+
   return {
     graph: {
       nodes: tweetsWithUser,
