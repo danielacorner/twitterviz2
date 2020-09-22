@@ -187,15 +187,17 @@ const Gallery = () => {
   }, [tweets, prevTweets, replace]);
 
   let firstUserId = "";
-  const areAllTweetsSameUser = tweets.reduce((acc, tweet, idx) => {
-    if (idx === 0) {
-      firstUserId = tweet.user.id_str;
-    } else {
-      acc = tweet.user.id_str === firstUserId;
-    }
-    return acc;
-  }, true);
-  console.log("🌟🚨: Gallery -> areAllTweetsSameUser", areAllTweetsSameUser);
+  const areAllTweetsSameUser =
+    tweets.length > 0 &&
+    tweets.reduce((acc, tweet, idx) => {
+      if (idx === 0) {
+        firstUserId = tweet.user.id_str;
+      } else {
+        acc = tweet.user.id_str === firstUserId;
+      }
+      return acc;
+    }, true);
+
   return (
     <GalleryStyles
       ref={ref}
