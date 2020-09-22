@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
-import { useConfig, useSetTweets, useLoading } from "../providers/store";
+import {
+  useConfig,
+  useSetTweets,
+  useLoading,
+  useAddTweets,
+  useTweets,
+} from "../providers/store";
 import { SERVER_URL } from "./constants";
 
 export function useWindowSize() {
@@ -37,17 +43,25 @@ export function useFetchTimeline() {
   const { loading, setLoading } = useLoading();
   const { numTweets, mediaType } = useConfig();
   const setTweets = useSetTweets();
+  const tweets = useTweets();
+  const addTweets = useAddTweets();
 
-  const fetchTimeline = async (userId: string) => {
+  const fetchTimeline = async (
+    userId: string,
+    isFetchMore: boolean = false
+  ) => {
     setLoading(true);
     const timer = setTimeout(() => setLoading(false), 10 * 1000);
     const resp = await fetch(
-      `${SERVER_URL}/api/user_timeline?id_str=${userId}&num=${numTweets}&mediaType=${mediaType}`
+      `${SERVER_URL}/api/user_timeline?id_str=${userId}&num=${numTweets}&mediaType=${mediaType}${
+        isFetchMore ? `&maxId=${tweets[tweets.length - 1].id_str}` : ""
+      }`
     );
     const data = await resp.json();
     setLoading(false);
     window.clearTimeout(timer);
-    setTweets(data);
+
+    (isFetchMore ? addTweets : setTweets)(data);
   };
 
   return { loading, fetchTimeline };

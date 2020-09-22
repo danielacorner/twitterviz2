@@ -95,7 +95,7 @@ const [useStore] = create(
         filterLevel: FILTER_LEVELS.none,
         searchTerm: "",
         numTweets: 50,
-        tabIndex: TAB_INDICES.NETWORKGRAPH,
+        tabIndex: TAB_INDICES.GALLERY,
       },
       isDrawerOpen: window.innerWidth > 600,
       setIsDrawerOpen: (next) => set((state) => ({ isDrawerOpen: next })),

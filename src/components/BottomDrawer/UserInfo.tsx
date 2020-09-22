@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components/macro";
 import { Button, CircularProgress } from "@material-ui/core";
 import { useSelectedNode } from "../../providers/store";
 import { useFetchTimeline } from "../../utils/hooks";
+import { Tweet, User } from "../../types";
 
 export const USER_INFO_WIDTH = 200;
 
@@ -29,9 +30,13 @@ const UserInfoStyles = styled.div`
     color: hsl(0, 0%, 50%);
   }
 `;
-export default function UserInfo() {
+export default function UserInfo({
+  tweetDisplay = null,
+}: {
+  tweetDisplay?: Tweet;
+}) {
   const tweet = useSelectedNode();
-  const user = tweet?.user;
+  const user = (tweetDisplay || tweet)?.user;
   // const [user, setUser] = useState(tweet?.user || null);
 
   // fetch user profile on mount
@@ -47,25 +52,9 @@ export default function UserInfo() {
 
   const { fetchTimeline, loading } = useFetchTimeline();
 
-  const profileImgUrl = `${user?.profile_image_url_https.slice(
-    0,
-    -"_normal.jpg".length
-  )}.jpg`;
-
   return (
     <UserInfoStyles>
-      <a
-        href={`https://twitter.com/${user?.screen_name}/`}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <div className="avatar">
-          <img src={profileImgUrl} alt="" />
-          <img src={user?.profile_image_url_https} alt="" />
-        </div>
-      </a>
-      <div className="username">{user?.name}</div>
-      <div className="screenName">{user?.screen_name}</div>
+      <UserAvatar user={user} />
       <Button
         variant="outlined"
         disabled={loading}
@@ -75,4 +64,45 @@ export default function UserInfo() {
       </Button>
     </UserInfoStyles>
   );
+}
+
+export function UserAvatar({
+  user = null,
+  imageOnly = false,
+}: {
+  user?: User;
+  imageOnly?: boolean;
+}) {
+  const profileImgUrl = `${user?.profile_image_url_https.slice(
+    0,
+    -"_normal.jpg".length + 3
+  )}.jpg`;
+
+  return (
+    <>
+      <a
+        href={`https://twitter.com/${user?.screen_name}/`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <div className="avatar">
+          <ImgUnmountOnError src={profileImgUrl} alt="" />
+          <ImgUnmountOnError src={user?.profile_image_url_https} alt="" />
+        </div>
+      </a>
+      {!imageOnly && (
+        <>
+          <div className="username">{user?.name}</div>
+          <div className="screenName">{user?.screen_name}</div>
+        </>
+      )}
+    </>
+  );
+}
+
+function ImgUnmountOnError(props: any) {
+  const [mounted, setMounted] = useState(true);
+  return mounted ? (
+    <img alt={props.alt || ""} {...props} onError={() => setMounted(false)} />
+  ) : null;
 }

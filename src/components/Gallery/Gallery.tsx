@@ -20,6 +20,8 @@ import { useMount } from "../../utils/utils";
 import BtnFavorite from "../common/BtnFavorite";
 import CloseIcon from "@material-ui/icons/Close";
 import { Tweet } from "../../types";
+import BtnFetchMore from "./BtnFetchMore";
+import { UserAvatar } from "../BottomDrawer/UserInfo";
 
 /** smaller grid rows means finer but more time to compute layout */
 const GRID_ROW_PX = 20;
@@ -35,6 +37,54 @@ const GalleryStyles = styled.div`
   grid-column-gap: ${GRID_GAP}px;
   width: 100%;
   .tweetContent {
+    position: relative;
+    .avatar {
+      height: 48px;
+      width: 48px;
+      position: absolute;
+      top: -24px;
+      left: 8px;
+      transform: scale(0.8);
+      transform-origin: top right;
+    }
+  }
+  .userAvatar {
+    grid-column: span 1 / -1;
+    grid-row: span 4;
+    padding-bottom: 64px;
+    .avatar {
+      width: 64px;
+      height: 64px;
+      position: relative;
+      &:before {
+        width: 68px;
+        height: 68px;
+        top: -2px;
+        left: -2px;
+      }
+    }
+  }
+  .avatar {
+    overflow: hidden;
+    border-radius: 999px;
+    &:before {
+      content: "";
+      background: hsl(0, 0%, 50%);
+      position: absolute;
+      width: 52px;
+      height: 52px;
+      top: -2px;
+      left: -2px;
+      border-radius: 999px;
+    }
+    img {
+      width: calc(100% - 4px);
+      height: calc(100% - 4px);
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      border-radius: 999px;
+    }
   }
   width: 100%;
   padding: 18px;
@@ -71,6 +121,11 @@ const GalleryStyles = styled.div`
     bottom: 0;
     right: 0;
   }
+  .btnFetchMore {
+    grid-column: span 1 / -1;
+    grid-row: span 4;
+    padding-bottom: 40px;
+  }
   ${CUSTOM_SCROLLBAR_CSS}
   ${(props) => (props.isLoading ? LOADING_SCROLLBAR_CSS : "")}
 `;
@@ -87,6 +142,7 @@ function GridItem({ tweet }) {
       ref={ref}
       style={{ gridRow: `span ${rowSpan}` }}
     >
+      <UserAvatar user={tweet.user} imageOnly={true} />
       <div className="openInNew">
         <OpenTweetBtn tweet={tweet} iconOnly={true} />
       </div>
@@ -129,16 +185,33 @@ const Gallery = () => {
       (ref.current as any).scrollTop = 0;
     }
   }, [tweets, prevTweets, replace]);
+
+  let firstUserId = "";
+  const areAllTweetsSameUser = tweets.reduce((acc, tweet, idx) => {
+    if (idx === 0) {
+      firstUserId = tweet.user.id_str;
+    } else {
+      acc = tweet.user.id_str === firstUserId;
+    }
+    return acc;
+  }, true);
+  console.log("🌟🚨: Gallery -> areAllTweetsSameUser", areAllTweetsSameUser);
   return (
     <GalleryStyles
       ref={ref}
       isLoading={loading}
       isLight={theme.palette.type === "light"}
     >
+      {areAllTweetsSameUser && (
+        <div className="userAvatar">
+          <UserAvatar user={tweets[0].user} imageOnly={true} />
+        </div>
+      )}
       {tweets.map((tweet) => (
         <GridItem key={tweet.id_str} tweet={tweet} />
       ))}
       {loading ? <ScrollMoreIndicator /> : null}
+      {areAllTweetsSameUser && <BtnFetchMore user={tweets[0].user} />}
     </GalleryStyles>
   );
 };
