@@ -204,14 +204,14 @@ const Gallery = () => {
     >
       {areAllTweetsSameUser && (
         <div className="userAvatar">
-          <UserAvatar user={tweets[0].user} imageOnly={true} />
+          <UserAvatar user={tweets[0]?.user} imageOnly={true} />
         </div>
       )}
       {tweets.map((tweet) => (
         <GridItem key={tweet.id_str} tweet={tweet} />
       ))}
       {loading ? <ScrollMoreIndicator /> : null}
-      {areAllTweetsSameUser && <BtnFetchMore user={tweets[0].user} />}
+      {areAllTweetsSameUser && <BtnFetchMore user={tweets[0]?.user} />}
     </GalleryStyles>
   );
 };
