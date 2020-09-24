@@ -29,13 +29,15 @@ const MIN_TWEET_WIDTH = 300;
 const GRID_GAP = 24;
 
 const GalleryStyles = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(${MIN_TWEET_WIDTH}px, 1fr));
-  grid-auto-flow: dense;
-  align-items: center;
-  grid-auto-rows: ${GRID_ROW_PX}px;
-  grid-column-gap: ${GRID_GAP}px;
-  width: 100%;
+  .galleryContent {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(${MIN_TWEET_WIDTH}px, 1fr));
+    grid-auto-flow: dense;
+    align-items: center;
+    grid-auto-rows: ${GRID_ROW_PX}px;
+    grid-column-gap: ${GRID_GAP}px;
+    width: 100%;
+  }
   .tweetContent {
     position: relative;
     .avatar {
@@ -48,22 +50,7 @@ const GalleryStyles = styled.div`
       transform-origin: top right;
     }
   }
-  .userAvatar {
-    grid-column: span 1 / -1;
-    grid-row: span 4;
-    padding-bottom: 64px;
-    .avatar {
-      width: 64px;
-      height: 64px;
-      position: relative;
-      &:before {
-        width: 68px;
-        height: 68px;
-        top: -2px;
-        left: -2px;
-      }
-    }
-  }
+
   .avatar {
     overflow: hidden;
     border-radius: 999px;
@@ -121,14 +108,96 @@ const GalleryStyles = styled.div`
     bottom: 0;
     right: 0;
   }
-  .btnFetchMore {
-    grid-column: span 1 / -1;
-    grid-row: span 4;
-    padding-bottom: 40px;
+  .btnFetchMoreWrapper {
+    width: 100%;
+    padding: 2rem 0;
+  }
+  .userAvatarWrapper {
+    padding: 1rem 0;
+    width: 100%;
+    display: grid;
+    grid-gap: 0.5rem;
+    place-items: center;
+    .avatar {
+      width: 64px;
+      height: 64px;
+      position: relative;
+      &:before {
+        width: 68px;
+        height: 68px;
+        top: -2px;
+        left: -2px;
+      }
+    }
   }
   ${CUSTOM_SCROLLBAR_CSS}
   ${(props) => (props.isLoading ? LOADING_SCROLLBAR_CSS : "")}
 `;
+
+const Gallery = () => {
+  const tweets = useTweets();
+  const prevTweets: Tweet[] = usePrevious(tweets || []);
+  const theme = useTheme();
+  const { loading } = useLoading();
+
+  let firstUserId = "";
+  const areAllTweetsSameUser =
+    tweets.length > 0 &&
+    tweets.reduce((acc, tweet, idx) => {
+      if (idx === 0) {
+        firstUserId = tweet.user.id_str;
+      } else {
+        acc = tweet.user.id_str === firstUserId;
+      }
+      return acc;
+    }, true);
+
+  // when we stream tweets,
+  // if in "replace" mode,
+  // scroll to top
+  const ref = useRef();
+  const { replace } = useConfig();
+  useEffect(() => {
+    const didJustDeleteOneTweet =
+      prevTweets && Math.abs(tweets.length - (prevTweets?.length || 0)) === 1;
+    if (
+      !areAllTweetsSameUser &&
+      !didJustDeleteOneTweet &&
+      replace &&
+      tweets.length !== 0 &&
+      ref.current
+    ) {
+      (ref.current as any).scrollTop = 0;
+    }
+  }, [tweets, prevTweets, replace, areAllTweetsSameUser]);
+
+  return (
+    <GalleryStyles
+      ref={ref}
+      isLoading={loading}
+      isLight={theme.palette.type === "light"}
+    >
+      {areAllTweetsSameUser && (
+        <div className="userAvatarWrapper">
+          <UserAvatar user={tweets[0]?.user} imageOnly={false} />
+        </div>
+      )}
+      <div className="galleryContent">
+        {tweets.map((tweet) => (
+          <GridItem key={tweet.id_str} tweet={tweet} />
+        ))}
+      </div>
+      {loading ? <ScrollMoreIndicator /> : null}
+      {areAllTweetsSameUser && (
+        <div className="btnFetchMoreWrapper">
+          <BtnFetchMore user={tweets[0]?.user} />
+        </div>
+      )}
+    </GalleryStyles>
+  );
+};
+
+export default Gallery;
 
 // TODO: use intersection observer to virtualize
 function GridItem({ tweet }) {
@@ -161,64 +230,6 @@ function DeleteTweetBtn({ tweet }: { tweet: Tweet }) {
   const deleteTweet = useDeleteTweet();
   return <CloseIcon onClick={() => deleteTweet(tweet.id_str)} />;
 }
-
-const Gallery = () => {
-  const tweets = useTweets();
-  const prevTweets: Tweet[] = usePrevious(tweets || []);
-  const theme = useTheme();
-  const { loading } = useLoading();
-
-  // when we stream tweets,
-  // if in "replace" mode,
-  // scroll to top
-  const ref = useRef();
-  const { replace } = useConfig();
-  useEffect(() => {
-    const didJustDeleteOneTweet =
-      prevTweets && Math.abs(tweets.length - (prevTweets?.length || 0)) === 1;
-    if (
-      !didJustDeleteOneTweet &&
-      replace &&
-      tweets.length !== 0 &&
-      ref.current
-    ) {
-      (ref.current as any).scrollTop = 0;
-    }
-  }, [tweets, prevTweets, replace]);
-
-  let firstUserId = "";
-  const areAllTweetsSameUser =
-    tweets.length > 0 &&
-    tweets.reduce((acc, tweet, idx) => {
-      if (idx === 0) {
-        firstUserId = tweet.user.id_str;
-      } else {
-        acc = tweet.user.id_str === firstUserId;
-      }
-      return acc;
-    }, true);
-
-  return (
-    <GalleryStyles
-      ref={ref}
-      isLoading={loading}
-      isLight={theme.palette.type === "light"}
-    >
-      {areAllTweetsSameUser && (
-        <div className="userAvatar">
-          <UserAvatar user={tweets[0]?.user} imageOnly={true} />
-        </div>
-      )}
-      {tweets.map((tweet) => (
-        <GridItem key={tweet.id_str} tweet={tweet} />
-      ))}
-      {loading ? <ScrollMoreIndicator /> : null}
-      {areAllTweetsSameUser && <BtnFetchMore user={tweets[0]?.user} />}
-    </GalleryStyles>
-  );
-};
-
-export default Gallery;
 
 const ScrollMoreStyles = styled.div`
   position: fixed;
