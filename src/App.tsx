@@ -94,7 +94,8 @@ function useFetchQueryTweetsOnMount() {
       return;
     }
 
-    fetchTweetsByIds(Array.isArray(qTweets) ? qTweets : qTweets.split(","));
+    const tweetIds = Array.isArray(qTweets) ? qTweets : qTweets.split(",");
+    fetchTweetsByIds(tweetIds);
   });
 }
 
@@ -103,7 +104,7 @@ function useSyncTweetsWithQuery() {
   const history = useHistory();
   useEffect(() => {
     if (tweets && tweets.length !== 0) {
-      const path = `/?t=${tweets.map((t) => t.id_str).join(",")})}`;
+      const path = `/?t=${tweets.map((t) => t.id_str).join(",")}`;
       history.push(path);
     }
     // eslint-disable-next-line
