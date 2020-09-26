@@ -86,15 +86,15 @@ function useFetchTweetsOnMount() {
  */
 function useFetchQueryTweetsOnMount() {
   const query = useQueryString();
-  const tweets = query.t;
+  const qTweets = query.t;
   const fetchTweetsByIds = useFetchTweetsByIds();
   // fetch tweets from DB on mount
   useMount(() => {
-    if (!tweets || tweets.length === 0) {
+    if (!qTweets || qTweets.length === 0) {
       return;
     }
 
-    fetchTweetsByIds(Array.isArray(tweets) ? tweets : tweets.split(","));
+    fetchTweetsByIds(Array.isArray(qTweets) ? qTweets : qTweets.split(","));
   });
 }
 
@@ -112,5 +112,5 @@ function useSyncTweetsWithQuery() {
 
 function useQueryString() {
   const location = useLocation();
-  return qs.parse(location.pathname);
+  return qs.parse(location.search);
 }
