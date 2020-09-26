@@ -5,11 +5,14 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import "./whyDidYouRender";
 import ThemeManager from "./providers/ThemeManager";
+import { BrowserRouter as Router } from "react-router-dom";
 
 ReactDOM.render(
   <React.StrictMode>
     <ThemeManager>
-      <App />
+      <Router>
+        <App />
+      </Router>
     </ThemeManager>
   </React.StrictMode>,
   document.getElementById("root")

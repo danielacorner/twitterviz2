@@ -1,15 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import styled from "styled-components/macro";
 import BottomDrawer from "./components/BottomDrawer/BottomDrawer";
 import { useMount } from "./utils/utils";
-import { useSetTweets, useLoading } from "./providers/store";
+import { useSetTweets, useLoading, useTweets } from "./providers/store";
 import { query as q } from "faunadb";
 import { faunaClient } from "./providers/faunaProvider";
 import VisualizationTabs from "./components/VisualizationTabs";
 import { useIsLight } from "./providers/ThemeManager";
 import "./video-react.css"; // import video-react css
 import LeftDrawer from "./components/LeftDrawer";
+import qs from "query-string";
+import { useFetchTweetsByIds } from "./components/Controls/Buttons";
+import { useLocation, useHistory } from "react-router";
 
 const AppStyles = styled.div`
   ${(props) => (props.isLoading ? "cursor: wait;" : "")}
@@ -32,6 +35,8 @@ const AppStyles = styled.div`
 
 function App() {
   useFetchTweetsOnMount();
+  useFetchQueryTweetsOnMount();
+  useSyncTweetsWithQuery();
   const isLight = useIsLight();
   const { loading } = useLoading();
   return (
@@ -73,4 +78,39 @@ function useFetchTweetsOnMount() {
         setTweets([]);
       });
   });
+}
+
+/** fetch posts if there's a query string
+ *
+ * [docs](https://docs.fauna.com/fauna/current/tutorials/crud?lang=javascript#retrieve)
+ */
+function useFetchQueryTweetsOnMount() {
+  const query = useQueryString();
+  const tweets = query.t;
+  const fetchTweetsByIds = useFetchTweetsByIds();
+  // fetch tweets from DB on mount
+  useMount(() => {
+    if (!tweets || tweets.length === 0) {
+      return;
+    }
+
+    fetchTweetsByIds(Array.isArray(tweets) ? tweets : tweets.split(","));
+  });
+}
+
+function useSyncTweetsWithQuery() {
+  const tweets = useTweets();
+  const history = useHistory();
+  useEffect(() => {
+    if (tweets && tweets.length !== 0) {
+      const path = `/?t=${tweets.map((t) => t.id_str).join(",")})}`;
+      history.push(path);
+    }
+    // eslint-disable-next-line
+  }, [tweets]);
+}
+
+function useQueryString() {
+  const location = useLocation();
+  return qs.parse(location.pathname);
 }

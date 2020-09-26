@@ -69,18 +69,38 @@ export function BtnStreamNewTweets() {
 }
 
 export function BtnFetchFavorites() {
-  const { loading, setLoading } = useLoading();
+  const fetchTweetsByIds = useFetchTweetsByIds();
+  const { loading } = useLoading();
+
+  return (
+    <CollapsibleButton
+      text={"Favorites"}
+      icon={<FavoriteIcon />}
+      type="submit"
+      className="btnFetch"
+      disabled={loading}
+      onClick={() => {
+        const { favorites } = getFavorites();
+        fetchTweetsByIds([favorites]);
+      }}
+      variant="outlined"
+      color="secondary"
+    />
+  );
+}
+
+export function useFetchTweetsByIds(): (ids: string[]) => void {
+  const { setLoading } = useLoading();
   const setTweets = useSetTweets();
 
-  const fetchTweetsByIds = async () => {
+  return async (ids: string[]) => {
     setLoading(true);
     // after 10 seconds, stop loading
     const timer = setTimeout(() => {
       setLoading(false);
     }, 10 * 1000);
 
-    const { favorites } = getFavorites();
-    const resp = await fetch(`${SERVER_URL}/api/get?ids=${favorites}`);
+    const resp = await fetch(`${SERVER_URL}/api/get?ids=${ids.join(",")}`);
 
     const tweetsResponses = await resp.json();
     const data = tweetsResponses.map((d) => d.data);
@@ -90,19 +110,6 @@ export function BtnFetchFavorites() {
 
     setTweets(data);
   };
-
-  return (
-    <CollapsibleButton
-      text={"Favorites"}
-      icon={<FavoriteIcon />}
-      type="submit"
-      className="btnFetch"
-      disabled={loading}
-      onClick={fetchTweetsByIds}
-      variant="outlined"
-      color="secondary"
-    />
-  );
 }
 
 function CollapsibleButton({ text, icon, disabled, ...props }) {
