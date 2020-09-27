@@ -7,7 +7,7 @@ import {
   useTweets,
 } from "../providers/store";
 import { SERVER_URL } from "./constants";
-import { useParamsForFetch } from "./utils";
+import { geoDistanceKm } from "./distanceFromCoords";
 
 export function useWindowSize() {
   // (For SSR apps only?) Initialize state with undefined width/height so server and client renders match
@@ -89,4 +89,31 @@ export function useFetchLikes() {
   };
 
   return { loading, fetchLikes };
+}
+
+export function useParamsForFetch() {
+  const { lang, allowedMediaTypes, countryCode, geolocation } = useConfig();
+  const langParam = lang !== "All" ? `&lang=${lang}` : "";
+  const allowedMediaTypesParam = !allowedMediaTypes.all
+    ? `&allowedMediaTypes=${allowedMediaTypes}`
+    : "";
+  const countryParam =
+    countryCode !== "All" ? `&countryCode=${countryCode}` : "";
+  // https://developer.twitter.com/en/docs/twitter-api/v1/tweets/search/api-reference/get-search-tweets
+  const searchRadius = geolocation
+    ? geoDistanceKm(
+        geolocation.latitude.left,
+        geolocation.longitude.left,
+        geolocation.latitude.right,
+        geolocation.longitude.left
+      ) / 2
+    : "";
+  const geocodeParam = geolocation
+    ? `&geocode=${
+        (geolocation.latitude.left + geolocation.latitude.right) / 2
+      },${
+        (geolocation.longitude.left + geolocation.longitude.right) / 2
+      },${searchRadius}km`
+    : "";
+  return { langParam, allowedMediaTypesParam, countryParam, geocodeParam };
 }
