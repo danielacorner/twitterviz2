@@ -6,7 +6,7 @@ import {
   Button,
 } from "@material-ui/core";
 import { SERVER_URL } from "../../utils/constants";
-import { useParamsForFetch } from "../../utils/hooks";
+import { useFetchTimeline, useParamsForFetch } from "../../utils/hooks";
 import { useConfig, useSetTweets, useLoading } from "../../providers/store";
 import SearchIcon from "@material-ui/icons/Search";
 import { Body1 } from "../common/styledComponents";
@@ -70,32 +70,14 @@ export function SearchForm() {
 
 export function FetchUserTweetsForm() {
   const [userHandle, setUserHandle] = useState("");
-  const [loading, setLoading] = useState(false);
-  const setTweets = useSetTweets();
-  const { numTweets } = useConfig();
 
-  const fetchUserTweets = async () => {
-    setLoading(true);
-    // after 10 seconds, stop loading
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 10 * 1000);
-
-    const resp = await fetch(
-      `${SERVER_URL}/api/user_timeline?screen_name=${userHandle}&num=${numTweets}`
-    );
-    const data = await resp.json();
-    setLoading(false);
-    clearTimeout(timer);
-
-    setTweets(data);
-  };
+  const { fetchTimelineByHandle, loading } = useFetchTimeline();
 
   return (
     <TwoColFormStyles
       onSubmit={(e) => {
         e.preventDefault();
-        fetchUserTweets();
+        fetchTimelineByHandle(userHandle);
       }}
     >
       <div

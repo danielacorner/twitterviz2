@@ -94,64 +94,13 @@ const MediaTypeCheckboxesStyles = styled.div``;
 
 export function MediaTypeCheckboxes() {
   const { allowedMediaTypes, setConfig } = useConfig();
-  const { video, image, text, all } = allowedMediaTypes;
+  const { video, photo, text } = allowedMediaTypes;
 
   return (
     <MediaTypeCheckboxesStyles className="checkboxes">
       <FormControlLabelCollapsible
         groupTitle="Media"
-        control={
-          <Checkbox
-            checked={all || (!text && !video && !image)}
-            disabled={!text && !video && !image}
-            name="checkedA"
-          />
-        }
-        onChange={() =>
-          setConfig({
-            allowedMediaTypes: {
-              ...allowedMediaTypes,
-              all: !allowedMediaTypes.all,
-            },
-          })
-        }
-        label={<Body1>All</Body1>}
-      />
-      <FormControlLabelCollapsible
-        groupTitle="Media"
-        control={
-          <Checkbox disabled={all} checked={video || all} name="checkedA" />
-        }
-        onChange={() =>
-          setConfig({
-            allowedMediaTypes: {
-              ...allowedMediaTypes,
-              video: !allowedMediaTypes.video,
-            },
-          })
-        }
-        label={<Body1>Video</Body1>}
-      />
-      <FormControlLabelCollapsible
-        groupTitle="Media"
-        control={
-          <Checkbox disabled={all} checked={image || all} name="checkedA" />
-        }
-        onChange={() =>
-          setConfig({
-            allowedMediaTypes: {
-              ...allowedMediaTypes,
-              image: !image,
-            },
-          })
-        }
-        label={<Body1>Image</Body1>}
-      />
-      <FormControlLabelCollapsible
-        groupTitle="Media"
-        control={
-          <Checkbox disabled={all} checked={text || all} name="checkedA" />
-        }
+        control={<Checkbox checked={text} name="checkedA" />}
         onChange={() =>
           setConfig({
             allowedMediaTypes: {
@@ -161,6 +110,32 @@ export function MediaTypeCheckboxes() {
           })
         }
         label={<Body1>Text</Body1>}
+      />
+      <FormControlLabelCollapsible
+        groupTitle="Media"
+        control={<Checkbox checked={photo} name="checkedA" />}
+        onChange={() =>
+          setConfig({
+            allowedMediaTypes: {
+              ...allowedMediaTypes,
+              photo: !photo,
+            },
+          })
+        }
+        label={<Body1>Image</Body1>}
+      />
+      <FormControlLabelCollapsible
+        groupTitle="Media"
+        control={<Checkbox checked={video} name="checkedA" />}
+        onChange={() =>
+          setConfig({
+            allowedMediaTypes: {
+              ...allowedMediaTypes,
+              video: !allowedMediaTypes.video,
+            },
+          })
+        }
+        label={<Body1>Video</Body1>}
       />
     </MediaTypeCheckboxesStyles>
   );

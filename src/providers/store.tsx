@@ -47,9 +47,8 @@ export type AppConfig = {
   } | null;
   countryCode: string;
   allowedMediaTypes: {
-    all: boolean;
     video: boolean;
-    image: boolean;
+    photo: boolean;
     text: boolean;
   };
   replace: boolean;
@@ -70,8 +69,7 @@ const [useStore] = create(
               users: [],
               tweets: [],
             } as GraphData),
-      tweetsFromServer:
-        process.env.NODE_ENV === "development" ? mockTweets : ([] as Tweet[]),
+      tweetsFromServer: [] as Tweet[],
       selectedNode: null as Tweet | null,
       setSelectedNode: (node: Tweet | null) =>
         set((state) => ({ selectedNode: node })),
@@ -92,10 +90,9 @@ const [useStore] = create(
         resultType: "mixed",
         geolocation: null,
         allowedMediaTypes: {
-          all: true,
           text: true,
           video: true,
-          image: true,
+          photo: true,
         },
         replace: true,
         filterLevel: FILTER_LEVELS.none,
@@ -292,13 +289,11 @@ export function useAllowedMediaTypes(): string[] {
     (state: GlobalStateStoreType) => state.config.allowedMediaTypes
   );
 
-  return allowedMediaTypes.all
-    ? ["all"]
-    : [
-        ...(allowedMediaTypes.video ? ["video"] : []),
-        ...(allowedMediaTypes.image ? ["photo"] : []),
-        // ...(allowedMediaTypes.text ? ["text"] : []),
-      ];
+  return [
+    ...(allowedMediaTypes.video ? ["video"] : []),
+    ...(allowedMediaTypes.photo ? ["photo"] : []),
+    ...(allowedMediaTypes.text ? ["text"] : []),
+  ];
 }
 
 export const useIsLeftDrawerOpen = () => {

@@ -5,6 +5,7 @@ import {
   useLoading,
   useAddTweets,
   useTweets,
+  useAllowedMediaTypes,
 } from "../providers/store";
 import { SERVER_URL } from "./constants";
 import { geoDistanceKm } from "./distanceFromCoords";
@@ -67,7 +68,24 @@ export function useFetchTimeline() {
     (isFetchMore ? addTweets : setTweets)(data);
   };
 
-  return { loading, fetchTimeline };
+  const fetchTimelineByHandle = async (userHandle: string) => {
+    setLoading(true);
+    // after 10 seconds, stop loading
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 10 * 1000);
+
+    const resp = await fetch(
+      `${SERVER_URL}/api/user_timeline?screen_name=${userHandle}&num=${numTweets}${allowedMediaTypesParam}`
+    );
+    const data = await resp.json();
+    setLoading(false);
+    clearTimeout(timer);
+
+    setTweets(data);
+  };
+
+  return { loading, fetchTimeline, fetchTimelineByHandle };
 }
 
 export function useFetchLikes() {
@@ -92,11 +110,14 @@ export function useFetchLikes() {
 }
 
 export function useParamsForFetch() {
-  const { lang, allowedMediaTypes, countryCode, geolocation } = useConfig();
+  const { lang, countryCode, geolocation } = useConfig();
   const langParam = lang !== "All" ? `&lang=${lang}` : "";
-  const allowedMediaTypesParam = !allowedMediaTypes.all
-    ? `&allowedMediaTypes=${allowedMediaTypes}`
-    : "";
+  const allowedMediaTypesStrings = useAllowedMediaTypes();
+  const allowedMediaTypesParam = [0, 3].includes(
+    allowedMediaTypesStrings.length
+  )
+    ? ""
+    : `&allowedMediaTypes=${allowedMediaTypesStrings.join(",")}`;
   const countryParam =
     countryCode !== "All" ? `&countryCode=${countryCode}` : "";
   // https://developer.twitter.com/en/docs/twitter-api/v1/tweets/search/api-reference/get-search-tweets
