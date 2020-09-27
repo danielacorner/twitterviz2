@@ -5,7 +5,7 @@ import {
   GraphData,
   transformTweetsIntoGraphData,
 } from "../utils/transformData";
-import { COLOR_BY, FILTER_LEVELS, FILTER_BY } from "../utils/constants";
+import { COLOR_BY, FILTER_LEVELS } from "../utils/constants";
 import mockTweets from "../tweets.json";
 import { useEffect, useRef } from "react";
 
@@ -46,9 +46,12 @@ export type AppConfig = {
     longitude: { left: number; right: number };
   } | null;
   countryCode: string;
-  isAllChecked: boolean;
-  isVideoChecked: boolean;
-  isImageChecked: boolean;
+  allowedMediaTypes: {
+    all: boolean;
+    video: boolean;
+    image: boolean;
+    text: boolean;
+  };
   replace: boolean;
   tabIndex: number;
   filterLevel: keyof typeof FILTER_LEVELS;
@@ -88,9 +91,12 @@ const [useStore] = create(
         countryCode: "All",
         resultType: "mixed",
         geolocation: null,
-        isAllChecked: true,
-        isVideoChecked: true,
-        isImageChecked: true,
+        allowedMediaTypes: {
+          all: true,
+          text: true,
+          video: true,
+          image: true,
+        },
         replace: true,
         filterLevel: FILTER_LEVELS.none,
         searchTerm: "",
@@ -138,14 +144,8 @@ export const useConfig = () => {
     resultType: useStore(
       (state: GlobalStateStoreType) => state.config.resultType
     ),
-    isVideoChecked: useStore(
-      (state: GlobalStateStoreType) => state.config.isVideoChecked
-    ),
-    isAllChecked: useStore(
-      (state: GlobalStateStoreType) => state.config.isAllChecked
-    ),
-    isImageChecked: useStore(
-      (state: GlobalStateStoreType) => state.config.isImageChecked
+    allowedMediaTypes: useStore(
+      (state: GlobalStateStoreType) => state.config.allowedMediaTypes
     ),
     replace: useStore((state: GlobalStateStoreType) => state.config.replace),
     isWordcloud: useStore(
@@ -166,8 +166,6 @@ export const useConfig = () => {
     numTweets: useStore(
       (state: GlobalStateStoreType) => state.config.numTweets
     ),
-    mediaType: useMediaType(),
-    allowedMediaTypes: useAllowedMediaTypes(),
     setConfig: useStore((state: GlobalStateStoreType) => state.setConfig),
   };
 };
@@ -288,37 +286,19 @@ export const useWordcloudConfig = () => {
   };
 };
 
+/** returns some of ["all","video","photo","text"] */
 export function useAllowedMediaTypes(): string[] {
-  const isVideoChecked = useStore(
-    (state: GlobalStateStoreType) => state.config.isVideoChecked
+  const allowedMediaTypes = useStore(
+    (state: GlobalStateStoreType) => state.config.allowedMediaTypes
   );
-  const isImageChecked = useStore(
-    (state: GlobalStateStoreType) => state.config.isImageChecked
-  );
-  const isAllChecked = useStore(
-    (state: GlobalStateStoreType) => state.config.isAllChecked
-  );
-  return isAllChecked
+
+  return allowedMediaTypes.all
     ? ["all"]
     : [
-        ...(isVideoChecked ? ["video"] : []),
-        ...(isImageChecked ? ["photo"] : []),
+        ...(allowedMediaTypes.video ? ["video"] : []),
+        ...(allowedMediaTypes.image ? ["photo"] : []),
+        // ...(allowedMediaTypes.text ? ["text"] : []),
       ];
-}
-
-/** returns one of imageAndVideo, imageOnly, videoOnly, null */
-export function useMediaType(): string | null {
-  const allowedMediaTypes = useAllowedMediaTypes();
-
-  return allowedMediaTypes.includes("all")
-    ? FILTER_BY.all
-    : allowedMediaTypes.includes("photo") && allowedMediaTypes.includes("video")
-    ? FILTER_BY.imageAndVideo
-    : allowedMediaTypes.includes("photo")
-    ? FILTER_BY.imageOnly
-    : allowedMediaTypes.includes("video")
-    ? FILTER_BY.videoOnly
-    : null;
 }
 
 export const useIsLeftDrawerOpen = () => {

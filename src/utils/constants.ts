@@ -5,12 +5,6 @@ export const COLOR_BY = {
   sentiment: "sentiment",
   profilePhoto: "profilePhoto",
 };
-export const FILTER_BY = {
-  all: "all",
-  imageAndVideo: "imageAndVideo",
-  imageOnly: "imageOnly",
-  videoOnly: "videoOnly",
-};
 export const FILTER_LEVELS = {
   medium: "medium",
   low: "low",

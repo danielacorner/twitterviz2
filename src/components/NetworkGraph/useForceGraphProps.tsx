@@ -10,6 +10,7 @@ import {
   useConfig,
   useSetTooltipNode,
   useSetSelectedNode,
+  useAllowedMediaTypes,
 } from "../../providers/store";
 
 const NODE_SIZE = 25;
@@ -19,8 +20,8 @@ const NODE_SIZE = 25;
 const DEFAULT_NODE_COLOR = "steelblue";
 
 export function useForceGraphProps() {
-  const { is3d, colorBy, allowedMediaTypes } = useConfig();
-
+  const { is3d, colorBy } = useConfig();
+  const allowedMediaTypesStrings = useAllowedMediaTypes();
   const setTooltipNode = useSetTooltipNode();
   const setSelectedNode = useSetSelectedNode();
 
@@ -116,7 +117,7 @@ export function useForceGraphProps() {
         ? (node: Tweet) => {
             const mediaArr = getMediaArr(node);
             const first = mediaArr[0];
-            if (!allowedMediaTypes.includes(first?.type)) {
+            if (!allowedMediaTypesStrings.includes(first?.type)) {
               return null;
             }
             const imgSrc = node.isUserNode

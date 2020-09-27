@@ -5,6 +5,7 @@ import {
   useSetTweets,
   useLoading,
   useIsLeftDrawerOpen,
+  useAllowedMediaTypes,
 } from "../../providers/store";
 import DiceIcon from "@material-ui/icons/Casino";
 import FavoriteIcon from "@material-ui/icons/Favorite";
@@ -18,9 +19,9 @@ export function BtnStreamNewTweets() {
     countryCode,
     numTweets,
     filterLevel,
-    mediaType,
     geolocation,
   } = useConfig();
+  const allowedMediaTypesStrings = useAllowedMediaTypes();
   const { loading, setLoading } = useLoading();
   const setTweets = useSetTweets();
 
@@ -32,7 +33,10 @@ export function BtnStreamNewTweets() {
     }, 10 * 1000);
 
     const langParam = lang !== "All" ? `&lang=${lang}` : "";
-    const mediaParam = mediaType ? `&mediaType=${mediaType}` : "";
+    const allowedMediaParam =
+      allowedMediaTypesStrings.length > 0
+        ? `&allowedMediaTypes=${allowedMediaTypesStrings.join(",")}`
+        : "";
     const countryParam =
       countryCode !== "All" ? `&countryCode=${countryCode}` : "";
 
@@ -42,8 +46,8 @@ export function BtnStreamNewTweets() {
 
     const resp = await fetch(
       geolocation
-        ? `${SERVER_URL}/api/filter?num=${numTweets}&locations=${locations}${mediaParam}`
-        : `${SERVER_URL}/api/stream?num=${numTweets}&filterLevel=${filterLevel}${mediaParam}${countryParam}${langParam}`
+        ? `${SERVER_URL}/api/filter?num=${numTweets}&locations=${locations}${allowedMediaParam}`
+        : `${SERVER_URL}/api/stream?num=${numTweets}&filterLevel=${filterLevel}${allowedMediaParam}${countryParam}${langParam}`
     );
 
     console.log("🌟🚨: fetchNewTweets -> resp", resp);

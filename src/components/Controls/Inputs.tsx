@@ -5,27 +5,25 @@ import {
   InputLabel,
   Button,
 } from "@material-ui/core";
-import { FILTER_BY, SERVER_URL } from "../../utils/constants";
+import { SERVER_URL } from "../../utils/constants";
+import { useParamsForFetch } from "../../utils/utils";
 import { useConfig, useSetTweets, useLoading } from "../../providers/store";
 import SearchIcon from "@material-ui/icons/Search";
 import { Body1 } from "../common/styledComponents";
-import { geoDistanceKm } from "../../utils/distanceFromCoords";
 import { TwoColRowStyles, TwoColFormStyles } from "../common/TwoColRowStyles";
 
 // TODO: abstract forms
 export function SearchForm() {
-  const {
-    searchTerm,
-    numTweets,
-    setConfig,
-    lang,
-    mediaType,
-    countryCode,
-    geolocation,
-    resultType,
-  } = useConfig();
+  const { searchTerm, numTweets, setConfig, resultType } = useConfig();
   const { loading, setLoading } = useLoading();
   const setTweets = useSetTweets();
+
+  const {
+    langParam,
+    allowedMediaTypesParam,
+    countryParam,
+    geocodeParam,
+  } = useParamsForFetch();
 
   const fetchSearchResults = async () => {
     setLoading(true);
@@ -34,28 +32,8 @@ export function SearchForm() {
       setLoading(false);
     }, 10 * 1000);
 
-    const langParam = lang !== "All" ? `&lang=${lang}` : "";
-    const mediaParam = mediaType ? `&mediaType=${mediaType}` : "";
-    const countryParam =
-      countryCode !== "All" ? `&countryCode=${countryCode}` : "";
-    // https://developer.twitter.com/en/docs/twitter-api/v1/tweets/search/api-reference/get-search-tweets
-    const searchRadius = geolocation
-      ? geoDistanceKm(
-          geolocation.latitude.left,
-          geolocation.longitude.left,
-          geolocation.latitude.right,
-          geolocation.longitude.left
-        ) / 2
-      : "";
-    const geocodeParam = geolocation
-      ? `&geocode=${
-          (geolocation.latitude.left + geolocation.latitude.right) / 2
-        },${
-          (geolocation.longitude.left + geolocation.longitude.right) / 2
-        },${searchRadius}km`
-      : "";
     const resp = await fetch(
-      `${SERVER_URL}/api/search?term=${searchTerm}&num=${numTweets}&result_type=${resultType}${langParam}${mediaParam}${countryParam}${geocodeParam}`
+      `${SERVER_URL}/api/search?term=${searchTerm}&num=${numTweets}&result_type=${resultType}${langParam}${allowedMediaTypesParam}${countryParam}${geocodeParam}`
     );
     console.log("🌟🚨: fetchSearchResults -> resp", resp);
     const data = await resp.json();
@@ -148,14 +126,14 @@ export function FetchUserTweetsForm() {
 }
 
 export function HowManyTweets() {
-  const { numTweets, mediaType, setConfig } = useConfig();
+  const { numTweets, allowedMediaTypes, setConfig } = useConfig();
 
   useEffect(() => {
     // if searching for media, reduce num tweets
-    if (mediaType) {
+    if (!allowedMediaTypes.text) {
       setConfig({ numTweets: 25 });
     }
-  }, [mediaType, setConfig]);
+  }, [allowedMediaTypes, setConfig]);
 
   return (
     <TwoColRowStyles>
@@ -171,13 +149,7 @@ export function HowManyTweets() {
         onChange={(e) => setConfig({ numTweets: +e.target.value })}
         type="number"
         inputProps={{
-          step: [
-            FILTER_BY.imageAndVideo,
-            FILTER_BY.imageOnly,
-            FILTER_BY.videoOnly,
-          ].includes(mediaType)
-            ? 5
-            : 50,
+          step: !allowedMediaTypes.text ? 5 : 50,
         }}
       />
     </TwoColRowStyles>

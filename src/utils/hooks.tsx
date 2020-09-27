@@ -7,6 +7,7 @@ import {
   useTweets,
 } from "../providers/store";
 import { SERVER_URL } from "./constants";
+import { useParamsForFetch } from "./utils";
 
 export function useWindowSize() {
   // (For SSR apps only?) Initialize state with undefined width/height so server and client renders match
@@ -41,7 +42,9 @@ export function useWindowSize() {
 
 export function useFetchTimeline() {
   const { loading, setLoading } = useLoading();
-  const { numTweets, mediaType } = useConfig();
+  const { numTweets } = useConfig();
+  const { allowedMediaTypesParam } = useParamsForFetch();
+
   const setTweets = useSetTweets();
   const tweets = useTweets();
   const addTweets = useAddTweets();
@@ -53,7 +56,7 @@ export function useFetchTimeline() {
     setLoading(true);
     const timer = setTimeout(() => setLoading(false), 10 * 1000);
     const resp = await fetch(
-      `${SERVER_URL}/api/user_timeline?id_str=${userId}&num=${numTweets}&mediaType=${mediaType}${
+      `${SERVER_URL}/api/user_timeline?id_str=${userId}&num=${numTweets}${allowedMediaTypesParam}${
         isFetchMore ? `&maxId=${tweets[tweets.length - 1].id_str}` : ""
       }`
     );
@@ -69,14 +72,15 @@ export function useFetchTimeline() {
 
 export function useFetchLikes() {
   const { loading, setLoading } = useLoading();
-  const { numTweets, mediaType } = useConfig();
+  const { numTweets } = useConfig();
+  const { allowedMediaTypesParam } = useParamsForFetch();
   const setTweets = useSetTweets();
 
   const fetchLikes = async (userId: string) => {
     setLoading(true);
     const timer = setTimeout(() => setLoading(false), 10 * 1000);
     const resp = await fetch(
-      `${SERVER_URL}/api/user_likes?id_str=${userId}&num=${numTweets}&mediaType=${mediaType}`
+      `${SERVER_URL}/api/user_likes?id_str=${userId}&num=${numTweets}${allowedMediaTypesParam}`
     );
     const data = await resp.json();
     setLoading(false);
