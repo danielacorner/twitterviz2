@@ -69,7 +69,7 @@ const [useStore] = create(
               users: [],
               tweets: [],
             } as GraphData),
-      tweetsFromServer: [] as Tweet[],
+      tweetsFromServer: /* process.env.NODE_ENV === "development" ? mockTweets : */ [] as Tweet[],
       selectedNode: null as Tweet | null,
       setSelectedNode: (node: Tweet | null) =>
         set((state) => ({ selectedNode: node })),
@@ -98,7 +98,7 @@ const [useStore] = create(
         filterLevel: FILTER_LEVELS.none,
         searchTerm: "",
         numTweets: 50,
-        tabIndex: TAB_INDICES.GALLERY,
+        tabIndex: TAB_INDICES.NETWORKGRAPH,
       },
       isDrawerOpen: window.innerWidth > 600,
       setIsDrawerOpen: (next) => set((state) => ({ isDrawerOpen: next })),

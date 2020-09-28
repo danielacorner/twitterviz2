@@ -80,7 +80,7 @@ function useFetchTweetsOnMount() {
   });
 }
 
-/** fetch posts if there's a query string
+/** fetch posts if there's a query string like /?t=12345,12346
  *
  * [docs](https://docs.fauna.com/fauna/current/tutorials/crud?lang=javascript#retrieve)
  */
@@ -102,10 +102,14 @@ function useFetchQueryTweetsOnMount() {
 function useSyncTweetsWithQuery() {
   const tweets = useTweets();
   const history = useHistory();
+  const { pathname } = useLocation();
   useEffect(() => {
-    if (tweets && tweets.length !== 0) {
-      const path = `/?t=${tweets.map((t) => t.id_str).join(",")}`;
-      history.push(path);
+    // debugger;
+    const newPath = `/?t=${tweets.map((t) => t.id_str).join(",")}`;
+    const shouldNavigate =
+      tweets && tweets.length !== 0 && pathname !== newPath;
+    if (shouldNavigate) {
+      history.push(newPath);
     }
     // eslint-disable-next-line
   }, [tweets]);

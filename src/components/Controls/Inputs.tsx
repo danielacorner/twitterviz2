@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  TextField,
-  CircularProgress,
-  InputLabel,
-  Button,
-} from "@material-ui/core";
+import { TextField, InputLabel, Button } from "@material-ui/core";
 import { SERVER_URL } from "../../utils/constants";
 import { useFetchTimeline, useParamsForFetch } from "../../utils/hooks";
 import { useConfig, useSetTweets, useLoading } from "../../providers/store";
@@ -89,7 +84,7 @@ export function FetchUserTweetsForm() {
       >
         <Body1>@</Body1>
         <TextField
-          label={loading ? <CircularProgress /> : "Fetch user..."}
+          label={"Fetch user..."}
           value={userHandle}
           onChange={(e) => setUserHandle(e.target.value)}
           type="text"

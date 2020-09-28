@@ -119,8 +119,8 @@ const GalleryStyles = styled.div`
     grid-gap: 0.5rem;
     place-items: center;
     .avatar {
-      width: 64px;
-      height: 64px;
+      width: 256px;
+      height: 256px;
       position: relative;
       &:before {
         width: 68px;

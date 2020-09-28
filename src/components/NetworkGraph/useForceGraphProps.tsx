@@ -12,6 +12,7 @@ import {
   useSetSelectedNode,
   useAllowedMediaTypes,
 } from "../../providers/store";
+import { useIsLight } from "../../providers/ThemeManager";
 
 const NODE_SIZE = 25;
 
@@ -24,7 +25,7 @@ export function useForceGraphProps() {
   const allowedMediaTypesStrings = useAllowedMediaTypes();
   const setTooltipNode = useSetTooltipNode();
   const setSelectedNode = useSetSelectedNode();
-
+  const isLightTheme = useIsLight();
   const fgRef = useRef();
 
   const onBackgroundClick = () => {
@@ -107,9 +108,9 @@ export function useForceGraphProps() {
         ctx.fill();
       }
     },
-    linkColor: "hsla(0,0%,60%,1)",
+    linkColor: isLightTheme ? "#000000" : "#FFFFFF",
     linkOpacity: 1,
-    linkWidth: 2,
+    linkWidth: 20,
     nodeThreeObject:
       colorBy === COLOR_BY.mediaType
         ? null
@@ -175,6 +176,14 @@ export function useForceGraphProps() {
         : null,
 
     onBackgroundClick,
+    enableZoomPanInteraction: true,
+    enableNavigationControls: true,
+    onLinkHover: (link, prevLink) => {
+      console.log("🌟🚨: useForceGraphProps -> link", link);
+      console.log("🌟🚨: useForceGraphProps -> prevLink", prevLink);
+    },
+    enablePointerInteraction: /* tweets.length<500 */ true,
+    enableNodeDrag: true,
   };
   return { fgRef, forceGraphProps };
 }
@@ -182,7 +191,7 @@ export function useForceGraphProps() {
 function drawProfilePhoto(node: any, ctx: any) {
   const img = new Image(NODE_SIZE, NODE_SIZE);
   img.src = node.user.profile_image_url_https;
-  ctx.drawImage(img, node.x, node.y);
+  ctx.drawImage(img, node.x - NODE_SIZE / 2, node.y - NODE_SIZE / 2);
 }
 
 function getNodeColor(node, colorBy) {

@@ -5,11 +5,16 @@ import {
   InputLabel,
   FormControl,
   Button,
+  Checkbox,
 } from "@material-ui/core";
 import { COLOR_BY } from "../../utils/constants";
 import { useConfig, AppConfig, useRecomputeGraph } from "../../providers/store";
-import { H5, CollapsibleSwitchWithLabels } from "../common/styledComponents";
-
+import {
+  H5,
+  CollapsibleSwitchWithLabels,
+  Body1,
+} from "../common/styledComponents";
+import { FormControlLabelCollapsible } from "./Checkboxes";
 /** react-force-graph docs
  * https://www.npmjs.com/package/react-force-graph
  */
@@ -55,14 +60,14 @@ function SwitchUserNodes() {
   const recomputeNodes = useRecomputeGraph();
 
   return (
-    <CollapsibleSwitchWithLabels
-      labelLeft="Hide Users"
-      labelRight="Show Users"
+    <FormControlLabelCollapsible
+      groupTitle="Media"
+      control={<Checkbox checked={showUserNodes} />}
       onChange={() => {
         setConfig({ showUserNodes: !showUserNodes });
         setTimeout(recomputeNodes);
       }}
-      checked={showUserNodes}
+      label={<Body1>Show Users</Body1>}
     />
   );
 }

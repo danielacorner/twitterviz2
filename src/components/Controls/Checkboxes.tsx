@@ -141,7 +141,7 @@ export function MediaTypeCheckboxes() {
   );
 }
 
-function FormControlLabelCollapsible({
+export function FormControlLabelCollapsible({
   control,
   label,
   groupTitle = "",
