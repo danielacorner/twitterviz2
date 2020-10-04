@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useSpring, animated } from "react-spring";
 import styled from "styled-components/macro";
-import TweetContent from "./TweetContent";
+import TweetContent from "./TweetContent/TweetContent";
 import { PADDING } from "../utils/utils";
 import useStore from "../providers/store";
 import useContainerDimensions from "../utils/useContainerDimensions";

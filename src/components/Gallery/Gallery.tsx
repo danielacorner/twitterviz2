@@ -7,7 +7,7 @@ import {
   usePrevious,
 } from "../../providers/store";
 import styled from "styled-components/macro";
-import TweetContent from "../TweetContent";
+import TweetContent from "../TweetContent/TweetContent";
 import { TABS_HEIGHT } from "../../utils/constants";
 import { useTheme } from "@material-ui/core";
 import { OpenTweetBtn } from "../BottomDrawer/BottomDrawer";

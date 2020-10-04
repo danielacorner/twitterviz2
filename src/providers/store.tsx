@@ -69,7 +69,8 @@ const [useStore] = create(
               users: [],
               tweets: [],
             } as GraphData),
-      tweetsFromServer: /* process.env.NODE_ENV === "development" ? mockTweets : */ [] as Tweet[],
+      tweetsFromServer:
+        process.env.NODE_ENV === "development" ? mockTweets : ([] as Tweet[]),
       selectedNode: null as Tweet | null,
       setSelectedNode: (node: Tweet | null) =>
         set((state) => ({ selectedNode: node })),

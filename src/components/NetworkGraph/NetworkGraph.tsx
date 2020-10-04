@@ -15,7 +15,6 @@ import {
   useRecomputeGraph,
   usePrevious,
 } from "../../providers/store";
-import * as d3 from "d3";
 
 const GraphStyles = styled.div`
   width: 100%;

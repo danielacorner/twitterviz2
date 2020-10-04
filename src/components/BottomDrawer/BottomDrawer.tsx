@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Drawer, IconButton, Button } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
-import TweetContent from "../TweetContent";
+import TweetContent from "../TweetContent/TweetContent";
 import UserInfo from "./UserInfo";
 import useStore, { GlobalStateStoreType } from "../../providers/store";
 import { useWindowSize } from "../../utils/hooks";
