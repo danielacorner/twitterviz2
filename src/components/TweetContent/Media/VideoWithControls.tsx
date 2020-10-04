@@ -14,6 +14,9 @@ const VideoStyles = styled.div`
   .video-react-big-play-button {
     display: none;
   }
+  .video-react-icon-fullscreen {
+    margin-right: 20px;
+  }
 `;
 export default function VideoWithControls({
   videoRef,
@@ -64,6 +67,7 @@ const BitrateStyles = styled.div`
   top: 0;
   align-items: center;
   display: flex;
+  padding-right: 6px;
 `;
 function BitrateControls({
   bitrate,

@@ -116,7 +116,9 @@ export const TweetStyles = styled.div`
       height: auto;
     }
     &:after {
+      /* play button svg */
       content: "";
+      opacity: 0.6;
       position: absolute;
       top: calc(50% - 48px);
       left: calc(50% - 48px);
