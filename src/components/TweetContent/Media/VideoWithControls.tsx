@@ -15,7 +15,21 @@ const VideoStyles = styled.div`
     display: none;
   }
   .video-react-icon-fullscreen {
-    margin-right: 20px;
+    margin-right: 30px;
+  }
+  .video-react-play-progress:after {
+    white-space: nowrap;
+  }
+  .video-react-play-control {
+    display: none;
+  }
+  .video-react-current-time {
+    padding-right: 0.2em;
+    padding-left: 0.5em;
+  }
+  .video-react-duration {
+    padding-left: 0.2em;
+    padding-right: 0.5em;
   }
 `;
 export default function VideoWithControls({
