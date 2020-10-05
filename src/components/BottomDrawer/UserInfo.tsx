@@ -79,10 +79,8 @@ export function UserAvatar({
   imageOnly?: boolean;
   large?: boolean;
 }) {
-  const profileImgUrl = `${user?.profile_image_url_https.slice(
-    0,
-    -"_normal.jpg".length + 3
-  )}.jpg`;
+  const [wasMousedOver, setWasMousedOver] = useState(false);
+
   return (
     <AvatarStyles
       css={`
@@ -103,9 +101,31 @@ export function UserAvatar({
         target="_blank"
         rel="noopener noreferrer"
       >
-        <div className="avatar">
-          <ImgUnmountOnError src={profileImgUrl} alt="" />
-          <ImgUnmountOnError src={user?.profile_image_url_https} alt="" />
+        <div className="avatar" onMouseEnter={() => setWasMousedOver(true)}>
+          {/* Large Image */}
+          {/* {large || wasMousedOver ? ( */}
+          <ImgUnmountOnError
+            srcSet={`
+              ${`${user?.profile_image_url_https.slice(
+                0,
+                -"_normal.jpg".length + 3
+              )}.jpg`} 480w,
+              ${user?.profile_image_url_https} 800w
+              `}
+            sizes="(max-width: 600px) 480px, 800px"
+            alt=""
+          />
+          {/* ) : null} */}
+          {/* small */}
+
+          {/* Small Image */}
+          {/* <ImgUnmountOnError
+            src={`${user?.profile_image_url_https.slice(
+              0,
+              -"_normal.jpg".length + 3
+            )}.jpg`}
+            alt=""
+          /> */}
         </div>
       </a>
       {!imageOnly && (
