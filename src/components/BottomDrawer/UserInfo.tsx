@@ -73,9 +73,11 @@ const AvatarStyles = styled.div``;
 export function UserAvatar({
   user = null,
   imageOnly = false,
+  large = false,
 }: {
   user?: User;
   imageOnly?: boolean;
+  large?: boolean;
 }) {
   const profileImgUrl = `${user?.profile_image_url_https.slice(
     0,
@@ -84,13 +86,15 @@ export function UserAvatar({
   return (
     <AvatarStyles
       css={`
+        ${large ? "position: relative;" : ""}
         .MuiButtonBase-root {
           position: absolute;
           top: -4px;
           left: 53px;
+          ${large ? "bottom: 42px; top: unset; right: 0; left: unset;" : ""}
         }
         svg {
-          width: 0.7em;
+          width: ${large ? 1 : 0.7}em;
         }
       `}
     >

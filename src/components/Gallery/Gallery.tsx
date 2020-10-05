@@ -179,7 +179,7 @@ const Gallery = () => {
     >
       {areAllTweetsSameUser && (
         <div className="userAvatarWrapper">
-          <UserAvatar user={tweets[0]?.user} imageOnly={false} />
+          <UserAvatar user={tweets[0]?.user} imageOnly={false} large={true} />
         </div>
       )}
       <div className="galleryContent">
