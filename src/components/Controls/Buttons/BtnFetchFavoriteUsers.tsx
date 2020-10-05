@@ -2,13 +2,13 @@ import React from "react";
 import { useLoading } from "../../../providers/store";
 import UserIcon from "@material-ui/icons/Face";
 import { getFavorites } from "../../common/BtnFavorite";
-import { useFetchTweetsByIds } from "../../../utils/hooks";
+import { useFetchUsersById } from "../../../utils/hooks";
 import { CollapsibleButton } from "./CollapsibleButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import { RowDiv } from "../../common/styledComponents";
 
 export function BtnFetchFavoriteUsers() {
-  const fetchTweetsByIds = useFetchTweetsByIds();
+  const fetchUsersById = useFetchUsersById();
   const { loading } = useLoading();
 
   return (
@@ -32,8 +32,8 @@ export function BtnFetchFavoriteUsers() {
       className="btnFetch"
       disabled={loading}
       onClick={() => {
-        const { favorites } = getFavorites();
-        fetchTweetsByIds([favorites]);
+        const { favoriteUsers } = getFavorites();
+        fetchUsersById([favoriteUsers]);
       }}
       variant="outlined"
       color="secondary"

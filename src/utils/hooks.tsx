@@ -33,6 +33,29 @@ export function useFetchTweetsByIds(): (ids: string[]) => void {
   };
 }
 
+export function useFetchUsersById(): (ids: string[]) => void {
+  const { setLoading } = useLoading();
+  const setTweets = useSetTweets();
+
+  return async (ids: string[]) => {
+    setLoading(true);
+    // after 10 seconds, stop loading
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 10 * 1000);
+
+    const resp = await fetch(`${SERVER_URL}/api/get?ids=${ids.join(",")}`);
+
+    const tweetsResponses = await resp.json();
+    const data = tweetsResponses.map((d) => d.data);
+
+    setLoading(false);
+    clearTimeout(timer);
+
+    setTweets(data);
+  };
+}
+
 export function useWindowSize() {
   // (For SSR apps only?) Initialize state with undefined width/height so server and client renders match
   // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/

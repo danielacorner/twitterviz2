@@ -27,7 +27,10 @@ export default function BtnFavorite({ tweet }) {
   );
 }
 
+/** localStorage getters, setters, togglers */
 export function getFavorites() {
+  // tweets
+
   const getFavs = () =>
     JSON.parse(window.localStorage.getItem("favorites") || "[]");
 
@@ -43,7 +46,32 @@ export function getFavorites() {
       : [...favs, tweetId];
     setFavorites(newFavorites);
   };
-  return { favorites, setFavorites, toggleFavorite };
+
+  // users
+
+  const getFavUsers = () =>
+    JSON.parse(window.localStorage.getItem("favoriteUsers") || "[]");
+  const favoriteUsers = getFavUsers();
+
+  const setFavoriteUsers = (newFavorites) =>
+    window.localStorage.setItem("favoriteUsers", JSON.stringify(newFavorites));
+
+  const toggleFavoriteUser = (userId) => {
+    const favs = getFavUsers();
+    const newFavorites = favs.includes(userId)
+      ? [...favs.filter((uId) => uId !== userId)]
+      : [...favs, userId];
+    setFavoriteUsers(newFavorites);
+  };
+
+  return {
+    favorites,
+    favoriteUsers,
+    setFavorites,
+    setFavoriteUsers,
+    toggleFavorite,
+    toggleFavoriteUser,
+  };
 }
 
 /** returns array of arrays of saved tweet ids */
