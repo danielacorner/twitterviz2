@@ -63,10 +63,12 @@ export default function UserInfo({
       >
         {loading ? <CircularProgress /> : "Fetch user timeline"}
       </Button>
-      <BtnFavorite tweet={tweet} />
+      <BtnFavorite tooltipTitle="favorite user" user={user} />
     </UserInfoStyles>
   );
 }
+
+const AvatarStyles = styled.div``;
 
 export function UserAvatar({
   user = null,
@@ -79,9 +81,19 @@ export function UserAvatar({
     0,
     -"_normal.jpg".length + 3
   )}.jpg`;
-
   return (
-    <>
+    <AvatarStyles
+      css={`
+        .MuiButtonBase-root {
+          position: absolute;
+          top: -4px;
+          left: 53px;
+        }
+        svg {
+          width: 0.7em;
+        }
+      `}
+    >
       <a
         href={`https://twitter.com/${user?.screen_name}/`}
         target="_blank"
@@ -98,7 +110,8 @@ export function UserAvatar({
           <div className="screenName">{user?.screen_name}</div>
         </>
       )}
-    </>
+      <BtnFavorite tooltipTitle="favorite user" user={user} />
+    </AvatarStyles>
   );
 }
 

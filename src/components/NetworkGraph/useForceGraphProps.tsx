@@ -178,10 +178,7 @@ export function useForceGraphProps() {
     onBackgroundClick,
     enableZoomPanInteraction: true,
     enableNavigationControls: true,
-    onLinkHover: (link, prevLink) => {
-      console.log("🌟🚨: useForceGraphProps -> link", link);
-      console.log("🌟🚨: useForceGraphProps -> prevLink", prevLink);
-    },
+    onLinkHover: (link, prevLink) => {},
     enablePointerInteraction: /* tweets.length<500 */ true,
     enableNodeDrag: true,
   };

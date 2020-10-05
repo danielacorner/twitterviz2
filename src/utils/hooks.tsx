@@ -9,31 +9,10 @@ import {
   useAllowedMediaTypes,
 } from "../providers/store";
 import { geoDistanceKm } from "./distanceFromCoords";
+import { Tweet } from "../types";
+import { getFavorites } from "../components/common/BtnFavorite";
 
 export function useFetchTweetsByIds(): (ids: string[]) => void {
-  const { setLoading } = useLoading();
-  const setTweets = useSetTweets();
-
-  return async (ids: string[]) => {
-    setLoading(true);
-    // after 10 seconds, stop loading
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 10 * 1000);
-
-    const resp = await fetch(`${SERVER_URL}/api/get?ids=${ids.join(",")}`);
-
-    const tweetsResponses = await resp.json();
-    const data = tweetsResponses.map((d) => d.data);
-
-    setLoading(false);
-    clearTimeout(timer);
-
-    setTweets(data);
-  };
-}
-
-export function useFetchUsersById(): (ids: string[]) => void {
   const { setLoading } = useLoading();
   const setTweets = useSetTweets();
 
@@ -132,6 +111,42 @@ export function useFetchTimeline() {
   };
 
   return { loading, fetchTimeline, fetchTimelineByHandle };
+}
+
+export function useFetchUsers() {
+  const { allowedMediaTypesParam } = useParamsForFetch();
+  const { toggleFavoriteUser } = getFavorites();
+  const setTweets = useSetTweets();
+  const fetchUsers = async (userHandles: string[]) => {
+    const results = await Promise.allSettled(
+      userHandles.map((userHandle) =>
+        fetch(
+          `${SERVER_URL}/api/user_timeline?screen_name=${userHandle}&num=${1}${allowedMediaTypesParam}`
+        ).then((resp) => ({ ...resp.json() }))
+      )
+    );
+    const resultsWithUsers = userHandles.map((userHandle, idx) => [
+      userHandle,
+      results[idx],
+    ]);
+
+    console.log("🌟🚨: fetchUsers -> results", results);
+    let newTweets = [] as Tweet[];
+    (resultsWithUsers as any[]).forEach(
+      ([userHandle, { status, value: tweetOrErr }]) => {
+        if (status === "fulfilled" && "id_str" in tweetOrErr) {
+          newTweets = [...newTweets, tweetOrErr];
+        } else {
+          console.log(tweetOrErr);
+          toggleFavoriteUser(userHandle);
+        }
+      }
+    );
+    console.log("🌟🚨: useFetchUsers -> newTweets", newTweets);
+    setTweets(newTweets);
+  };
+
+  return fetchUsers;
 }
 
 export function useFetchLikes() {

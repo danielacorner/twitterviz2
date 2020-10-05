@@ -199,7 +199,6 @@ const Gallery = () => {
 
 export default Gallery;
 
-// TODO: use intersection observer to virtualize
 function GridItem({ tweet }) {
   const [ref, dimensions] = useContainerDimensions();
   const rowSpan = Math.ceil(
@@ -220,7 +219,7 @@ function GridItem({ tweet }) {
       </div>
       <TweetContent tweet={tweet} isTooltip={false} autoPlay={false} />
       <div className="btnFavorite">
-        <BtnFavorite tweet={tweet} />
+        <BtnFavorite tweet={tweet} tooltipTitle="favorite tweet" />
       </div>
     </div>
   );

@@ -1,29 +1,54 @@
 import React, { useState, useEffect } from "react";
+import { User } from "../../types";
 
-import { IconButton } from "@material-ui/core";
+import { IconButton, Tooltip } from "@material-ui/core";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import { useStoredSaves } from "../../providers/store";
 
-export default function BtnFavorite({ tweet }) {
-  const { favorites, toggleFavorite } = getFavorites();
-  const isFavorite = favorites.includes(tweet.id_str);
+export default function BtnFavorite({
+  tweet = null,
+  user = null as null | User,
+  tooltipTitle = null,
+}) {
+  const {
+    favorites,
+    toggleFavorite,
+    favoriteUsers,
+    toggleFavoriteUser,
+  } = getFavorites();
+  const isUser = Boolean(user);
+  const isTweet = !isUser;
+
+  const isFavorite = isTweet ? favorites.includes(tweet.id_str) : null;
+  const isFavoriteUser = isUser
+    ? favoriteUsers.includes(user.screen_name)
+    : null;
+
+  // re-render manually when we change localStorage
   const [key, setKey] = useState(Math.random());
   const rerender = () => setKey(Math.random());
+
   return (
-    <IconButton
-      key={key}
-      style={{
-        color: isFavorite ? "tomato" : "hsla(0,0%,50%,0.5)",
-        height: 18,
-        width: 18,
-      }}
-      onClick={() => {
-        toggleFavorite(tweet.id_str);
-        rerender();
-      }}
-    >
-      <FavoriteIcon />
-    </IconButton>
+    <Tooltip title={tooltipTitle}>
+      <IconButton
+        key={key}
+        style={{
+          color: isFavorite || isFavoriteUser ? "tomato" : "hsla(0,0%,50%,0.5)",
+          height: 18,
+          width: 18,
+        }}
+        onClick={() => {
+          if (isUser) {
+            toggleFavoriteUser(user.screen_name);
+          } else {
+            toggleFavorite(tweet.id_str);
+          }
+          rerender();
+        }}
+      >
+        <FavoriteIcon />
+      </IconButton>
+    </Tooltip>
   );
 }
 

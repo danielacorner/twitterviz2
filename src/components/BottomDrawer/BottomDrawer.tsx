@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Drawer, IconButton, Button } from "@material-ui/core";
+import { Drawer, IconButton, Button, Tooltip } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import TweetContent from "../TweetContent/TweetContent";
 import UserInfo from "./UserInfo";
@@ -73,9 +73,11 @@ const BottomDrawer = () => {
       >
         <DrawerContentStyles>
           {/* absolute-position below here */}
-          <IconButton className="btnClose" onClick={handleClose}>
-            <CloseIcon />
-          </IconButton>
+          <Tooltip title="delete">
+            <IconButton className="btnClose" onClick={handleClose}>
+              <CloseIcon />
+            </IconButton>
+          </Tooltip>
           <div className="userAndTweetWrapper">
             {/* non-absolute-position below here */}
             <div className="userWrapper">
@@ -111,7 +113,9 @@ export const OpenTweetBtn = ({ tweet, offsetY = 0, iconOnly = false }) => (
     rel="noopener noreferrer"
   >
     {iconOnly ? (
-      <OpenInNewIcon />
+      <Tooltip title="Open in new">
+        <OpenInNewIcon />
+      </Tooltip>
     ) : (
       <Button variant="outlined" endIcon={<OpenInNewIcon />}>
         Open tweet

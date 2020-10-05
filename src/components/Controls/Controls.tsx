@@ -28,7 +28,7 @@ import {
   MediaTypeCheckboxes,
   RecentPopularMixedRadioBtns,
 } from "./Checkboxes";
-import { FetchUserTweetsForm, HowManyTweets, SearchForm } from "./Inputs";
+import { FetchUserTweetsForm, SearchForm } from "./Inputs";
 import { ControlTitle, TwoColFormStyles } from "../common/TwoColRowStyles";
 import ControlsStyles from "./ControlsStyles";
 import WordcloudControls from "./WordcloudControls";

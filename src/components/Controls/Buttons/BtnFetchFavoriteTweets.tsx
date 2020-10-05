@@ -4,14 +4,12 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import { getFavorites } from "../../common/BtnFavorite";
 import { useFetchTweetsByIds } from "../../../utils/hooks";
 import { CollapsibleButton } from "./CollapsibleButton";
-import { useTheme, SvgIcon } from "@material-ui/core";
+import { SvgIcon } from "@material-ui/core";
 import { RowDiv } from "../../common/styledComponents";
 
 export function BtnFetchFavoriteTweets() {
   const fetchTweetsByIds = useFetchTweetsByIds();
   const { loading } = useLoading();
-  const theme = useTheme();
-  console.log("🌟🚨: BtnFetchFavoriteTweets -> theme", theme);
   return (
     <CollapsibleButton
       tooltipTitle="Favorite tweets"

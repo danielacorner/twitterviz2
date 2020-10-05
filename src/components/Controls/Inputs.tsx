@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { TextField, InputLabel, Button } from "@material-ui/core";
+import { TextField, Button } from "@material-ui/core";
 import { SERVER_URL } from "../../utils/constants";
 import { useFetchTimeline, useParamsForFetch } from "../../utils/hooks";
 import { useConfig, useSetTweets, useLoading } from "../../providers/store";
@@ -51,9 +51,7 @@ export function SearchForm() {
     const resp = await fetch(
       `${SERVER_URL}/api/search?term=${searchTerm}&num=${numTweets}&result_type=${resultType}${langParam}${allowedMediaTypesParam}${countryParam}${geocodeParam}`
     );
-    console.log("🌟🚨: fetchSearchResults -> resp", resp);
     const data = await resp.json();
-    console.log("🌟🚨: fetchSearchResults -> data", data);
     setLoading(false);
     clearTimeout(timer);
 

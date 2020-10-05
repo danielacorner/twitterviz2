@@ -48,9 +48,7 @@ export function BtnStreamNewTweets() {
         : `${SERVER_URL}/api/stream?num=${numTweets}&filterLevel=${filterLevel}${allowedMediaParam}${countryParam}${langParam}`
     );
 
-    console.log("🌟🚨: fetchNewTweets -> resp", resp);
     const data = await resp.json();
-    console.log("🌟🚨: fetchNewTweets -> data", data);
     setLoading(false);
     clearTimeout(timer);
 
