@@ -4,6 +4,7 @@ import { Button, CircularProgress } from "@material-ui/core";
 import { useSelectedNode } from "../../providers/store";
 import { useFetchTimeline } from "../../utils/hooks";
 import { Tweet, User } from "../../types";
+import BtnFavorite from "../common/BtnFavorite";
 
 export const USER_INFO_WIDTH = 200;
 
@@ -62,6 +63,7 @@ export default function UserInfo({
       >
         {loading ? <CircularProgress /> : "Fetch user timeline"}
       </Button>
+      <BtnFavorite tweet={tweet} />
     </UserInfoStyles>
   );
 }

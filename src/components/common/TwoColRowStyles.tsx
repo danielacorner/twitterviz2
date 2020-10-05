@@ -22,6 +22,10 @@ export const TwoColFormStyles = styled.form`
   grid-auto-flow: column;
   place-items: center;
   height: 100%;
+  .MuiFormLabel-root {
+    position: relative !important;
+    white-space: nowrap !important;
+  }
   .MuiFormControl-root {
     height: 100%;
   }

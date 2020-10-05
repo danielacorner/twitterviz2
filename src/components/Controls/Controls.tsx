@@ -15,7 +15,12 @@ import {
   useSetTweets,
   useIsLeftDrawerOpen,
 } from "../../providers/store";
-import { H5, Body2, CUSTOM_SCROLLBAR_CSS } from "../common/styledComponents";
+import {
+  H5,
+  Body2,
+  CUSTOM_SCROLLBAR_CSS,
+  RowDiv,
+} from "../common/styledComponents";
 import SelectGeolocation from "./SelectGeolocation";
 import { SelectCountry, SelectLanguage } from "./Dropdowns";
 import {
@@ -28,16 +33,15 @@ import { ControlTitle, TwoColFormStyles } from "../common/TwoColRowStyles";
 import ControlsStyles from "./ControlsStyles";
 import WordcloudControls from "./WordcloudControls";
 import NetworkGraphControls from "./NetworkGraphControls";
-import {
-  SwitchReplace,
-  BtnStreamNewTweets,
-  BtnFetchFavorites,
-} from "./Buttons";
+import { SwitchReplace } from "./SwitchReplace";
+import { BtnFetchFavoriteTweets } from "./Buttons/BtnFetchFavoriteTweets";
+import { BtnStreamNewTweets } from "./Buttons/BtnStreamNewTweets";
 import { useSavedDatasets } from "../common/BtnFavorite";
 import { SERVER_URL } from "../../utils/constants";
 import SaveIcon from "@material-ui/icons/Save";
 import ClearIcon from "@material-ui/icons/Clear";
 import styled from "styled-components/macro";
+import { BtnFetchFavoriteUsers } from "./Buttons/BtnFetchFavoriteUsers";
 
 const Div = styled.div``;
 
@@ -194,11 +198,13 @@ function FetchTweetsControls() {
       <div className="fetchTweets section">
         <H5 style={{ pointerEvents: "none" }}>Fetch Tweets</H5>
         <SwitchReplace />
-        <HowManyTweets />
         <BtnStreamNewTweets />
         <SearchForm />
         <FetchUserTweetsForm />
-        <BtnFetchFavorites />
+        <RowDiv>
+          <BtnFetchFavoriteTweets />
+          <BtnFetchFavoriteUsers />
+        </RowDiv>
       </div>
       <div className="filterTweets section">
         <H5>Filter Incoming Tweets</H5>

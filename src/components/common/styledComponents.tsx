@@ -4,9 +4,14 @@ import { Typography, Switch, Tooltip } from "@material-ui/core";
 import { FORM_HEIGHT } from "../../utils/constants";
 import { useIsLeftDrawerOpen } from "../../providers/store";
 
-export const Div = styled.div`
+export const ColumnDiv = styled.div`
   display: grid;
   place-items: center;
+`;
+export const RowDiv = styled.div`
+  display: flex;
+  place-items: center;
+  place-content: center;
 `;
 
 export const H5 = ({ children, ...props }) => (
@@ -38,7 +43,7 @@ export const CollapsibleSwitchWithLabels = ({
 }) => {
   const { isDrawerOpen } = useIsLeftDrawerOpen();
   return (
-    <Div
+    <ColumnDiv
       css={`
         display: grid;
         grid-auto-flow: column;
@@ -52,7 +57,7 @@ export const CollapsibleSwitchWithLabels = ({
         <Switch onChange={onChange} checked={checked} {...props} />
       </Tooltip>
       <Body1>{labelRight}</Body1>
-    </Div>
+    </ColumnDiv>
   );
 };
 

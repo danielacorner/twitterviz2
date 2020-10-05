@@ -3,6 +3,7 @@ import "./App.css";
 import styled from "styled-components/macro";
 import BottomDrawer from "./components/BottomDrawer/BottomDrawer";
 import { useMount } from "./utils/utils";
+import { useFetchTweetsByIds } from "./utils/hooks";
 import { useSetTweets, useLoading, useTweets } from "./providers/store";
 import { query as q } from "faunadb";
 import { faunaClient } from "./providers/faunaProvider";
@@ -11,7 +12,6 @@ import { useIsLight } from "./providers/ThemeManager";
 import "./video-react.css"; // import video-react css
 import LeftDrawer from "./components/LeftDrawer";
 import qs from "query-string";
-import { useFetchTweetsByIds } from "./components/Controls/Buttons";
 import { useLocation, useHistory } from "react-router";
 
 const AppStyles = styled.div`

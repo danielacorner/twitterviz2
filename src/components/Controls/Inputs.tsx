@@ -5,9 +5,30 @@ import { useFetchTimeline, useParamsForFetch } from "../../utils/hooks";
 import { useConfig, useSetTweets, useLoading } from "../../providers/store";
 import SearchIcon from "@material-ui/icons/Search";
 import { Body1 } from "../common/styledComponents";
-import { TwoColRowStyles, TwoColFormStyles } from "../common/TwoColRowStyles";
+import { TwoColFormStyles } from "../common/TwoColRowStyles";
+import styled from "styled-components/macro";
+const Div = styled.div``;
+const InputStyles = styled.div`
+  display: flex;
+  place-items: center;
+  place-content: center;
+  align-items: flex-end;
+  .MuiInput-root {
+    margin-top: 0 !important;
+  }
+`;
 
-// TODO: abstract forms
+const TextAndInputStyles = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 0.5em;
+  height: 100%;
+  align-items: flex-end;
+  .MuiFormLabel-root {
+    position: relative !important;
+  }
+`;
+
 export function SearchForm() {
   const { searchTerm, numTweets, setConfig, resultType } = useConfig();
   const { loading, setLoading } = useLoading();
@@ -45,12 +66,15 @@ export function SearchForm() {
         fetchSearchResults();
       }}
     >
-      <TextField
-        label="🔎 Search"
-        value={searchTerm}
-        onChange={(e) => setConfig({ searchTerm: e.target.value })}
-        type="text"
-      />
+      <InputStyles>
+        <TextField
+          label="🔎 Search"
+          value={searchTerm}
+          style={{ textAlign: "left" }}
+          onChange={(e) => setConfig({ searchTerm: e.target.value })}
+          type="text"
+        />
+      </InputStyles>
       <Button
         variant="contained"
         color="primary"
@@ -75,21 +99,20 @@ export function FetchUserTweetsForm() {
         fetchTimelineByHandle(userHandle);
       }}
     >
-      <div
-        style={{
-          display: "grid",
-          gridAutoFlow: "column",
-          alignItems: "baseline",
-        }}
-      >
-        <Body1>@</Body1>
+      <InputStyles>
+        <Body1
+          style={{ color: "hsl(0,0%,50%)", marginBottom: 6, marginRight: 4 }}
+        >
+          @
+        </Body1>
         <TextField
+          style={{ textAlign: "left" }}
           label={"Fetch user..."}
           value={userHandle}
           onChange={(e) => setUserHandle(e.target.value)}
           type="text"
         />
-      </div>
+      </InputStyles>
       <Button
         variant="contained"
         color="primary"
@@ -113,15 +136,16 @@ export function HowManyTweets() {
   }, [allowedMediaTypes, setConfig]);
 
   return (
-    <TwoColRowStyles>
-      <InputLabel
-        className="inputLabel"
-        id="language"
-        style={{ whiteSpace: "nowrap" }}
-      >
-        How many?
-      </InputLabel>
+    <Div
+      css={`
+        .MuiFormLabel-root {
+          white-space: nowrap;
+        }
+      `}
+    >
       <TextField
+        style={{ width: 60 }}
+        label="How many?"
         value={numTweets}
         onChange={(e) => setConfig({ numTweets: +e.target.value })}
         type="number"
@@ -129,6 +153,6 @@ export function HowManyTweets() {
           step: !allowedMediaTypes.text ? 5 : 50,
         }}
       />
-    </TwoColRowStyles>
+    </Div>
   );
 }

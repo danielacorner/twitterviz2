@@ -16,10 +16,7 @@ const ControlsStyles = styled.div`
     display: grid;
     grid-gap: 12px;
   }
-  input {
-    margin: auto;
-    height: ${FORM_HEIGHT}px;
-  }
+
   button {
     width: ${(props) =>
       props.isDrawerOpen

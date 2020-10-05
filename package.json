@@ -52,8 +52,10 @@
     ]
   },
   "devDependencies": {
+    "@material-ui/types": "^5.1.0",
     "@types/d3": "^5.7.2",
     "@types/lodash": "^4.14.158",
+    "@types/material-ui": "^0.21.8",
     "@types/react-d3-graph": "^2.3.3",
     "@types/react-router": "^5.1.8",
     "@welldone-software/why-did-you-render": "^5.0.0-alpha.2",

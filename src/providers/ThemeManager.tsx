@@ -25,6 +25,8 @@ export default function ThemeManager({ children }) {
   const mainSecondaryColor = darkState
     ? `hsl(270,50%,45%)`
     : `hsl(270,50%,60%)`;
+  // ? `hsl(270,50%,45%)`
+  // : `hsl(270,50%,60%)`;
   const textPrimaryColor = darkState ? `hsl(0,0%,100%)` : `hsl(0,0%,0%)`;
   const textSecondaryColor = darkState ? `hsl(0,0%,60%)` : `hsl(0,0%,40%)`;
   const darkTheme = createMuiTheme({
