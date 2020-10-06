@@ -18,17 +18,6 @@ const InputStyles = styled.div`
   }
 `;
 
-const TextAndInputStyles = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 0.5em;
-  height: 100%;
-  align-items: flex-end;
-  .MuiFormLabel-root {
-    position: relative !important;
-  }
-`;
-
 export function SearchForm() {
   const { searchTerm, numTweets, setConfig, resultType } = useConfig();
   const { loading, setLoading } = useLoading();

@@ -79,8 +79,6 @@ export function UserAvatar({
   imageOnly?: boolean;
   large?: boolean;
 }) {
-  const [wasMousedOver, setWasMousedOver] = useState(false);
-
   return (
     <AvatarStyles
       css={`
@@ -101,7 +99,7 @@ export function UserAvatar({
         target="_blank"
         rel="noopener noreferrer"
       >
-        <div className="avatar" onMouseEnter={() => setWasMousedOver(true)}>
+        <div className="avatar">
           {/* Large Image */}
           {/* {large || wasMousedOver ? ( */}
           <ImgUnmountOnError
