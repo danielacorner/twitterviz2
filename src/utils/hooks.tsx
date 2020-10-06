@@ -120,6 +120,8 @@ export function useFetchUsers() {
   const fetchUsers = async (userHandles: string[]) => {
     const results = await (Promise as any).allSettled(
       userHandles.map((userHandle) =>
+        // TODO: GET users/lookup https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/get-users-lookup
+
         fetch(
           `${SERVER_URL}/api/user_timeline?screen_name=${userHandle}&num=${1}${allowedMediaTypesParam}`
         ).then((resp) => ({ ...resp.json() }))

@@ -6,6 +6,9 @@ import { useFetchTimeline } from "../../utils/hooks";
 import { Tweet, User } from "../../types";
 import BtnFavorite from "../common/BtnFavorite";
 
+// TODO: User Object API Reference: https://developer.twitter.com/en/docs/twitter-api/v1/data-dictionary/overview/user-object
+// TODO: GET users/lookup https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/get-users-lookup
+
 export const USER_INFO_WIDTH = 200;
 
 const UserInfoStyles = styled.div`

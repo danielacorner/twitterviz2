@@ -31,6 +31,17 @@ const VideoStyles = styled.div`
     padding-left: 0.2em;
     padding-right: 0.5em;
   }
+  .video-react-slider {
+    padding: 16px 0;
+    background: none;
+  }
+  .video-react-slider:focus {
+    box-shadow: none;
+  }
+  .video-react-load-progress,
+  .video-react-slider-bar {
+    margin-top: 14px !important;
+  }
 `;
 export default function VideoWithControls({
   videoRef,
