@@ -118,7 +118,7 @@ export function useFetchUsers() {
   const { toggleFavoriteUser } = getFavorites();
   const setTweets = useSetTweets();
   const fetchUsers = async (userHandles: string[]) => {
-    const results = await Promise.allSettled(
+    const results = await (Promise as any).allSettled(
       userHandles.map((userHandle) =>
         fetch(
           `${SERVER_URL}/api/user_timeline?screen_name=${userHandle}&num=${1}${allowedMediaTypesParam}`
