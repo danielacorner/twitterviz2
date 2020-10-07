@@ -1,16 +1,17 @@
 import React, { useState, useRef } from "react";
 
-import { Button, Menu, MenuItem, Tooltip } from "@material-ui/core";
-import { useFetchTimeline, useFetchLikes } from "../../utils/hooks";
+import { Button, Tooltip } from "@material-ui/core";
+import { useFetchTimeline } from "../../utils/hooks";
 import { User } from "../../types";
 import { useIsLight } from "../../providers/ThemeManager";
+import RightClickMenu from "./RightClickMenu";
 
 export default function BtnFetchTimeline({ user }: { user: Partial<User> }) {
   const { fetchTimeline } = useFetchTimeline();
-  const { fetchLikes } = useFetchLikes();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isLight = useIsLight();
   const ref = useRef();
+  const handleClose = () => setIsMenuOpen(false);
   return (
     <>
       <Tooltip title="right-click for more options">
@@ -31,31 +32,14 @@ export default function BtnFetchTimeline({ user }: { user: Partial<User> }) {
           Fetch
         </Button>
       </Tooltip>
-      <Menu
-        anchorEl={ref.current}
-        onBackdropClick={() => {
-          setIsMenuOpen(false);
+      <RightClickMenu
+        {...{
+          user,
+          isMenuOpen,
+          handleClose,
+          anchorEl: ref.current,
         }}
-        open={isMenuOpen}
-      >
-        <MenuItem
-          onClick={() => {
-            fetchTimeline(user.id_str);
-            setIsMenuOpen(false);
-          }}
-        >
-          Tweets
-        </MenuItem>
-        {/* <MenuItem onClick={handleFetchMedia}>Media</MenuItem> */}
-        <MenuItem
-          onClick={() => {
-            fetchLikes(user.id_str);
-            setIsMenuOpen(false);
-          }}
-        >
-          Likes
-        </MenuItem>
-      </Menu>
+      />
     </>
   );
 }

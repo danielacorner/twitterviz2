@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ForceGraph2D,
   ForceGraph3D,
@@ -14,7 +14,9 @@ import {
   useGraphData,
   useRecomputeGraph,
   usePrevious,
+  useTooltipNode,
 } from "../../providers/store";
+import RightClickMenu from "../common/RightClickMenu";
 
 const GraphStyles = styled.div`
   width: 100%;
@@ -31,10 +33,15 @@ const NetworkGraph = () => {
 
 function Graph() {
   const recompute = useRecomputeGraph();
-
-  const { fgRef, forceGraphProps } = useForceGraphProps();
+  const {
+    fgRef,
+    forceGraphProps,
+    mousePosition,
+    handleCloseMenu,
+  } = useForceGraphProps();
   const { graph: graphData } = useGraphData();
   const { is3d, showUserNodes } = useConfig();
+  const tooltipNode = useTooltipNode();
   const prevShowUserNodes = usePrevious(showUserNodes);
   useEffect(() => {
     if (showUserNodes !== prevShowUserNodes) {
@@ -79,6 +86,22 @@ function Graph() {
       ) : (
         <ForceGraph2D ref={fgRef} graphData={graphData} {...forceGraphProps} />
       )}
+      <RightClickMenu
+        {...{
+          anchorEl: null,
+          handleClose: handleCloseMenu,
+          isMenuOpen: mousePosition.mouseY !== null,
+          user: tooltipNode?.user,
+          MenuProps: {
+            keepMounted: true,
+            anchorReference: "anchorPosition",
+            anchorPosition:
+              mousePosition.mouseY !== null && mousePosition.mouseX !== null
+                ? { top: mousePosition.mouseY, left: mousePosition.mouseX }
+                : undefined,
+          },
+        }}
+      />
     </>
   );
 }

@@ -3,7 +3,7 @@ import { getMediaArr } from "../../utils/utils";
 import * as THREE from "three";
 import * as d3 from "d3";
 import { Tweet } from "../../types";
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 // https://www.npmjs.com/package/react-force-graph
 import { useWindowSize } from "../../utils/hooks";
 import {
@@ -27,10 +27,20 @@ export function useForceGraphProps() {
   const setSelectedNode = useSetSelectedNode();
   const isLightTheme = useIsLight();
   const fgRef = useRef();
-
+  const [mousePosition, setMousePosition] = useState({
+    mouseX: null,
+    mouseY: null,
+  });
+  const handleCloseMenu = () => {
+    setMousePosition({
+      mouseX: null,
+      mouseY: null,
+    });
+  };
   const onBackgroundClick = () => {
     setSelectedNode(null);
     setTooltipNode(null);
+    handleCloseMenu();
   };
 
   const { width, height } = useWindowSize();
@@ -50,11 +60,24 @@ export function useForceGraphProps() {
     },
     [setSelectedNode, setTooltipNode]
   );
+
+  const onNodeRightClick = useCallback(
+    (node, event) => {
+      console.log("🌟🚨: useForceGraphProps -> event", event);
+      event.preventDefault();
+      setMousePosition({
+        mouseX: event.clientX - 2,
+        mouseY: event.clientY - 4,
+      });
+    },
+    [setMousePosition]
+  );
   const forceGraphProps = {
     width: width - CONTROLS_WIDTH,
     height,
     onNodeHover,
     onNodeClick,
+    onNodeRightClick,
     // nodeAutoColorBy: "group",
     cooldownTime: is3d ? 10000 : 1000,
     nodeRelSize: NODE_SIZE,
@@ -182,7 +205,7 @@ export function useForceGraphProps() {
     enablePointerInteraction: /* tweets.length<500 */ true,
     enableNodeDrag: true,
   };
-  return { fgRef, forceGraphProps };
+  return { fgRef, forceGraphProps, mousePosition, handleCloseMenu };
 }
 
 function drawProfilePhoto(node: any, ctx: any) {
