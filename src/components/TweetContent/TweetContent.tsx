@@ -176,7 +176,11 @@ export default function TweetContent({
             <MediaContent
               key={mediaItem.id_str}
               {...mediaItem}
-              {...{ autoPlay, containerWidth: dimensions?.width || 0 }}
+              {...{
+                autoPlay,
+                isTooltip,
+                containerWidth: dimensions?.width || 0,
+              }}
             />
           );
         })}

@@ -6,6 +6,8 @@ import { Variant } from "../../../types";
 import { Player, ControlBar, VolumeMenuButton } from "video-react";
 import { MediaItem } from "../../../utils/utils";
 
+// https://video-react.js.org/
+
 const VideoStyles = styled.div`
   .video-react {
     padding: 0 !important;
@@ -47,10 +49,12 @@ export default function VideoWithControls({
   videoRef,
   containerWidth,
   mediaItem,
+  isTooltip,
 }: {
   videoRef: { current: any };
   containerWidth: number;
   mediaItem: MediaItem;
+  isTooltip: boolean;
 }) {
   const { variants, sizes, poster } = mediaItem;
 
@@ -61,6 +65,7 @@ export default function VideoWithControls({
     <VideoStyles>
       <Player
         ref={videoRef}
+        muted={isTooltip}
         controls={true}
         src={variants.find((v) => v.bitrate === bitrate).url}
         poster={poster}

@@ -5,10 +5,12 @@ import VideoWithControls from "./VideoWithControls";
 type MediaProps = MediaItem & {
   autoPlay: boolean;
   containerWidth: number;
+  isTooltip: boolean;
 };
 export default function MediaContent({
   autoPlay,
   containerWidth,
+  isTooltip,
   ...mediaItem
 }: MediaProps) {
   const { poster, src, type, sizes } = mediaItem;
@@ -41,7 +43,9 @@ export default function MediaContent({
     >
       {type === "video" ? (
         autoPlay || clickedOnce ? (
-          <VideoWithControls {...{ videoRef, containerWidth, mediaItem }} />
+          <VideoWithControls
+            {...{ videoRef, isTooltip, containerWidth, mediaItem }}
+          />
         ) : (
           // must use custom element to enable lazy-loading poster image
           <div
