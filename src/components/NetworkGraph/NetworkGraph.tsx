@@ -73,6 +73,7 @@ function Graph() {
       links: graphData.links,
       nodes: [...(replace ? [] : prev.nodes), ...newNodes],
     }));
+    // eslint-disable-next-line
   }, [graphData]);
 
   const { is3d, showUserNodes } = useConfig();

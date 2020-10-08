@@ -1,6 +1,6 @@
 //
 
-import { GraphData, Tweet } from "../types";
+import { GraphData, Link, Tweet } from "../types";
 import { EMPTY_TWEET } from "./emptyTweet";
 // each Tweet node links to one or more User nodes: poster, replied, mentioned, retweeted
 // Tweet nodes link to each other via Hashtags
