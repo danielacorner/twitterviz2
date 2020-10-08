@@ -62,14 +62,16 @@ export default function VisualizationTabs() {
           }
           {...a11yProps(1)}
         />
-        <Tab
-          label={
-            <Typography variant="button" color="textPrimary">
-              Gallery
-            </Typography>
-          }
-          {...a11yProps(2)}
-        />
+        {process.env.NODE_ENV === "development" && (
+          <Tab
+            label={
+              <Typography variant="button" color="textPrimary">
+                Gallery
+              </Typography>
+            }
+            {...a11yProps(2)}
+          />
+        )}
       </Tabs>
       <TabPanel value={value} index={TAB_INDICES.NETWORKGRAPH}>
         <NetworkGraph />
@@ -77,9 +79,11 @@ export default function VisualizationTabs() {
       <TabPanel value={value} index={TAB_INDICES.WORDCLOUD}>
         <Wordcloud />
       </TabPanel>
-      <TabPanel value={value} index={TAB_INDICES.GALLERY}>
-        <Gallery />
-      </TabPanel>
+      {process.env.NODE_ENV === "development" && (
+        <TabPanel value={value} index={TAB_INDICES.GALLERY}>
+          <Gallery />
+        </TabPanel>
+      )}
     </Div>
   );
 }
