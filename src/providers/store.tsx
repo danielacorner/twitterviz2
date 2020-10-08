@@ -61,14 +61,13 @@ export type AppConfig = {
 const [useStore] = create(
   (set) =>
     ({
-      graphData:
-        process.env.NODE_ENV === "development"
+      graphData: /* process.env.NODE_ENV === "development"
           ? transformTweetsIntoGraphData(mockTweets as Tweet[], false)
-          : ({
-              graph: { nodes: [], links: [] },
-              users: [],
-              tweets: [],
-            } as GraphData),
+          : */ {
+        graph: { nodes: [], links: [] },
+        users: [],
+        tweets: [],
+      } as GraphData,
       tweetsFromServer:
         process.env.NODE_ENV === "development" ? mockTweets : ([] as Tweet[]),
       selectedNode: null as Tweet | null,
@@ -95,7 +94,7 @@ const [useStore] = create(
           video: true,
           photo: true,
         },
-        replace: true,
+        replace: false,
         filterLevel: FILTER_LEVELS.none,
         searchTerm: "",
         numTweets: 50,
@@ -178,7 +177,7 @@ export const useTooltipNode = () =>
   useStore((state: GlobalStateStoreType) => state.tooltipNode);
 export const useSetTooltipNode = () =>
   useStore((state: GlobalStateStoreType) => state.setTooltipNode);
-export const useGraphData = () =>
+export const useGraphData = (): GraphData =>
   useStore((state: GlobalStateStoreType) => state.graphData);
 export const useLoading = () =>
   useStore((state: GlobalStateStoreType) => ({

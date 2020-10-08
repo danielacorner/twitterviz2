@@ -6,10 +6,10 @@ export function SwitchReplace() {
   const { replace, setConfig } = useConfig();
   return (
     <CollapsibleSwitchWithLabels
-      labelLeft="Add"
-      labelRight="Replace"
+      labelRight="Add"
+      labelLeft="Replace"
       onChange={() => setConfig({ replace: !replace })}
-      checked={replace}
+      checked={!replace}
     />
   );
 }
