@@ -1,6 +1,6 @@
 //
 
-import { Tweet } from "../types";
+import { GraphData, Tweet } from "../types";
 import { EMPTY_TWEET } from "./emptyTweet";
 // each Tweet node links to one or more User nodes: poster, replied, mentioned, retweeted
 // Tweet nodes link to each other via Hashtags
@@ -14,14 +14,7 @@ import { EMPTY_TWEET } from "./emptyTweet";
 // 3. retweeted user's other tweets
 // 4. replied-to users' other tweets
 // 5. tweets sharing a hashtag
-export type Link = { source: string | number; target: string | number };
-type User = Tweet["user"];
-type GraphOfTweets = { nodes: Tweet[]; links: Link[] };
-export type GraphData = {
-  graph: GraphOfTweets;
-  users: User[];
-  tweets: Tweet[];
-};
+
 export function transformTweetsIntoGraphData(
   tweets: Tweet[],
   showUserNodes: boolean

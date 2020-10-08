@@ -17,6 +17,8 @@ import {
   useTooltipNode,
 } from "../../providers/store";
 import RightClickMenu from "../common/RightClickMenu";
+// https://www.npmjs.com/package/d3-force-cluster
+import { forceCluster } from "d3-force-cluster";
 import { Tweet } from "../../types";
 
 const GraphStyles = styled.div`
@@ -31,8 +33,6 @@ const NetworkGraph = () => {
     </GraphStyles>
   );
 };
-
-NetworkGraph.whyDidYouRender = { logOnDifferentValues: true };
 
 // https://github.com/vasturiano/react-force-graph
 
@@ -85,34 +85,58 @@ function Graph() {
     // eslint-disable-next-line
   }, [showUserNodes]);
 
-  //   // TODO
+  // TODO:
   // manipulate the force!
   // https://github.com/vasturiano/react-force-graph/blob/master/example/collision-detection/index.html
-  // useEffect(() => {
-  //   const fg = fgRef.current as any;
-  //   if (!fg) {
-  //     return;
-  //   }
+  // https://www.npmjs.com/package/d3-force-cluster
+  useEffect(() => {
+    const fg = fgRef.current as any;
+    if (!fg) {
+      return;
+    }
 
-  //   // Deactivate existing forces
-  //   // fg.d3Force("center", null);
-  //   // fg.d3Force("charge", null);
-  //   // fg.d3Force("link", null);
-  //   // fg.d3Force("link", d3.forceLink(graphData.links).strength(1));
+    // cluster centers = user nodes
+    const clusterCenters: { [userId: string]: Tweet } = graphData.nodes.reduce(
+      (acc, cur) =>
+        // if we don't already have the user node, add it to the object
+        cur.isUserNode && !(cur.user.id_str in acc)
+          ? { ...acc, [cur.user.id_str]: cur }
+          : acc,
+      {}
+    );
 
-  //   // Add collision and bounding box forces
-  //   // fg.d3Force('collide', d3.forceCollide(4));
-  //   // fg.d3Force('box', () => {
-  //   //   const SQUARE_HALF_SIDE = N * 2;
+    // Deactivate existing forces
+    // fg.d3Force("center", null);
+    // fg.d3Force("charge", null);
+    // fg.d3Force("link", null);
 
-  //   //   graphData.nodes.forEach(node => {
-  //   //     const x = node.x || 0, y = node.y || 0;
+    // apply custom forces
+    // fg.d3Force("link", d3.forceLink(graphData.links).strength(1));
+    // https://www.npmjs.com/package/d3-force-cluster
+    // https://bl.ocks.org/ericsoco/4e1b7b628771ae77753842e6dabfcef3
+    fg.d3Force(
+      "cluster",
+      forceCluster()
+        .centers(function (d) {
+          return clusterCenters[d.user.id_str];
+        })
+        .strength(0.2)
+        .centerInertia(0.1)
+    );
 
-  //   //     // bounce on box walls
-  //   //     if (Math.abs(x) > SQUARE_HALF_SIDE) { node.vx *= -1; }
-  //   //     if (Math.abs(y) > SQUARE_HALF_SIDE) { node.vy *= -1; }
-  //   //   });
-  // });
+    // Add collision and bounding box forces
+    // fg.d3Force('collide', d3.forceCollide(4));
+    // fg.d3Force('box', () => {
+    //   const SQUARE_HALF_SIDE = N * 2;
+
+    //   graphData.nodes.forEach(node => {
+    //     const x = node.x || 0, y = node.y || 0;
+
+    //     // bounce on box walls
+    //     if (Math.abs(x) > SQUARE_HALF_SIDE) { node.vx *= -1; }
+    //     if (Math.abs(y) > SQUARE_HALF_SIDE) { node.vy *= -1; }
+    //   });
+  });
 
   return (
     <>
@@ -141,7 +165,5 @@ function Graph() {
     </>
   );
 }
-
-Graph.whyDidYouRender = { logOnDifferentValues: true };
 
 export default NetworkGraph;

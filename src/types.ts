@@ -531,3 +531,11 @@ export interface SentimentResult {
   positive: string[];
   negative: string[];
 }
+
+export type Link = { source: string | number; target: string | number };
+export type GraphOfTweets = { nodes: Tweet[]; links: Link[] };
+export type GraphData = {
+  graph: GraphOfTweets;
+  users: User[];
+  tweets: Tweet[];
+};

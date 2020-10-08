@@ -1,10 +1,7 @@
 import create from "zustand";
 import { uniqBy } from "lodash";
-import { Tweet } from "../types";
-import {
-  GraphData,
-  transformTweetsIntoGraphData,
-} from "../utils/transformData";
+import { Tweet, GraphData } from "../types";
+import { transformTweetsIntoGraphData } from "../utils/transformData";
 import { COLOR_BY, FILTER_LEVELS } from "../utils/constants";
 import mockTweets from "../tweets.json";
 import { useEffect, useRef } from "react";
@@ -94,7 +91,7 @@ const [useStore] = create(
           video: true,
           photo: true,
         },
-        replace: false,
+        replace: true,
         filterLevel: FILTER_LEVELS.none,
         searchTerm: "",
         numTweets: 50,
