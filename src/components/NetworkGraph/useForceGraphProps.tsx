@@ -63,7 +63,6 @@ export function useForceGraphProps() {
 
   const onNodeRightClick = useCallback(
     (node, event) => {
-      console.log("🌟🚨: useForceGraphProps -> event", event);
       event.preventDefault();
       setMousePosition({
         mouseX: event.clientX - 2,

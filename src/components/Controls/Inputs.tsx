@@ -113,14 +113,7 @@ export function FetchUserTweetsForm() {
 }
 
 export function HowManyTweets() {
-  const { numTweets, allowedMediaTypes, setConfig } = useConfig();
-
-  useEffect(() => {
-    // if searching for media, reduce num tweets
-    if (!allowedMediaTypes.text) {
-      setConfig({ numTweets: 25 });
-    }
-  }, [allowedMediaTypes, setConfig]);
+  const { numTweets, setConfig } = useConfig();
 
   return (
     <Div
@@ -137,7 +130,7 @@ export function HowManyTweets() {
         onChange={(e) => setConfig({ numTweets: +e.target.value })}
         type="number"
         inputProps={{
-          step: !allowedMediaTypes.text ? 5 : 50,
+          step: 5,
         }}
       />
     </Div>

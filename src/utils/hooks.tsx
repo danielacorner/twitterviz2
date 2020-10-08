@@ -132,7 +132,6 @@ export function useFetchUsers() {
       results[idx],
     ]);
 
-    console.log("🌟🚨: fetchUsers -> results", results);
     let newTweets = [] as Tweet[];
     (resultsWithUsers as any[]).forEach(
       ([userHandle, { status, value: tweetOrErr }]) => {
@@ -144,7 +143,6 @@ export function useFetchUsers() {
         }
       }
     );
-    console.log("🌟🚨: useFetchUsers -> newTweets", newTweets);
     setTweets(newTweets);
   };
 
