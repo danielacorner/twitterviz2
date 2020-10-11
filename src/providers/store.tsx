@@ -289,7 +289,7 @@ export const useIsLeftDrawerOpen = () => {
 export const useRecomputeGraph = () => {
   const tweets = useTweets();
   const setTweets = useSetTweets();
-  return () => setTweets(tweets);
+  return () => setTimeout(() => setTweets(tweets));
 };
 
 export function usePrevious(value): typeof value {

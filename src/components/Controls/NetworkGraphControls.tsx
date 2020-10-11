@@ -8,7 +8,7 @@ import {
   Checkbox,
 } from "@material-ui/core";
 import { COLOR_BY } from "../../utils/constants";
-import { useConfig, AppConfig, useRecomputeGraph } from "../../providers/store";
+import { useConfig, AppConfig } from "../../providers/store";
 import {
   H5,
   CollapsibleSwitchWithLabels,
@@ -57,15 +57,12 @@ function Switch3D() {
 
 function SwitchUserNodes() {
   const { showUserNodes, setConfig } = useConfig();
-  const recomputeNodes = useRecomputeGraph();
-
   return (
     <FormControlLabelCollapsible
       groupTitle="Media"
       control={<Checkbox checked={showUserNodes} />}
       onChange={() => {
         setConfig({ showUserNodes: !showUserNodes });
-        setTimeout(recomputeNodes);
       }}
       label={<Body1>Show Users</Body1>}
     />

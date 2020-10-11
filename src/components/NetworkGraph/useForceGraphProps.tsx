@@ -14,7 +14,7 @@ import {
 } from "../../providers/store";
 import { useIsLight } from "../../providers/ThemeManager";
 
-const NODE_SIZE = 25;
+export const NODE_DIAMETER = 25;
 
 /** https://www.npmjs.com/package/react-force-graph */
 
@@ -65,16 +65,14 @@ export function useForceGraphProps() {
     [setSelectedNode, setTooltipNode]
   );
 
-  const onNodeRightClick = useCallback(
-    (node, event) => {
-      event.preventDefault();
-      setMousePosition({
-        mouseX: event.clientX - 2,
-        mouseY: event.clientY - 4,
-      });
-    },
-    [setMousePosition]
-  );
+  const onNodeRightClick = useCallback((node, event) => {
+    event.preventDefault();
+    setMousePosition({
+      mouseX: event.clientX - 2,
+      mouseY: event.clientY - 4,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const forceGraphProps = {
     width: width - CONTROLS_WIDTH,
@@ -84,12 +82,12 @@ export function useForceGraphProps() {
     onNodeRightClick,
     // nodeAutoColorBy: "group",
     cooldownTime: is3d ? 10000 : 1000,
-    nodeRelSize: NODE_SIZE,
+    nodeRelSize: NODE_DIAMETER,
     nodeColor: (node) => getNodeColor(node, colorBy),
     onEngineStop: () =>
       fgRef.current && !is3d ? (fgRef.current as any).zoomToFit(400) : null,
     nodeCanvasObject: (node, ctx) => {
-      if (colorBy === COLOR_BY.profilePhoto) {
+      if (colorBy === COLOR_BY.profilePhoto || node.isUserNode) {
         // show profile photo
         drawProfilePhoto(node, ctx);
       } else if (colorBy === COLOR_BY.media) {
@@ -98,7 +96,7 @@ export function useForceGraphProps() {
         if (!mediaArr[0]) {
           // draw an empty circle if there's no media
           ctx.beginPath();
-          ctx.arc(node.x, node.y, NODE_SIZE / 2, 0, Math.PI * 2);
+          ctx.arc(node.x, node.y, NODE_DIAMETER / 2, 0, Math.PI * 2);
           // stroke styles https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/stroke
           ctx.strokeStyle = "cornflowerblue";
           ctx.stroke();
@@ -106,8 +104,8 @@ export function useForceGraphProps() {
           const image = mediaArr[0];
           const small = image.sizes.small;
           const hwRatio = small.h / small.w;
-          const imgHeight = NODE_SIZE * hwRatio * 2;
-          const imgWidth = NODE_SIZE * 2;
+          const imgHeight = NODE_DIAMETER * hwRatio * 2;
+          const imgWidth = NODE_DIAMETER * 2;
 
           // show the first image/video preview
 
@@ -123,13 +121,10 @@ export function useForceGraphProps() {
             imgHeight
           );
         }
-      } else if (node.isUserNode) {
-        // draw profile photo if it's a user node
-        drawProfilePhoto(node, ctx);
       } else {
         // draw circle
         ctx.beginPath();
-        ctx.arc(node.x, node.y, NODE_SIZE / 2, 0, Math.PI * 2);
+        ctx.arc(node.x, node.y, NODE_DIAMETER / 2, 0, Math.PI * 2);
         // stroke styles https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/stroke
         ctx.fillStyle = getNodeColor(node, colorBy);
         ctx.fill();
@@ -214,9 +209,9 @@ export function useForceGraphProps() {
 }
 
 function drawProfilePhoto(node: any, ctx: any) {
-  const img = new Image(NODE_SIZE, NODE_SIZE);
+  const img = new Image(NODE_DIAMETER, NODE_DIAMETER);
   img.src = node.user.profile_image_url_https;
-  ctx.drawImage(img, node.x - NODE_SIZE / 2, node.y - NODE_SIZE / 2);
+  ctx.drawImage(img, node.x - NODE_DIAMETER / 2, node.y - NODE_DIAMETER / 2);
 }
 
 function getNodeColor(node, colorBy) {

@@ -19,9 +19,9 @@ export default function BtnFavorite({
   const isUser = Boolean(user);
   const isTweet = !isUser;
 
-  const isFavorite = isTweet ? favorites.includes(tweet.id_str) : null;
+  const isFavorite = isTweet ? tweet && favorites.includes(tweet.id_str) : null;
   const isFavoriteUser = isUser
-    ? favoriteUsers.includes(user.screen_name)
+    ? user && favoriteUsers.includes(user.screen_name)
     : null;
 
   // re-render manually when we change localStorage
