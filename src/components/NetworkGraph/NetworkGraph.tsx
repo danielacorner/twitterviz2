@@ -49,25 +49,22 @@ function Graph() {
   // sync internal state to prevent node re-renders
   const [graph, setGraph] = useState({ nodes: [], links: [] });
   const [userNodes, setUserNodes] = useState([]);
-  // cluster centers = user nodes
-  const clusterCenters: { [userId: string]: Tweet } = userNodes.reduce(
-    (acc, cur) =>
-      // if we don't already have the user node, add it to the object
-      ({ ...acc, [cur.user.screen_name]: cur }),
-    // !(cur.user.id_str in acc) ? { ...acc, [cur.user.id_str]: cur } : acc,
-    {}
-  );
-  console.log("🌟🚨: Graph -> userNodes", userNodes);
-  console.log("🌟🚨: Graph -> clusterCenters", clusterCenters);
 
   const graphWithUsers = {
     ...graph,
-    nodes: [
-      ...graph.nodes,
-      ...(showUserNodes ? userNodes : []),
-    ].map((tweet) => ({ ...tweet, cluster: tweet.user?.screen_name })),
+    nodes: [...graph.nodes, ...(showUserNodes ? userNodes : [])],
+    links: [
+      ...graph.links,
+      ...(showUserNodes
+        ? tweets.map((t) => ({
+            // source: its user
+            source: Number(t.user.id_str),
+            // target: the tweet
+            target: Number(t.id_str),
+          }))
+        : []),
+    ],
   };
-  console.log("🌟🚨: Graph -> graphWithUsers", graphWithUsers);
 
   //
   // show/hide user nodes
@@ -76,45 +73,21 @@ function Graph() {
   useEffect(() => {
     if (!showUserNodes) {
       setUserNodes([]);
-      return;
+    } else {
+      // add nodes for each user
+
+      const nonUniqueUserNodes: Tweet[] = tweets.map((tweet) => ({
+        ...EMPTY_TWEET,
+        id: Number(tweet.user.id_str),
+        id_str: tweet.user.id_str,
+        user: tweet.user,
+        isUserNode: true,
+      }));
+
+      // deduplicate
+      const newUserNodes = uniqBy(nonUniqueUserNodes, (d) => d.user.id_str);
+      setUserNodes(newUserNodes);
     }
-
-    const tweetsWithUser: Tweet[] = tweets
-      // id <- +id_str
-      .map((t) => ({ ...t, id: Number(t.id_str) }))
-      .filter((t) => Boolean(t.user?.id_str));
-
-    // add nodes for each user & links to their tweets
-
-    const userLinks = ([] || tweetsWithUser).map((t) => ({
-      // * for now, trying cluster force instead of link force
-      // source: its user
-      source: Number(t.user.id_str),
-      // target: the tweet
-      target: Number(t.id_str),
-    }));
-
-    const nonUniqueUserNodes: Tweet[] = tweets.map((tweet) => ({
-      ...EMPTY_TWEET,
-      id: Number(tweet.user.id_str),
-      id_str: tweet.user.screen_name,
-      user: tweet.user,
-      isUserNode: true,
-    }));
-
-    // deduplicate
-    const newUserNodes = uniqBy(nonUniqueUserNodes, (d) => d.user.screen_name);
-    setUserNodes(newUserNodes);
-
-    setGraph((prev) => {
-      return {
-        ...prev,
-        links: [...userLinks],
-        nodes: [...prev.nodes].filter((tweet) =>
-          showUserNodes ? true : !tweet.isUserNode
-        ),
-      };
-    });
   }, [showUserNodes, tweets]);
 
   //
@@ -132,7 +105,6 @@ function Graph() {
     // filter out tweets without users
 
     const nodeIds = graph.nodes.map((node) => node.id_str);
-    console.log("🌟🚨: Graph -> graph.nodes", graph.nodes);
 
     // to prevent existing node re-renders, we'll spread existing nodes, and only spread new nodes on the end
 
@@ -140,7 +112,6 @@ function Graph() {
     const newNodes = tweetsWithUser.filter(
       (node) => !nodeIds.includes(node.id_str)
     );
-    console.log("🌟🚨: Graph -> newNodes", newNodes);
 
     // * consider spreading newLinks if not doing so causes a performance issue
 
@@ -177,44 +148,44 @@ function Graph() {
     // fg.d3Force("link", null);
 
     // apply custom forces
-    // fg.d3Force("link", d3.forceLink(graph.links).strength(1));
+
+    fg.d3Force("link", d3.forceLink(graph.links).strength(1));
+
     // https://github.com/vasturiano/react-force-graph/blob/master/example/collision-detection/index.html
     // https://www.npmjs.com/package/d3-force-cluster
     // https://bl.ocks.org/ericsoco/4e1b7b628771ae77753842e6dabfcef3
-    fg.d3Force(
-      "cluster",
-      (alpha) => {
-        graphWithUsers.nodes.forEach(function (d) {
-          const cluster = clusterCenters[d.cluster] as any;
+    // cluster centers = user nodes
+    // const clusterCenters: { [userId: string]: Tweet } = userNodes.reduce(
+    //   (acc, cur) =>
+    //     // if we don't already have the user node, add it to the object
+    //     ({ ...acc, [cur.user.id_str]: cur }),
+    //   // !(cur.user.id_str in acc) ? { ...acc, [cur.user.id_str]: cur } : acc,
+    //   {}
+    // );
+    // fg.d3Force("cluster", (alpha) => {
+    //   graphWithUsers.nodes.forEach(function (d) {
+    //     const cluster = clusterCenters[d.cluster] as any;
 
-          if (!cluster || cluster.id_str === d.id_str) {
-            return;
-          }
+    //     if (!cluster || cluster.id_str === d.id_str) {
+    //       return;
+    //     }
 
-          let x = d.x - (cluster.x || 0),
-            y = d.y - (cluster.y || 0),
-            l = Math.sqrt(x * x + y * y),
-            r = NODE_DIAMETER / 2;
-          // r = d.radius + cluster.radius;
+    //     let x = d.x - (cluster.x || 0),
+    //       y = d.y - (cluster.y || 0),
+    //       l = Math.sqrt(x * x + y * y),
+    //       r = NODE_DIAMETER / 2;
+    //     console.log("🌟🚨: Graph -> x", x);
+    //     // r = d.radius + cluster.radius;
 
-          if (l != r) {
-            l = (l - r) / (l * alpha);
-            d.x -= x *= l;
-            d.y -= y *= l;
-            cluster.x += x;
-            cluster.y += y;
-          }
-        });
-      }
-      // forceCluster()
-      //   .centers(function (tweet: Tweet & { cluster: string }) {
-      //     const center = clusterCenters[tweet.cluster];
-      //     return center;
-      //   })
-      //   .strength(0.5)
-      //   .centerInertia(0.1)
-      //   .initialize(graphWithUsers.nodes)
-    );
+    //     if (l != r) {
+    //       l = (l - r) / (l * alpha ** 0.1);
+    //       d.x -= x *= l;
+    //       d.y -= y *= l;
+    //       cluster.x += x;
+    //       cluster.y += y;
+    //     }
+    //   });
+    // });
 
     // Add collision and bounding box forces
     // fg.d3Force("collide", d3.forceCollide(NODE_DIAMETER / 2));
@@ -234,7 +205,7 @@ function Graph() {
     //     }
     //   });
     // });
-  }, [graphWithUsers, clusterCenters, fg]);
+  }, [graphWithUsers, fg]);
 
   return (
     <>
