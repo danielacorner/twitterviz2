@@ -1,4 +1,5 @@
 import create from "zustand";
+import shallow from "zustand/shallow";
 import { uniqBy } from "lodash";
 import { Tweet } from "../types";
 import { COLOR_BY, FILTER_LEVELS } from "../utils/constants";
@@ -174,10 +175,13 @@ export const useTooltipNode = () =>
 export const useSetTooltipNode = () =>
   useStore((state: GlobalStateStoreType) => state.setTooltipNode);
 export const useLoading = () =>
-  useStore((state: GlobalStateStoreType) => ({
-    loading: state.loading,
-    setLoading: state.setLoading,
-  }));
+  useStore(
+    (state: GlobalStateStoreType) => ({
+      loading: state.loading,
+      setLoading: state.setLoading,
+    }),
+    shallow
+  );
 export const useStoredSaves = () =>
   useStore((state: GlobalStateStoreType) => ({
     saves: state.savedDatasets,

@@ -3,15 +3,14 @@ import { ForceGraph2D, ForceGraph3D } from "react-force-graph";
 import NodeTooltip from "../NodeTooltip";
 // https://www.npmjs.com/package/react-force-graph
 import styled from "styled-components/macro";
-import { NODE_DIAMETER, useForceGraphProps } from "./useForceGraphProps";
-import { useConfig, useTooltipNode, useTweets } from "../../providers/store";
-import RightClickMenu from "../common/RightClickMenu";
+import { useForceGraphProps } from "./useForceGraphProps";
+import { useConfig, useTweets } from "../../providers/store";
 // https://www.npmjs.com/package/d3-force-cluster
-import { forceCluster } from "d3-force-cluster";
 import { Tweet } from "../../types";
 import { uniqBy } from "lodash";
 import { EMPTY_TWEET } from "../../utils/emptyTweet";
 import * as d3 from "d3";
+import GraphRightClickMenu from "./GraphRightClickMenu";
 
 const GraphStyles = styled.div`
   width: 100%;
@@ -22,6 +21,7 @@ const NetworkGraph = () => {
     <GraphStyles>
       <Graph />
       <NodeTooltip />
+      <GraphRightClickMenu />
     </GraphStyles>
   );
 };
@@ -29,12 +29,7 @@ const NetworkGraph = () => {
 // https://github.com/vasturiano/react-force-graph
 
 function Graph() {
-  const {
-    fgRef,
-    forceGraphProps,
-    mousePosition,
-    handleCloseMenu,
-  } = useForceGraphProps();
+  const { fgRef, forceGraphProps } = useForceGraphProps();
   const { is3d, showUserNodes, replace } = useConfig();
   const tweets = useTweets();
 
@@ -137,6 +132,8 @@ function Graph() {
 
   const fg = fgRef.current as any;
 
+  // const [ref,dimensions] = useContainerDimensions()
+
   useEffect(() => {
     if (!fg) {
       return;
@@ -190,7 +187,7 @@ function Graph() {
     // Add collision and bounding box forces
     // fg.d3Force("collide", d3.forceCollide(NODE_DIAMETER / 2));
     // fg.d3Force("box", () => {
-    //   const SQUARE_HALF_SIDE = window.innerWidth / 2;
+    //   const SQUARE_HALF_SIDE = (window.innerWidth - CONTROLS_WIDTH) / 2;
 
     //   graph.nodes.forEach((node) => {
     //     const x = node.x || 0,
@@ -205,7 +202,7 @@ function Graph() {
     //     }
     //   });
     // });
-  }, [graphWithUsers, fg]);
+  }, [graph, fg]);
 
   return (
     <>
@@ -223,31 +220,7 @@ function Graph() {
           {...forceGraphProps}
         />
       )}
-      <GraphRightClickMenu {...{ mousePosition, handleCloseMenu }} />
     </>
-  );
-}
-
-function GraphRightClickMenu({ mousePosition, handleCloseMenu }) {
-  const tooltipNode = useTooltipNode();
-
-  return (
-    <RightClickMenu
-      {...{
-        anchorEl: null,
-        handleClose: handleCloseMenu,
-        isMenuOpen: mousePosition.mouseY !== null,
-        user: tooltipNode?.user,
-        MenuProps: {
-          keepMounted: true,
-          anchorReference: "anchorPosition",
-          anchorPosition:
-            mousePosition.mouseY !== null && mousePosition.mouseX !== null
-              ? { top: mousePosition.mouseY, left: mousePosition.mouseX }
-              : undefined,
-        },
-      }}
-    />
   );
 }
 

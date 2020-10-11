@@ -15,7 +15,7 @@ import qs from "query-string";
 import { useLocation, useHistory } from "react-router";
 
 const AppStyles = styled.div`
-  ${(props) => (props.isLoading ? "cursor: wait;" : "")}
+  /* ${(props) => (props.isLoading ? "cursor: wait;" : "")} */
   transition: background 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
   background: ${(props) => (props.isLight ? "white" : "hsl(0,0%,10%)")};
   display: grid;
