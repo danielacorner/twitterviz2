@@ -60,6 +60,15 @@ function Graph() {
   console.log("🌟🚨: Graph -> userNodes", userNodes);
   console.log("🌟🚨: Graph -> clusterCenters", clusterCenters);
 
+  const graphWithUsers = {
+    ...graph,
+    nodes: [
+      ...graph.nodes,
+      ...(showUserNodes ? userNodes : []),
+    ].map((tweet) => ({ ...tweet, cluster: tweet.user?.screen_name })),
+  };
+  console.log("🌟🚨: Graph -> graphWithUsers", graphWithUsers);
+
   //
   // show/hide user nodes
   //
@@ -115,7 +124,10 @@ function Graph() {
   useEffect(() => {
     const tweetsWithUser: Tweet[] = tweets
       // id <- +id_str
-      .map((t) => ({ ...t, id: Number(t.id_str) }))
+      .map((t) => ({
+        ...t,
+        id: Number(t.id_str),
+      }))
       .filter((t) => Boolean(t.user?.id_str));
     // filter out tweets without users
 
@@ -155,9 +167,6 @@ function Graph() {
   const fg = fgRef.current as any;
 
   useEffect(() => {
-    // https://github.com/vasturiano/react-force-graph/blob/master/example/collision-detection/index.html
-    // https://www.npmjs.com/package/d3-force-cluster
-
     if (!fg) {
       return;
     }
@@ -168,20 +177,44 @@ function Graph() {
     // fg.d3Force("link", null);
 
     // apply custom forces
-    fg.d3Force("link", d3.forceLink(graph.links).strength(1));
+    // fg.d3Force("link", d3.forceLink(graph.links).strength(1));
+    // https://github.com/vasturiano/react-force-graph/blob/master/example/collision-detection/index.html
     // https://www.npmjs.com/package/d3-force-cluster
     // https://bl.ocks.org/ericsoco/4e1b7b628771ae77753842e6dabfcef3
-    // TODO: not working
-    // fg.d3Force(
-    //   "cluster",
-    //   forceCluster()
-    //     .centers(function (tweet: Tweet) {
-    //       const center = clusterCenters[tweet.user.screen_name];
-    //       return center;
-    //     })
-    //     .strength(0.2)
-    //     .centerInertia(0.1)
-    // );
+    fg.d3Force(
+      "cluster",
+      (alpha) => {
+        graphWithUsers.nodes.forEach(function (d) {
+          const cluster = clusterCenters[d.cluster] as any;
+
+          if (!cluster || cluster.id_str === d.id_str) {
+            return;
+          }
+
+          let x = d.x - (cluster.x || 0),
+            y = d.y - (cluster.y || 0),
+            l = Math.sqrt(x * x + y * y),
+            r = NODE_DIAMETER / 2;
+          // r = d.radius + cluster.radius;
+
+          if (l != r) {
+            l = (l - r) / (l * alpha);
+            d.x -= x *= l;
+            d.y -= y *= l;
+            cluster.x += x;
+            cluster.y += y;
+          }
+        });
+      }
+      // forceCluster()
+      //   .centers(function (tweet: Tweet & { cluster: string }) {
+      //     const center = clusterCenters[tweet.cluster];
+      //     return center;
+      //   })
+      //   .strength(0.5)
+      //   .centerInertia(0.1)
+      //   .initialize(graphWithUsers.nodes)
+    );
 
     // Add collision and bounding box forces
     // fg.d3Force("collide", d3.forceCollide(NODE_DIAMETER / 2));
@@ -201,13 +234,7 @@ function Graph() {
     //     }
     //   });
     // });
-  }, [graph, userNodes, clusterCenters, fg]);
-
-  const graphWithUsers = {
-    ...graph,
-    nodes: [...graph.nodes, ...(showUserNodes ? userNodes : [])],
-  };
-  console.log("🌟🚨: Graph -> graphWithUsers", graphWithUsers);
+  }, [graphWithUsers, clusterCenters, fg]);
 
   return (
     <>
