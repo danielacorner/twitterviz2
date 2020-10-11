@@ -1,7 +1,6 @@
 import create from "zustand";
 import { uniqBy } from "lodash";
-import { Tweet, GraphData } from "../types";
-import { transformTweetsIntoGraphData } from "../utils/transformData";
+import { Tweet } from "../types";
 import { COLOR_BY, FILTER_LEVELS } from "../utils/constants";
 import mockTweets from "../tweets.json";
 import { useEffect, useRef } from "react";
@@ -18,8 +17,6 @@ export type GlobalStateStoreType = {
   setSelectedNode: (node: Tweet | null) => void;
   tooltipNode: Tweet | null;
   setTooltipNode: (node: Tweet | null) => void;
-  setGraphData: (tweets) => void;
-  graphData: GraphData;
   setTweetsFromServer: (tweets) => void;
   config: AppConfig;
   setConfig: (newConfig: Partial<AppConfig>) => void;
@@ -58,13 +55,6 @@ export type AppConfig = {
 const [useStore] = create(
   (set) =>
     ({
-      graphData: /* process.env.NODE_ENV === "development"
-          ? transformTweetsIntoGraphData(mockTweets as Tweet[], false)
-          : */ {
-        graph: { nodes: [], links: [] },
-        users: [],
-        tweets: [],
-      } as GraphData,
       tweetsFromServer:
         process.env.NODE_ENV === "development" ? mockTweets : ([] as Tweet[]),
       selectedNode: null as Tweet | null,
@@ -75,7 +65,6 @@ const [useStore] = create(
         set((state) => ({ tooltipNode: node })),
       setTweetsFromServer: (tweets) =>
         set((state) => ({ tweetsFromServer: tweets })),
-      setGraphData: (tweets) => set((state) => ({ graphData: tweets })),
       loading: false,
       setLoading: (loading) => set((state) => ({ loading })),
       config: {
@@ -120,7 +109,15 @@ const [useStore] = create(
 
 export default useStore;
 
+/** return all configurable values from the control panel
+ * * the convenience of a big object useConfig() is offset by the consequence of
+ * * causing re-renders on each component using it, every time any config value changes
+ */
 export const useConfig = () => {
+  // ? is it possible to return factory functions which generate these selectors instead?
+  // ? e.g.
+  // ? return { getLoading: () => useStore(state...
+  // ? const {getLoading} = useConfig(); const loading = getLoading())
   return {
     loading: useStore((state: GlobalStateStoreType) => state.loading),
     is3d: useStore((state: GlobalStateStoreType) => state.config.is3d),
@@ -174,8 +171,6 @@ export const useTooltipNode = () =>
   useStore((state: GlobalStateStoreType) => state.tooltipNode);
 export const useSetTooltipNode = () =>
   useStore((state: GlobalStateStoreType) => state.setTooltipNode);
-export const useGraphData = (): GraphData =>
-  useStore((state: GlobalStateStoreType) => state.graphData);
 export const useLoading = () =>
   useStore((state: GlobalStateStoreType) => ({
     loading: state.loading,
@@ -196,10 +191,6 @@ export const useSetTweets = () => {
   const setTweetsFromServer = useStore(
     (state: GlobalStateStoreType) => state.setTweetsFromServer
   );
-  const setGraphData = useStore(
-    (state: GlobalStateStoreType) => state.setGraphData
-  );
-  const { showUserNodes } = useConfig();
   return (tweetsArg: Tweet[]) => {
     const isError = !Array.isArray(tweetsArg);
     if (isError) {
@@ -210,8 +201,6 @@ export const useSetTweets = () => {
       ? tweets
       : uniqBy([...tweetsFromServer, ...tweets], (t) => t.id_str);
     setTweetsFromServer(newTweets);
-
-    setGraphData(transformTweetsIntoGraphData(newTweets, showUserNodes));
   };
 };
 
@@ -223,14 +212,10 @@ export const useAddTweets = () => {
   const setTweetsFromServer = useStore(
     (state: GlobalStateStoreType) => state.setTweetsFromServer
   );
-  const setGraphData = useStore(
-    (state: GlobalStateStoreType) => state.setGraphData
-  );
-  const { showUserNodes } = useConfig();
+
   return (tweets: Tweet[]) => {
     const newTweets = uniqBy([...tweetsFromServer, ...tweets], (t) => t.id_str);
     setTweetsFromServer(newTweets);
-    setGraphData(transformTweetsIntoGraphData(newTweets, showUserNodes));
   };
 };
 
@@ -242,14 +227,9 @@ export const useDeleteTweet = () => {
   const setTweetsFromServer = useStore(
     (state: GlobalStateStoreType) => state.setTweetsFromServer
   );
-  const setGraphData = useStore(
-    (state: GlobalStateStoreType) => state.setGraphData
-  );
-  const { showUserNodes } = useConfig();
   return (tweetId: string) => {
     const newTweets = tweetsFromServer.filter((t) => t.id_str !== tweetId);
     setTweetsFromServer(newTweets);
-    setGraphData(transformTweetsIntoGraphData(newTweets, showUserNodes));
   };
 };
 

@@ -31,19 +31,23 @@ export function useForceGraphProps() {
     mouseX: null,
     mouseY: null,
   });
-  const handleCloseMenu = () => {
+
+  const handleCloseMenu = useCallback(() => {
     setMousePosition({
       mouseX: null,
       mouseY: null,
     });
-  };
-  const onBackgroundClick = () => {
+  }, []);
+
+  const onBackgroundClick = useCallback(() => {
     setSelectedNode(null);
     setTooltipNode(null);
     handleCloseMenu();
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const { width, height } = useWindowSize();
+
   const onNodeHover = useCallback(
     (node) => {
       if (node) {
@@ -71,6 +75,7 @@ export function useForceGraphProps() {
     },
     [setMousePosition]
   );
+
   const forceGraphProps = {
     width: width - CONTROLS_WIDTH,
     height,
@@ -204,6 +209,7 @@ export function useForceGraphProps() {
     enablePointerInteraction: /* tweets.length<500 */ true,
     enableNodeDrag: true,
   };
+
   return { fgRef, forceGraphProps, mousePosition, handleCloseMenu };
 }
 

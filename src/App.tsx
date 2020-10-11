@@ -80,7 +80,7 @@ function useFetchTweetsOnMount() {
   });
 }
 
-/** fetch posts if there's a query string like /?t=12345,12346
+/** fetch tweets if there's a query string like /?t=12345,12346
  *
  * [docs](https://docs.fauna.com/fauna/current/tutorials/crud?lang=javascript#retrieve)
  */
@@ -88,9 +88,16 @@ function useFetchQueryTweetsOnMount() {
   const query = useQueryString();
   const qTweets = query.t;
   const fetchTweetsByIds = useFetchTweetsByIds();
+  const tweets = useTweets();
   // fetch tweets from DB on mount
   useMount(() => {
-    if (!qTweets || qTweets.length === 0) {
+    if (
+      // skip if we already have tweets,
+      tweets.length > 0 ||
+      // or if the query is empty
+      !qTweets ||
+      qTweets.length === 0
+    ) {
       return;
     }
 
@@ -99,6 +106,7 @@ function useFetchQueryTweetsOnMount() {
   });
 }
 
+/** when the tweets change, update the url */
 function useSyncTweetsWithQuery() {
   const tweets = useTweets();
   const history = useHistory();

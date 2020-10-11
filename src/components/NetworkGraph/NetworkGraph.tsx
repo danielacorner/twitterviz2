@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   ForceGraph2D,
   ForceGraph3D,
@@ -11,15 +11,16 @@ import styled from "styled-components/macro";
 import { useForceGraphProps } from "./useForceGraphProps";
 import {
   useConfig,
-  useGraphData,
   useRecomputeGraph,
   usePrevious,
   useTooltipNode,
+  useTweets,
 } from "../../providers/store";
 import RightClickMenu from "../common/RightClickMenu";
 // https://www.npmjs.com/package/d3-force-cluster
 import { forceCluster } from "d3-force-cluster";
 import { Tweet } from "../../types";
+import { transformTweetsIntoGraphData } from "../../utils/transformData";
 
 const GraphStyles = styled.div`
   width: 100%;
@@ -38,17 +39,17 @@ const NetworkGraph = () => {
 
 function Graph() {
   const recompute = useRecomputeGraph();
-  const {
-    fgRef,
-    forceGraphProps,
-    mousePosition,
-    handleCloseMenu,
-  } = useForceGraphProps();
+  const { fgRef, forceGraphProps } = useForceGraphProps();
+  const { is3d, showUserNodes, replace } = useConfig();
+  const tweets = useTweets();
+  const { graph: graphData } = useMemo(
+    () => transformTweetsIntoGraphData(tweets, showUserNodes),
+    [tweets, showUserNodes]
+  );
 
   // dynamic force graph updates WITHOUT re-rendering every node example: https://github.com/vasturiano/react-force-graph/blob/master/example/dynamic/index.html
 
-  const { graph: graphData } = useGraphData();
-  const { replace } = useConfig();
+  console.log("🌟🚨: Graph -> graphData", graphData);
 
   // New force graph nodes should be able to mount without causing all others to re-mount
   // But, for some reason, using graphData as ForceGraph props caused every node to re-render on every change of graphData.
@@ -76,8 +77,6 @@ function Graph() {
     // eslint-disable-next-line
   }, [graphData]);
 
-  const { is3d, showUserNodes } = useConfig();
-  const tooltipNode = useTooltipNode();
   const prevShowUserNodes = usePrevious(showUserNodes);
   useEffect(() => {
     if (showUserNodes !== prevShowUserNodes) {
@@ -147,23 +146,33 @@ function Graph() {
       ) : (
         <ForceGraph2D ref={fgRef} graphData={graph} {...forceGraphProps} />
       )}
-      <RightClickMenu
-        {...{
-          anchorEl: null,
-          handleClose: handleCloseMenu,
-          isMenuOpen: mousePosition.mouseY !== null,
-          user: tooltipNode?.user,
-          MenuProps: {
-            keepMounted: true,
-            anchorReference: "anchorPosition",
-            anchorPosition:
-              mousePosition.mouseY !== null && mousePosition.mouseX !== null
-                ? { top: mousePosition.mouseY, left: mousePosition.mouseX }
-                : undefined,
-          },
-        }}
-      />
+      <GraphRightClickMenu />
     </>
+  );
+}
+
+function GraphRightClickMenu() {
+  const { mousePosition, handleCloseMenu } = useForceGraphProps();
+
+  const tooltipNode = useTooltipNode();
+
+  return (
+    <RightClickMenu
+      {...{
+        anchorEl: null,
+        handleClose: handleCloseMenu,
+        isMenuOpen: mousePosition.mouseY !== null,
+        user: tooltipNode?.user,
+        MenuProps: {
+          keepMounted: true,
+          anchorReference: "anchorPosition",
+          anchorPosition:
+            mousePosition.mouseY !== null && mousePosition.mouseX !== null
+              ? { top: mousePosition.mouseY, left: mousePosition.mouseX }
+              : undefined,
+        },
+      }}
+    />
   );
 }
 
