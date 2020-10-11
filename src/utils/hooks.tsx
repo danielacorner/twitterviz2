@@ -174,11 +174,10 @@ export function useParamsForFetch() {
   const { lang, countryCode, geolocation } = useConfig();
   const langParam = lang !== "All" ? `&lang=${lang}` : "";
   const allowedMediaTypesStrings = useAllowedMediaTypes();
-  const allowedMediaTypesParam = [0, 3].includes(
-    allowedMediaTypesStrings.length
-  )
-    ? ""
-    : `&allowedMediaTypes=${allowedMediaTypesStrings.join(",")}`;
+  const allowedMediaTypesParam =
+    allowedMediaTypesStrings.length === 0
+      ? ""
+      : `&allowedMediaTypes=${allowedMediaTypesStrings.join(",")}`;
   const countryParam =
     countryCode !== "All" ? `&countryCode=${countryCode}` : "";
   // https://developer.twitter.com/en/docs/twitter-api/v1/tweets/search/api-reference/get-search-tweets

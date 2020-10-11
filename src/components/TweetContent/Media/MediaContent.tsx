@@ -41,7 +41,7 @@ export default function MediaContent({
         position: "relative",
       }}
     >
-      {type === "video" ? (
+      {["video", "animated_gif"].includes(type) ? (
         autoPlay || clickedOnce ? (
           <VideoWithControls
             {...{ videoRef, isTooltip, containerWidth, mediaItem }}

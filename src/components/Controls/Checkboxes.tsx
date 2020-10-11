@@ -94,7 +94,7 @@ const MediaTypeCheckboxesStyles = styled.div``;
 
 export function MediaTypeCheckboxes() {
   const { allowedMediaTypes, setConfig } = useConfig();
-  const { video, photo, text } = allowedMediaTypes;
+  const { video, photo, text, animated_gif } = allowedMediaTypes;
 
   return (
     <MediaTypeCheckboxesStyles className="checkboxes">
@@ -136,6 +136,19 @@ export function MediaTypeCheckboxes() {
           })
         }
         label={<Body1>Video</Body1>}
+      />
+      <FormControlLabelCollapsible
+        groupTitle="Media"
+        control={<Checkbox checked={animated_gif} name="checkedA" />}
+        onChange={() =>
+          setConfig({
+            allowedMediaTypes: {
+              ...allowedMediaTypes,
+              animated_gif: !allowedMediaTypes.animated_gif,
+            },
+          })
+        }
+        label={<Body1>GIF</Body1>}
       />
     </MediaTypeCheckboxesStyles>
   );

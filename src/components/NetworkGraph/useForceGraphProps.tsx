@@ -227,6 +227,8 @@ function getNodeColor(node, colorBy) {
         ? "tomato"
         : type === "photo"
         ? "limegreen"
+        : type === "animated_gif"
+        ? "wheat"
         : DEFAULT_NODE_COLOR;
 
     case COLOR_BY.sentiment:

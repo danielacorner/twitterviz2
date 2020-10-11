@@ -44,6 +44,7 @@ export type AppConfig = {
     video: boolean;
     photo: boolean;
     text: boolean;
+    animated_gif: boolean;
   };
   replace: boolean;
   tabIndex: number;
@@ -79,6 +80,7 @@ const [useStore] = create(
           text: true,
           video: true,
           photo: true,
+          animated_gif: true,
         },
         replace: true,
         filterLevel: FILTER_LEVELS.none,
@@ -269,6 +271,7 @@ export function useAllowedMediaTypes(): string[] {
   return [
     ...(allowedMediaTypes.video ? ["video"] : []),
     ...(allowedMediaTypes.photo ? ["photo"] : []),
+    ...(allowedMediaTypes.animated_gif ? ["animated_gif"] : []),
     ...(allowedMediaTypes.text ? ["text"] : []),
   ];
 }
