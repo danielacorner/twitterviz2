@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 // https://www.npmjs.com/package/react-force-graph
 import { useTooltipNode } from "../../providers/store";
 import { useMount } from "../../utils/utils";
@@ -18,6 +18,12 @@ export default function GraphRightClickMenu() {
       mouseY: null,
     });
   }, []);
+
+  useEffect(() => {
+    if (!tooltipNode && mousePosition.mouseY) {
+      handleCloseMenu();
+    }
+  }, [tooltipNode]);
 
   useMount(() => {
     function handleRightClick(event) {
@@ -39,7 +45,7 @@ export default function GraphRightClickMenu() {
       {...{
         anchorEl: null,
         handleClose: handleCloseMenu,
-        isMenuOpen: mousePosition.mouseY !== null,
+        isMenuOpen: tooltipNode && mousePosition.mouseY !== null,
         user: tooltipNode?.user,
         MenuProps: {
           keepMounted: true,

@@ -146,7 +146,7 @@ function Graph() {
 
     // apply custom forces
 
-    fg.d3Force("link", d3.forceLink(graph.links).strength(1));
+    fg.d3Force("link", d3.forceLink(graph.links).strength(0.2));
 
     // https://github.com/vasturiano/react-force-graph/blob/master/example/collision-detection/index.html
     // https://www.npmjs.com/package/d3-force-cluster
