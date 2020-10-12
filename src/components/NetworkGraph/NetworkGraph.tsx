@@ -277,7 +277,7 @@ function Graph() {
     //     }
     //   });
     // });
-  }, [graph, fg, isGridMode]);
+  }, [graph, fg, isGridMode, showUserNodes]);
 
   return (
     <>
