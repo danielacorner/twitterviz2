@@ -5,6 +5,10 @@ import { Tweet } from "../types";
 import { COLOR_BY, FILTER_LEVELS } from "../utils/constants";
 import mockTweets from "../tweets.json";
 import { useEffect, useRef } from "react";
+import { useLocation } from "react-router";
+import qs from "query-string";
+
+export const useSearchObj = () => qs.parse(useLocation().search);
 
 export const TAB_INDICES = {
   NETWORKGRAPH: 0,
@@ -49,7 +53,6 @@ export type AppConfig = {
     animated_gif: boolean;
   };
   replace: boolean;
-  tabIndex: number;
   filterLevel: keyof typeof FILTER_LEVELS;
   searchTerm: string;
   numTweets: number;
@@ -89,7 +92,6 @@ const [useStore] = create(
         filterLevel: FILTER_LEVELS.none,
         searchTerm: "",
         numTweets: 50,
-        tabIndex: TAB_INDICES.NETWORKGRAPH,
       },
       isDrawerOpen: window.innerWidth > 600,
       setIsDrawerOpen: (next) => set((state) => ({ isDrawerOpen: next })),
@@ -160,20 +162,8 @@ export const useConfig = () => {
       (state: GlobalStateStoreType) => state.config.replace,
       shallow
     ),
-    isWordcloud: useStore(
-      (state: GlobalStateStoreType) =>
-        state.config.tabIndex === TAB_INDICES.WORDCLOUD,
-      shallow
-    ),
-    isNetworkGraph: useStore(
-      (state: GlobalStateStoreType) =>
-        state.config.tabIndex === TAB_INDICES.NETWORKGRAPH,
-      shallow
-    ),
-    tabIndex: useStore(
-      (state: GlobalStateStoreType) => state.config.tabIndex,
-      shallow
-    ),
+    isWordcloud: `${TAB_INDICES.WORDCLOUD}` in useSearchObj(),
+    isNetworkGraph: `${TAB_INDICES.NETWORKGRAPH}` in useSearchObj(),
     filterLevel: useStore(
       (state: GlobalStateStoreType) => state.config.filterLevel,
       shallow

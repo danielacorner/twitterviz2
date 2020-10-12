@@ -7,7 +7,7 @@ import ReplyIcon from "@material-ui/icons/Reply";
 import { TweetStyles } from "../TweetStyles";
 import { Body2, Body1 } from "../common/styledComponents";
 import BtnFetchTimeline from "../common/BtnFetchTimeline";
-import { TAB_INDICES, useConfig } from "../../providers/store";
+import { TAB_INDICES, useSearchObj } from "../../providers/store";
 import useContainerDimensions from "../../utils/useContainerDimensions";
 import MediaContent from "./Media/MediaContent";
 
@@ -94,12 +94,12 @@ export default function TweetContent({
       )
     );
 
-  const { tabIndex } = useConfig();
   const [ref, dimensions] = useContainerDimensions();
+  const searchObj = useSearchObj();
   return (
     <TweetStyles
       ref={ref}
-      isGallery={tabIndex === TAB_INDICES.GALLERY}
+      isGallery={`${TAB_INDICES.GALLERY}` in searchObj}
       isRetweet={Boolean(retweetedUser)}
       isTooltip={isTooltip}
       isBottomDrawer={isBottomDrawer}

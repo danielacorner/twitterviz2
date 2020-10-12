@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Tabs, Tab, Typography } from "@material-ui/core";
 import NetworkGraph from "./NetworkGraph/NetworkGraph";
 import Wordcloud from "./Wordcloud/Wordcloud";
 import styled from "styled-components/macro";
-import { useConfig, TAB_INDICES } from "../providers/store";
+import { TAB_INDICES } from "../providers/store";
 import Gallery from "./Gallery/Gallery";
 import { TABS_HEIGHT } from "../utils/constants";
+import { useHistory, useLocation } from "react-router";
+import qs from "query-string";
+import { isEqual } from "lodash";
+
 const Div = styled.div``;
 
 function a11yProps(index) {
@@ -14,14 +18,26 @@ function a11yProps(index) {
     "aria-controls": `tabpanel-${index}`,
   };
 }
-
+VisualizationTabs.whyDidYouRender = { logOnDifferentValues: true };
 export default function VisualizationTabs() {
-  const { tabIndex: value, setConfig } = useConfig();
-  const setValue = (newValue) => setConfig({ tabIndex: newValue });
+  const [tabIndex, setTabIndex] = useState(TAB_INDICES.NETWORKGRAPH);
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    setTabIndex(newValue);
   };
+
+  // sync tab index to url
+  const location = useLocation();
+  const history = useHistory();
+  useEffect(() => {
+    const queryObj = qs.parse(location.search);
+    const newQuery = { ...queryObj, tab: tabIndex };
+    const newSearch = qs.stringify(newQuery);
+    const newPath = `${location.pathname}?${newSearch}`;
+    if (!isEqual(newPath, location.pathname)) {
+      history.replace(newPath);
+    }
+  }, [tabIndex, history, location.pathname, location.search]);
 
   return (
     <Div
@@ -41,7 +57,7 @@ export default function VisualizationTabs() {
       `}
     >
       <Tabs
-        value={value}
+        value={tabIndex}
         onChange={handleChange}
         className="tabs"
         aria-label="simple tabs example"
@@ -73,14 +89,14 @@ export default function VisualizationTabs() {
           />
         )}
       </Tabs>
-      <TabPanel value={value} index={TAB_INDICES.NETWORKGRAPH}>
+      <TabPanel value={tabIndex} index={TAB_INDICES.NETWORKGRAPH}>
         <NetworkGraph />
       </TabPanel>
-      <TabPanel value={value} index={TAB_INDICES.WORDCLOUD}>
+      <TabPanel value={tabIndex} index={TAB_INDICES.WORDCLOUD}>
         <Wordcloud />
       </TabPanel>
       {process.env.NODE_ENV === "development" && (
-        <TabPanel value={value} index={TAB_INDICES.GALLERY}>
+        <TabPanel value={tabIndex} index={TAB_INDICES.GALLERY}>
           <Gallery />
         </TabPanel>
       )}

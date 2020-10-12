@@ -31,19 +31,23 @@ const AppStyles = styled.div`
   }
 `;
 
-App.whyDidYouRender = { logOnDifferentValues: true };
 function App() {
-  useFetchTweetsOnMount();
-  useFetchQueryTweetsOnMount();
-  useSyncTweetsWithQuery();
   return (
     <AppStyles className="App">
+      <AppStylesHooks />
+      <InitializeAppHooks />
       <LeftDrawer />
       <VisualizationTabs />
       <BottomDrawer />
-      <AppStylesHooks />
     </AppStyles>
   );
+}
+
+function InitializeAppHooks() {
+  useFetchTweetsOnMount();
+  useFetchQueryTweetsOnMount();
+  useSyncTweetsWithQuery();
+  return null;
 }
 
 function AppStylesHooks() {
