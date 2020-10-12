@@ -103,30 +103,17 @@ export function UserAvatar({
         rel="noopener noreferrer"
       >
         <div className="avatar">
-          {/* Large Image */}
-          {/* {large || wasMousedOver ? ( */}
           <ImgUnmountOnError
             srcSet={`
+              ${user?.profile_image_url_https} 480w,
               ${`${user?.profile_image_url_https.slice(
                 0,
-                -"_normal.jpg".length + 3
-              )}.jpg`} 480w,
-              ${user?.profile_image_url_https} 800w
+                -"_normal.jpg".length
+              )}.jpg`} 800w
               `}
             sizes="(max-width: 600px) 480px, 800px"
             alt=""
           />
-          {/* ) : null} */}
-          {/* small */}
-
-          {/* Small Image */}
-          {/* <ImgUnmountOnError
-            src={`${user?.profile_image_url_https.slice(
-              0,
-              -"_normal.jpg".length + 3
-            )}.jpg`}
-            alt=""
-          /> */}
         </div>
       </a>
       {!imageOnly && (

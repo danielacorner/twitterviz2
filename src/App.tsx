@@ -12,7 +12,7 @@ import { useIsLight } from "./providers/ThemeManager";
 import "./video-react.css"; // import video-react css
 import LeftDrawer from "./components/LeftDrawer";
 import qs from "query-string";
-import { useLocation, useHistory } from "react-router";
+import { useLocation } from "react-router";
 
 const AppStyles = styled.div`
   transition: background 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
@@ -46,7 +46,6 @@ function App() {
 function InitializeAppHooks() {
   useFetchTweetsOnMount();
   useFetchQueryTweetsOnMount();
-  useSyncTweetsWithQuery();
   return null;
 }
 
@@ -122,23 +121,6 @@ function useFetchQueryTweetsOnMount() {
     const tweetIds = Array.isArray(qTweets) ? qTweets : qTweets.split(",");
     fetchTweetsByIds(tweetIds);
   });
-}
-
-/** when the tweets change, update the url */
-function useSyncTweetsWithQuery() {
-  const tweets = useTweets();
-  const history = useHistory();
-  const { pathname } = useLocation();
-  useEffect(() => {
-    // debugger;
-    const newPath = `/?t=${tweets.map((t) => t.id_str).join(",")}`;
-    const shouldNavigate =
-      tweets && tweets.length !== 0 && pathname !== newPath;
-    if (shouldNavigate) {
-      history.push(newPath);
-    }
-    // eslint-disable-next-line
-  }, [tweets]);
 }
 
 function useQueryString() {

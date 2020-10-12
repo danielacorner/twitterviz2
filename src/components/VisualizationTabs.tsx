@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Tabs, Tab, Typography } from "@material-ui/core";
 import NetworkGraph from "./NetworkGraph/NetworkGraph";
 import Wordcloud from "./Wordcloud/Wordcloud";
@@ -6,9 +6,7 @@ import styled from "styled-components/macro";
 import { TAB_INDICES } from "../providers/store";
 import Gallery from "./Gallery/Gallery";
 import { TABS_HEIGHT } from "../utils/constants";
-import { useHistory, useLocation } from "react-router";
-import qs from "query-string";
-import { isEqual } from "lodash";
+import useSyncStateToUrl from "./useSyncStateToUrl";
 
 const Div = styled.div``;
 
@@ -20,24 +18,12 @@ function a11yProps(index) {
 }
 
 export default function VisualizationTabs() {
-  const [tabIndex, setTabIndex] = useState(TAB_INDICES.NETWORKGRAPH);
+  // sync tab index & tweet ids to url
+  const [tabIndex, setTabIndex] = useSyncStateToUrl();
 
   const handleChange = (event, newValue) => {
     setTabIndex(newValue);
   };
-
-  // sync tab index to url
-  const location = useLocation();
-  const history = useHistory();
-  useEffect(() => {
-    const queryObj = qs.parse(location.search);
-    const newQuery = { ...queryObj, tab: tabIndex };
-    const newSearch = qs.stringify(newQuery);
-    const newPath = `${location.pathname}?${newSearch}`;
-    if (!isEqual(newPath, location.pathname)) {
-      history.replace(newPath);
-    }
-  }, [tabIndex, history, location.pathname, location.search]);
 
   return (
     <Div
