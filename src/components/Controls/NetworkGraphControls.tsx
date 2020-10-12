@@ -27,6 +27,7 @@ const NetworkGraphControls = () => {
     <>
       <H5 style={{ pointerEvents: "none" }}>Network Graph Controls</H5>
       <Switch3D />
+      <SwitchGridMode />
       <SwitchUserNodes />
       <SelectColorBy />
       <Button
@@ -51,6 +52,18 @@ function Switch3D() {
       labelRight="3D"
       onChange={() => setConfig({ is3d: !is3d })}
       checked={is3d}
+    />
+  );
+}
+
+function SwitchGridMode() {
+  const { isGridMode, setConfig } = useConfig();
+  return (
+    <CollapsibleSwitchWithLabels
+      labelLeft="Force"
+      labelRight="Grid"
+      onChange={() => setConfig({ isGridMode: !isGridMode })}
+      checked={isGridMode}
     />
   );
 }

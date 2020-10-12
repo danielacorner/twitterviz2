@@ -32,6 +32,7 @@ export type GlobalStateStoreType = {
 };
 export type AppConfig = {
   is3d: boolean;
+  isGridMode: boolean;
   showUserNodes: boolean;
   colorBy: keyof typeof COLOR_BY | null;
   lang: string;
@@ -58,7 +59,9 @@ const [useStore] = create(
   (set) =>
     ({
       tweetsFromServer:
-        process.env.NODE_ENV === "development" ? mockTweets : ([] as Tweet[]),
+        process.env.NODE_ENV === "development"
+          ? mockTweets.slice(0, 20)
+          : ([] as Tweet[]),
       selectedNode: null as Tweet | null,
       setSelectedNode: (node: Tweet | null) =>
         set((state) => ({ selectedNode: node })),
@@ -70,6 +73,7 @@ const [useStore] = create(
       loading: false,
       setLoading: (loading) => set((state) => ({ loading })),
       config: {
+        isGridMode: false,
         showUserNodes: false,
         is3d: false,
         colorBy: COLOR_BY.mediaType as keyof typeof COLOR_BY | null,
@@ -122,45 +126,71 @@ export const useConfig = () => {
   // ? return { getLoading: () => useStore(state...
   // ? const {getLoading} = useConfig(); const loading = getLoading())
   return {
-    loading: useStore((state: GlobalStateStoreType) => state.loading),
-    is3d: useStore((state: GlobalStateStoreType) => state.config.is3d),
-    showUserNodes: useStore(
-      (state: GlobalStateStoreType) => state.config.showUserNodes
+    loading: useStore((state: GlobalStateStoreType) => state.loading, shallow),
+    is3d: useStore((state: GlobalStateStoreType) => state.config.is3d, shallow),
+    isGridMode: useStore(
+      (state: GlobalStateStoreType) => state.config.isGridMode,
+      shallow
     ),
-    colorBy: useStore((state: GlobalStateStoreType) => state.config.colorBy),
-    lang: useStore((state: GlobalStateStoreType) => state.config.lang),
+    showUserNodes: useStore(
+      (state: GlobalStateStoreType) => state.config.showUserNodes,
+      shallow
+    ),
+    colorBy: useStore(
+      (state: GlobalStateStoreType) => state.config.colorBy,
+      shallow
+    ),
+    lang: useStore((state: GlobalStateStoreType) => state.config.lang, shallow),
     countryCode: useStore(
-      (state: GlobalStateStoreType) => state.config.countryCode
+      (state: GlobalStateStoreType) => state.config.countryCode,
+      shallow
     ),
     geolocation: useStore(
-      (state: GlobalStateStoreType) => state.config.geolocation
+      (state: GlobalStateStoreType) => state.config.geolocation,
+      shallow
     ),
     resultType: useStore(
-      (state: GlobalStateStoreType) => state.config.resultType
+      (state: GlobalStateStoreType) => state.config.resultType,
+      shallow
     ),
     allowedMediaTypes: useStore(
-      (state: GlobalStateStoreType) => state.config.allowedMediaTypes
+      (state: GlobalStateStoreType) => state.config.allowedMediaTypes,
+      shallow
     ),
-    replace: useStore((state: GlobalStateStoreType) => state.config.replace),
+    replace: useStore(
+      (state: GlobalStateStoreType) => state.config.replace,
+      shallow
+    ),
     isWordcloud: useStore(
       (state: GlobalStateStoreType) =>
-        state.config.tabIndex === TAB_INDICES.WORDCLOUD
+        state.config.tabIndex === TAB_INDICES.WORDCLOUD,
+      shallow
     ),
     isNetworkGraph: useStore(
       (state: GlobalStateStoreType) =>
-        state.config.tabIndex === TAB_INDICES.NETWORKGRAPH
+        state.config.tabIndex === TAB_INDICES.NETWORKGRAPH,
+      shallow
     ),
-    tabIndex: useStore((state: GlobalStateStoreType) => state.config.tabIndex),
+    tabIndex: useStore(
+      (state: GlobalStateStoreType) => state.config.tabIndex,
+      shallow
+    ),
     filterLevel: useStore(
-      (state: GlobalStateStoreType) => state.config.filterLevel
+      (state: GlobalStateStoreType) => state.config.filterLevel,
+      shallow
     ),
     searchTerm: useStore(
-      (state: GlobalStateStoreType) => state.config.searchTerm
+      (state: GlobalStateStoreType) => state.config.searchTerm,
+      shallow
     ),
     numTweets: useStore(
-      (state: GlobalStateStoreType) => state.config.numTweets
+      (state: GlobalStateStoreType) => state.config.numTweets,
+      shallow
     ),
-    setConfig: useStore((state: GlobalStateStoreType) => state.setConfig),
+    setConfig: useStore(
+      (state: GlobalStateStoreType) => state.setConfig,
+      shallow
+    ),
   };
 };
 

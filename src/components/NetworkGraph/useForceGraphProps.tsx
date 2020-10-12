@@ -15,7 +15,7 @@ import {
 import { useIsLight } from "../../providers/ThemeManager";
 
 export const NODE_DIAMETER = 25;
-const USER_DIAMETER = NODE_DIAMETER * 2;
+const AVATAR_DIAMETER = NODE_DIAMETER * 2;
 
 /** https://www.npmjs.com/package/react-force-graph */
 
@@ -60,7 +60,7 @@ export function useForceGraphProps() {
     onNodeHover,
     onNodeClick,
     // nodeAutoColorBy: "group",
-    cooldownTime: is3d ? 10000 : 1000,
+    cooldownTime: 20 * 1000,
     nodeRelSize: NODE_DIAMETER,
     nodeColor: (node) => getNodeColor(node, colorBy),
     onEngineStop: () =>
@@ -188,31 +188,59 @@ export function useForceGraphProps() {
 }
 
 function drawProfilePhoto(node: any, ctx: any) {
-  const img = new Image(USER_DIAMETER, USER_DIAMETER);
+  const img = new Image(AVATAR_DIAMETER, AVATAR_DIAMETER);
   img.src = node.user.profile_image_url_https;
+  // img.addEventListener("load", function () {
+  //   // ctx.globalCompositeOperation = "destination-in"; // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
 
-  // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
-  ctx.drawImage(
-    img,
-    node.x - USER_DIAMETER / 2, // dx: The x-axis coordinate in the destination canvas at which to place the top-left corner of the source
-    node.y - USER_DIAMETER / 2, // dx: The y-axis coordinate in the destination canvas at which to place the top-left corner of the source
-    USER_DIAMETER, // dWidth: The width to draw the image in the destination canvas. This allows scaling of the drawn image. If not specified, the image is not scaled in width when drawn.
-    USER_DIAMETER // dHeight: The height to draw the image in the destination canvas. This allows scaling of the drawn image. If not specified, the image is not scaled in height when drawn.
-  );
+  // });
 
-  // ctx.globalCompositeOperation = "destination-in"; // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
+  // circle
+
+  // ctx.save();
   ctx.beginPath();
   // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/arc
   ctx.arc(
     node.x, // x: The horizontal coordinate of the arc's center.
     node.y, // y: The vertical coordinate of the arc's center.
-    USER_DIAMETER / 2, // radius
+    AVATAR_DIAMETER / 2, // radius
     0, // startAngle
     Math.PI * 2 // endAngle
   );
-  ctx.closePath();
-  // ctx.fillStyle = "transparent";
-  ctx.fill();
+  // ctx.clip();
+  // ctx.closePath();
+  // ctx.clip();
+  // ctx.fill();
+  ctx.lineWidth = 5;
+  ctx.strokeStyle = "blue";
+  ctx.stroke();
+
+  // photo
+
+  // execute drawImage statements here
+  // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+  ctx.drawImage(
+    img,
+    node.x - AVATAR_DIAMETER / 2, // dx: The x-axis coordinate in the destination canvas at which to place the top-left corner of the source
+    node.y - AVATAR_DIAMETER / 2, // dy: The y-axis coordinate in the destination canvas at which to place the top-left corner of the source
+    AVATAR_DIAMETER, // dWidth: The width to draw the image in the destination canvas. This allows scaling of the drawn image. If not specified, the image is not scaled in width when drawn.
+    AVATAR_DIAMETER // dHeight: The height to draw the image in the destination canvas. This allows scaling of the drawn image. If not specified, the image is not scaled in height when drawn.
+  );
+
+  /*
+   * restore() restores the canvas context to its original state
+   * before we defined the clipping region
+   */
+  // ctx.restore();
+  // ctx.beginPath();
+  // ctx.arc(node.x, node.y, AVATAR_DIAMETER / 2, 0, 2 * Math.PI, false);
+  // ctx.lineWidth = 10;
+  // ctx.strokeStyle = "blue";
+  // ctx.stroke();
+
+  //   },
+  //   false
+  // );
 }
 
 function getNodeColor(node, colorBy) {
@@ -228,7 +256,7 @@ function getNodeColor(node, colorBy) {
         : DEFAULT_NODE_COLOR;
 
     case COLOR_BY.sentiment:
-      const scale = d3.scaleSequential(d3.interpolatePiYG).domain([-1, 1]);
+      const scale = scaleSequential(d3.interpolatePiYG).domain([-1, 1]);
 
       return scale(node.sentimentResult?.comparative) as string;
 

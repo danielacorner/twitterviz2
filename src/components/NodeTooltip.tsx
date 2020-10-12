@@ -87,7 +87,7 @@ const NodeTooltip = () => {
     top: 16,
     left: MOUSE_WIDTH,
     transform: `translate(${position.x}px,${position.y}px)`,
-    config: { tension: 300, mass: 0.2 },
+    config: { tension: 170, mass: 0.1 },
     onRest: () => {
       if (!tooltipNode) {
         lastTooltipNode.current = null;

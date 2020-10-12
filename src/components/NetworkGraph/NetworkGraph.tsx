@@ -3,13 +3,14 @@ import { ForceGraph2D, ForceGraph3D } from "react-force-graph";
 import NodeTooltip from "../NodeTooltip";
 // https://www.npmjs.com/package/react-force-graph
 import styled from "styled-components/macro";
-import { useForceGraphProps } from "./useForceGraphProps";
+import { NODE_DIAMETER, useForceGraphProps } from "./useForceGraphProps";
 import { useConfig, useTweets } from "../../providers/store";
 // https://www.npmjs.com/package/d3-force-cluster
 import { Tweet } from "../../types";
 import { uniqBy } from "lodash";
 import { EMPTY_TWEET } from "../../utils/emptyTweet";
 import * as d3 from "d3";
+import * as d3_force from "d3-force";
 import GraphRightClickMenu from "./GraphRightClickMenu";
 
 const GraphStyles = styled.div`
@@ -30,7 +31,7 @@ const NetworkGraph = () => {
 
 function Graph() {
   const { fgRef, forceGraphProps } = useForceGraphProps();
-  const { is3d, showUserNodes, replace } = useConfig();
+  const { is3d, showUserNodes, replace, isGridMode } = useConfig();
   const tweets = useTweets();
 
   // dynamic force graph updates WITHOUT re-rendering every node example: https://github.com/vasturiano/react-force-graph/blob/master/example/dynamic/index.html
@@ -140,13 +141,62 @@ function Graph() {
     }
 
     // Deactivate existing forces
-    // fg.d3Force("center", null);
-    // fg.d3Force("charge", null);
+    // fg.d3Force("center", d3.forceCenter());
+    // fg.d3Force("gravity", d3.forceManyBody().strength(10));
+    fg.d3Force(
+      "charge",
+      d3
+        .forceManyBody()
+        .strength(-30)
+        // max distance to push other nodes away
+        .distanceMax(NODE_DIAMETER * 2)
+    );
+    fg.d3Force("collide", d3.forceCollide(NODE_DIAMETER / 2));
     // fg.d3Force("link", null);
 
     // apply custom forces
 
-    fg.d3Force("link", d3.forceLink(graph.links).strength(0.2));
+    // fg.d3Force("link", d3.forceLink(graph.links).strength(0.2));
+
+    // position each node in a (square?) grid
+
+    // order from top-left, rightwards
+
+    const gridColumnWidth = 100;
+
+    if (isGridMode) {
+      fg.d3Force(
+        "forceX",
+        d3
+          .forceX((node, idx, allNodes) => {
+            // each node goes to the right
+            const numNodesAcross = Math.floor(allNodes.length ** 0.5);
+            const gridColumn = idx % numNodesAcross;
+
+            const randomNumberNear1 = 1.01 - 0.05 * Math.random();
+
+            return gridColumn * gridColumnWidth * randomNumberNear1;
+          })
+          .strength(0.2)
+      );
+      fg.d3Force(
+        "forceY",
+        d3
+          .forceY((node, idx, allNodes) => {
+            // each node goes in its column
+            const numNodesAcross = Math.floor(allNodes.length ** 0.5);
+            const gridRow = Math.floor(idx / numNodesAcross);
+
+            const randomNumberNear1 = 1.01 - 0.05 * Math.random();
+
+            return gridRow * gridColumnWidth * randomNumberNear1;
+          })
+          .strength(0.2)
+      );
+    } else {
+      fg.d3Force("forceY", null);
+      fg.d3Force("forceX", null);
+    }
 
     // https://github.com/vasturiano/react-force-graph/blob/master/example/collision-detection/index.html
     // https://www.npmjs.com/package/d3-force-cluster
@@ -184,8 +234,6 @@ function Graph() {
     //   });
     // });
 
-    // Add collision and bounding box forces
-    // fg.d3Force("collide", d3.forceCollide(NODE_DIAMETER / 2));
     // fg.d3Force("box", () => {
     //   const SQUARE_HALF_SIDE = (window.innerWidth - CONTROLS_WIDTH) / 2;
 
@@ -202,7 +250,7 @@ function Graph() {
     //     }
     //   });
     // });
-  }, [graph, fg]);
+  }, [graph, fg, isGridMode]);
 
   return (
     <>
