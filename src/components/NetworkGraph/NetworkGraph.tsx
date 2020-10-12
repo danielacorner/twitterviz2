@@ -147,7 +147,7 @@ function Graph() {
       "charge",
       d3
         .forceManyBody()
-        .strength(-30)
+        .strength(-60)
         // max distance to push other nodes away
         .distanceMax(NODE_DIAMETER * 2)
     );
@@ -175,7 +175,10 @@ function Graph() {
 
             const randomNumberNear1 = 1.01 - 0.05 * Math.random();
 
-            return gridColumn * gridColumnWidth * randomNumberNear1;
+            return (
+              -0.5 * gridColumnWidth +
+              gridColumn * gridColumnWidth * randomNumberNear1
+            );
           })
           .strength(0.2)
       );
@@ -189,13 +192,21 @@ function Graph() {
 
             const randomNumberNear1 = 1.01 - 0.05 * Math.random();
 
-            return gridRow * gridColumnWidth * randomNumberNear1;
+            return (
+              -0.5 * gridColumnWidth +
+              gridRow * gridColumnWidth * randomNumberNear1
+            );
           })
           .strength(0.2)
       );
     } else {
-      fg.d3Force("forceY", null);
-      fg.d3Force("forceX", null);
+      // spring all to center, then stop
+      fg.d3Force("forceY", d3.forceY(0).strength(0.1));
+      fg.d3Force("forceX", d3.forceX(0).strength(0.1));
+      setTimeout(() => {
+        fg.d3Force("forceY", null);
+        fg.d3Force("forceX", null);
+      }, 150);
     }
 
     // https://github.com/vasturiano/react-force-graph/blob/master/example/collision-detection/index.html

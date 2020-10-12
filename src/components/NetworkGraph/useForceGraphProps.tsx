@@ -22,7 +22,7 @@ const AVATAR_DIAMETER = NODE_DIAMETER * 2;
 const DEFAULT_NODE_COLOR = "steelblue";
 
 export function useForceGraphProps() {
-  const { is3d, colorBy } = useConfig();
+  const { is3d, colorBy, isGridMode } = useConfig();
   const allowedMediaTypesStrings = useAllowedMediaTypes();
   const setTooltipNode = useSetTooltipNode();
   const setSelectedNode = useSetSelectedNode();
@@ -60,7 +60,7 @@ export function useForceGraphProps() {
     onNodeHover,
     onNodeClick,
     // nodeAutoColorBy: "group",
-    cooldownTime: 20 * 1000,
+    cooldownTime: isGridMode ? 200 : 400,
     nodeRelSize: NODE_DIAMETER,
     nodeColor: (node) => getNodeColor(node, colorBy),
     onEngineStop: () =>
@@ -187,6 +187,7 @@ export function useForceGraphProps() {
   return { fgRef, forceGraphProps };
 }
 
+// https://codesandbox.io/s/distracted-nash-4251j?file=/src/index.js
 function drawProfilePhoto(node: any, ctx: any) {
   const img = new Image(AVATAR_DIAMETER, AVATAR_DIAMETER);
   img.src = node.user.profile_image_url_https;
