@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import { TextField, Button } from "@material-ui/core";
 import { SERVER_URL } from "../../utils/constants";
 import { useFetchTimeline, useParamsForFetch } from "../../utils/hooks";
-import { useConfig, useSetTweets, useLoading } from "../../providers/store";
+import {
+  useConfig,
+  useSetTweets,
+  useLoading,
+  useSetLoading,
+} from "../../providers/store";
 import SearchIcon from "@material-ui/icons/Search";
 import { Body1 } from "../common/styledComponents";
 import { TwoColFormStyles } from "../common/TwoColRowStyles";
@@ -19,8 +24,10 @@ const InputStyles = styled.div`
 `;
 
 export function SearchForm() {
-  const { searchTerm, numTweets, setConfig, resultType } = useConfig();
-  const { loading, setLoading } = useLoading();
+  const [searchTerm, setSearchTerm] = useState("");
+  const { numTweets, resultType } = useConfig();
+  const loading = useLoading();
+  const setLoading = useSetLoading();
   const setTweets = useSetTweets();
 
   const {
@@ -58,7 +65,7 @@ export function SearchForm() {
           label="🔎 Search"
           value={searchTerm}
           style={{ textAlign: "left" }}
-          onChange={(e) => setConfig({ searchTerm: e.target.value })}
+          onChange={(e) => setSearchTerm(e.target.value)}
           type="text"
         />
       </InputStyles>

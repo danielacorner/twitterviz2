@@ -15,9 +15,7 @@ import qs from "query-string";
 import { useLocation, useHistory } from "react-router";
 
 const AppStyles = styled.div`
-  /* ${(props) => (props.isLoading ? "cursor: wait;" : "")} */
   transition: background 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
-  background: ${(props) => (props.isLight ? "white" : "hsl(0,0%,10%)")};
   display: grid;
   grid-template-columns: auto 1fr;
   min-height: 100vh;
@@ -33,19 +31,35 @@ const AppStyles = styled.div`
   }
 `;
 
+App.whyDidYouRender = { logOnDifferentValues: true };
 function App() {
   useFetchTweetsOnMount();
   useFetchQueryTweetsOnMount();
   useSyncTweetsWithQuery();
-  const isLight = useIsLight();
-  const { loading } = useLoading();
   return (
-    <AppStyles isLoading={loading} isLight={isLight} className="App">
+    <AppStyles className="App">
       <LeftDrawer />
       <VisualizationTabs />
       <BottomDrawer />
+      <AppStylesHooks />
     </AppStyles>
   );
+}
+
+function AppStylesHooks() {
+  const loading = useLoading();
+  const isLight = useIsLight();
+
+  useEffect(() => {
+    const app = document.querySelector(".App");
+    if (!app) {
+      return;
+    }
+    (app as HTMLElement).style.cursor = loading ? "wait" : "unset";
+    (app as HTMLElement).style.background = isLight ? "white" : "hsl(0,0%,10%)";
+  }, [loading, isLight]);
+
+  return null;
 }
 
 export default App;

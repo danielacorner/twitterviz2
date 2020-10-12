@@ -14,6 +14,7 @@ import {
   useTweets,
   useSetTweets,
   useIsLeftDrawerOpen,
+  useSetLoading,
 } from "../../providers/store";
 import {
   H5,
@@ -47,7 +48,7 @@ const Div = styled.div``;
 
 const Controls = () => {
   const theme = useTheme();
-  const { loading } = useLoading();
+  const loading = useLoading();
   const { isDrawerOpen } = useIsLeftDrawerOpen();
   return (
     <ControlsStyles
@@ -104,7 +105,8 @@ function SaveDataForm() {
 
 function SavedDatasetsList() {
   const setTweets = useSetTweets();
-  const { loading, setLoading } = useLoading();
+  const loading = useLoading();
+  const setLoading = useSetLoading();
 
   const { deleteSaved, saves } = useSavedDatasets();
 

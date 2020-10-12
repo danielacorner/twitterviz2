@@ -7,13 +7,14 @@ import {
   useAddTweets,
   useTweets,
   useAllowedMediaTypes,
+  useSetLoading,
 } from "../providers/store";
 import { geoDistanceKm } from "./distanceFromCoords";
 import { Tweet } from "../types";
 import { getFavorites } from "../components/common/BtnFavorite";
 
 export function useFetchTweetsByIds(): (ids: string[]) => void {
-  const { setLoading } = useLoading();
+  const setLoading = useSetLoading();
   const setTweets = useSetTweets();
 
   return async (ids: string[]) => {
@@ -67,7 +68,8 @@ export function useWindowSize() {
 }
 
 export function useFetchTimeline() {
-  const { loading, setLoading } = useLoading();
+  const loading = useLoading();
+  const setLoading = useSetLoading();
   const { numTweets } = useConfig();
   const { allowedMediaTypesParam } = useParamsForFetch();
 
@@ -150,7 +152,8 @@ export function useFetchUsers() {
 }
 
 export function useFetchLikes() {
-  const { loading, setLoading } = useLoading();
+  const loading = useLoading();
+  const setLoading = useSetLoading();
   const { numTweets } = useConfig();
   const { allowedMediaTypesParam } = useParamsForFetch();
   const setTweets = useSetTweets();

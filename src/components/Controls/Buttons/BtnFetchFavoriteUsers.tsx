@@ -9,7 +9,7 @@ import { RowDiv } from "../../common/styledComponents";
 
 export function BtnFetchFavoriteUsers() {
   const fetchUsers = useFetchUsers();
-  const { loading } = useLoading();
+  const loading = useLoading();
 
   return (
     <CollapsibleButton

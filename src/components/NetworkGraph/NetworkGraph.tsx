@@ -27,7 +27,6 @@ const NetworkGraph = () => {
 };
 
 // https://github.com/vasturiano/react-force-graph
-
 function Graph() {
   const { fgRef, forceGraphProps } = useForceGraphProps();
   const { is3d, showUserNodes, replace, isGridMode } = useConfig();
@@ -181,14 +180,29 @@ function useTheForce(
         .distanceMax(NODE_DIAMETER * (showUserNodes ? 8 : 2))
     );
 
-    fg.d3Force("gravity", d3.forceManyBody().strength(60));
+    // gravitate nodes together when turning off grid mode
+    if (!isGridMode) {
+      fg.d3Force(
+        "gravity",
+        d3
+          .forceManyBody()
+          .strength(100)
+          // turn off gravity when nodes get close enough together
+          .distanceMin(NODE_DIAMETER * 15)
+      );
+
+      // setTimeout(() => {
+      //   fg.d3Force("gravity", null);
+      // }, 250);
+    }
+
     // fg.d3Force(
     //   "gravity",
     //   d3.forceManyBody().strength(showUserNodes ? 120 : 0)
     //   // max distance to push other nodes away
     //   // .distanceMax(NODE_DIAMETER * 2)
     // );
-    fg.d3Force("collide", d3.forceCollide(NODE_DIAMETER / 2));
+    fg.d3Force("collide", d3.forceCollide(NODE_DIAMETER));
     // fg.d3Force("link", null);
     // apply custom forces
     fg.d3Force(
@@ -214,7 +228,8 @@ function useTheForce(
             const numNodesAcross = Math.floor(allNodes.length ** 0.5);
             const gridColumn = idx % numNodesAcross;
 
-            const randomNumberNear1 = 1.01 - 0.05 * Math.random();
+            // const randomNumberNear1 = 1.01 - 0.05 * Math.random();
+            const randomNumberNear1 = 1;
 
             return (
               -0.5 * gridColumnWidth +
@@ -231,7 +246,8 @@ function useTheForce(
             const numNodesAcross = Math.floor(allNodes.length ** 0.5);
             const gridRow = Math.floor(idx / numNodesAcross);
 
-            const randomNumberNear1 = 1.01 - 0.05 * Math.random();
+            // const randomNumberNear1 = 1.01 - 0.05 * Math.random();
+            const randomNumberNear1 = 1;
 
             return (
               -0.5 * gridColumnWidth +
@@ -247,7 +263,6 @@ function useTheForce(
 
       // gravitate all towards each other
       // fg.d3Force("gravity", d3.forceManyBody().strength(140));
-      fg.d3Force("collide", d3.forceCollide(NODE_DIAMETER));
 
       // spring all to center, then stop
       // fg.d3Force("forceY", d3.forceY(0).strength(0.1));

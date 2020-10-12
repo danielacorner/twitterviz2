@@ -4,6 +4,7 @@ import {
   useSetTweets,
   useLoading,
   useAllowedMediaTypes,
+  useSetLoading,
 } from "../../../providers/store";
 import DiceIcon from "@material-ui/icons/Casino";
 import { SERVER_URL } from "../../../utils/constants";
@@ -20,7 +21,8 @@ export function BtnStreamNewTweets() {
     geolocation,
   } = useConfig();
   const allowedMediaTypesStrings = useAllowedMediaTypes();
-  const { loading, setLoading } = useLoading();
+  const loading = useLoading();
+  const setLoading = useSetLoading();
   const setTweets = useSetTweets();
 
   const fetchNewTweets = async () => {

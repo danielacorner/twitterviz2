@@ -59,9 +59,7 @@ const [useStore] = create(
   (set) =>
     ({
       tweetsFromServer:
-        process.env.NODE_ENV === "development"
-          ? mockTweets.slice(0, 20)
-          : ([] as Tweet[]),
+        process.env.NODE_ENV === "development" ? mockTweets : ([] as Tweet[]),
       selectedNode: null as Tweet | null,
       setSelectedNode: (node: Tweet | null) =>
         set((state) => ({ selectedNode: node })),
@@ -125,8 +123,9 @@ export const useConfig = () => {
   // ? e.g.
   // ? return { getLoading: () => useStore(state...
   // ? const {getLoading} = useConfig(); const loading = getLoading())
+
   return {
-    loading: useStore((state: GlobalStateStoreType) => state.loading, shallow),
+    // useLoading: ()=> useStore((state: GlobalStateStoreType) => state.loading, shallow),
     is3d: useStore((state: GlobalStateStoreType) => state.config.is3d, shallow),
     isGridMode: useStore(
       (state: GlobalStateStoreType) => state.config.isGridMode,
@@ -205,13 +204,9 @@ export const useTooltipNode = () =>
 export const useSetTooltipNode = () =>
   useStore((state: GlobalStateStoreType) => state.setTooltipNode);
 export const useLoading = () =>
-  useStore(
-    (state: GlobalStateStoreType) => ({
-      loading: state.loading,
-      setLoading: state.setLoading,
-    }),
-    shallow
-  );
+  useStore((state: GlobalStateStoreType) => state.loading);
+export const useSetLoading = () =>
+  useStore((state: GlobalStateStoreType) => state.setLoading);
 export const useStoredSaves = () =>
   useStore((state: GlobalStateStoreType) => ({
     saves: state.savedDatasets,

@@ -9,7 +9,7 @@ import { RowDiv } from "../../common/styledComponents";
 
 export function BtnFetchFavoriteTweets() {
   const fetchTweetsByIds = useFetchTweetsByIds();
-  const { loading } = useLoading();
+  const loading = useLoading();
   return (
     <CollapsibleButton
       tooltipTitle="Favorite tweets"

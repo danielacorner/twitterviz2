@@ -138,7 +138,7 @@ const Gallery = () => {
   const tweets = useTweets();
   const prevTweets: Tweet[] = usePrevious(tweets || []);
   const theme = useTheme();
-  const { loading } = useLoading();
+  const loading = useLoading();
 
   let firstUserId = "";
   const areAllTweetsSameUser =
