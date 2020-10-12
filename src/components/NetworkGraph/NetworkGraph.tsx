@@ -10,7 +10,6 @@ import { Tweet } from "../../types";
 import { uniqBy } from "lodash";
 import { EMPTY_TWEET } from "../../utils/emptyTweet";
 import * as d3 from "d3";
-import * as d3_force from "d3-force";
 import GraphRightClickMenu from "./GraphRightClickMenu";
 
 const GraphStyles = styled.div`
