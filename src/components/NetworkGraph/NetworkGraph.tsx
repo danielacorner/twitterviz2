@@ -147,16 +147,33 @@ function Graph() {
       "charge",
       d3
         .forceManyBody()
-        .strength(-60)
+        .strength((node) => ((node as Tweet).isUserNode ? 3 : 1) * -60)
         // max distance to push other nodes away
-        .distanceMax(NODE_DIAMETER * 2)
+        .distanceMax(NODE_DIAMETER * (showUserNodes ? 8 : 2))
     );
+
+    fg.d3Force("gravity", d3.forceCenter());
+    // fg.d3Force(
+    //   "gravity",
+    //   d3.forceManyBody().strength(showUserNodes ? 120 : 0)
+    //   // max distance to push other nodes away
+    //   // .distanceMax(NODE_DIAMETER * 2)
+    // );
+
     fg.d3Force("collide", d3.forceCollide(NODE_DIAMETER / 2));
     // fg.d3Force("link", null);
 
     // apply custom forces
 
-    // fg.d3Force("link", d3.forceLink(graph.links).strength(0.2));
+    fg.d3Force(
+      "link",
+      d3
+        .forceLink(graph.links)
+        .strength(0.2)
+        .distance((link, idx, links) => {
+          return NODE_DIAMETER * 1.25;
+        })
+    );
 
     // position each node in a (square?) grid
 
