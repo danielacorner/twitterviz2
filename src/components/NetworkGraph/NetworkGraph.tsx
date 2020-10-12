@@ -134,6 +134,36 @@ function Graph() {
 
   // const [ref,dimensions] = useContainerDimensions()
 
+  useTheForce(fg, showUserNodes, graph, isGridMode);
+
+  return (
+    <>
+      {is3d ? (
+        // https://www.npmjs.com/package/react-force-graph
+        <ForceGraph3D
+          ref={fgRef}
+          graphData={graphWithUsers}
+          {...forceGraphProps}
+        />
+      ) : (
+        <ForceGraph2D
+          ref={fgRef}
+          graphData={graphWithUsers}
+          {...forceGraphProps}
+        />
+      )}
+    </>
+  );
+}
+
+export default NetworkGraph;
+
+function useTheForce(
+  fg: any,
+  showUserNodes: boolean,
+  graph: { nodes: any[]; links: any[] },
+  isGridMode: boolean
+) {
   useEffect(() => {
     if (!fg) {
       return;
@@ -151,19 +181,16 @@ function Graph() {
         .distanceMax(NODE_DIAMETER * (showUserNodes ? 8 : 2))
     );
 
-    fg.d3Force("gravity", d3.forceCenter());
+    fg.d3Force("gravity", d3.forceManyBody().strength(60));
     // fg.d3Force(
     //   "gravity",
     //   d3.forceManyBody().strength(showUserNodes ? 120 : 0)
     //   // max distance to push other nodes away
     //   // .distanceMax(NODE_DIAMETER * 2)
     // );
-
     fg.d3Force("collide", d3.forceCollide(NODE_DIAMETER / 2));
     // fg.d3Force("link", null);
-
     // apply custom forces
-
     fg.d3Force(
       "link",
       d3
@@ -175,9 +202,7 @@ function Graph() {
     );
 
     // position each node in a (square?) grid
-
     // order from top-left, rightwards
-
     const gridColumnWidth = 100;
 
     if (isGridMode) {
@@ -216,13 +241,22 @@ function Graph() {
           .strength(0.2)
       );
     } else {
+      // disable positioning forces
+      fg.d3Force("forceY", null);
+      fg.d3Force("forceX", null);
+
+      // gravitate all towards each other
+      // fg.d3Force("gravity", d3.forceManyBody().strength(140));
+      fg.d3Force("collide", d3.forceCollide(NODE_DIAMETER));
+
       // spring all to center, then stop
-      fg.d3Force("forceY", d3.forceY(0).strength(0.1));
-      fg.d3Force("forceX", d3.forceX(0).strength(0.1));
-      setTimeout(() => {
-        fg.d3Force("forceY", null);
-        fg.d3Force("forceX", null);
-      }, 150);
+      // fg.d3Force("forceY", d3.forceY(0).strength(0.1));
+      // fg.d3Force("forceX", d3.forceX(0).strength(0.1));
+      // setTimeout(() => {
+      // fg.d3Force("gravity", null);
+      //   fg.d3Force("forceY", null);
+      //   fg.d3Force("forceX", null);
+      // }, 250);
     }
 
     // https://github.com/vasturiano/react-force-graph/blob/master/example/collision-detection/index.html
@@ -239,18 +273,15 @@ function Graph() {
     // fg.d3Force("cluster", (alpha) => {
     //   graphWithUsers.nodes.forEach(function (d) {
     //     const cluster = clusterCenters[d.cluster] as any;
-
     //     if (!cluster || cluster.id_str === d.id_str) {
     //       return;
     //     }
-
     //     let x = d.x - (cluster.x || 0),
     //       y = d.y - (cluster.y || 0),
     //       l = Math.sqrt(x * x + y * y),
     //       r = NODE_DIAMETER / 2;
     //     console.log("🌟🚨: Graph -> x", x);
     //     // r = d.radius + cluster.radius;
-
     //     if (l != r) {
     //       l = (l - r) / (l * alpha ** 0.1);
     //       d.x -= x *= l;
@@ -260,14 +291,11 @@ function Graph() {
     //     }
     //   });
     // });
-
     // fg.d3Force("box", () => {
     //   const SQUARE_HALF_SIDE = (window.innerWidth - CONTROLS_WIDTH) / 2;
-
     //   graph.nodes.forEach((node) => {
     //     const x = node.x || 0,
     //       y = node.y || 0;
-
     //     // bounce on box walls
     //     if (Math.abs(x) > SQUARE_HALF_SIDE) {
     //       node.vx *= -1;
@@ -278,25 +306,4 @@ function Graph() {
     //   });
     // });
   }, [graph, fg, isGridMode, showUserNodes]);
-
-  return (
-    <>
-      {is3d ? (
-        // https://www.npmjs.com/package/react-force-graph
-        <ForceGraph3D
-          ref={fgRef}
-          graphData={graphWithUsers}
-          {...forceGraphProps}
-        />
-      ) : (
-        <ForceGraph2D
-          ref={fgRef}
-          graphData={graphWithUsers}
-          {...forceGraphProps}
-        />
-      )}
-    </>
-  );
 }
-
-export default NetworkGraph;
