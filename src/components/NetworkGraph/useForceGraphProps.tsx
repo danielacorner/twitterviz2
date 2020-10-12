@@ -15,6 +15,7 @@ import {
 import { useIsLight } from "../../providers/ThemeManager";
 
 export const NODE_DIAMETER = 25;
+const USER_DIAMETER = NODE_DIAMETER * 2;
 
 /** https://www.npmjs.com/package/react-force-graph */
 
@@ -187,9 +188,31 @@ export function useForceGraphProps() {
 }
 
 function drawProfilePhoto(node: any, ctx: any) {
-  const img = new Image(NODE_DIAMETER, NODE_DIAMETER);
+  const img = new Image(USER_DIAMETER, USER_DIAMETER);
   img.src = node.user.profile_image_url_https;
-  ctx.drawImage(img, node.x - NODE_DIAMETER / 2, node.y - NODE_DIAMETER / 2);
+
+  // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+  ctx.drawImage(
+    img,
+    node.x - USER_DIAMETER / 2, // dx: The x-axis coordinate in the destination canvas at which to place the top-left corner of the source
+    node.y - USER_DIAMETER / 2, // dx: The y-axis coordinate in the destination canvas at which to place the top-left corner of the source
+    USER_DIAMETER, // dWidth: The width to draw the image in the destination canvas. This allows scaling of the drawn image. If not specified, the image is not scaled in width when drawn.
+    USER_DIAMETER // dHeight: The height to draw the image in the destination canvas. This allows scaling of the drawn image. If not specified, the image is not scaled in height when drawn.
+  );
+
+  // ctx.globalCompositeOperation = "destination-in"; // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
+  ctx.beginPath();
+  // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/arc
+  ctx.arc(
+    node.x, // x: The horizontal coordinate of the arc's center.
+    node.y, // y: The vertical coordinate of the arc's center.
+    USER_DIAMETER / 2, // radius
+    0, // startAngle
+    Math.PI * 2 // endAngle
+  );
+  ctx.closePath();
+  // ctx.fillStyle = "transparent";
+  ctx.fill();
 }
 
 function getNodeColor(node, colorBy) {

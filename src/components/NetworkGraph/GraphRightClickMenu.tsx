@@ -23,7 +23,7 @@ export default function GraphRightClickMenu() {
     if (!tooltipNode && mousePosition.mouseY) {
       handleCloseMenu();
     }
-  }, [tooltipNode]);
+  }, [tooltipNode, handleCloseMenu, mousePosition.mouseY]);
 
   useMount(() => {
     function handleRightClick(event) {
@@ -45,7 +45,7 @@ export default function GraphRightClickMenu() {
       {...{
         anchorEl: null,
         handleClose: handleCloseMenu,
-        isMenuOpen: tooltipNode && mousePosition.mouseY !== null,
+        isMenuOpen: Boolean(tooltipNode && mousePosition.mouseY !== null),
         user: tooltipNode?.user,
         MenuProps: {
           keepMounted: true,
