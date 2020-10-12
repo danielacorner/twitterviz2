@@ -34,7 +34,7 @@ export function BtnFetchFavoriteTweets() {
       disabled={loading}
       onClick={() => {
         const { favorites } = getFavorites();
-        fetchTweetsByIds([favorites]);
+        fetchTweetsByIds(favorites);
       }}
       variant="outlined"
       color="secondary"

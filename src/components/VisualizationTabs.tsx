@@ -18,7 +18,7 @@ function a11yProps(index) {
     "aria-controls": `tabpanel-${index}`,
   };
 }
-VisualizationTabs.whyDidYouRender = { logOnDifferentValues: true };
+
 export default function VisualizationTabs() {
   const [tabIndex, setTabIndex] = useState(TAB_INDICES.NETWORKGRAPH);
 

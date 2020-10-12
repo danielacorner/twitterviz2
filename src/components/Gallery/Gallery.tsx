@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   useConfig,
   useTweets,
@@ -227,7 +227,11 @@ function GridItem({ tweet }) {
 
 function DeleteTweetBtn({ tweet }: { tweet: Tweet }) {
   const deleteTweet = useDeleteTweet();
-  return <CloseIcon onClick={() => deleteTweet(tweet.id_str)} />;
+  const handleDelete = useCallback(() => deleteTweet(tweet.id_str), [
+    tweet.id_str,
+    deleteTweet,
+  ]);
+  return <CloseIcon onClick={handleDelete} />;
 }
 
 const ScrollMoreStyles = styled.div`

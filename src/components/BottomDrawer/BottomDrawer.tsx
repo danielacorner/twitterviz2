@@ -104,25 +104,27 @@ const BottomDrawer = () => {
   );
 };
 
-export const OpenTweetBtn = ({ tweet, offsetY = 0, iconOnly = false }) => (
-  <a
-    className="viewTweet"
-    style={{ transform: `translateY(${-offsetY}px)` }}
-    href={`https://www.twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`}
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    {iconOnly ? (
-      <Tooltip title="Open in new">
-        <OpenInNewIcon />
-      </Tooltip>
-    ) : (
-      <Button variant="outlined" endIcon={<OpenInNewIcon />}>
-        Open tweet
-      </Button>
-    )}
-  </a>
-);
+export function OpenTweetBtn({ tweet, offsetY = 0, iconOnly = false }) {
+  return (
+    <a
+      className="viewTweet"
+      style={{ transform: `translateY(${-offsetY}px)` }}
+      href={`https://www.twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {iconOnly ? (
+        <Tooltip title="Open in new">
+          <OpenInNewIcon />
+        </Tooltip>
+      ) : (
+        <Button variant="outlined" endIcon={<OpenInNewIcon />}>
+          Open tweet
+        </Button>
+      )}
+    </a>
+  );
+}
 
 export default BottomDrawer;
 

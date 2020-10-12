@@ -4,7 +4,7 @@ import { uniqBy } from "lodash";
 import { Tweet } from "../types";
 import { COLOR_BY, FILTER_LEVELS } from "../utils/constants";
 import mockTweets from "../tweets.json";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 import qs from "query-string";
 
@@ -62,7 +62,9 @@ const [useStore] = create(
   (set) =>
     ({
       tweetsFromServer:
-        process.env.NODE_ENV === "development" ? mockTweets : ([] as Tweet[]),
+        process.env.NODE_ENV === "development"
+          ? mockTweets.slice(0, 12)
+          : ([] as Tweet[]),
       selectedNode: null as Tweet | null,
       setSelectedNode: (node: Tweet | null) =>
         set((state) => ({ selectedNode: node })),
@@ -243,15 +245,19 @@ export const useAddTweets = () => {
 /** delete a tweet from store */
 export const useDeleteTweet = () => {
   const tweetsFromServer = useStore(
-    (state: GlobalStateStoreType) => state.tweetsFromServer
+    (state: GlobalStateStoreType) => state.tweetsFromServer,
+    shallow
   );
   const setTweetsFromServer = useStore(
     (state: GlobalStateStoreType) => state.setTweetsFromServer
   );
-  return (tweetId: string) => {
-    const newTweets = tweetsFromServer.filter((t) => t.id_str !== tweetId);
-    setTweetsFromServer(newTweets);
-  };
+  return useCallback(
+    (tweetId: string) => {
+      const newTweets = tweetsFromServer.filter((t) => t.id_str !== tweetId);
+      setTweetsFromServer(newTweets);
+    },
+    [tweetsFromServer, setTweetsFromServer]
+  );
 };
 
 export type WordcloudConfig = {
