@@ -257,7 +257,7 @@ function getNodeColor(node, colorBy) {
         : DEFAULT_NODE_COLOR;
 
     case COLOR_BY.sentiment:
-      const scale = scaleSequential(d3.interpolatePiYG).domain([-1, 1]);
+      const scale = d3.scaleSequential(d3.interpolatePiYG).domain([-1, 1]);
 
       return scale(node.sentimentResult?.comparative) as string;
 
