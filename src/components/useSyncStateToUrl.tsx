@@ -29,12 +29,14 @@ export default function useSyncStateToUrl(): [
       tweets: tweets.map((t) => t.id_str).join(","),
     };
 
-    const newSearch = qs.stringify(newQueryObj);
-    const newPath = `${pathname}?${newSearch}`;
+    const newSearch = "?" + qs.stringify(newQueryObj);
 
-    if (newPath !== pathname) {
-      history.push(newPath);
+    const oldPathAndSearch = `${pathname}${search}`;
+    const newPathAndSearch = `${pathname}${newSearch}`;
+
+    if (newPathAndSearch !== oldPathAndSearch) {
+      history.push(newPathAndSearch);
     }
-  }, [pathname, history, tweets, tabIndex, search]);
+  }, [pathname, history, tweets, tabIndex, search, queryObj]);
   return [tabIndex, setTabIndex];
 }

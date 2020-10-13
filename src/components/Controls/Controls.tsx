@@ -9,7 +9,6 @@ import {
   Tooltip,
 } from "@material-ui/core";
 import {
-  useConfig,
   useLoading,
   useTweets,
   useSetTweets,
@@ -188,8 +187,12 @@ function SavedDatasetsList() {
 
 function VizSpecificControls() {
   const searchObj = useSearchObj();
-  const isWordcloud = `${TAB_INDICES.WORDCLOUD}` in searchObj;
-  const isNetworkGraph = `${TAB_INDICES.NETWORKGRAPH}` in searchObj;
+  console.log("🌟🚨: VizSpecificControls -> searchObj", searchObj);
+  const isWordcloud =
+    "tab" in searchObj && searchObj.tab === `${TAB_INDICES.WORDCLOUD}`;
+  const isNetworkGraph =
+    "tab" in searchObj && searchObj.tab === `${TAB_INDICES.NETWORKGRAPH}`;
+  console.log("🌟🚨: VizSpecificControls -> isNetworkGraph", isNetworkGraph);
 
   return isWordcloud ? (
     <WordcloudControls />
