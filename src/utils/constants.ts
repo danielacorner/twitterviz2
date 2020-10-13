@@ -20,3 +20,9 @@ export const SERVER_URL =
 
 export const CONTROLS_PADDING_INNER = 14;
 export const FORM_HEIGHT = 36;
+
+export const TAB_INDICES = {
+  NETWORKGRAPH: 0,
+  WORDCLOUD: 1,
+  GALLERY: 2,
+};

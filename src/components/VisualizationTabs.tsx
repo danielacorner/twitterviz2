@@ -3,9 +3,8 @@ import { Tabs, Tab, Typography } from "@material-ui/core";
 import NetworkGraph from "./NetworkGraph/NetworkGraph";
 import Wordcloud from "./Wordcloud/Wordcloud";
 import styled from "styled-components/macro";
-import { TAB_INDICES } from "../providers/store";
 import Gallery from "./Gallery/Gallery";
-import { TABS_HEIGHT } from "../utils/constants";
+import { TABS_HEIGHT, TAB_INDICES } from "../utils/constants";
 import useSyncStateToUrl from "./useSyncStateToUrl";
 
 const Div = styled.div``;

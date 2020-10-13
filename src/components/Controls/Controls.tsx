@@ -15,6 +15,7 @@ import {
   useSetTweets,
   useIsLeftDrawerOpen,
   useSetLoading,
+  useSearchObj,
 } from "../../providers/store";
 import {
   H5,
@@ -38,7 +39,7 @@ import { SwitchReplace } from "./SwitchReplace";
 import { BtnFetchFavoriteTweets } from "./Buttons/BtnFetchFavoriteTweets";
 import { BtnStreamNewTweets } from "./Buttons/BtnStreamNewTweets";
 import { useSavedDatasets } from "../common/BtnFavorite";
-import { SERVER_URL } from "../../utils/constants";
+import { SERVER_URL, TAB_INDICES } from "../../utils/constants";
 import SaveIcon from "@material-ui/icons/Save";
 import ClearIcon from "@material-ui/icons/Clear";
 import styled from "styled-components/macro";
@@ -186,7 +187,10 @@ function SavedDatasetsList() {
 }
 
 function VizSpecificControls() {
-  const { isWordcloud, isNetworkGraph } = useConfig();
+  const searchObj = useSearchObj();
+  const isWordcloud = `${TAB_INDICES.WORDCLOUD}` in searchObj;
+  const isNetworkGraph = `${TAB_INDICES.NETWORKGRAPH}` in searchObj;
+
   return isWordcloud ? (
     <WordcloudControls />
   ) : isNetworkGraph ? (

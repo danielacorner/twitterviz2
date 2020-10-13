@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router";
-import { TAB_INDICES, useTweets } from "../providers/store";
+import { useTweets } from "../providers/store";
+import { TAB_INDICES } from "utils/constants";
 import qs from "query-string";
 
 /** when the tweets change, update the url */
@@ -8,15 +9,20 @@ export default function useSyncStateToUrl(): [
   number,
   React.Dispatch<React.SetStateAction<number>>
 ] {
-  const [tabIndex, setTabIndex] = useState(TAB_INDICES.NETWORKGRAPH);
-
   const tweets = useTweets();
   const history = useHistory();
   const { pathname, search } = useLocation();
+  const queryObj = qs.parse(search);
+
+  const initialTabIndex = queryObj.tab
+    ? Number(queryObj.tab)
+    : TAB_INDICES.NETWORKGRAPH;
+
+  const [tabIndex, setTabIndex] = useState(initialTabIndex);
 
   // TODO: not working when fetch tweets by id?
   useEffect(() => {
-    const queryObj = qs.parse(search);
+    // const queryObj = qs.parse(search);
     const newQueryObj = {
       ...queryObj,
       tab: tabIndex,

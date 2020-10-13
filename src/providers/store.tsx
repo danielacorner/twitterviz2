@@ -10,12 +10,6 @@ import qs from "query-string";
 
 export const useSearchObj = () => qs.parse(useLocation().search);
 
-export const TAB_INDICES = {
-  NETWORKGRAPH: 0,
-  WORDCLOUD: 1,
-  GALLERY: 2,
-};
-
 export type GlobalStateStoreType = {
   tweetsFromServer: Tweet[];
   selectedNode: Tweet | null;
@@ -164,8 +158,6 @@ export const useConfig = () => {
       (state: GlobalStateStoreType) => state.config.replace,
       shallow
     ),
-    isWordcloud: `${TAB_INDICES.WORDCLOUD}` in useSearchObj(),
-    isNetworkGraph: `${TAB_INDICES.NETWORKGRAPH}` in useSearchObj(),
     filterLevel: useStore(
       (state: GlobalStateStoreType) => state.config.filterLevel,
       shallow
