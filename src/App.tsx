@@ -1,10 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import "./App.css";
 import styled from "styled-components/macro";
 import BottomDrawer from "./components/BottomDrawer/BottomDrawer";
 import { useMount } from "./utils/utils";
 import { useFetchTweetsByIds } from "./utils/hooks";
-import { useSetTweets, useLoading, useTweets } from "./providers/store";
+import {
+  useSetTweets,
+  useLoading,
+  useTweets,
+  useSetLoading,
+} from "./providers/store";
 import { query as q } from "faunadb";
 import { faunaClient } from "./providers/faunaProvider";
 import VisualizationTabs from "./components/VisualizationTabs";
@@ -34,11 +39,11 @@ const AppStyles = styled.div`
 function App() {
   return (
     <AppStyles className="App">
-      <AppStylesHooks />
-      <InitializeAppHooks />
       <LeftDrawer />
       <VisualizationTabs />
       <BottomDrawer />
+      <AppStylesHooks />
+      <InitializeAppHooks />
     </AppStyles>
   );
 }
@@ -46,7 +51,34 @@ function App() {
 function InitializeAppHooks() {
   useFetchTweetsOnMount();
   useFetchQueryTweetsOnMount();
+  useStopLoadingEventually();
+
   return null;
+}
+
+const MAX_LOADING_TIME = 2 * 1000;
+
+/** stop loading after MAX_LOADING_TIME */
+function useStopLoadingEventually() {
+  const loading = useLoading();
+  const setLoading = useSetLoading();
+
+  const timerRef = useRef(null as number | null);
+
+  useEffect(() => {
+    if (loading && !timerRef.current) {
+      timerRef.current = window.setTimeout(() => {
+        setLoading(false);
+      }, MAX_LOADING_TIME);
+    }
+
+    return () => {
+      if (!loading && timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+    };
+  }, [loading, setLoading]);
 }
 
 function AppStylesHooks() {
@@ -103,7 +135,7 @@ function useFetchTweetsOnMount() {
  */
 function useFetchQueryTweetsOnMount() {
   const query = useQueryString();
-  const qTweets = query.t;
+  const qTweets = query.tweets;
   const fetchTweetsByIds = useFetchTweetsByIds();
   const tweets = useTweets();
   // fetch tweets from DB on mount

@@ -27,10 +27,6 @@ export function BtnStreamNewTweets() {
 
   const fetchNewTweets = async () => {
     setLoading(true);
-    // after 10 seconds, stop loading
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 10 * 1000);
 
     const langParam = lang !== "All" ? `&lang=${lang}` : "";
     const allowedMediaParam =
@@ -52,7 +48,6 @@ export function BtnStreamNewTweets() {
 
     const data = await resp.json();
     setLoading(false);
-    clearTimeout(timer);
 
     setTweets(data);
   };

@@ -18,7 +18,7 @@ export function CollapsibleButton({
   const { isDrawerOpen } = useIsLeftDrawerOpen();
 
   return (
-    <Tooltip title={tooltipTitle}>
+    <Tooltip title={tooltipTitle || ""}>
       <Div css={css}>
         <Tooltip title={isDrawerOpen ? "" : text}>
           <Button

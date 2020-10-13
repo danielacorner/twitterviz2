@@ -61,14 +61,14 @@ const [useStore] = create(
           : ([] as Tweet[]),
       selectedNode: null as Tweet | null,
       setSelectedNode: (node: Tweet | null) =>
-        set((state) => ({ selectedNode: node })),
+        set(() => ({ selectedNode: node })),
       tooltipNode: null as Tweet | null,
       setTooltipNode: (node: Tweet | null) =>
-        set((state) => ({ tooltipNode: node })),
+        set(() => ({ tooltipNode: node })),
       setTweetsFromServer: (tweets) =>
-        set((state) => ({ tweetsFromServer: tweets })),
+        set(() => ({ tweetsFromServer: tweets })),
       loading: false,
-      setLoading: (loading) => set((state) => ({ loading })),
+      setLoading: (loading) => set(() => ({ loading })),
       config: {
         isGridMode: false,
         showUserNodes: false,

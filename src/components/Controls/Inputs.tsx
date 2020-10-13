@@ -39,17 +39,12 @@ export function SearchForm() {
 
   const fetchSearchResults = async () => {
     setLoading(true);
-    // after 10 seconds, stop loading
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 10 * 1000);
 
     const resp = await fetch(
       `${SERVER_URL}/api/search?term=${searchTerm}&num=${numTweets}&result_type=${resultType}${langParam}${allowedMediaTypesParam}${countryParam}${geocodeParam}`
     );
     const data = await resp.json();
     setLoading(false);
-    clearTimeout(timer);
 
     setTweets(data);
   };

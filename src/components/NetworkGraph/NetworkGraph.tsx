@@ -295,7 +295,6 @@ function useTheForce(
     //       y = d.y - (cluster.y || 0),
     //       l = Math.sqrt(x * x + y * y),
     //       r = NODE_DIAMETER / 2;
-    //     console.log("🌟🚨: Graph -> x", x);
     //     // r = d.radius + cluster.radius;
     //     if (l != r) {
     //       l = (l - r) / (l * alpha ** 0.1);

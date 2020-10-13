@@ -112,10 +112,6 @@ function SavedDatasetsList() {
 
   const fetchTweetsBySavIdx = async (savesIdx) => {
     setLoading(true);
-    // after 10 seconds, stop loading
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 10 * 1000);
 
     const resp = await fetch(
       `${SERVER_URL}/api/get?ids=${saves[savesIdx].ids}`
@@ -125,7 +121,6 @@ function SavedDatasetsList() {
     const data = tweetsResponses.map((d) => d.data);
 
     setLoading(false);
-    clearTimeout(timer);
 
     setTweets(data);
   };
@@ -187,12 +182,10 @@ function SavedDatasetsList() {
 
 function VizSpecificControls() {
   const searchObj = useSearchObj();
-  console.log("🌟🚨: VizSpecificControls -> searchObj", searchObj);
   const isWordcloud =
     "tab" in searchObj && searchObj.tab === `${TAB_INDICES.WORDCLOUD}`;
   const isNetworkGraph =
     "tab" in searchObj && searchObj.tab === `${TAB_INDICES.NETWORKGRAPH}`;
-  console.log("🌟🚨: VizSpecificControls -> isNetworkGraph", isNetworkGraph);
 
   return isWordcloud ? (
     <WordcloudControls />

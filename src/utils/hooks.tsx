@@ -19,10 +19,6 @@ export function useFetchTweetsByIds(): (ids: string[]) => void {
 
   return async (ids: string[]) => {
     setLoading(true);
-    // after 10 seconds, stop loading
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 10 * 1000);
 
     const resp = await fetch(`${SERVER_URL}/api/get?ids=${ids.join(",")}`);
 
@@ -30,7 +26,6 @@ export function useFetchTweetsByIds(): (ids: string[]) => void {
     const data = tweetsResponses.map((d) => d.data);
 
     setLoading(false);
-    clearTimeout(timer);
 
     setTweets(data);
   };
@@ -97,17 +92,12 @@ export function useFetchTimeline() {
 
   const fetchTimelineByHandle = async (userHandle: string) => {
     setLoading(true);
-    // after 10 seconds, stop loading
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 10 * 1000);
 
     const resp = await fetch(
       `${SERVER_URL}/api/user_timeline?screen_name=${userHandle}&num=${numTweets}${allowedMediaTypesParam}`
     );
     const data = await resp.json();
     setLoading(false);
-    clearTimeout(timer);
 
     setTweets(data);
   };
