@@ -171,50 +171,6 @@ function useTheForce(
     // Deactivate existing forces
     // fg.d3Force("center", d3.forceCenter());
     // fg.d3Force("gravity", d3.forceManyBody().strength(10));
-    fg.d3Force(
-      "charge",
-      d3
-        .forceManyBody()
-        .strength(showUserNodes ? -400 : -30)
-        // .strength((node) => ((node as Tweet).isUserNode ? -360 : -30))
-        // max distance to push other nodes away
-        .distanceMax(NODE_DIAMETER * (showUserNodes ? 50 : 2))
-    );
-
-    // gravitate nodes together when turning off grid mode
-    if (!isGridMode) {
-      fg.d3Force(
-        "gravity",
-        d3
-          .forceManyBody()
-          .strength(showUserNodes ? 400 : 100)
-          // turn off gravity when nodes get close enough together
-          .distanceMin(NODE_DIAMETER * 15)
-      );
-
-      // setTimeout(() => {
-      //   fg.d3Force("gravity", null);
-      // }, 250);
-    }
-
-    // fg.d3Force(
-    //   "gravity",
-    //   d3.forceManyBody().strength(showUserNodes ? 120 : 0)
-    //   // max distance to push other nodes away
-    //   // .distanceMax(NODE_DIAMETER * 2)
-    // );
-    fg.d3Force("collide", d3.forceCollide(NODE_DIAMETER));
-    // fg.d3Force("link", null);
-    // apply custom forces
-    fg.d3Force(
-      "link",
-      d3
-        .forceLink(graph.links)
-        .strength(0.2)
-        .distance((link, idx, links) => {
-          return NODE_DIAMETER * 1.25;
-        })
-    );
 
     // position each node in a (square?) grid
     // order from top-left, rightwards
@@ -261,6 +217,50 @@ function useTheForce(
       // disable positioning forces
       fg.d3Force("forceY", null);
       fg.d3Force("forceX", null);
+
+      // gravitate nodes together
+      fg.d3Force(
+        "gravity",
+        d3
+          .forceManyBody()
+          .strength(showUserNodes ? 10 : 100)
+          // turn off gravity when nodes get close enough together
+          .distanceMin(NODE_DIAMETER * 5)
+      );
+
+      // repel nodes from each other
+      fg.d3Force(
+        "charge",
+        d3
+          .forceManyBody()
+          .strength(showUserNodes ? -500 : -30)
+          // .strength((node) => ((node as Tweet).isUserNode ? -360 : -30))
+          // max distance to push other nodes away
+          .distanceMax(NODE_DIAMETER * (showUserNodes ? 10 : 2))
+      );
+
+      // fg.d3Force(
+      //   "gravity",
+      //   d3.forceManyBody().strength(showUserNodes ? 120 : 0)
+      //   // max distance to push other nodes away
+      //   // .distanceMax(NODE_DIAMETER * 2)
+      // );
+
+      // fg.d3Force("collide", d3.forceCollide(NODE_DIAMETER));
+      // fg.d3Force("link", null);
+      // apply custom forces
+      fg.d3Force(
+        "link",
+        d3
+          .forceLink(graph.links)
+          .strength(0.2)
+          .distance((link, idx, links) => {
+            return NODE_DIAMETER * 1.25;
+          })
+      );
+      // setTimeout(() => {
+      //   fg.d3Force("gravity", null);
+      // }, 250);
 
       // gravitate all towards each other
       // fg.d3Force("gravity", d3.forceManyBody().strength(140));
