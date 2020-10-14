@@ -44,7 +44,6 @@ export function SearchForm() {
       `${SERVER_URL}/api/search?term=${searchTerm}&num=${numTweets}&result_type=${resultType}${langParam}${allowedMediaTypesParam}${countryParam}${geocodeParam}`
     );
     const data = await resp.json();
-    setLoading(false);
 
     setTweets(data);
   };

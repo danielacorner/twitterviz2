@@ -25,8 +25,6 @@ export function useFetchTweetsByIds(): (ids: string[]) => void {
     const tweetsResponses = await resp.json();
     const data = tweetsResponses.map((d) => d.data);
 
-    setLoading(false);
-
     setTweets(data);
   };
 }
@@ -77,15 +75,12 @@ export function useFetchTimeline() {
     isFetchMore: boolean = false
   ) => {
     setLoading(true);
-    const timer = setTimeout(() => setLoading(false), 10 * 1000);
     const resp = await fetch(
       `${SERVER_URL}/api/user_timeline?id_str=${userId}&num=${numTweets}${allowedMediaTypesParam}${
         isFetchMore ? `&maxId=${tweets[tweets.length - 1].id_str}` : ""
       }`
     );
     const data = await resp.json();
-    setLoading(false);
-    window.clearTimeout(timer);
 
     (isFetchMore ? addTweets : setTweets)(data);
   };
@@ -97,7 +92,6 @@ export function useFetchTimeline() {
       `${SERVER_URL}/api/user_timeline?screen_name=${userHandle}&num=${numTweets}${allowedMediaTypesParam}`
     );
     const data = await resp.json();
-    setLoading(false);
 
     setTweets(data);
   };
@@ -150,13 +144,10 @@ export function useFetchLikes() {
 
   const fetchLikes = async (userId: string) => {
     setLoading(true);
-    const timer = setTimeout(() => setLoading(false), 10 * 1000);
     const resp = await fetch(
       `${SERVER_URL}/api/user_likes?id_str=${userId}&num=${numTweets}${allowedMediaTypesParam}`
     );
     const data = await resp.json();
-    setLoading(false);
-    window.clearTimeout(timer);
     setTweets(data);
   };
 

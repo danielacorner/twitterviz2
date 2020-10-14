@@ -120,8 +120,6 @@ function SavedDatasetsList() {
     const tweetsResponses = await resp.json();
     const data = tweetsResponses.map((d) => d.data);
 
-    setLoading(false);
-
     setTweets(data);
   };
 

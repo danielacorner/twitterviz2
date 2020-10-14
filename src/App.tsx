@@ -62,9 +62,11 @@ const MAX_LOADING_TIME = 2 * 1000;
 function useStopLoadingEventually() {
   const loading = useLoading();
   const setLoading = useSetLoading();
-
+  const tweets = useTweets();
   const timerRef = useRef(null as number | null);
+  const prevTweets = useRef(tweets);
 
+  // when loading starts, start a timer to stop loading
   useEffect(() => {
     if (loading && !timerRef.current) {
       timerRef.current = window.setTimeout(() => {
@@ -78,7 +80,18 @@ function useStopLoadingEventually() {
         timerRef.current = null;
       }
     };
-  }, [loading, setLoading]);
+  }, [loading, setLoading, tweets]);
+
+  // when tweets length changes, stop loading
+  useEffect(() => {
+    if (prevTweets.current.length !== tweets.length) {
+      setLoading(false);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+    }
+  }, [tweets, setLoading, prevTweets.current]);
 }
 
 function AppStylesHooks() {

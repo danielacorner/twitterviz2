@@ -177,6 +177,9 @@ function useTheForce(
     const gridColumnWidth = 100;
 
     if (isGridMode) {
+      fg.d3Force("gravity", null);
+      fg.d3Force("charge", null);
+      fg.d3Force("link", null);
       fg.d3Force(
         "forceX",
         d3
@@ -193,7 +196,7 @@ function useTheForce(
               gridColumn * gridColumnWidth * randomNumberNear1
             );
           })
-          .strength(0.2)
+          .strength(0.6)
       );
       fg.d3Force(
         "forceY",
@@ -211,7 +214,7 @@ function useTheForce(
               gridRow * gridColumnWidth * randomNumberNear1
             );
           })
-          .strength(0.2)
+          .strength(0.6)
       );
     } else {
       // disable positioning forces

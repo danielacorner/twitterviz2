@@ -47,7 +47,6 @@ export function BtnStreamNewTweets() {
     );
 
     const data = await resp.json();
-    setLoading(false);
 
     setTweets(data);
   };
