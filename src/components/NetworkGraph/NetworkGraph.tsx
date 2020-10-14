@@ -27,7 +27,6 @@ const NetworkGraph = () => {
 };
 
 // https://github.com/vasturiano/react-force-graph
-Graph.whyDidYouRender = { logOnDifferentValues: true };
 function Graph() {
   const { fgRef, forceGraphProps } = useForceGraphProps();
   const { is3d, showUserNodes, replace, isGridMode } = useConfig();

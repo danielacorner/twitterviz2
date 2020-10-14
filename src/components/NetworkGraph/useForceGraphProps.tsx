@@ -110,11 +110,19 @@ export function useForceGraphProps() {
         ctx.fill();
       }
     },
-    // linkColor: isLightTheme ? "#000000" : "#FFFFFF",
-    linkWidth: 4,
-    linkOpacity: 1,
+    linkWidth: 1,
     backgroundColor: "transparent",
-    linkColor: "#FFFFFF",
+    linkColor: ({ source, target }) => {
+      const LIGHTGREY = "#D3D3D3";
+      const DARKGREY = "#a9a9a9";
+      const userToTweetColor = LIGHTGREY;
+      // TODO: link by likes
+      // TODO: link by replies
+      // TODO: link by retweets
+      const other = DARKGREY;
+      return source.isUserNode ? userToTweetColor : other;
+    },
+    // linkOpacity: 0.2,
     // linkDirectionalArrowLength: 8,
     // linkDirectionalArrowRelPos: 1,
     nodeThreeObject:
