@@ -11,6 +11,7 @@ import {
   useSetTooltipNode,
   useSetSelectedNode,
   useAllowedMediaTypes,
+  useTooltipNode,
 } from "../../providers/store";
 import { useIsLight } from "../../providers/ThemeManager";
 
@@ -25,6 +26,7 @@ export function useForceGraphProps() {
   const { is3d, colorBy, isGridMode, showUserNodes } = useConfig();
   const allowedMediaTypesStrings = useAllowedMediaTypes();
   const setTooltipNode = useSetTooltipNode();
+  const tooltipNode = useTooltipNode();
   const setSelectedNode = useSetSelectedNode();
   const isLightTheme = useIsLight();
   console.log("🌟🚨: useForceGraphProps -> isLightTheme", isLightTheme);
@@ -67,6 +69,10 @@ export function useForceGraphProps() {
     onEngineStop: () =>
       fgRef.current && !is3d ? (fgRef.current as any).zoomToFit(400) : null,
     nodeCanvasObject: (node, ctx) => {
+      if (tooltipNode?.id_str === node.id_str) {
+        drawHighlightCircle(node, ctx);
+      }
+
       if (colorBy === COLOR_BY.profilePhoto || node.isUserNode) {
         // show profile photo
         drawProfilePhoto(node, ctx);
@@ -199,6 +205,37 @@ export function useForceGraphProps() {
   };
 
   return { fgRef, forceGraphProps };
+}
+
+function drawHighlightCircle(node: any, ctx: any) {
+  // circle
+  ctx.beginPath();
+  // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/arc
+  ctx.arc(
+    node.x, // x: The horizontal coordinate of the arc's center.
+    node.y, // y: The vertical coordinate of the arc's center.
+    AVATAR_DIAMETER / 2, // radius
+    0, // startAngle
+    Math.PI * 2 // endAngle
+  );
+  ctx.strokeStyle = "white";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  /*
+   * restore() restores the canvas context to its original state
+   * before we defined the clipping region
+   */
+  // ctx.restore();
+  // ctx.beginPath();
+  // ctx.arc(node.x, node.y, AVATAR_DIAMETER / 2, 0, 2 * Math.PI, false);
+  // ctx.lineWidth = 10;
+  // ctx.strokeStyle = "blue";
+  // ctx.stroke();
+  // ctx.clip();
+  // ctx.closePath();
+  // ctx.clip();
+  // ctx.fill();
 }
 
 // https://codesandbox.io/s/distracted-nash-4251j?file=/src/index.js
