@@ -197,14 +197,9 @@ export function useForceGraphProps() {
 function drawProfilePhoto(node: any, ctx: any) {
   const img = new Image(AVATAR_DIAMETER, AVATAR_DIAMETER);
   img.src = node.user.profile_image_url_https;
-  // img.addEventListener("load", function () {
-  //   // ctx.globalCompositeOperation = "destination-in"; // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
-
-  // });
+  ctx.save();
 
   // circle
-
-  // ctx.save();
   ctx.beginPath();
   // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/arc
   ctx.arc(
@@ -214,13 +209,7 @@ function drawProfilePhoto(node: any, ctx: any) {
     0, // startAngle
     Math.PI * 2 // endAngle
   );
-  // ctx.clip();
-  // ctx.closePath();
-  // ctx.clip();
-  // ctx.fill();
-  ctx.lineWidth = 5;
-  ctx.strokeStyle = "blue";
-  ctx.stroke();
+  ctx.clip();
 
   // photo
 
@@ -233,21 +222,6 @@ function drawProfilePhoto(node: any, ctx: any) {
     AVATAR_DIAMETER, // dWidth: The width to draw the image in the destination canvas. This allows scaling of the drawn image. If not specified, the image is not scaled in width when drawn.
     AVATAR_DIAMETER // dHeight: The height to draw the image in the destination canvas. This allows scaling of the drawn image. If not specified, the image is not scaled in height when drawn.
   );
-
-  /*
-   * restore() restores the canvas context to its original state
-   * before we defined the clipping region
-   */
-  // ctx.restore();
-  // ctx.beginPath();
-  // ctx.arc(node.x, node.y, AVATAR_DIAMETER / 2, 0, 2 * Math.PI, false);
-  // ctx.lineWidth = 10;
-  // ctx.strokeStyle = "blue";
-  // ctx.stroke();
-
-  //   },
-  //   false
-  // );
 }
 
 function getNodeColor(node, colorBy) {

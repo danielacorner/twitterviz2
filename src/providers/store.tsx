@@ -71,7 +71,7 @@ const [useStore] = create(
       setLoading: (loading) => set(() => ({ loading })),
       config: {
         isGridMode: false,
-        showUserNodes: false,
+        showUserNodes: true,
         is3d: false,
         colorBy: COLOR_BY.mediaType as keyof typeof COLOR_BY | null,
         lang: "All",
