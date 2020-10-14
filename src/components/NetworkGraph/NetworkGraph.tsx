@@ -223,7 +223,7 @@ function useTheForce(
         "gravity",
         d3
           .forceManyBody()
-          .strength(showUserNodes ? 10 : 100)
+          .strength(10)
           // turn off gravity when nodes get close enough together
           .distanceMin(NODE_DIAMETER * 5)
       );
@@ -233,10 +233,10 @@ function useTheForce(
         "charge",
         d3
           .forceManyBody()
-          .strength(showUserNodes ? -500 : -30)
+          .strength(-500)
           // .strength((node) => ((node as Tweet).isUserNode ? -360 : -30))
           // max distance to push other nodes away
-          .distanceMax(NODE_DIAMETER * (showUserNodes ? 10 : 2))
+          .distanceMax(NODE_DIAMETER * (showUserNodes ? 10 : 5))
       );
 
       // fg.d3Force(
@@ -258,9 +258,12 @@ function useTheForce(
             return NODE_DIAMETER * 1.25;
           })
       );
-      // setTimeout(() => {
-      //   fg.d3Force("gravity", null);
-      // }, 250);
+
+      fg.d3Force("pullTogether", d3.forceManyBody().strength(400));
+
+      setTimeout(() => {
+        fg.d3Force("pullTogether", null);
+      }, 250);
 
       // gravitate all towards each other
       // fg.d3Force("gravity", d3.forceManyBody().strength(140));
