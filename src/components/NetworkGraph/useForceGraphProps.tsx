@@ -27,6 +27,7 @@ export function useForceGraphProps() {
   const setTooltipNode = useSetTooltipNode();
   const setSelectedNode = useSetSelectedNode();
   const isLightTheme = useIsLight();
+  console.log("🌟🚨: useForceGraphProps -> isLightTheme", isLightTheme);
   const fgRef = useRef();
 
   const onBackgroundClick = useCallback(() => {
@@ -60,7 +61,7 @@ export function useForceGraphProps() {
     onNodeHover,
     onNodeClick,
     // nodeAutoColorBy: "group",
-    cooldownTime: (isGridMode ? 200 : 400) * (showUserNodes ? 2 : 1),
+    cooldownTime: (isGridMode ? 200 : 400) * (showUserNodes ? 4 : 1),
     nodeRelSize: NODE_DIAMETER,
     nodeColor: (node) => getNodeColor(node, colorBy),
     onEngineStop: () =>
@@ -109,9 +110,13 @@ export function useForceGraphProps() {
         ctx.fill();
       }
     },
-    linkColor: isLightTheme ? "#000000" : "#FFFFFF",
+    // linkColor: isLightTheme ? "#000000" : "#FFFFFF",
+    linkWidth: 4,
     linkOpacity: 1,
-    linkWidth: 20,
+    backgroundColor: "transparent",
+    linkColor: "#FFFFFF",
+    // linkDirectionalArrowLength: 8,
+    // linkDirectionalArrowRelPos: 1,
     nodeThreeObject:
       colorBy === COLOR_BY.mediaType
         ? null
@@ -177,6 +182,7 @@ export function useForceGraphProps() {
         : null,
 
     onBackgroundClick,
+
     enableZoomPanInteraction: true,
     enableNavigationControls: true,
     onLinkHover: (link, prevLink) => {},

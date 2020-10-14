@@ -84,7 +84,7 @@ const [useStore] = create(
           photo: true,
           animated_gif: true,
         },
-        replace: true,
+        replace: false,
         filterLevel: FILTER_LEVELS.none,
         searchTerm: "",
         numTweets: 50,

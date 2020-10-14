@@ -27,6 +27,7 @@ const NetworkGraph = () => {
 };
 
 // https://github.com/vasturiano/react-force-graph
+Graph.whyDidYouRender = { logOnDifferentValues: true };
 function Graph() {
   const { fgRef, forceGraphProps } = useForceGraphProps();
   const { is3d, showUserNodes, replace, isGridMode } = useConfig();
@@ -175,9 +176,10 @@ function useTheForce(
       "charge",
       d3
         .forceManyBody()
-        .strength((node) => ((node as Tweet).isUserNode ? 3 : 1) * -60)
+        .strength(showUserNodes ? -400 : -30)
+        // .strength((node) => ((node as Tweet).isUserNode ? -360 : -30))
         // max distance to push other nodes away
-        .distanceMax(NODE_DIAMETER * (showUserNodes ? 8 : 2))
+        .distanceMax(NODE_DIAMETER * (showUserNodes ? 50 : 2))
     );
 
     // gravitate nodes together when turning off grid mode
@@ -186,7 +188,7 @@ function useTheForce(
         "gravity",
         d3
           .forceManyBody()
-          .strength(100)
+          .strength(showUserNodes ? 400 : 100)
           // turn off gravity when nodes get close enough together
           .distanceMin(NODE_DIAMETER * 15)
       );

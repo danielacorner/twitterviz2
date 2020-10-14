@@ -24,7 +24,7 @@ const NetworkGraphControls = () => {
     console.log("TODO");
   };
   return (
-    <>
+    <div className="networkGraphControls controlsContainer">
       <H5 style={{ pointerEvents: "none" }}>Network Graph Controls</H5>
       <Switch3D />
       <SwitchGridMode />
@@ -38,7 +38,7 @@ const NetworkGraphControls = () => {
       >
         Link Nodes
       </Button>
-    </>
+    </div>
   );
 };
 

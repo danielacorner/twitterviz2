@@ -71,6 +71,12 @@ const ControlsStyles = styled.div`
   [class*="TwoColRowStyles"] {
     width: 100%;
   }
+  .controlsContainer {
+    display: grid;
+    grid-auto-flow: row;
+    grid-gap: 1.5em;
+    justify-items: center;
+  }
   .diceIcon {
     transition: all 0.3s ease;
     animation: ${(props) =>

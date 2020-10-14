@@ -50,13 +50,16 @@ export const CollapsibleSwitchWithLabels = ({
         align-items: center;
         justify-content: center;
         height: ${FORM_HEIGHT}px;
+        .label {
+          min-width: 3em;
+        }
       `}
     >
-      <Body1>{labelLeft}</Body1>
+      <Body1 className="label">{labelLeft}</Body1>
       <Tooltip title={isDrawerOpen ? "" : `${labelLeft}/${labelRight}`}>
         <Switch onChange={onChange} checked={checked} {...props} />
       </Tooltip>
-      <Body1>{labelRight}</Body1>
+      <Body1 className="label">{labelRight}</Body1>
     </ColumnDiv>
   );
 };
