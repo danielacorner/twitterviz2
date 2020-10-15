@@ -8,6 +8,8 @@ import {
   useTweets,
   useAllowedMediaTypes,
   useSetLoading,
+  useLikesByUser,
+  useSetLikesByUser,
 } from "../providers/store";
 import { geoDistanceKm } from "./distanceFromCoords";
 import { Tweet } from "../types";
@@ -141,14 +143,25 @@ export function useFetchLikes() {
   const { numTweets } = useConfig();
   const { allowedMediaTypesParam } = useParamsForFetch();
   const setTweets = useSetTweets();
+  const likesByUser = useLikesByUser();
+  const setLikesByUser = useSetLikesByUser();
 
   const fetchLikes = async (userId: string) => {
     setLoading(true);
     const resp = await fetch(
       `${SERVER_URL}/api/user_likes?id_str=${userId}&num=${numTweets}${allowedMediaTypesParam}`
     );
-    const data = await resp.json();
-    setTweets(data);
+    const likedTweets = await resp.json();
+
+    // add to the likes object for this user
+    setLikesByUser({
+      ...likesByUser,
+      [userId]: [
+        ...(likesByUser?.[userId] || []),
+        likedTweets.map((tweet) => tweet.id_str),
+      ],
+    });
+    setTweets(likedTweets);
   };
 
   return { loading, fetchLikes };

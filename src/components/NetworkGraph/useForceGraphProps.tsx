@@ -29,7 +29,6 @@ export function useForceGraphProps() {
   const tooltipNode = useTooltipNode();
   const setSelectedNode = useSetSelectedNode();
   const isLightTheme = useIsLight();
-  console.log("🌟🚨: useForceGraphProps -> isLightTheme", isLightTheme);
   const fgRef = useRef();
 
   const onBackgroundClick = useCallback(() => {
@@ -129,7 +128,7 @@ export function useForceGraphProps() {
       // TODO: link by likes
       // TODO: link by replies
       // TODO: link by retweets
-      const other = DARKGREY;
+      const other = isLightTheme ? DARKGREY : LIGHTGREY;
       return source.isUserNode ? userToTweetColor : other;
     },
     // linkOpacity: 0.2,

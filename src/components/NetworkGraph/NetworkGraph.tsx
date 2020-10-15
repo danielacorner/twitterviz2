@@ -4,7 +4,7 @@ import NodeTooltip from "../NodeTooltip";
 // https://www.npmjs.com/package/react-force-graph
 import styled from "styled-components/macro";
 import { NODE_DIAMETER, useForceGraphProps } from "./useForceGraphProps";
-import { useConfig, useTweets } from "../../providers/store";
+import { useConfig, useLikesByUser, useTweets } from "../../providers/store";
 // https://www.npmjs.com/package/d3-force-cluster
 import { Tweet } from "../../types";
 import { uniqBy } from "lodash";
@@ -42,7 +42,27 @@ function Graph() {
 
   // sync internal state to prevent node re-renders
   const [graph, setGraph] = useState({ nodes: [], links: [] });
-  const [userNodes, setUserNodes] = useState([]);
+  const [userNodes, setUserNodes] = useState([] as Tweet[]);
+  const likesByUser = useLikesByUser();
+  const userToLikesLinks = showUserNodes
+    ? userNodes.reduce((acc, userNode) => {
+        const userLikes = likesByUser[userNode.id_str];
+        if (userLikes) {
+          console.log("🌟🚨: Graph -> userLikes", userLikes);
+          const likedTweetLinks = userLikes
+            .filter(Boolean)
+            .map((likedTweetId) => ({
+              source: Number(likedTweetId),
+              target: Number(userNode.id_str),
+            }));
+          console.log("🌟🚨: Graph -> likedTweetLinks", likedTweetLinks);
+          return [...acc, ...likedTweetLinks];
+        } else {
+          return acc;
+        }
+      }, [])
+    : [];
+  console.log("🌟🚨: Graph -> userToLikesLinks", userToLikesLinks);
 
   const graphWithUsers = {
     ...graph,
@@ -50,12 +70,17 @@ function Graph() {
     links: [
       ...graph.links,
       ...(showUserNodes
-        ? tweets.map((t) => ({
-            // source: its user
-            source: Number(t.user.id_str),
-            // target: the tweet
-            target: Number(t.id_str),
-          }))
+        ? [
+            // links from each user to their tweets
+            ...tweets.map((t) => ({
+              // source: its user
+              source: Number(t.user.id_str),
+              // target: the tweet
+              target: Number(t.id_str),
+            })),
+            // links from each user to their likes
+            ...userToLikesLinks,
+          ]
         : []),
     ],
   };

@@ -19,6 +19,8 @@ export type GlobalStateStoreType = {
   setTweetsFromServer: (tweets) => void;
   config: AppConfig;
   setConfig: (newConfig: Partial<AppConfig>) => void;
+  likesByUser: { [userId: string]: string[] };
+  setLikesByUser: (newLikesByUser: { [userId: string]: string[] }) => void;
   loading: boolean;
   setLoading: (newLoading: boolean) => void;
   wordcloudConfig: WordcloudConfig;
@@ -68,6 +70,8 @@ const [useStore] = create(
       setTweetsFromServer: (tweets) =>
         set(() => ({ tweetsFromServer: tweets })),
       loading: false,
+      likesByUser: {},
+      setLikesByUser: (likesByUser) => set(() => ({ likesByUser })),
       setLoading: (loading) => set(() => ({ loading })),
       config: {
         isGridMode: false,
@@ -191,6 +195,10 @@ export const useLoading = () =>
   useStore((state: GlobalStateStoreType) => state.loading);
 export const useSetLoading = () =>
   useStore((state: GlobalStateStoreType) => state.setLoading);
+export const useLikesByUser = () =>
+  useStore((state: GlobalStateStoreType) => state.likesByUser);
+export const useSetLikesByUser = () =>
+  useStore((state: GlobalStateStoreType) => state.setLikesByUser);
 export const useStoredSaves = () =>
   useStore((state: GlobalStateStoreType) => ({
     saves: state.savedDatasets,
