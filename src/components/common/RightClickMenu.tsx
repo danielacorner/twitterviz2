@@ -6,6 +6,7 @@ import {
   useFetchReplies,
 } from "../../utils/hooks";
 import { useTooltipNode } from "providers/store";
+import RetweetedIcon from "@material-ui/icons/CachedRounded";
 
 export default function RightClickMenu({
   anchorEl,
@@ -35,7 +36,7 @@ export default function RightClickMenu({
           handleClose();
         }}
       >
-        Tweets by @{tooltipNode?.user.screen_name}
+        Tweets by {tooltipNode?.user.name} (@{tooltipNode?.user.screen_name})
       </MenuItem>
       {/* <MenuItem onClick={handleFetchMedia}>Media</MenuItem> */}
       {/* <MenuItem onClick={handleFetchFollowing}>Following</MenuItem> */}
@@ -48,7 +49,8 @@ export default function RightClickMenu({
             handleClose();
           }}
         >
-          Tweets liked by @{tooltipNode?.user.screen_name}
+          Tweets liked by {tooltipNode?.user.name} (@
+          {tooltipNode?.user.screen_name})
         </MenuItem>
       ) : null}
       {isTweetNode ? (
@@ -59,6 +61,18 @@ export default function RightClickMenu({
           }}
         >
           Replies to this tweet
+        </MenuItem>
+      ) : null}
+      {isTweetNode && tooltipNode?.retweeted_status?.user ? (
+        <MenuItem
+          onClick={() => {
+            fetchReplies(user.id_str);
+            handleClose();
+          }}
+        >
+          Tweets by <RetweetedIcon style={{ transform: "scale(0.8)" }} />{" "}
+          {tooltipNode.retweeted_status.user.name} (@
+          {tooltipNode.retweeted_status.user.screen_name})
         </MenuItem>
       ) : null}
     </Menu>
