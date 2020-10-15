@@ -63,22 +63,17 @@ function useStopLoadingEventually() {
   const loading = useLoading();
   const setLoading = useSetLoading();
   const tweets = useTweets();
-  const timerRef = useRef(null as number | null);
   const prevTweets = useRef(tweets);
 
   // when loading starts, start a timer to stop loading
   useEffect(() => {
-    if (loading && !timerRef.current) {
-      timerRef.current = window.setTimeout(() => {
-        setLoading(false);
-      }, MAX_LOADING_TIME);
-    }
+    console.log("🌟🚨: useStopLoadingEventually -> setLoading", setLoading);
+    const timer = window.setTimeout(() => {
+      setLoading(false);
+    }, MAX_LOADING_TIME);
 
     return () => {
-      if (!loading && timerRef.current) {
-        clearTimeout(timerRef.current);
-        timerRef.current = null;
-      }
+      clearTimeout(timer);
     };
   }, [loading, setLoading, tweets]);
 
@@ -86,10 +81,11 @@ function useStopLoadingEventually() {
   useEffect(() => {
     if (prevTweets.current.length !== tweets.length) {
       setLoading(false);
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-        timerRef.current = null;
+      const app = document.querySelector(".App");
+      if (!app) {
+        return;
       }
+      (app as HTMLElement).style.cursor = "unset";
     }
   }, [tweets, setLoading, prevTweets.current]);
 }
@@ -103,7 +99,9 @@ function AppStylesHooks() {
     if (!app) {
       return;
     }
-    (app as HTMLElement).style.cursor = loading ? "wait" : "unset";
+    if (loading) {
+      (app as HTMLElement).style.cursor = "wait";
+    }
     (app as HTMLElement).style.background = isLight ? "white" : "hsl(0,0%,10%)";
   }, [loading, isLight]);
 

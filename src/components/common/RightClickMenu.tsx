@@ -51,7 +51,7 @@ export default function RightClickMenu({
           Tweets liked by @{tooltipNode?.user.screen_name}
         </MenuItem>
       ) : null}
-      {isTweetNode ? null : (
+      {isTweetNode ? (
         <MenuItem
           onClick={() => {
             fetchReplies(user.id_str);
@@ -60,7 +60,7 @@ export default function RightClickMenu({
         >
           Replies to this tweet
         </MenuItem>
-      )}
+      ) : null}
     </Menu>
   );
 }
