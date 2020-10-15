@@ -60,7 +60,7 @@ export default function RightClickMenu({
             handleClose();
           }}
         >
-          Retweets of this tweet
+          Retweets of this tweet (if any)
         </MenuItem>
       ) : null}
       {isTweetNode && tooltipNode?.retweeted_status?.user ? (
