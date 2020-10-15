@@ -8,8 +8,10 @@ import {
   useTweets,
   useAllowedMediaTypes,
   useSetLoading,
-  useLikesByUser,
-  useSetLikesByUser,
+  useLikesByUserId,
+  useSetLikesByUserId,
+  useRepliesByTweetId,
+  useSetRepliesByTweetId,
 } from "../providers/store";
 import { geoDistanceKm } from "./distanceFromCoords";
 import { Tweet } from "../types";
@@ -143,8 +145,8 @@ export function useFetchLikes() {
   const { numTweets } = useConfig();
   const { allowedMediaTypesParam } = useParamsForFetch();
   const setTweets = useSetTweets();
-  const likesByUser = useLikesByUser();
-  const setLikesByUser = useSetLikesByUser();
+  const likesByUserId = useLikesByUserId();
+  const setLikesByUserId = useSetLikesByUserId();
 
   const fetchLikes = async (userId: string) => {
     setLoading(true);
@@ -154,10 +156,10 @@ export function useFetchLikes() {
     const likedTweets = await resp.json();
 
     // add to the likes object for this user
-    setLikesByUser({
-      ...likesByUser,
+    setLikesByUserId({
+      ...likesByUserId,
       [userId]: [
-        ...(likesByUser?.[userId] || []),
+        ...(likesByUserId?.[userId] || []),
         ...likedTweets.map((tweet) => tweet.id_str),
       ],
     });
@@ -165,6 +167,40 @@ export function useFetchLikes() {
   };
 
   return { loading, fetchLikes };
+}
+
+// TODO:
+/** fetch tweets replying to a tweet */
+export function useFetchReplies() {
+  const loading = useLoading();
+  const setLoading = useSetLoading();
+  const { numTweets } = useConfig();
+  const { allowedMediaTypesParam } = useParamsForFetch();
+  const setTweets = useSetTweets();
+  const repliesByTweetId = useRepliesByTweetId();
+  const setRepliesByUser = useSetRepliesByTweetId();
+
+  const fetchReplies = async (tweetId: string) => {
+    setLoading(true);
+    const resp = await fetch(
+      `${SERVER_URL}/api/tweet_replies?id_str=${tweetId}&num=${numTweets}${allowedMediaTypesParam}`
+    );
+    const likedTweets = await resp.json();
+
+    // add to the replies object for this user
+    setRepliesByUser({
+      // TODO: repliesByTweet instead?
+      // * link reply nodes by Tweet.in_reply_to_id
+      ...repliesByTweetId,
+      [tweetId]: [
+        ...(repliesByTweetId?.[tweetId] || []),
+        ...likedTweets.map((tweet) => tweet.id_str),
+      ],
+    });
+    setTweets(likedTweets.map((tweet) => ({ ...tweet, isLikedNode: true })));
+  };
+
+  return { loading, fetchReplies };
 }
 
 export function useParamsForFetch() {

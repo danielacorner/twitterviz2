@@ -19,8 +19,12 @@ export type GlobalStateStoreType = {
   setTweetsFromServer: (tweets) => void;
   config: AppConfig;
   setConfig: (newConfig: Partial<AppConfig>) => void;
-  likesByUser: { [userId: string]: string[] };
-  setLikesByUser: (newLikesByUser: { [userId: string]: string[] }) => void;
+  likesByUserId: { [userId: string]: string[] };
+  setLikesByUserId: (newlikesByUserId: { [userId: string]: string[] }) => void;
+  repliesByTweetId: { [tweetId: string]: string[] };
+  setRepliesByTweetId: (newRepliesByTweetId: {
+    [userId: string]: string[];
+  }) => void;
   loading: boolean;
   setLoading: (newLoading: boolean) => void;
   wordcloudConfig: WordcloudConfig;
@@ -70,8 +74,8 @@ const [useStore] = create(
       setTweetsFromServer: (tweets) =>
         set(() => ({ tweetsFromServer: tweets })),
       loading: false,
-      likesByUser: {},
-      setLikesByUser: (likesByUser) => set(() => ({ likesByUser })),
+      likesByUserId: {},
+      setLikesByUserId: (likesByUserId) => set(() => ({ likesByUserId })),
       setLoading: (loading) => set(() => ({ loading })),
       config: {
         isGridMode: false,
@@ -187,7 +191,7 @@ export const useSelectedNode = () =>
   useStore((state: GlobalStateStoreType) => state.selectedNode);
 export const useSetSelectedNode = () =>
   useStore((state: GlobalStateStoreType) => state.setSelectedNode);
-export const useTooltipNode = () =>
+export const useTooltipNode = (): Tweet | null =>
   useStore((state: GlobalStateStoreType) => state.tooltipNode);
 export const useSetTooltipNode = () =>
   useStore((state: GlobalStateStoreType) => state.setTooltipNode);
@@ -195,10 +199,14 @@ export const useLoading = () =>
   useStore((state: GlobalStateStoreType) => state.loading);
 export const useSetLoading = () =>
   useStore((state: GlobalStateStoreType) => state.setLoading);
-export const useLikesByUser = () =>
-  useStore((state: GlobalStateStoreType) => state.likesByUser);
-export const useSetLikesByUser = () =>
-  useStore((state: GlobalStateStoreType) => state.setLikesByUser);
+export const useLikesByUserId = () =>
+  useStore((state: GlobalStateStoreType) => state.likesByUserId);
+export const useSetLikesByUserId = () =>
+  useStore((state: GlobalStateStoreType) => state.setLikesByUserId);
+export const useRepliesByTweetId = () =>
+  useStore((state: GlobalStateStoreType) => state.repliesByTweetId);
+export const useSetRepliesByTweetId = () =>
+  useStore((state: GlobalStateStoreType) => state.setRepliesByTweetId);
 export const useStoredSaves = () =>
   useStore((state: GlobalStateStoreType) => ({
     saves: state.savedDatasets,

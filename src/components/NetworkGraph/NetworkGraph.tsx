@@ -4,7 +4,7 @@ import NodeTooltip from "../NodeTooltip";
 // https://www.npmjs.com/package/react-force-graph
 import styled from "styled-components/macro";
 import { NODE_DIAMETER, useForceGraphProps } from "./useForceGraphProps";
-import { useConfig, useLikesByUser, useTweets } from "../../providers/store";
+import { useConfig, useLikesByUserId, useTweets } from "../../providers/store";
 // https://www.npmjs.com/package/d3-force-cluster
 import { Tweet } from "../../types";
 import { uniqBy } from "lodash";
@@ -43,10 +43,10 @@ function Graph() {
   // sync internal state to prevent node re-renders
   const [graph, setGraph] = useState({ nodes: [], links: [] });
   const [userNodes, setUserNodes] = useState([] as Tweet[]);
-  const likesByUser = useLikesByUser();
+  const likesByUserId = useLikesByUserId();
   const userToLikesLinks = showUserNodes
     ? userNodes.reduce((acc, userNode) => {
-        const userLikes = likesByUser[userNode.id_str];
+        const userLikes = likesByUserId[userNode.id_str];
         if (userLikes) {
           const likedTweetLinks = userLikes.map((likedTweetId) => {
             const source = Number(likedTweetId);

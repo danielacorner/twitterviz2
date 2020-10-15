@@ -73,7 +73,7 @@ export function useForceGraphProps() {
     //   fgRef.current && !is3d ? (fgRef.current as any).zoomToFit(400) : null,
     nodeCanvasObject: (node, ctx) => {
       if (tooltipNode?.id_str === node.id_str) {
-        drawHighlightCircle(node, ctx);
+        drawHighlightCircle(node, ctx, tooltipNode?.isUserNode);
       }
 
       if (colorBy === COLOR_BY.profilePhoto || node.isUserNode) {
@@ -214,14 +214,14 @@ export function useForceGraphProps() {
   return { fgRef, forceGraphProps };
 }
 
-function drawHighlightCircle(node: any, ctx: any) {
+function drawHighlightCircle(node: any, ctx: any, isUserNode: boolean) {
   // circle
   ctx.beginPath();
   // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/arc
   ctx.arc(
     node.x, // x: The horizontal coordinate of the arc's center.
     node.y, // y: The vertical coordinate of the arc's center.
-    AVATAR_DIAMETER / 2, // radius
+    isUserNode ? AVATAR_DIAMETER : AVATAR_DIAMETER / 2, // radius
     0, // startAngle
     Math.PI * 2 // endAngle
   );
