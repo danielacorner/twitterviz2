@@ -140,7 +140,6 @@ export function useFetchUsers() {
 }
 
 export function useFetchLikes() {
-  const loading = useLoading();
   const setLoading = useSetLoading();
   const { numTweets } = useConfig();
   const { allowedMediaTypesParam } = useParamsForFetch();
@@ -166,13 +165,12 @@ export function useFetchLikes() {
     setTweets(likedTweets.map((tweet) => ({ ...tweet, isLikedNode: true })));
   };
 
-  return { loading, fetchLikes };
+  return { fetchLikes };
 }
 
 // TODO:
 /** fetch tweets replying to a tweet */
 export function useFetchReplies() {
-  const loading = useLoading();
   const setLoading = useSetLoading();
   const { numTweets } = useConfig();
   const { allowedMediaTypesParam } = useParamsForFetch();
@@ -199,7 +197,7 @@ export function useFetchReplies() {
     setTweets(replyTweets.map((tweet) => ({ ...tweet, isLikedNode: true })));
   };
 
-  return { loading, fetchReplies };
+  return { fetchReplies };
 }
 
 export function useParamsForFetch() {

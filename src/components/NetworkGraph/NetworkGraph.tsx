@@ -283,11 +283,11 @@ function useTheForce(
           })
       );
 
-      fg.d3Force("pullTogether", d3.forceManyBody().strength(400));
+      // fg.d3Force("pullTogether", d3.forceManyBody().strength(400));
 
-      setTimeout(() => {
-        fg.d3Force("pullTogether", null);
-      }, 250);
+      // setTimeout(() => {
+      //   fg.d3Force("pullTogether", null);
+      // }, 250);
 
       // gravitate all towards each other
       // fg.d3Force("gravity", d3.forceManyBody().strength(140));
