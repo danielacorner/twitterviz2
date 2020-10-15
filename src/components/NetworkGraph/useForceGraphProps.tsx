@@ -69,8 +69,8 @@ export function useForceGraphProps() {
     cooldownTime: 400 * (showUserNodes ? 2 : 1),
     nodeRelSize: NODE_DIAMETER,
     nodeColor: (node) => getNodeColor(node, colorBy),
-    onEngineStop: () =>
-      fgRef.current && !is3d ? (fgRef.current as any).zoomToFit(400) : null,
+    // onEngineStop: () =>
+    //   fgRef.current && !is3d ? (fgRef.current as any).zoomToFit(400) : null,
     nodeCanvasObject: (node, ctx) => {
       if (tooltipNode?.id_str === node.id_str) {
         drawHighlightCircle(node, ctx);

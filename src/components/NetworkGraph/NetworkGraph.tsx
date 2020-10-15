@@ -279,7 +279,7 @@ function useTheForce(
           .forceLink(graph.links)
           .strength(0.2)
           .distance((link, idx, links) => {
-            return NODE_DIAMETER * 1.25;
+            return NODE_DIAMETER * 1.25 * (link.source.isLikedNode ? 15 : 1);
           })
       );
 
