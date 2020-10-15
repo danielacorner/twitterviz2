@@ -23,7 +23,7 @@ const AVATAR_DIAMETER = NODE_DIAMETER * 2;
 const DEFAULT_NODE_COLOR = "steelblue";
 
 export function useForceGraphProps() {
-  const { is3d, colorBy, showUserNodes } = useConfig();
+  const { colorBy } = useConfig();
   const allowedMediaTypesStrings = useAllowedMediaTypes();
   const setTooltipNode = useSetTooltipNode();
   const tooltipNode = useTooltipNode();

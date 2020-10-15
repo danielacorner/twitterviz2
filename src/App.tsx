@@ -86,7 +86,7 @@ function useStopLoadingEventually() {
       }
       (app as HTMLElement).style.cursor = "unset";
     }
-  }, [tweets, setLoading, prevTweets.current]);
+  }, [tweets, setLoading]);
 }
 
 function AppStylesHooks() {
