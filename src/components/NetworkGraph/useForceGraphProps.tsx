@@ -124,12 +124,16 @@ export function useForceGraphProps() {
     linkColor: ({ source, target }) => {
       const LIGHTGREY = "#D3D3D3";
       const DARKGREY = "#a9a9a9";
+      const LIKE = "#ce03d8";
       const userToTweetColor = LIGHTGREY;
-      // TODO: link by likes
       // TODO: link by replies
       // TODO: link by retweets
       const other = isLightTheme ? DARKGREY : LIGHTGREY;
-      return source.isUserNode ? userToTweetColor : other;
+      return source.isLikedNode
+        ? LIKE
+        : source.isUserNode
+        ? userToTweetColor
+        : other;
     },
     // linkOpacity: 0.2,
     // linkDirectionalArrowLength: 8,

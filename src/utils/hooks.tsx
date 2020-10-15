@@ -158,10 +158,10 @@ export function useFetchLikes() {
       ...likesByUser,
       [userId]: [
         ...(likesByUser?.[userId] || []),
-        likedTweets.map((tweet) => tweet.id_str),
+        ...likedTweets.map((tweet) => tweet.id_str),
       ],
     });
-    setTweets(likedTweets);
+    setTweets(likedTweets.map((tweet) => ({ ...tweet, isLikedNode: true })));
   };
 
   return { loading, fetchLikes };

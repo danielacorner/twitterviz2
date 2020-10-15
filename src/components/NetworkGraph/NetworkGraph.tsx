@@ -48,21 +48,17 @@ function Graph() {
     ? userNodes.reduce((acc, userNode) => {
         const userLikes = likesByUser[userNode.id_str];
         if (userLikes) {
-          console.log("🌟🚨: Graph -> userLikes", userLikes);
-          const likedTweetLinks = userLikes
-            .filter(Boolean)
-            .map((likedTweetId) => ({
-              source: Number(likedTweetId),
-              target: Number(userNode.id_str),
-            }));
-          console.log("🌟🚨: Graph -> likedTweetLinks", likedTweetLinks);
+          const likedTweetLinks = userLikes.map((likedTweetId) => {
+            const source = Number(likedTweetId);
+            const target = Number(userNode.id_str);
+            return { source, target, isLike: true };
+          });
           return [...acc, ...likedTweetLinks];
         } else {
           return acc;
         }
       }, [])
     : [];
-  console.log("🌟🚨: Graph -> userToLikesLinks", userToLikesLinks);
 
   const graphWithUsers = {
     ...graph,
