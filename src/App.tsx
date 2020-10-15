@@ -67,7 +67,6 @@ function useStopLoadingEventually() {
 
   // when loading starts, start a timer to stop loading
   useEffect(() => {
-    console.log("🌟🚨: useStopLoadingEventually -> setLoading", setLoading);
     const timer = window.setTimeout(() => {
       setLoading(false);
     }, MAX_LOADING_TIME);

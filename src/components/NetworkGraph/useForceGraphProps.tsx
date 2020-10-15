@@ -62,11 +62,11 @@ export function useForceGraphProps() {
     onNodeHover,
     onNodeClick,
     d3VelocityDecay: 0.7,
-    d3AlphaDecay: 0.01,
+    d3AlphaDecay: 0.007,
     // warmupTicks: 10,
     // cooldownTicks: 10,
     // nodeAutoColorBy: "group",
-    cooldownTime: 400 * (showUserNodes ? 2 : 1),
+    // cooldownTime: 400 * (showUserNodes ? 2 : 1),
     nodeRelSize: NODE_DIAMETER,
     nodeColor: (node) => getNodeColor(node, colorBy),
     // onEngineStop: () =>
