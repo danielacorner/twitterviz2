@@ -4,7 +4,12 @@ import NodeTooltip from "../NodeTooltip";
 // https://www.npmjs.com/package/react-force-graph
 import styled from "styled-components/macro";
 import { NODE_DIAMETER, useForceGraphProps } from "./useForceGraphProps";
-import { useConfig, useLikesByUserId, useTweets } from "../../providers/store";
+import {
+  useConfig,
+  useLikesByUserId,
+  useRetweetsByTweetId,
+  useTweets,
+} from "../../providers/store";
 // https://www.npmjs.com/package/d3-force-cluster
 import { Tweet } from "../../types";
 import { uniqBy } from "lodash";
@@ -44,6 +49,7 @@ function Graph() {
   const [graph, setGraph] = useState({ nodes: [], links: [] });
   const [userNodes, setUserNodes] = useState([] as Tweet[]);
   const likesByUserId = useLikesByUserId();
+  const retweetsByTweetId = useRetweetsByTweetId();
   const userToLikesLinks = showUserNodes
     ? userNodes.reduce((acc, userNode) => {
         const userLikes = likesByUserId[userNode.id_str];
@@ -51,7 +57,7 @@ function Graph() {
           const likedTweetLinks = userLikes.map((likedTweetId) => {
             const source = Number(likedTweetId);
             const target = Number(userNode.id_str);
-            return { source, target, isLike: true };
+            return { source, target };
           });
           return [...acc, ...likedTweetLinks];
         } else {
@@ -59,6 +65,24 @@ function Graph() {
         }
       }, [])
     : [];
+
+  const userToRetweetsLinks = showUserNodes
+    ? tweets.reduce((acc, tweet) => {
+        const tweetRetweets = retweetsByTweetId[tweet.id_str];
+        if (tweetRetweets) {
+          const retweetedTweetLinks = tweetRetweets.map((retweetedTweetId) => {
+            const source = Number(retweetedTweetId);
+            const target = Number(tweet.id_str);
+            return { source, target };
+          });
+          return [...acc, ...retweetedTweetLinks];
+        } else {
+          return acc;
+        }
+      }, [])
+    : [];
+
+  const tweetToRetweetsLinks = [];
 
   const graphWithUsers = {
     ...graph,
@@ -76,6 +100,8 @@ function Graph() {
             })),
             // links from each user to their likes
             ...userToLikesLinks,
+            ...userToRetweetsLinks,
+            ...tweetToRetweetsLinks,
           ]
         : []),
     ],
@@ -279,7 +305,15 @@ function useTheForce(
           .forceLink(graph.links)
           .strength(0.2)
           .distance((link, idx, links) => {
-            return NODE_DIAMETER * 1.25 * (link.source.isLikedNode ? 15 : 1);
+            return (
+              NODE_DIAMETER *
+              1.25 *
+              (link.source.isLikedNode
+                ? 15
+                : link.source.isRetweetNode
+                ? 30
+                : 1)
+            );
           })
       );
 

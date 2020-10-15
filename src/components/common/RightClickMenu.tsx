@@ -3,7 +3,7 @@ import { Menu, MenuItem } from "@material-ui/core";
 import {
   useFetchLikes,
   useFetchTimeline,
-  useFetchReplies,
+  useFetchRetweets,
 } from "../../utils/hooks";
 import { useTooltipNode } from "providers/store";
 import RetweetedIcon from "@material-ui/icons/CachedRounded";
@@ -17,7 +17,7 @@ export default function RightClickMenu({
 }) {
   const { fetchTimeline } = useFetchTimeline();
   const { fetchLikes } = useFetchLikes();
-  const { fetchReplies } = useFetchReplies();
+  const { fetchRetweets } = useFetchRetweets();
   // TODO: fetch retweeters of a tweet GET statuses/retweeters/ids https://developer.twitter.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/get-statuses-retweets-id
   // TODO: fetch users who liked a tweet
   const tooltipNode = useTooltipNode();
@@ -56,17 +56,17 @@ export default function RightClickMenu({
       {isTweetNode ? (
         <MenuItem
           onClick={() => {
-            fetchReplies(user.id_str);
+            fetchRetweets(tooltipNode?.id_str);
             handleClose();
           }}
         >
-          Replies to this tweet
+          Retweets of this tweet
         </MenuItem>
       ) : null}
       {isTweetNode && tooltipNode?.retweeted_status?.user ? (
         <MenuItem
           onClick={() => {
-            fetchReplies(user.id_str);
+            fetchTimeline(tooltipNode.retweeted_status.user.id_str);
             handleClose();
           }}
         >

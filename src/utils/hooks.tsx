@@ -10,8 +10,8 @@ import {
   useSetLoading,
   useLikesByUserId,
   useSetLikesByUserId,
-  useRepliesByTweetId,
-  useSetRepliesByTweetId,
+  useRetweetsByTweetId,
+  useSetRetweetersByTweetId,
 } from "../providers/store";
 import { geoDistanceKm } from "./distanceFromCoords";
 import { Tweet } from "../types";
@@ -169,35 +169,45 @@ export function useFetchLikes() {
 }
 
 // TODO:
-/** fetch tweets replying to a tweet */
-export function useFetchReplies() {
+/** fetch tweets replying to a tweet
+ * since we can only fetch from statuses/mentions_timeline,
+ * we'll fetch all the replies to this user
+ * * (later we could filter out other replies to this user, leaving only the ones to this tweet)
+ *
+ */
+export function useFetchRetweets() {
   const setLoading = useSetLoading();
   const { numTweets } = useConfig();
   const { allowedMediaTypesParam } = useParamsForFetch();
   const setTweets = useSetTweets();
-  const repliesByTweetId = useRepliesByTweetId();
-  const setRepliesByTweetId = useSetRepliesByTweetId();
+  const retweetsByTweetId = useRetweetsByTweetId();
+  const setRetweetsByTweetId = useSetRetweetersByTweetId();
 
-  const fetchReplies = async (tweetId: string) => {
+  const fetchRetweets = async (tweetId: string) => {
     setLoading(true);
     const resp = await fetch(
-      `${SERVER_URL}/api/tweet_replies?id_str=${tweetId}&num=${numTweets}${allowedMediaTypesParam}`
+      `${SERVER_URL}/api/retweets?id_str=${tweetId}&num=${numTweets}${allowedMediaTypesParam}`
     );
-    const replyTweets = await resp.json();
+    const retweetTweets = await resp.json();
 
-    // add to the replies object for this tweet id
-    setRepliesByTweetId({
+    if (retweetTweets.length === 0) {
+      return;
+    }
+    // add to the retweets object for this tweet id
+    setRetweetsByTweetId({
       // * link reply nodes by Tweet.in_reply_to_id
-      ...repliesByTweetId,
+      ...retweetsByTweetId,
       [tweetId]: [
-        ...(repliesByTweetId?.[tweetId] || []),
-        ...replyTweets.map((tweet) => tweet.id_str),
+        ...(retweetsByTweetId?.[tweetId] || []),
+        ...retweetTweets.map((tweet) => tweet.id_str),
       ],
     });
-    setTweets(replyTweets.map((tweet) => ({ ...tweet, isLikedNode: true })));
+    setTweets(
+      retweetTweets.map((tweet) => ({ ...tweet, isRetweetNode: true }))
+    );
   };
 
-  return { fetchReplies };
+  return { fetchRetweets };
 }
 
 export function useParamsForFetch() {

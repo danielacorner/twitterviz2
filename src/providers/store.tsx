@@ -21,9 +21,13 @@ export type GlobalStateStoreType = {
   setConfig: (newConfig: Partial<AppConfig>) => void;
   likesByUserId: { [userId: string]: string[] };
   setLikesByUserId: (newlikesByUserId: { [userId: string]: string[] }) => void;
-  repliesByTweetId: { [tweetId: string]: string[] };
-  setRepliesByTweetId: (newRepliesByTweetId: {
-    [userId: string]: string[];
+  // repliesByUserId: { [tweetId: string]: string[] };
+  // setRepliesByUserId: (newRepliesByUserId: {
+  //   [userId: string]: string[];
+  // }) => void;
+  retweetersByTweetId: { [tweetId: string]: string[] };
+  setRetweetersByTweetId: (newRetweetersByTweetId: {
+    [tweetId: string]: string[];
   }) => void;
   loading: boolean;
   setLoading: (newLoading: boolean) => void;
@@ -76,6 +80,12 @@ const [useStore] = create(
       loading: false,
       likesByUserId: {},
       setLikesByUserId: (likesByUserId) => set(() => ({ likesByUserId })),
+      // * only works for authenticated user (me)
+      // repliesByUserId: {},
+      // setRepliesByUserId: (repliesByUserId) => set(() => ({ repliesByUserId })),
+      retweetersByTweetId: {},
+      setRetweetersByTweetId: (retweetersByTweetId) =>
+        set(() => ({ retweetersByTweetId })),
       setLoading: (loading) => set(() => ({ loading })),
       config: {
         isGridMode: false,
@@ -203,10 +213,15 @@ export const useLikesByUserId = () =>
   useStore((state: GlobalStateStoreType) => state.likesByUserId);
 export const useSetLikesByUserId = () =>
   useStore((state: GlobalStateStoreType) => state.setLikesByUserId);
-export const useRepliesByTweetId = () =>
-  useStore((state: GlobalStateStoreType) => state.repliesByTweetId);
-export const useSetRepliesByTweetId = () =>
-  useStore((state: GlobalStateStoreType) => state.setRepliesByTweetId);
+// export const useRepliesByUserId = () =>
+//   useStore((state: GlobalStateStoreType) => state.repliesByUserId);
+// export const useSetRepliesByUserId = () =>
+//   useStore((state: GlobalStateStoreType) => state.setRepliesByUserId);
+export const useRetweetsByTweetId = () =>
+  useStore((state: GlobalStateStoreType) => state.retweetersByTweetId);
+export const useSetRetweetersByTweetId = () =>
+  useStore((state: GlobalStateStoreType) => state.setRetweetersByTweetId);
+
 export const useStoredSaves = () =>
   useStore((state: GlobalStateStoreType) => ({
     saves: state.savedDatasets,

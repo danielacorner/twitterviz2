@@ -138,6 +138,7 @@ export interface Tweet {
   created_at?: string;
   isUserNode?: boolean;
   isLikedNode?: boolean;
+  isRetweetNode?: boolean;
   id: string | number;
   id_str: string;
   text: string;
