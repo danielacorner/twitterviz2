@@ -36,6 +36,7 @@ function Graph() {
   const { fgRef, forceGraphProps } = useForceGraphProps();
   const { is3d, showUserNodes, replace, isGridMode } = useConfig();
   const tweets = useTweets();
+  console.log("🌟🚨: Graph -> tweets", tweets);
 
   // dynamic force graph updates WITHOUT re-rendering every node example: https://github.com/vasturiano/react-force-graph/blob/master/example/dynamic/index.html
 
@@ -171,15 +172,11 @@ function Graph() {
     // eslint-disable-next-line
   }, [tweets]);
 
-  // TODO:
+  const fg = fgRef.current as any;
+
   //
   // use the force!
   //
-
-  const fg = fgRef.current as any;
-
-  // const [ref,dimensions] = useContainerDimensions()
-
   useTheForce(fg, showUserNodes, graph, isGridMode);
 
   return (
