@@ -3,7 +3,7 @@ import shallow from "zustand/shallow";
 import { uniqBy } from "lodash";
 import { Tweet } from "../types";
 import { COLOR_BY, FILTER_LEVELS } from "../utils/constants";
-import mockTweets from "../tweets.json";
+import mockTweetsData from "../mockTweetsData.json";
 import { useCallback, useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 import qs from "query-string";
@@ -25,8 +25,8 @@ export type GlobalStateStoreType = {
   // setRepliesByUserId: (newRepliesByUserId: {
   //   [userId: string]: string[];
   // }) => void;
-  retweetersByTweetId: { [tweetId: string]: string[] };
-  setRetweetersByTweetId: (newRetweetersByTweetId: {
+  retweetsByTweetId: { [tweetId: string]: string[] };
+  setRetweetsByTweetId: (newRetweetsByTweetId: {
     [tweetId: string]: string[];
   }) => void;
   loading: boolean;
@@ -67,8 +67,16 @@ const [useStore] = create(
     ({
       tweetsFromServer:
         process.env.NODE_ENV === "development"
-          ? mockTweets.slice(0, 12)
+          ? mockTweetsData.tweets
           : ([] as Tweet[]),
+      likesByUserId:
+        process.env.NODE_ENV === "development"
+          ? mockTweetsData.likesByUserId
+          : {},
+      retweetsByTweetId:
+        process.env.NODE_ENV === "development"
+          ? mockTweetsData.retweetsByTweetId
+          : {},
       selectedNode: null as Tweet | null,
       setSelectedNode: (node: Tweet | null) =>
         set(() => ({ selectedNode: node })),
@@ -78,14 +86,12 @@ const [useStore] = create(
       setTweetsFromServer: (tweets) =>
         set(() => ({ tweetsFromServer: tweets })),
       loading: false,
-      likesByUserId: {},
       setLikesByUserId: (likesByUserId) => set(() => ({ likesByUserId })),
       // * only works for authenticated user (me)
       // repliesByUserId: {},
       // setRepliesByUserId: (repliesByUserId) => set(() => ({ repliesByUserId })),
-      retweetersByTweetId: {},
-      setRetweetersByTweetId: (retweetersByTweetId) =>
-        set(() => ({ retweetersByTweetId })),
+      setRetweetsByTweetId: (retweetsByTweetId) =>
+        set(() => ({ retweetsByTweetId })),
       setLoading: (loading) => set(() => ({ loading })),
       config: {
         isGridMode: false,
@@ -218,9 +224,9 @@ export const useSetLikesByUserId = () =>
 // export const useSetRepliesByUserId = () =>
 //   useStore((state: GlobalStateStoreType) => state.setRepliesByUserId);
 export const useRetweetsByTweetId = () =>
-  useStore((state: GlobalStateStoreType) => state.retweetersByTweetId);
-export const useSetRetweetersByTweetId = () =>
-  useStore((state: GlobalStateStoreType) => state.setRetweetersByTweetId);
+  useStore((state: GlobalStateStoreType) => state.retweetsByTweetId);
+export const useSetRetweetsByTweetId = () =>
+  useStore((state: GlobalStateStoreType) => state.setRetweetsByTweetId);
 
 export const useStoredSaves = () =>
   useStore((state: GlobalStateStoreType) => ({

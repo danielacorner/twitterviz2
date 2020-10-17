@@ -36,7 +36,16 @@ function Graph() {
   const { fgRef, forceGraphProps } = useForceGraphProps();
   const { is3d, showUserNodes, replace, isGridMode } = useConfig();
   const tweets = useTweets();
-  console.log("🌟🚨: Graph -> tweets", tweets);
+  const likesByUserId = useLikesByUserId();
+  const retweetsByTweetId = useRetweetsByTweetId();
+
+  // uncomment to grab the current state and copy-paste into mockTweetsData.json
+
+  console.log("🌟🚨: Graph -> mockTweetsData", {
+    tweets,
+    retweetsByTweetId,
+    likesByUserId,
+  });
 
   // dynamic force graph updates WITHOUT re-rendering every node example: https://github.com/vasturiano/react-force-graph/blob/master/example/dynamic/index.html
 
@@ -49,8 +58,7 @@ function Graph() {
   // sync internal state to prevent node re-renders
   const [graph, setGraph] = useState({ nodes: [], links: [] });
   const [userNodes, setUserNodes] = useState([] as Tweet[]);
-  const likesByUserId = useLikesByUserId();
-  const retweetsByTweetId = useRetweetsByTweetId();
+
   const userToLikesLinks = showUserNodes
     ? userNodes.reduce((acc, userNode) => {
         const userLikes = likesByUserId[userNode.id_str];
@@ -273,6 +281,8 @@ function useTheForce(
           .strength(10)
           // turn off gravity when nodes get close enough together
           .distanceMin(NODE_DIAMETER * 5)
+          // so that you can drag nodes apart and have them stop pulling back together, max distance
+          .distanceMax(NODE_DIAMETER * 50)
       );
 
       // repel nodes from each other
@@ -306,7 +316,7 @@ function useTheForce(
               NODE_DIAMETER *
               1.25 *
               (link.source.isLikedNode
-                ? 15
+                ? 60
                 : link.source.isRetweetNode
                 ? 30
                 : 1)

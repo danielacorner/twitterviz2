@@ -12,6 +12,8 @@ import {
   useSetSelectedNode,
   useAllowedMediaTypes,
   useTooltipNode,
+  useRetweetsByTweetId,
+  useLikesByUserId,
 } from "../../providers/store";
 import { useIsLight } from "../../providers/ThemeManager";
 
@@ -30,6 +32,8 @@ export function useForceGraphProps() {
   const setSelectedNode = useSetSelectedNode();
   const isLightTheme = useIsLight();
   const fgRef = useRef();
+  const retweetsByTweetId = useRetweetsByTweetId();
+  const likesByUserId = useLikesByUserId();
 
   const onBackgroundClick = useCallback(() => {
     setSelectedNode(null);
@@ -130,9 +134,17 @@ export function useForceGraphProps() {
       // TODO: link by replies
       // TODO: link by retweets
       const other = isLightTheme ? DARKGREY : LIGHTGREY;
-      return source.isLikedNode
+
+      const isLikeLink =
+        target?.user?.id_str &&
+        target.user.id_str in likesByUserId &&
+        likesByUserId[target.user.id_str].includes(source.id_str);
+
+      const isRetweetLink = target.id_str in retweetsByTweetId;
+
+      return isLikeLink
         ? LIKE
-        : source.isRetweetNode
+        : isRetweetLink
         ? RETWEET_TO_TWEET
         : source.isUserNode
         ? USER_TO_TWEET

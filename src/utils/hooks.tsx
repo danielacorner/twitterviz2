@@ -11,7 +11,7 @@ import {
   useLikesByUserId,
   useSetLikesByUserId,
   useRetweetsByTweetId,
-  useSetRetweetersByTweetId,
+  useSetRetweetsByTweetId,
 } from "../providers/store";
 import { geoDistanceKm } from "./distanceFromCoords";
 import { Tweet } from "../types";
@@ -181,7 +181,7 @@ export function useFetchRetweets() {
   const { allowedMediaTypesParam } = useParamsForFetch();
   const setTweets = useSetTweets();
   const retweetsByTweetId = useRetweetsByTweetId();
-  const setRetweetsByTweetId = useSetRetweetersByTweetId();
+  const setRetweetsByTweetId = useSetRetweetsByTweetId();
 
   const fetchRetweets = async (tweetId: string) => {
     setLoading(true);
