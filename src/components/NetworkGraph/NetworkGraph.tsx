@@ -16,6 +16,7 @@ import { uniqBy } from "lodash";
 import { EMPTY_TWEET } from "../../utils/emptyTweet";
 import * as d3 from "d3";
 import GraphRightClickMenu from "./GraphRightClickMenu";
+import { useGetIsLikeLink, useGetIsRetweetLink } from "utils/hooks";
 
 const GraphStyles = styled.div`
   width: 100%;
@@ -215,6 +216,9 @@ function useTheForce(
   graph: { nodes: any[]; links: any[] },
   isGridMode: boolean
 ) {
+  const getIsLikeLink = useGetIsLikeLink();
+  const getIsRetweetLink = useGetIsRetweetLink();
+
   useEffect(() => {
     if (!fg) {
       return;
@@ -310,15 +314,21 @@ function useTheForce(
         "link",
         d3
           .forceLink(graph.links)
-          .strength(0.2)
+          .strength((link, idx, links) => {
+            return (
+              0.2 *
+              // different link types have different strengths
+              (getIsLikeLink(link) ? 1 : getIsRetweetLink(link) ? 0 : 1)
+            );
+          })
           .distance((link, idx, links) => {
             return (
               NODE_DIAMETER *
               1.25 *
               (link.source.isLikedNode
-                ? 60
+                ? 10
                 : link.source.isRetweetNode
-                ? 30
+                ? 20
                 : 1)
             );
           })

@@ -5,15 +5,17 @@ import * as d3 from "d3";
 import { Tweet } from "../../types";
 import { useCallback, useRef } from "react";
 // https://www.npmjs.com/package/react-force-graph
-import { useWindowSize } from "../../utils/hooks";
+import {
+  useGetIsLikeLink,
+  useGetIsRetweetLink,
+  useWindowSize,
+} from "../../utils/hooks";
 import {
   useConfig,
   useSetTooltipNode,
   useSetSelectedNode,
   useAllowedMediaTypes,
   useTooltipNode,
-  useRetweetsByTweetId,
-  useLikesByUserId,
 } from "../../providers/store";
 import { useIsLight } from "../../providers/ThemeManager";
 
@@ -32,9 +34,8 @@ export function useForceGraphProps() {
   const setSelectedNode = useSetSelectedNode();
   const isLightTheme = useIsLight();
   const fgRef = useRef();
-  const retweetsByTweetId = useRetweetsByTweetId();
-  const likesByUserId = useLikesByUserId();
-
+  const getIsLikeLink = useGetIsLikeLink();
+  const getIsRetweetLink = useGetIsRetweetLink();
   const onBackgroundClick = useCallback(() => {
     setSelectedNode(null);
     setTooltipNode(null);
@@ -135,12 +136,8 @@ export function useForceGraphProps() {
       // TODO: link by retweets
       const other = isLightTheme ? DARKGREY : LIGHTGREY;
 
-      const isLikeLink =
-        target?.user?.id_str &&
-        target.user.id_str in likesByUserId &&
-        likesByUserId[target.user.id_str].includes(source.id_str);
-
-      const isRetweetLink = target.id_str in retweetsByTweetId;
+      const isLikeLink = getIsLikeLink({ source, target });
+      const isRetweetLink = getIsRetweetLink({ source, target });
 
       return isLikeLink
         ? LIKE

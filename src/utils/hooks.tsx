@@ -238,3 +238,16 @@ export function useParamsForFetch() {
     : "";
   return { langParam, allowedMediaTypesParam, countryParam, geocodeParam };
 }
+
+export const useGetIsLikeLink = () => {
+  const likesByUserId = useLikesByUserId();
+  return ({ source, target }) =>
+    target?.user?.id_str &&
+    target.user.id_str in likesByUserId &&
+    likesByUserId[target.user.id_str].includes(source.id_str);
+};
+
+export const useGetIsRetweetLink = () => {
+  const retweetsByTweetId = useRetweetsByTweetId();
+  return ({ source, target }) => target.id_str in retweetsByTweetId;
+};
