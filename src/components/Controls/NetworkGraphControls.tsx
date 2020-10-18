@@ -19,7 +19,13 @@ import {
 } from "../common/styledComponents";
 import { FormControlLabelCollapsible } from "./Checkboxes";
 import { Slider, Typography } from "@material-ui/core";
-import { SlowMotionVideo, Speed, Timer } from "@material-ui/icons";
+import {
+  GroupWork,
+  GroupWorkOutlined,
+  SlowMotionVideo,
+  Speed,
+  Timer,
+} from "@material-ui/icons";
 /** react-force-graph docs
  * https://www.npmjs.com/package/react-force-graph
  */
@@ -103,21 +109,42 @@ function SelectColorBy() {
   );
 }
 
-function valuetext(value) {
-  return `${value}`;
-}
 function SimulationControls() {
   const {
-    setConfig,
     d3VelocityDecay,
     d3AlphaDecay,
     cooldownTime,
+    gravity,
+    charge,
   } = useConfig();
 
   return (
     <FormControl>
+      <TitleWithIcon title={"Charge"} icon={<GroupWork />} />
+      <SliderWithInputAndSwitch
+        {...{
+          value: charge,
+          configKeyString: "charge",
+          min: -1000,
+          max: 0,
+          disabledValue: 0,
+          step: 10,
+        }}
+      />
 
-<TitleWithIcon title={"Velocity decay"} icon={<Speed />}/>
+      <TitleWithIcon title={"Gravity"} icon={<GroupWorkOutlined />} />
+      <SliderWithInputAndSwitch
+        {...{
+          value: gravity,
+          configKeyString: "gravity",
+          min: 0,
+          max: 1000,
+          disabledValue: 0,
+          step: 10,
+        }}
+      />
+
+      <TitleWithIcon title={"Velocity decay"} icon={<Speed />} />
       <SliderWithInputAndSwitch
         {...{
           value: d3VelocityDecay,
@@ -129,7 +156,7 @@ function SimulationControls() {
         }}
       />
 
-<TitleWithIcon title={"Alpha decay"} icon={<SlowMotionVideo />}/>
+      <TitleWithIcon title={"Alpha decay"} icon={<SlowMotionVideo />} />
       <SliderWithInputAndSwitch
         {...{
           value: d3AlphaDecay,
@@ -141,7 +168,7 @@ function SimulationControls() {
         }}
       />
 
-<TitleWithIcon title={"Cooldown time"} icon={<Timer />}/>
+      <TitleWithIcon title={"Cooldown time"} icon={<Timer />} />
       <SliderWithInputAndSwitch
         {...{
           value: cooldownTime,
@@ -156,15 +183,15 @@ function SimulationControls() {
   );
 }
 
-function TitleWithIcon({title,icon}){
-  return       <Grid container spacing={2} alignItems="center">
-  <Grid item>
-    {icon}
-  </Grid>
-  <Grid item>
-<Typography gutterBottom>{title}}</Typography>
-  </Grid>
-</Grid>
+function TitleWithIcon({ title, icon }) {
+  return (
+    <Grid container spacing={2} alignItems="center">
+      <Grid item>{icon}</Grid>
+      <Grid item>
+        <Typography gutterBottom>{title}</Typography>
+      </Grid>
+    </Grid>
+  );
 }
 
 function SliderWithInputAndSwitch({
@@ -193,16 +220,12 @@ function SliderWithInputAndSwitch({
   return (
     <Grid container spacing={2} alignItems="center">
       <Grid item xs>
-        <Switch
-          onChange={() => setDisabled(!disabled)}
-          checked={!disabled}
-        />
+        <Switch onChange={() => setDisabled(!disabled)} checked={!disabled} />
       </Grid>
       <Grid item xs>
         <Slider
           {...{ min, max, step, value }}
           disabled={disabled}
-          getAriaValueText={valuetext}
           onChange={(event, newValue, ...rest) => {
             setConfig({ [configKeyString]: newValue as number });
           }}
@@ -218,7 +241,6 @@ function SliderWithInputAndSwitch({
           onChange={(event) => {
             const newValue = event.target.value;
             if (typeof newValue === "number") {
-              console.log("🌟🚨: SimulationControls -> newValue", newValue);
               setConfig({ [configKeyString]: newValue as number });
             }
           }}

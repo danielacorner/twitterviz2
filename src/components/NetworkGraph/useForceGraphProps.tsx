@@ -227,6 +227,7 @@ export function useForceGraphProps() {
     onLinkHover: (link, prevLink) => {},
     enablePointerInteraction: /* tweets.length<500 */ true,
     enableNodeDrag: true,
+    // when we start to drag, pause the simulation
   };
 
   return { fgRef, forceGraphProps };

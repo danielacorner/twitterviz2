@@ -40,6 +40,8 @@ export type GlobalStateStoreType = {
 };
 export type AppConfig = {
   is3d: boolean;
+  gravity: number;
+  charge: number;
   isPaused: boolean;
   d3VelocityDecay: number;
   d3AlphaDecay: number;
@@ -107,6 +109,8 @@ const [useStore] = create(
         is3d: false,
         /** is the simulation paused */
         isPaused: false,
+        gravity: 10,
+        charge: -500,
         d3VelocityDecay: 0.9,
         d3AlphaDecay: 0.007,
         cooldownTime: 15 * 1000,
@@ -162,6 +166,14 @@ export const useConfig = () => {
   return {
     // useLoading: ()=> useStore((state: GlobalStateStoreType) => state.loading, shallow),
     is3d: useStore((state: GlobalStateStoreType) => state.config.is3d, shallow),
+    gravity: useStore(
+      (state: GlobalStateStoreType) => state.config.gravity,
+      shallow
+    ),
+    charge: useStore(
+      (state: GlobalStateStoreType) => state.config.charge,
+      shallow
+    ),
     isPaused: useStore(
       (state: GlobalStateStoreType) => state.config.isPaused,
       shallow

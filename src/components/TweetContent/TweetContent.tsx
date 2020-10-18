@@ -25,6 +25,7 @@ export default function TweetContent({
     retweeted_status,
     extended_tweet,
     extended_entities,
+    in_reply_to_screen_name,
     entities,
   } = tweet;
   const retweetedUser = retweeted_status?.user
@@ -107,49 +108,14 @@ export default function TweetContent({
       videoHeight={-offset + 270}
       isVideo={extended_entities?.media[0]?.type === "video"}
     >
-      {retweetedUser && (
-        <div className="retweetedUser">
-          <Body1 className="user_name">{retweetedUser.name}</Body1>
-          <a
-            href={`https://twitter.com/${retweetedUser.screen_name}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="user_screen_name"
-          >
-            @{retweetedUser.screen_name}
-          </a>
-          {!isTooltip && <BtnFetchTimeline user={retweetedUser} />}
-        </div>
-      )}
       <div className="userInfo">
-        <>{retweetedUser && <RetweetedBy user={user} />}</>
-        <a
-          href={`https://twitter.com/${user.screen_name}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="user_screen_name"
-        >
-          @{user.screen_name}
-        </a>
-        <BtnFetchTimeline user={user} />
+        {retweetedUser && <RetweetedByUser {...{ user, isTooltip }} />}
+        {retweetedUser && <RetweetedUser {...{ retweetedUser, isTooltip }} />}
+        {in_reply_to_screen_name && (
+          <InReplyToUser {...{ in_reply_to_screen_name }} />
+        )}
       </div>
 
-      {tweet.in_reply_to_screen_name && (
-        <>
-          <Body2 className="inReplyTo">
-            <ReplyIcon />
-            to
-            <a
-              style={{ marginLeft: "0.5ch" }}
-              href={`https://twitter.com/${tweet.in_reply_to_screen_name}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              @{tweet.in_reply_to_screen_name}
-            </a>
-          </Body2>
-        </>
-      )}
       {(user.location || entities?.place?.country_code) && (
         <Body2 className="locationInfo">
           {user.location && (
@@ -185,11 +151,52 @@ export default function TweetContent({
   );
 }
 
-function RetweetedBy({ user }) {
+function RetweetedByUser({ user, isTooltip }) {
   return (
     <>
       <RetweetedIcon /> <div className="retweetedBy">by </div>
       <Body2 className="username">{user.name}</Body2>
+      <a
+        href={`https://twitter.com/${user.screen_name}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="user_screen_name"
+      >
+        @{user.screen_name}
+      </a>
+      {!isTooltip && <BtnFetchTimeline user={user} />}
     </>
+  );
+}
+function RetweetedUser({ retweetedUser, isTooltip }) {
+  return (
+    <div className="retweetedUser">
+      <Body1 className="user_name">{retweetedUser.name}</Body1>
+      <a
+        href={`https://twitter.com/${retweetedUser.screen_name}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="user_screen_name"
+      >
+        @{retweetedUser.screen_name}
+      </a>
+      {!isTooltip && <BtnFetchTimeline user={retweetedUser} />}
+    </div>
+  );
+}
+function InReplyToUser({ in_reply_to_screen_name }) {
+  return (
+    <Body2 className="inReplyTo">
+      <ReplyIcon />
+      to
+      <a
+        style={{ marginLeft: "0.5ch" }}
+        href={`https://twitter.com/${in_reply_to_screen_name}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        @{in_reply_to_screen_name}
+      </a>
+    </Body2>
   );
 }
