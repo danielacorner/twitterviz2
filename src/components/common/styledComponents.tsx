@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components/macro";
 import { Typography, Switch, Tooltip } from "@material-ui/core";
 import { FORM_HEIGHT } from "../../utils/constants";
-import { useIsLeftDrawerOpen } from "../../providers/store";
 
 export const ColumnDiv = styled.div`
   display: grid;
@@ -41,7 +40,6 @@ export const CollapsibleSwitchWithLabels = ({
   checked,
   ...props
 }) => {
-  const { isDrawerOpen } = useIsLeftDrawerOpen();
   return (
     <ColumnDiv
       css={`
@@ -56,7 +54,7 @@ export const CollapsibleSwitchWithLabels = ({
       `}
     >
       <Body1 className="label">{labelLeft}</Body1>
-      <Tooltip title={isDrawerOpen ? "" : `${labelLeft}/${labelRight}`}>
+      <Tooltip title={`${labelLeft}/${labelRight}`}>
         <Switch onChange={onChange} checked={checked} {...props} />
       </Tooltip>
       <Body1 className="label">{labelRight}</Body1>

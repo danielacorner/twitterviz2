@@ -24,26 +24,16 @@ import { SlowMotionVideo, Speed, Timer } from "@material-ui/icons";
  * https://www.npmjs.com/package/react-force-graph
  */
 const NetworkGraphControls = () => {
-  // TODO
-  const createLinks = () => {
-    console.log("TODO");
-  };
   return (
     <div className="networkGraphControls controlsContainer">
-      <H5 style={{ pointerEvents: "none" }}>Network Graph Controls</H5>
+      <H5 style={{ pointerEvents: "none" }}>Graph</H5>
       <Switch3D />
       <SwitchGridMode />
+      <H5 style={{ pointerEvents: "none" }}>Nodes</H5>
       <SwitchUserNodes />
       <SelectColorBy />
+      <H5 style={{ pointerEvents: "none" }}>Force Simulation</H5>
       <SimulationControls />
-      <Button
-        variant="contained"
-        color="primary"
-        disabled={true}
-        onClick={createLinks}
-      >
-        Link Nodes
-      </Button>
     </div>
   );
 };
