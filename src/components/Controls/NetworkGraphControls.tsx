@@ -214,7 +214,7 @@ function SliderWithInputAndSwitch({
       // when we unpause, restore the previous value
       setConfig({ [configKeyString]: prevValue.current as number });
     }
-  }, [disabled, setConfig, configKeyString, disabledValue]);
+  }, [disabled, setConfig, configKeyString, disabledValue, value]);
 
   return (
     <Grid container spacing={2} alignItems="center">
