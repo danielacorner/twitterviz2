@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   MenuItem,
   Select,
@@ -8,6 +8,7 @@ import {
   Checkbox,
   Grid,
   Input,
+  Switch,
 } from "@material-ui/core";
 import { COLOR_BY } from "../../utils/constants";
 import { useConfig, AppConfig } from "../../providers/store";
@@ -127,80 +128,103 @@ function SimulationControls() {
   return (
     <FormControl>
       <Typography gutterBottom>Velocity decay</Typography>
-      <SliderWithInput
+      <SliderWithInputAndSwitch
         {...{
           value: d3VelocityDecay,
           configKeyString: "d3VelocityDecay",
           icon: <Speed />,
           min: 0,
           max: 1,
+          disabledValue: 1,
           step: 0.05,
         }}
       />
 
       <Typography gutterBottom>Alpha decay</Typography>
-      <SliderWithInput
+      <SliderWithInputAndSwitch
         {...{
           value: d3AlphaDecay,
           configKeyString: "d3AlphaDecay",
           icon: <SlowMotionVideo />,
           min: 0,
-          max: 0.2,
+          max: 0.1,
+          disabledValue: 1,
           step: 0.01,
         }}
       />
 
       <Typography gutterBottom>Cooldown time</Typography>
-      <SliderWithInput
+      <SliderWithInputAndSwitch
         {...{
           value: cooldownTime,
           configKeyString: "cooldownTime",
           icon: <Timer />,
           min: 0,
           max: 30 * 1000,
+          disabledValue: 0,
           step: 1000,
         }}
-      />
-      <CollapsibleSwitchWithLabels
-        onChange={() => {
-          setConfig({ isPaused: !isPaused });
-        }}
-        labelLeft={"Play"}
-        labelRight={"Pause"}
-        checked={isPaused}
       />
     </FormControl>
   );
 }
 
-function SliderWithInput({ value, configKeyString, min, max, step }) {
+function SliderWithInputAndSwitch({
+  value,
+  disabledValue,
+  configKeyString,
+  min,
+  max,
+  step,
+  icon,
+}) {
   const { setConfig } = useConfig();
+  const [isDisabled, setIsDisabled] = useState(false);
+  const prevValue = useRef(value);
+  const setValue = (newValue) =>
+    setConfig({ [configKeyString]: newValue as number });
+
+  useEffect(() => {
+    // when we pause, remember the previous value & set to the disabled value
+    if (isDisabled) {
+      prevValue.current = value;
+      setValue(disabledValue);
+    } else {
+      // when we unpause, restore the previous value
+      setValue(prevValue.current);
+    }
+  }, [isDisabled, setValue]);
 
   return (
     <Grid container spacing={2} alignItems="center">
-      <Grid item>
-        <SlowMotionVideo />
+      <Grid item>{icon}</Grid>
+      <Grid item xs>
+        <Switch
+          onChange={() => setIsDisabled(!isDisabled)}
+          checked={!isDisabled}
+        />
       </Grid>
       <Grid item xs>
         <Slider
           {...{ min, max, step, value }}
           getAriaValueText={valuetext}
           onChange={(event, newValue, ...rest) => {
-            setConfig({ [configKeyString]: newValue as number });
+            setValue(newValue);
           }}
           valueLabelDisplay="auto"
           aria-labelledby={`input-slider-${configKeyString}`}
         />
       </Grid>
-      <Grid item>
+      <Grid item xs>
         <Input
-          value={value}
+          value={isDisabled ? disabledValue : value}
+          disabled={isDisabled}
           margin="dense"
           onChange={(event) => {
             const newValue = event.target.value;
             if (typeof newValue === "number") {
               console.log("🌟🚨: SimulationControls -> newValue", newValue);
-              setConfig({ [configKeyString]: newValue as number });
+              setValue(newValue);
             }
           }}
           inputProps={{
