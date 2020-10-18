@@ -4,7 +4,6 @@ import {
   Select,
   InputLabel,
   FormControl,
-  Button,
   Checkbox,
   Grid,
   Input,
@@ -215,7 +214,7 @@ function SliderWithInputAndSwitch({
       // when we unpause, restore the previous value
       setConfig({ [configKeyString]: prevValue.current as number });
     }
-  }, [disabled, setConfig, configKeyString]);
+  }, [disabled, setConfig, configKeyString, disabledValue]);
 
   return (
     <Grid container spacing={2} alignItems="center">

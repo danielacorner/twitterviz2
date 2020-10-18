@@ -187,5 +187,14 @@ export function useTheForce(
     //     }
     //   });
     // });
-  }, [graph, fg, isGridMode, showUserNodes, gravity, charge]);
+  }, [
+    graph,
+    fg,
+    isGridMode,
+    showUserNodes,
+    gravity,
+    charge,
+    getIsLikeLink,
+    getIsRetweetLink,
+  ]);
 }

@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components/macro";
-import { Button, CircularProgress } from "@material-ui/core";
 import { useSelectedNode } from "../../providers/store";
-import { useFetchTimeline } from "../../utils/hooks";
 import { Tweet, User } from "../../types";
 import BtnFavorite from "../common/BtnFavorite";
 
@@ -53,8 +51,6 @@ export default function UserInfo({
   //       setUser(data);
   //     });
   // }, []);
-
-  const { fetchTimeline, loading } = useFetchTimeline();
 
   return (
     <UserInfoStyles>

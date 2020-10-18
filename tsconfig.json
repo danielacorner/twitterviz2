@@ -14,7 +14,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react"
+    "jsx": "react",
+    "noUnusedLocals": true
   },
   "include": ["src", "types/types-cogeden.ts", "types/operations-types.ts"]
 }
