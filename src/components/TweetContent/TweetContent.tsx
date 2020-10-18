@@ -11,6 +11,7 @@ import BtnFetchTimeline from "../common/BtnFetchTimeline";
 import { useSearchObj } from "../../providers/store";
 import useContainerDimensions from "utils/useContainerDimensions";
 import MediaContent from "./Media/MediaContent";
+import { Tweet } from "types";
 
 export default function TweetContent({
   tweet,
@@ -28,14 +29,8 @@ export default function TweetContent({
     in_reply_to_screen_name,
     entities,
   } = tweet;
-  const retweetedUser = retweeted_status?.user
-    ? {
-        name: retweeted_status.user.name,
-        screen_name: retweeted_status.user.screen_name,
-        id_str: retweeted_status.user.id_str,
-      }
-    : null;
 
+  const retweetedUser = getRetweetedUser(tweet);
   let parsing = null; //TODO necessary?
 
   const mediaArr = getMediaArr(tweet);
@@ -109,11 +104,16 @@ export default function TweetContent({
       isVideo={extended_entities?.media[0]?.type === "video"}
     >
       <div className="userInfo">
-        {retweetedUser && <RetweetedByUser {...{ user, isTooltip }} />}
-        {retweetedUser && <RetweetedUser {...{ retweetedUser, isTooltip }} />}
-        {in_reply_to_screen_name && (
-          <InReplyToUser {...{ in_reply_to_screen_name }} />
-        )}
+        <div className="usersRows">
+          {!retweetedUser && (
+            <OriginalUser {...{ originalUser: user, isTooltip }} />
+          )}
+          {retweetedUser && <RetweetedByUser {...{ user, isTooltip }} />}
+          {retweetedUser && <RetweetedUser {...{ retweetedUser, isTooltip }} />}
+          {in_reply_to_screen_name && (
+            <InReplyToUser {...{ in_reply_to_screen_name }} />
+          )}
+        </div>
       </div>
 
       {(user.location || entities?.place?.country_code) && (
@@ -153,7 +153,7 @@ export default function TweetContent({
 
 function RetweetedByUser({ user, isTooltip }) {
   return (
-    <>
+    <div className="retweetedByUser">
       <RetweetedIcon /> <div className="retweetedBy">by </div>
       <Body2 className="username">{user.name}</Body2>
       <a
@@ -165,7 +165,23 @@ function RetweetedByUser({ user, isTooltip }) {
         @{user.screen_name}
       </a>
       {!isTooltip && <BtnFetchTimeline user={user} />}
-    </>
+    </div>
+  );
+}
+function OriginalUser({ originalUser, isTooltip }) {
+  return (
+    <div className="originalUser">
+      <Body1 className="user_name">{originalUser.name}</Body1>
+      <a
+        href={`https://twitter.com/${originalUser.screen_name}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="user_screen_name"
+      >
+        @{originalUser.screen_name}
+      </a>
+      {!isTooltip && <BtnFetchTimeline user={originalUser} />}
+    </div>
   );
 }
 function RetweetedUser({ retweetedUser, isTooltip }) {
@@ -186,7 +202,7 @@ function RetweetedUser({ retweetedUser, isTooltip }) {
 }
 function InReplyToUser({ in_reply_to_screen_name }) {
   return (
-    <Body2 className="inReplyTo">
+    <Body2 className="inReplyToUser">
       <ReplyIcon />
       to
       <a
@@ -199,4 +215,14 @@ function InReplyToUser({ in_reply_to_screen_name }) {
       </a>
     </Body2>
   );
+}
+
+export function getRetweetedUser(tweet: Tweet) {
+  return tweet?.retweeted_status?.user
+    ? {
+        name: tweet.retweeted_status.user.name,
+        screen_name: tweet.retweeted_status.user.screen_name,
+        id_str: tweet.retweeted_status.user.id_str,
+      }
+    : null;
 }

@@ -8,26 +8,34 @@ export const TweetStyles = styled.div`
   grid-gap: ${PADDING}px;
   overflow: hidden;
   word-break: break-all;
-  .user_name,
-  .user_screen_name,
-  .location,
-  .inReplyTo {
-    font-size: 0.8em;
-  }
+
   .user_name {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .retweetedUser {
+  .usersRows {
     display: grid;
-    width: 100%;
-    grid-template-columns: auto auto auto;
+  }
+  .retweetedByUser,
+  .retweetedUser,
+  .originalUser,
+  .inReplyToUser {
+    display: grid;
+    grid-auto-flow: column;
     align-items: baseline;
     justify-content: start;
     grid-gap: 2px;
     transform-origin: left;
   }
+  .location,
+  .inReplyToUser,
+  .retweetedByUser,
+  .locationInfo {
+    font-size: 0.8em;
+    color: hsl(0, 0%, 50%);
+  }
+
   .btnFetchTimeline {
     font-size: 0.6rem;
     width: 42px;
@@ -48,38 +56,27 @@ export const TweetStyles = styled.div`
     align-content: center;
     align-items: baseline;
     grid-gap: 2px;
-    ${(props) =>
-      props.isRetweet
-        ? "font-size: 0.75rem; align-content: end; color: hsl(0, 0%, 50%);"
-        : ""};
-
     .username {
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
     }
   }
-  .retweetedBy {
-    margin-right: 0.5ch;
-  }
   .locationInfo {
-    font-size: 0.75rem;
     display: grid;
     grid-auto-flow: column;
     place-content: start;
     grid-gap: 2px;
     height: 8px;
-    color: hsl(0, 0%, 50%);
     transform: translateY(-6px);
     transform-origin: top left;
   }
-  .inReplyTo {
+  .inReplyToUser {
+    text-align: left;
     display: grid;
     grid-auto-flow: column;
     justify-content: flex-start;
     align-items: center;
-    color: hsl(0, 0%, 50%);
-    text-align: left;
     .MuiSvgIcon-root {
       width: 0.8em;
       height: 0.8em;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useSpring, animated } from "react-spring";
 import styled from "styled-components/macro";
-import TweetContent from "./TweetContent/TweetContent";
+import TweetContent, { getRetweetedUser } from "./TweetContent/TweetContent";
 import { PADDING } from "../utils/utils";
 import useStore from "../providers/store";
 import useContainerDimensions from "../utils/useContainerDimensions";
@@ -97,12 +97,15 @@ const NodeTooltip = () => {
 
   const tweet = tooltipNode || lastTooltipNode.current;
   const isLight = useIsLight();
+
+  const retweetedUser = getRetweetedUser(tweet);
+  const originalPoster = retweetedUser ? retweetedUser : tweet?.user;
   return (
     <animated.div style={springToMousePosition}>
       <TooltipStyles ref={ref} isLight={isLight}>
         <div className="profileAndContent">
           <AvatarStyles>
-            <img src={tweet?.user.profile_image_url_https} alt="" />
+            <img src={originalPoster?.profile_image_url_https} alt="" />
           </AvatarStyles>
           {tweet && (
             <>
