@@ -122,17 +122,16 @@ function SimulationControls() {
     d3VelocityDecay,
     d3AlphaDecay,
     cooldownTime,
-    isPaused,
   } = useConfig();
-  console.log("🌟🚨: SimulationControls -> d3VelocityDecay", d3VelocityDecay);
+
   return (
     <FormControl>
-      <Typography gutterBottom>Velocity decay</Typography>
+
+<TitleWithIcon title={"Velocity decay"} icon={<Speed />}/>
       <SliderWithInputAndSwitch
         {...{
           value: d3VelocityDecay,
           configKeyString: "d3VelocityDecay",
-          icon: <Speed />,
           min: 0,
           max: 1,
           disabledValue: 1,
@@ -140,12 +139,11 @@ function SimulationControls() {
         }}
       />
 
-      <Typography gutterBottom>Alpha decay</Typography>
+<TitleWithIcon title={"Alpha decay"} icon={<SlowMotionVideo />}/>
       <SliderWithInputAndSwitch
         {...{
           value: d3AlphaDecay,
           configKeyString: "d3AlphaDecay",
-          icon: <SlowMotionVideo />,
           min: 0,
           max: 0.1,
           disabledValue: 1,
@@ -153,20 +151,30 @@ function SimulationControls() {
         }}
       />
 
-      <Typography gutterBottom>Cooldown time</Typography>
+<TitleWithIcon title={"Cooldown time"} icon={<Timer />}/>
       <SliderWithInputAndSwitch
         {...{
           value: cooldownTime,
           configKeyString: "cooldownTime",
-          icon: <Timer />,
           min: 0,
-          max: 30 * 1000,
+          max: 15 * 1000,
           disabledValue: 0,
           step: 1000,
         }}
       />
     </FormControl>
   );
+}
+
+function TitleWithIcon({title,icon}){
+  return       <Grid container spacing={2} alignItems="center">
+  <Grid item>
+    {icon}
+  </Grid>
+  <Grid item>
+<Typography gutterBottom>{title}}</Typography>
+  </Grid>
+</Grid>
 }
 
 function SliderWithInputAndSwitch({
@@ -176,40 +184,37 @@ function SliderWithInputAndSwitch({
   min,
   max,
   step,
-  icon,
 }) {
   const { setConfig } = useConfig();
-  const [isDisabled, setIsDisabled] = useState(false);
+  const [disabled, setDisabled] = useState(false);
   const prevValue = useRef(value);
-  const setValue = (newValue) =>
-    setConfig({ [configKeyString]: newValue as number });
 
   useEffect(() => {
     // when we pause, remember the previous value & set to the disabled value
-    if (isDisabled) {
+    if (disabled) {
       prevValue.current = value;
-      setValue(disabledValue);
+      setConfig({ [configKeyString]: disabledValue as number });
     } else {
       // when we unpause, restore the previous value
-      setValue(prevValue.current);
+      setConfig({ [configKeyString]: prevValue.current as number });
     }
-  }, [isDisabled, setValue]);
+  }, [disabled, setConfig, configKeyString]);
 
   return (
     <Grid container spacing={2} alignItems="center">
-      <Grid item>{icon}</Grid>
       <Grid item xs>
         <Switch
-          onChange={() => setIsDisabled(!isDisabled)}
-          checked={!isDisabled}
+          onChange={() => setDisabled(!disabled)}
+          checked={!disabled}
         />
       </Grid>
       <Grid item xs>
         <Slider
           {...{ min, max, step, value }}
+          disabled={disabled}
           getAriaValueText={valuetext}
           onChange={(event, newValue, ...rest) => {
-            setValue(newValue);
+            setConfig({ [configKeyString]: newValue as number });
           }}
           valueLabelDisplay="auto"
           aria-labelledby={`input-slider-${configKeyString}`}
@@ -217,14 +222,14 @@ function SliderWithInputAndSwitch({
       </Grid>
       <Grid item xs>
         <Input
-          value={isDisabled ? disabledValue : value}
-          disabled={isDisabled}
+          value={disabled ? disabledValue : value}
+          disabled={disabled}
           margin="dense"
           onChange={(event) => {
             const newValue = event.target.value;
             if (typeof newValue === "number") {
               console.log("🌟🚨: SimulationControls -> newValue", newValue);
-              setValue(newValue);
+              setConfig({ [configKeyString]: newValue as number });
             }
           }}
           inputProps={{
