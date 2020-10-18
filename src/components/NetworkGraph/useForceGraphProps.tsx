@@ -27,7 +27,13 @@ const AVATAR_DIAMETER = NODE_DIAMETER * 2;
 const DEFAULT_NODE_COLOR = "steelblue";
 
 export function useForceGraphProps() {
-  const { colorBy } = useConfig();
+  const {
+    colorBy,
+    d3VelocityDecay,
+    d3AlphaDecay,
+    cooldownTime,
+    isPaused,
+  } = useConfig();
   const allowedMediaTypesStrings = useAllowedMediaTypes();
   const setTooltipNode = useSetTooltipNode();
   const tooltipNode = useTooltipNode();
@@ -66,10 +72,10 @@ export function useForceGraphProps() {
     height,
     onNodeHover,
     onNodeClick,
-    d3VelocityDecay: 0.7,
-    d3AlphaDecay: 0.007,
+    d3VelocityDecay,
+    d3AlphaDecay,
+    cooldownTime: isPaused ? 0 : cooldownTime,
     // warmupTicks: 10,
-    // cooldownTicks: 10,
     // nodeAutoColorBy: "group",
     // cooldownTime: 400 * (showUserNodes ? 2 : 1),
     nodeRelSize: NODE_DIAMETER,

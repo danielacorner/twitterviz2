@@ -122,12 +122,7 @@ export default function TweetContent({
         </div>
       )}
       <div className="userInfo">
-        {retweetedUser && (
-          <>
-            <RetweetedIcon /> <div className="retweetedBy">by </div>
-          </>
-        )}
-        <Body2 className="username">{user.name}</Body2>
+        <>{retweetedUser && <RetweetedBy user={user} />}</>
         <a
           href={`https://twitter.com/${user.screen_name}`}
           target="_blank"
@@ -187,5 +182,14 @@ export default function TweetContent({
         })}
       </div>
     </TweetStyles>
+  );
+}
+
+function RetweetedBy({ user }) {
+  return (
+    <>
+      <RetweetedIcon /> <div className="retweetedBy">by </div>
+      <Body2 className="username">{user.name}</Body2>
+    </>
   );
 }

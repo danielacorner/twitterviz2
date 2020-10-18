@@ -193,7 +193,7 @@ export function useFetchRetweets() {
     if (retweetTweets.length === 0) {
       return;
     }
-    // add to the retweets object for this tweet id
+    // add to the retweets object for tweet.id_str
     setRetweetsByTweetId({
       // * link reply nodes by Tweet.in_reply_to_id
       ...retweetsByTweetId,

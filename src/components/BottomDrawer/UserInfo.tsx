@@ -59,13 +59,6 @@ export default function UserInfo({
   return (
     <UserInfoStyles>
       <UserAvatar user={user} />
-      <Button
-        variant="outlined"
-        disabled={loading}
-        onClick={() => user?.id_str && fetchTimeline(user?.id_str)}
-      >
-        {loading ? <CircularProgress /> : "Fetch user timeline"}
-      </Button>
       <BtnFavorite tooltipTitle="favorite user" user={user} />
     </UserInfoStyles>
   );

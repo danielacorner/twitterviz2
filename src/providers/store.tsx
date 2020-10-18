@@ -40,6 +40,10 @@ export type GlobalStateStoreType = {
 };
 export type AppConfig = {
   is3d: boolean;
+  isPaused: boolean;
+  d3VelocityDecay: number;
+  d3AlphaDecay: number;
+  cooldownTime: number;
   isGridMode: boolean;
   showUserNodes: boolean;
   colorBy: keyof typeof COLOR_BY | null;
@@ -69,34 +73,43 @@ const [useStore] = create(
         process.env.NODE_ENV === "development"
           ? mockTweetsData.tweets
           : ([] as Tweet[]),
+      // map between tweet.user.id_str and the liked tweet.id_str
       likesByUserId:
         process.env.NODE_ENV === "development"
           ? mockTweetsData.likesByUserId
           : {},
+      setLikesByUserId: (likesByUserId) => set(() => ({ likesByUserId })),
+      // map between tweet.user.id_str and the liked tweet.id_str
       retweetsByTweetId:
         process.env.NODE_ENV === "development"
           ? mockTweetsData.retweetsByTweetId
           : {},
+      setRetweetsByTweetId: (retweetsByTweetId) =>
+        set(() => ({ retweetsByTweetId })),
+      /** which node is displayed in the BottomDrawer */
       selectedNode: null as Tweet | null,
       setSelectedNode: (node: Tweet | null) =>
         set(() => ({ selectedNode: node })),
+
       tooltipNode: null as Tweet | null,
       setTooltipNode: (node: Tweet | null) =>
         set(() => ({ tooltipNode: node })),
       setTweetsFromServer: (tweets) =>
         set(() => ({ tweetsFromServer: tweets })),
       loading: false,
-      setLikesByUserId: (likesByUserId) => set(() => ({ likesByUserId })),
       // * only works for authenticated user (me)
       // repliesByUserId: {},
       // setRepliesByUserId: (repliesByUserId) => set(() => ({ repliesByUserId })),
-      setRetweetsByTweetId: (retweetsByTweetId) =>
-        set(() => ({ retweetsByTweetId })),
       setLoading: (loading) => set(() => ({ loading })),
       config: {
         isGridMode: false,
         showUserNodes: true,
         is3d: false,
+        /** is the simulation paused */
+        isPaused: false,
+        d3VelocityDecay: 0.9,
+        d3AlphaDecay: 0.007,
+        cooldownTime: 15 * 1000,
         colorBy: COLOR_BY.mediaType as keyof typeof COLOR_BY | null,
         lang: "All",
         countryCode: "All",
@@ -149,6 +162,22 @@ export const useConfig = () => {
   return {
     // useLoading: ()=> useStore((state: GlobalStateStoreType) => state.loading, shallow),
     is3d: useStore((state: GlobalStateStoreType) => state.config.is3d, shallow),
+    isPaused: useStore(
+      (state: GlobalStateStoreType) => state.config.isPaused,
+      shallow
+    ),
+    d3VelocityDecay: useStore(
+      (state: GlobalStateStoreType) => state.config.d3VelocityDecay,
+      shallow
+    ),
+    d3AlphaDecay: useStore(
+      (state: GlobalStateStoreType) => state.config.d3AlphaDecay,
+      shallow
+    ),
+    cooldownTime: useStore(
+      (state: GlobalStateStoreType) => state.config.cooldownTime,
+      shallow
+    ),
     isGridMode: useStore(
       (state: GlobalStateStoreType) => state.config.isGridMode,
       shallow

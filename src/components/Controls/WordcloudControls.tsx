@@ -18,7 +18,7 @@ function valuetextInstances(value) {
 }
 function WordcloudMinInstancesSlider() {
   const { minInstances, setWordcloudConfig } = useWordcloudConfig();
-  const handleChange = (event, [newMin]) => {
+  const handleChange = (event, newMin) => {
     setWordcloudConfig({ minInstances: newMin });
   };
   return (
@@ -29,7 +29,7 @@ function WordcloudMinInstancesSlider() {
       <Slider
         min={1}
         max={5}
-        value={[minInstances]}
+        value={minInstances}
         onChange={handleChange}
         valueLabelDisplay="auto"
         aria-labelledby="instances-slider"

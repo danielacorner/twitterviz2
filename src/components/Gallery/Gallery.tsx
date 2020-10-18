@@ -81,32 +81,18 @@ const GalleryStyles = styled.div`
     height: fit-content;
     border: 1px solid hsl(0, 0%, ${(props) => (props.isLight ? "70" : "30")}%);
     margin: -0.5px;
-    padding: 16px;
+    padding: 16px 16px 32px;
     position: relative;
   }
-  .openInNew {
+  .tweetButtons {
     transform: scale(0.8);
     transform-origin: top right;
     position: absolute;
-    top: 0;
-    right: 0;
-  }
-  .deleteTweet {
-    transform: scale(0.8);
-    transform-origin: top left;
-    position: absolute;
-    top: 0;
-    left: 0;
-    cursor: pointer;
+    bottom: -3px;
+    right: 6px;
     color: tomato;
-    opacity: 0.5;
-  }
-  .btnFavorite {
-    transform: scale(0.8);
-    transform-origin: bottom right;
-    position: absolute;
-    bottom: 0;
-    right: 0;
+    display: grid;
+    grid-auto-flow: column;
   }
   .btnFetchMoreWrapper {
     width: 100%;
@@ -211,16 +197,12 @@ function GridItem({ tweet }) {
       style={{ gridRow: `span ${rowSpan}` }}
     >
       <UserAvatar user={tweet.user} imageOnly={true} />
-      <div className="openInNew">
-        <OpenTweetBtn tweet={tweet} iconOnly={true} />
-      </div>
-      <div className="deleteTweet">
+      <div className="tweetButtons">
         <DeleteTweetBtn tweet={tweet} />
-      </div>
-      <TweetContent tweet={tweet} isTooltip={false} autoPlay={false} />
-      <div className="btnFavorite">
+        <OpenTweetBtn tweet={tweet} iconOnly={true} />
         <BtnFavorite tweet={tweet} tooltipTitle="favorite tweet" />
       </div>
+      <TweetContent tweet={tweet} isTooltip={false} autoPlay={false} />
     </div>
   );
 }

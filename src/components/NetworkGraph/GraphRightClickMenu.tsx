@@ -27,7 +27,11 @@ export default function GraphRightClickMenu() {
 
   useMount(() => {
     function handleRightClick(event) {
+      // prevent default right-click menu
       event.preventDefault();
+      // pause the simulation
+
+      // set the mouse position, triggering the menu to open
       setMousePosition({
         mouseX: event.clientX - 2,
         mouseY: event.clientY - 4,
