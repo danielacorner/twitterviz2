@@ -29,7 +29,7 @@ import {
   MediaTypeCheckboxes,
   RecentPopularMixedRadioBtns,
 } from "./Checkboxes";
-import { FetchUserTweetsForm, SearchForm } from "./Inputs";
+import { FetchUserTweetsForm, HowManyTweets, SearchForm } from "./Inputs";
 import { ControlTitle, TwoColFormStyles } from "../common/TwoColRowStyles";
 import ControlsStyles from "./ControlsStyles";
 import WordcloudControls from "./WordcloudControls";
@@ -197,7 +197,10 @@ function FetchTweetsControls() {
     <>
       <div className="fetchTweets section">
         <H5 style={{ pointerEvents: "none" }}>Fetch Tweets</H5>
-        <SwitchReplace />
+        <RowDiv style={{ alignItems: "flex-end" }}>
+          <SwitchReplace />
+          <HowManyTweets />
+        </RowDiv>
         <BtnStreamNewTweets />
         <SearchForm />
         <FetchUserTweetsForm />

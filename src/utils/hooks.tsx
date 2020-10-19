@@ -10,8 +10,6 @@ import {
   useSetLoading,
   useLikesByUserId,
   useSetLikesByUserId,
-  useRetweetsByTweetId,
-  useSetRetweetsByTweetId,
 } from "../providers/store";
 import { geoDistanceKm } from "./distanceFromCoords";
 import { Tweet } from "../types";
@@ -180,8 +178,8 @@ export function useFetchRetweets() {
   const { numTweets } = useConfig();
   const { allowedMediaTypesParam } = useParamsForFetch();
   const setTweets = useSetTweets();
-  const retweetsByTweetId = useRetweetsByTweetId();
-  const setRetweetsByTweetId = useSetRetweetsByTweetId();
+  // const retweetsByTweetId = useRetweetsByTweetId();
+  // const setRetweetsByTweetId = useSetRetweetsByTweetId();
 
   const fetchRetweets = async (tweetId: string) => {
     setLoading(true);
@@ -194,16 +192,16 @@ export function useFetchRetweets() {
       return;
     }
     // add to the retweets object for tweet.id_str
-    setRetweetsByTweetId({
-      // * link reply nodes by Tweet.in_reply_to_id
-      ...retweetsByTweetId,
-      [tweetId]: [
-        ...(retweetsByTweetId?.[tweetId] || []),
-        ...retweetTweets.map((tweet) => tweet.id_str),
-      ],
-    });
+    // setRetweetsByTweetId({
+    //   // * link reply nodes by Tweet.in_reply_to_id
+    //   ...retweetsByTweetId,
+    //   [tweetId]: [
+    //     ...(retweetsByTweetId?.[tweetId] || []),
+    //     ...retweetTweets.map((tweet) => tweet.id_str),
+    //   ],
+    // });
     setTweets(
-      retweetTweets.map((tweet) => ({ ...tweet, isRetweetNode: true }))
+      retweetTweets /* .map((tweet) => ({ ...tweet, isRetweetNode: true })) */
     );
   };
 
@@ -247,7 +245,9 @@ export const useGetIsLikeLink = () => {
     likesByUserId[target.user.id_str].includes(source.id_str);
 };
 
-export const useGetIsRetweetLink = () => {
-  const retweetsByTweetId = useRetweetsByTweetId();
-  return ({ source, target }) => target.id_str in retweetsByTweetId;
+export const getIsRetweetLink = ({ source, target }) => {
+  return source.isRetweetNode || target.isOriginalNode;
+};
+export const getIsTweetToRetweetLink = ({ source, target }) => {
+  return !source.isUserNode && target.isOriginalNode;
 };

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { NODE_DIAMETER } from "./useForceGraphProps";
 import { useConfig } from "../../providers/store";
 import * as d3 from "d3";
-import { useGetIsLikeLink, useGetIsRetweetLink } from "utils/hooks";
+import { useGetIsLikeLink, getIsRetweetLink } from "utils/hooks";
 
 export function useTheForce(
   fg: any,
@@ -11,7 +11,6 @@ export function useTheForce(
   isGridMode: boolean
 ) {
   const getIsLikeLink = useGetIsLikeLink();
-  const getIsRetweetLink = useGetIsRetweetLink();
   const { gravity, charge } = useConfig();
   useEffect(() => {
     if (!fg) {
@@ -190,6 +189,7 @@ export function useTheForce(
     fg,
     isGridMode,
     showUserNodes,
+    getIsRetweetLink,
     gravity,
     charge,
     getIsLikeLink,

@@ -41,11 +41,11 @@ function Graph() {
 
   // uncomment to grab the current state and copy-paste into mockTweetsData.json
 
-  // console.log("🌟🚨: Graph -> mockTweetsData", {
-  //   tweets,
-  //   retweetsByTweetId,
-  //   likesByUserId,
-  // });
+  console.log("🌟🚨: Graph -> mockTweetsData", {
+    tweets,
+    retweetsByTweetId,
+    likesByUserId,
+  });
 
   // dynamic force graph updates WITHOUT re-rendering every node example: https://github.com/vasturiano/react-force-graph/blob/master/example/dynamic/index.html
 
@@ -75,29 +75,30 @@ function Graph() {
       }, [])
     : [];
 
-  const userToRetweetsLinks = showUserNodes
+  const tweetToRetweetsLinks = showUserNodes
     ? tweets.reduce((acc, tweet) => {
-        const tweetRetweets = retweetsByTweetId[tweet.id_str];
-        if (tweetRetweets) {
-          const retweetedTweetLinks = tweetRetweets.map((retweetedTweetId) => {
-            const source = Number(retweetedTweetId);
-            const target = Number(tweet.id_str);
-            return { source, target };
-          });
-          return [...acc, ...retweetedTweetLinks];
+        const retweetsOfThisTweet = retweetsByTweetId[tweet.id_str];
+        if (retweetsOfThisTweet) {
+          const linksFromRetweetsOfThisTweet = retweetsOfThisTweet.map(
+            (idOfOriginalTweet) => {
+              const source = Number(idOfOriginalTweet);
+              const target = Number(tweet.id_str);
+              return { source, target };
+            }
+          );
+          return [...acc, ...linksFromRetweetsOfThisTweet];
         } else {
           return acc;
         }
       }, [])
     : [];
 
-  const tweetToRetweetsLinks = [];
-
   const graphWithUsers = {
     ...graph,
     nodes: [...graph.nodes, ...(showUserNodes ? userNodes : [])],
     links: [
       ...graph.links,
+      ...tweetToRetweetsLinks,
       ...(showUserNodes
         ? [
             // links from each user to their tweets
@@ -109,8 +110,6 @@ function Graph() {
             })),
             // links from each user to their likes
             ...userToLikesLinks,
-            ...userToRetweetsLinks,
-            ...tweetToRetweetsLinks,
           ]
         : []),
     ],

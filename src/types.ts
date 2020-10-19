@@ -138,7 +138,10 @@ export interface Tweet {
   created_at?: string;
   isUserNode?: boolean;
   isLikedNode?: boolean;
+  /** is this a retweet of another tweet */
   isRetweetNode?: boolean;
+  /** is this the original tweet referred to by a retweet */
+  isOriginalNode?: boolean;
   id: string | number;
   id_str: string;
   text: string;

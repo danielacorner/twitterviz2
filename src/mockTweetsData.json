@@ -76,9 +76,9 @@
           }
         },
         "protected": false,
-        "followers_count": 87292833,
+        "followers_count": 87293133,
         "friends_count": 50,
-        "listed_count": 121489,
+        "listed_count": 121501,
         "created_at": "Wed Mar 18 13:46:38 +0000 2009",
         "favourites_count": 5,
         "utc_offset": null,
@@ -115,16 +115,17 @@
       "place": null,
       "contributors": null,
       "is_quote_status": false,
-      "retweet_count": 14311,
-      "favorite_count": 51317,
+      "retweet_count": 15232,
+      "favorite_count": 55379,
       "favorited": false,
       "retweeted": false,
-      "lang": "en"
+      "lang": "en",
+      "isRetweetNode": true
     },
     {
-      "created_at": "Mon Oct 19 04:25:06 +0000 2020",
-      "id": 1318045485031018500,
-      "id_str": "1318045485031018497",
+      "created_at": "Mon Oct 19 05:08:43 +0000 2020",
+      "id": 1318056460287291400,
+      "id_str": "1318056460287291392",
       "text": "RT @realDonaldTrump: Watch the @marklevinshow on @FoxNews at 10:00 P.M. He will importantly be talking about the corruption of Joe Biden. @…",
       "truncated": false,
       "entities": {
@@ -164,27 +165,27 @@
         ],
         "urls": []
       },
-      "source": "<a href=\"https://mobile.twitter.com\" rel=\"nofollow\">Twitter Web App</a>",
+      "source": "<a href=\"http://twitter.com/download/android\" rel=\"nofollow\">Twitter for Android</a>",
       "in_reply_to_status_id": null,
       "in_reply_to_status_id_str": null,
       "in_reply_to_user_id": null,
       "in_reply_to_user_id_str": null,
       "in_reply_to_screen_name": null,
       "user": {
-        "id": 87504275,
-        "id_str": "87504275",
-        "name": "Frank Flag",
-        "screen_name": "rightlyaligned",
-        "location": "Right Side of the Left Coast",
-        "description": "All Political Social Cultural All The Time\nThank GOD Our President Is .@realDonaldTrump\n#Trump #MAGA #KAG #2A\n*****Also On https://t.co/5YElXraTEP*****",
-        "url": "http://t.co/nHoU83JQJk",
+        "id": 1152160808,
+        "id_str": "1152160808",
+        "name": "Desert Eddie",
+        "screen_name": "DesertEddie",
+        "location": "Peyto Lake = Prettiest, yes?",
+        "description": "This most beautiful mountain lake is in Alberta",
+        "url": "http://t.co/dQ58cmkNWK",
         "entities": {
           "url": {
             "urls": [
               {
-                "url": "http://t.co/nHoU83JQJk",
-                "expanded_url": "http://rightlyaligned.com",
-                "display_url": "rightlyaligned.com",
+                "url": "http://t.co/dQ58cmkNWK",
+                "expanded_url": "http://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=11&cad=rja&ved=0CHUQtwIwCg&url=http%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DgI2h4i-_CRA&ei=5xlKUe2sL4j3igKJkIG4BQ&usg=AFQjCNF6FsWDmF4EjmKdXkxolAt9lC_S7w&bvm=bv.44158598,d.cGE",
+                "display_url": "google.com/url?sa=t&rct=j…",
                 "indices": [
                   0,
                   22
@@ -193,44 +194,34 @@
             ]
           },
           "description": {
-            "urls": [
-              {
-                "url": "https://t.co/5YElXraTEP",
-                "expanded_url": "http://Parler.com",
-                "display_url": "Parler.com",
-                "indices": [
-                  123,
-                  146
-                ]
-              }
-            ]
+            "urls": []
           }
         },
         "protected": false,
-        "followers_count": 3415,
-        "friends_count": 3101,
-        "listed_count": 117,
-        "created_at": "Wed Nov 04 18:52:26 +0000 2009",
-        "favourites_count": 58124,
+        "followers_count": 40,
+        "friends_count": 48,
+        "listed_count": 9,
+        "created_at": "Tue Feb 05 21:49:18 +0000 2013",
+        "favourites_count": 7533,
         "utc_offset": null,
         "time_zone": null,
         "geo_enabled": false,
         "verified": false,
-        "statuses_count": 254830,
+        "statuses_count": 7349,
         "lang": null,
         "contributors_enabled": false,
         "is_translator": false,
         "is_translation_enabled": false,
-        "profile_background_color": "022330",
-        "profile_background_image_url": "http://abs.twimg.com/images/themes/theme15/bg.png",
-        "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme15/bg.png",
+        "profile_background_color": "C0DEED",
+        "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+        "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
         "profile_background_tile": false,
-        "profile_image_url": "http://pbs.twimg.com/profile_images/682358149/rightlyaligned_normal.jpg",
-        "profile_image_url_https": "https://pbs.twimg.com/profile_images/682358149/rightlyaligned_normal.jpg",
-        "profile_banner_url": "https://pbs.twimg.com/profile_banners/87504275/1580229206",
+        "profile_image_url": "http://pbs.twimg.com/profile_images/459098085654687744/R7lQVRwH_normal.jpeg",
+        "profile_image_url_https": "https://pbs.twimg.com/profile_images/459098085654687744/R7lQVRwH_normal.jpeg",
+        "profile_banner_url": "https://pbs.twimg.com/profile_banners/1152160808/1363807990",
         "profile_link_color": "0084B4",
-        "profile_sidebar_border_color": "A8C7F7",
-        "profile_sidebar_fill_color": "C0DFEC",
+        "profile_sidebar_border_color": "000000",
+        "profile_sidebar_fill_color": "DDEEF6",
         "profile_text_color": "333333",
         "profile_use_background_image": true,
         "has_extended_profile": false,
@@ -321,9 +312,9 @@
             }
           },
           "protected": false,
-          "followers_count": 87292834,
+          "followers_count": 87293134,
           "friends_count": 50,
-          "listed_count": 121489,
+          "listed_count": 121501,
           "created_at": "Wed Mar 18 13:46:38 +0000 2009",
           "favourites_count": 5,
           "utc_offset": null,
@@ -360,23 +351,23 @@
         "place": null,
         "contributors": null,
         "is_quote_status": false,
-        "retweet_count": 14311,
-        "favorite_count": 51321,
+        "retweet_count": 15232,
+        "favorite_count": 55391,
         "favorited": false,
         "retweeted": false,
         "lang": "en"
       },
       "is_quote_status": false,
-      "retweet_count": 14311,
+      "retweet_count": 15232,
       "favorite_count": 0,
       "favorited": false,
       "retweeted": false,
       "lang": "en",
-      "isRetweetNode": true
+      "isOriginalNode": true
     }
   ],
   "retweetsByTweetId": {
-    "1318045485031018497": [
+    "1318056460287291392": [
       "1318003668768026624"
     ]
   },

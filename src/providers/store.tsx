@@ -129,7 +129,8 @@ const [useStore] = create(
         replace: false,
         filterLevel: FILTER_LEVELS.none,
         searchTerm: "",
-        numTweets: 50,
+        numTweets: 1,
+        // numTweets: 50,
       },
       isDrawerOpen: window.innerWidth > 600,
       setIsDrawerOpen: (next) => set((state) => ({ isDrawerOpen: next })),
@@ -336,11 +337,40 @@ export const useSetTweets = () => {
       {}
     );
 
+    // for each retweet node, tag is as such
+    const tweetIdsToTagAsOriginal = Object.values(retweetsByTweetId).reduce(
+      (acc, retweetIds) => [...acc, ...retweetIds],
+      []
+    );
+    const tweetIdsToTagAsRetweet = Object.keys(retweetsByTweetId).reduce(
+      (acc, tweetId) => [...acc, tweetId],
+      []
+    );
+
+    console.log(
+      "🌟🚨: useSetTweets -> tweetIdsToTagAsOriginal",
+      tweetIdsToTagAsOriginal
+    );
+    console.log(
+      "🌟🚨: useSetTweets -> tweetIdsToTagAsRetweet",
+      tweetIdsToTagAsRetweet
+    );
+
     console.log("🌟🚨: useSetTweets -> retweetsByTweetId", retweetsByTweetId);
 
     setRetweets(retweetsByTweetId);
 
-    setTweetsFromServer(newTweets);
+    const newTweetsTagged = newTweets.map((t) => ({
+      ...t,
+      ...(tweetIdsToTagAsOriginal.includes(t.id_str)
+        ? { isRetweetNode: true }
+        : {}),
+      ...(tweetIdsToTagAsRetweet.includes(t.id_str)
+        ? { isOriginalNode: true }
+        : {}),
+    }));
+
+    setTweetsFromServer(newTweetsTagged);
   };
 };
 

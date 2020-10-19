@@ -9,8 +9,6 @@ import {
 import DiceIcon from "@material-ui/icons/Casino";
 import { SERVER_URL } from "../../../utils/constants";
 import { CollapsibleButton } from "./CollapsibleButton";
-import { RowDiv } from "../../common/styledComponents";
-import { HowManyTweets } from "../Inputs";
 
 export function BtnStreamNewTweets() {
   const {
@@ -52,20 +50,17 @@ export function BtnStreamNewTweets() {
   };
 
   return (
-    <RowDiv style={{ alignItems: "flex-end" }}>
-      <HowManyTweets />
-      <CollapsibleButton
-        css={`
-          width: fit-content;
-        `}
-        text={"Stream Tweets"}
-        icon={<DiceIcon className="diceIcon" />}
-        disabled={loading}
-        onClick={fetchNewTweets}
-        className="btnFetch"
-        variant="contained"
-        color="primary"
-      />
-    </RowDiv>
+    <CollapsibleButton
+      css={`
+        width: fit-content;
+      `}
+      text={"Stream Tweets"}
+      icon={<DiceIcon className="diceIcon" />}
+      disabled={loading}
+      onClick={fetchNewTweets}
+      className="btnFetch"
+      variant="contained"
+      color="primary"
+    />
   );
 }

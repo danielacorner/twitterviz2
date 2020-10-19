@@ -7,8 +7,9 @@ import { useCallback, useRef } from "react";
 // https://www.npmjs.com/package/react-force-graph
 import {
   useGetIsLikeLink,
-  useGetIsRetweetLink,
+  getIsRetweetLink,
   useWindowSize,
+  getIsTweetToRetweetLink,
 } from "../../utils/hooks";
 import {
   useConfig,
@@ -44,7 +45,6 @@ export function useForceGraphProps() {
   const isLightTheme = useIsLight();
   const fgRef = useRef();
   const getIsLikeLink = useGetIsLikeLink();
-  const getIsRetweetLink = useGetIsRetweetLink();
   const onBackgroundClick = useCallback(() => {
     setSelectedNode(null);
     setTooltipNode(null);
@@ -150,10 +150,22 @@ export function useForceGraphProps() {
         ? USER_TO_TWEET
         : other;
     },
+    linkCurvature: ({ source, target }) => {
+      const isTweetToRetweetLink = getIsTweetToRetweetLink({ source, target });
+      return isTweetToRetweetLink ? 0.5 : 0;
+    },
+    linkCurveRotation: ({ source, target }) => 1,
     linkLineDash: ({ source, target }) => {
       const isLikeLink = getIsLikeLink({ source, target });
       const isRetweetLink = getIsRetweetLink({ source, target });
-      return isLikeLink ? [5, 15] : isRetweetLink ? [15, 15] : [1, 2];
+      const isTweetToRetweetLink = getIsTweetToRetweetLink({ source, target });
+      return isTweetToRetweetLink
+        ? null
+        : isLikeLink
+        ? [5, 15]
+        : isRetweetLink
+        ? [15, 15]
+        : [1, 2];
     },
     // linkOpacity: ({ source, target }) => {
     //   const isLikeLink = getIsLikeLink({ source, target });

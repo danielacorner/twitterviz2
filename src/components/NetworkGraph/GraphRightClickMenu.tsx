@@ -25,7 +25,7 @@ export default function GraphRightClickMenu() {
     });
     // return cooldownTime to its previous value
     setConfig({ cooldownTime: prevCooldownTime.current });
-  }, []);
+  }, [setConfig]);
 
   // close the menu when ?
   useEffect(() => {
