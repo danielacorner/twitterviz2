@@ -2,7 +2,11 @@ import { useEffect } from "react";
 import { NODE_DIAMETER } from "./useForceGraphProps";
 import { useConfig } from "../../providers/store";
 import * as d3 from "d3";
-import { useGetIsLikeLink, getIsRetweetLink } from "utils/hooks";
+import {
+  useGetIsLikeLink,
+  getIsRetweetLink,
+  getIsTweetToRetweetLink,
+} from "utils/hooks";
 
 export function useTheForce(
   fg: any,
@@ -104,22 +108,33 @@ export function useTheForce(
         d3
           .forceLink(graph.links)
           .strength((link, idx, links) => {
-            return (
-              0.2 *
-              // different link types have different strengths
-              (getIsLikeLink(link) ? 1 : getIsRetweetLink(link) ? 0 : 1)
-            );
+            const isLikeLink = getIsLikeLink(link);
+            const isRetweetLink = getIsRetweetLink(link);
+            const isTweetToRetweetLink = getIsTweetToRetweetLink(link);
+
+            const mult = isLikeLink
+              ? 1
+              : isRetweetLink
+              ? 0.1
+              : isTweetToRetweetLink
+              ? 0.1
+              : 1;
+
+            return mult * 0.2;
           })
           .distance((link, idx, links) => {
-            return (
-              NODE_DIAMETER *
-              1.25 *
-              (link.source.isLikedNode
-                ? 10
-                : link.source.isRetweetNode
-                ? 20
-                : 1)
-            );
+            const isLikeLink = getIsLikeLink(link);
+            const isRetweetLink = getIsRetweetLink(link);
+            const isTweetToRetweetLink = getIsTweetToRetweetLink(link);
+
+            const mult = isLikeLink
+              ? 10
+              : isRetweetLink
+              ? 20
+              : isTweetToRetweetLink
+              ? 20
+              : 1;
+            return mult * NODE_DIAMETER * 1.25;
           })
       );
 
@@ -184,15 +199,5 @@ export function useTheForce(
     //     }
     //   });
     // });
-  }, [
-    graph,
-    fg,
-    isGridMode,
-    showUserNodes,
-    getIsRetweetLink,
-    gravity,
-    charge,
-    getIsLikeLink,
-    getIsRetweetLink,
-  ]);
+  }, [graph, fg, isGridMode, showUserNodes, gravity, charge, getIsLikeLink]);
 }

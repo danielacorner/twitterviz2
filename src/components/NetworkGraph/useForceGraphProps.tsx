@@ -141,20 +141,28 @@ export function useForceGraphProps() {
 
       const isLikeLink = getIsLikeLink({ source, target });
       const isRetweetLink = getIsRetweetLink({ source, target });
+      const isTweetToRetweetLink = getIsTweetToRetweetLink({ source, target });
 
       return isLikeLink
         ? LIKE
-        : isRetweetLink
+        : isRetweetLink || isTweetToRetweetLink
         ? RETWEET_TO_TWEET
         : source.isUserNode
         ? USER_TO_TWEET
         : other;
     },
     linkCurvature: ({ source, target }) => {
-      const isTweetToRetweetLink = getIsTweetToRetweetLink({ source, target });
-      return isTweetToRetweetLink ? 0.5 : 0;
+      const isLikeLink = getIsLikeLink({ source, target });
+      const isRetweetLink = getIsRetweetLink({ source, target });
+      // const isTweetToRetweetLink = getIsTweetToRetweetLink({ source, target });
+      return isLikeLink ? 0.1 : isRetweetLink ? 0.2 : 0;
     },
-    linkCurveRotation: ({ source, target }) => 1,
+    // linkCurveRotation: ({ source, target }) => {
+    //   const isLikeLink = getIsLikeLink({ source, target });
+    //   const isRetweetLink = getIsRetweetLink({ source, target });
+    //   // const isTweetToRetweetLink = getIsTweetToRetweetLink({ source, target });
+    //   return isLikeLink ? 1 : isRetweetLink ? Math.PI * -2 : 0;
+    // },
     linkLineDash: ({ source, target }) => {
       const isLikeLink = getIsLikeLink({ source, target });
       const isRetweetLink = getIsRetweetLink({ source, target });
@@ -175,9 +183,23 @@ export function useForceGraphProps() {
     linkDirectionalArrowLength: ({ source, target }) => {
       const isLikeLink = getIsLikeLink({ source, target });
       const isRetweetLink = getIsRetweetLink({ source, target });
-      return isLikeLink ? 15 : isRetweetLink ? 15 : null;
+      const isTweetToRetweetLink = getIsTweetToRetweetLink({ source, target });
+      return isLikeLink
+        ? 15
+        : isRetweetLink || isTweetToRetweetLink
+        ? 15
+        : null;
     },
-    linkDirectionalArrowRelPos: 1,
+    linkDirectionalArrowRelPos: ({ source, target }) => {
+      const isLikeLink = getIsLikeLink({ source, target });
+      const isRetweetLink = getIsRetweetLink({ source, target });
+      const isTweetToRetweetLink = getIsTweetToRetweetLink({ source, target });
+      return !source.isUserNode && (isLikeLink || isRetweetLink)
+        ? 1
+        : isTweetToRetweetLink
+        ? 0
+        : null;
+    },
     nodeThreeObject:
       colorBy === COLOR_BY.mediaType
         ? null

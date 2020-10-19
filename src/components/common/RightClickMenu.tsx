@@ -16,8 +16,8 @@ export default function RightClickMenu({
   MenuProps = {},
 }) {
   const { fetchTimeline } = useFetchTimeline();
-  const { fetchLikes } = useFetchLikes();
-  const { fetchRetweets } = useFetchRetweets();
+  const fetchLikes = useFetchLikes();
+  const fetchRetweets = useFetchRetweets();
   // TODO: fetch retweeters of a tweet GET statuses/retweeters/ids https://developer.twitter.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/get-statuses-retweets-id
   // TODO: fetch users who liked a tweet
   const tooltipNode = useTooltipNode();

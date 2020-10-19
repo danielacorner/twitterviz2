@@ -14,6 +14,7 @@ import {
 import { geoDistanceKm } from "./distanceFromCoords";
 import { Tweet } from "../types";
 import { getFavorites } from "../components/common/BtnFavorite";
+import { uniq } from "lodash";
 
 export function useFetchTweetsByIds(): (ids: string[]) => void {
   const setLoading = useSetLoading();
@@ -145,25 +146,31 @@ export function useFetchLikes() {
   const likesByUserId = useLikesByUserId();
   const setLikesByUserId = useSetLikesByUserId();
 
-  const fetchLikes = async (userId: string) => {
+  return async (userId: string) => {
+    const allLikesIds = uniq(
+      Object.values(likesByUserId).reduce((acc, cur) => [...acc, ...cur], [])
+    ).sort();
+    const maxIdParam =
+      allLikesIds.length === 0 ? "" : `&max_id=${allLikesIds[0]}`;
+    console.log("🌟🚨: useFetchLikes -> maxIdParam", maxIdParam);
     setLoading(true);
     const resp = await fetch(
-      `${SERVER_URL}/api/user_likes?id_str=${userId}&num=${numTweets}${allowedMediaTypesParam}`
+      `${SERVER_URL}/api/user_likes?id_str=${userId}&num=${numTweets}${maxIdParam}${allowedMediaTypesParam}`
     );
     const likedTweets = await resp.json();
 
     // add to the likes object for this user
-    setLikesByUserId({
+    const newLikesByUserId = {
       ...likesByUserId,
-      [userId]: [
+      [userId]: uniq([
         ...(likesByUserId?.[userId] || []),
         ...likedTweets.map((tweet) => tweet.id_str),
-      ],
-    });
+      ]),
+    };
+    console.log("🌟🚨: fetchLikes -> newLikesByUserId", newLikesByUserId);
+    setLikesByUserId(newLikesByUserId);
     setTweets(likedTweets.map((tweet) => ({ ...tweet, isLikedNode: true })));
   };
-
-  return { fetchLikes };
 }
 
 // TODO:
@@ -181,7 +188,7 @@ export function useFetchRetweets() {
   // const retweetsByTweetId = useRetweetsByTweetId();
   // const setRetweetsByTweetId = useSetRetweetsByTweetId();
 
-  const fetchRetweets = async (tweetId: string) => {
+  return async (tweetId: string) => {
     setLoading(true);
     const resp = await fetch(
       `${SERVER_URL}/api/retweets?id_str=${tweetId}&num=${numTweets}${allowedMediaTypesParam}`
@@ -204,8 +211,6 @@ export function useFetchRetweets() {
       retweetTweets /* .map((tweet) => ({ ...tweet, isRetweetNode: true })) */
     );
   };
-
-  return { fetchRetweets };
 }
 
 export function useParamsForFetch() {
@@ -246,7 +251,10 @@ export const useGetIsLikeLink = () => {
 };
 
 export const getIsRetweetLink = ({ source, target }) => {
-  return source.isRetweetNode || target.isOriginalNode;
+  const isTweetToRetweetLink = getIsTweetToRetweetLink({ source, target });
+  return (
+    !isTweetToRetweetLink && (source.isRetweetNode || target.isOriginalNode)
+  );
 };
 export const getIsTweetToRetweetLink = ({ source, target }) => {
   return !source.isUserNode && target.isOriginalNode;

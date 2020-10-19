@@ -281,6 +281,7 @@ export const useStoredSaves = () =>
 export const useSetTweets = () => {
   const { replace } = useConfig();
   const setRetweets = useSetRetweetsByTweetId();
+  const setLikes = useSetLikesByUserId();
   const tweetsFromServer = useStore(
     (state: GlobalStateStoreType) => state.tweetsFromServer
   );
@@ -288,6 +289,12 @@ export const useSetTweets = () => {
     (state: GlobalStateStoreType) => state.setTweetsFromServer
   );
   return (tweetsArg: Tweet[]) => {
+    if (replace) {
+      // delete all likes, retweets
+      setRetweets({});
+      setLikes({});
+    }
+
     const isError = !Array.isArray(tweetsArg);
     if (isError) {
       console.error(tweetsArg);
@@ -309,14 +316,9 @@ export const useSetTweets = () => {
         const hasRetweet = tweet?.retweeted_status?.id_str;
         // add its id_str to the array associated with its tweet.id_str
         if (hasRetweet) {
-          console.log(
-            "🌟🚨: useSetTweets -> tweet?.retweeted_status?.id_str",
-            tweet?.retweeted_status?.id_str
-          );
           // check the existing tweets for this tweet,
           // if it exists, add it to the list to create a link
           // *(this operation is now O^N2, but it's only performed when the tweets change)
-          console.log("🌟🚨: useSetTweets -> tweets", newTweets);
           const isRetweetInAllTweets = Boolean(
             newTweets.find((t) => t.id_str === tweet.retweeted_status.id_str)
           );
@@ -346,17 +348,6 @@ export const useSetTweets = () => {
       (acc, tweetId) => [...acc, tweetId],
       []
     );
-
-    console.log(
-      "🌟🚨: useSetTweets -> tweetIdsToTagAsOriginal",
-      tweetIdsToTagAsOriginal
-    );
-    console.log(
-      "🌟🚨: useSetTweets -> tweetIdsToTagAsRetweet",
-      tweetIdsToTagAsRetweet
-    );
-
-    console.log("🌟🚨: useSetTweets -> retweetsByTweetId", retweetsByTweetId);
 
     setRetweets(retweetsByTweetId);
 
