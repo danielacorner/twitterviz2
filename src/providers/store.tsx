@@ -76,12 +76,13 @@ const [useStore] = create(
           ? mockTweetsData.tweets
           : ([] as Tweet[]),
       // map between tweet.user.id_str and the liked tweet.id_str
+      // likesByUserId is populated when we "fetch tweets liked by a user"
       likesByUserId:
         process.env.NODE_ENV === "development"
           ? mockTweetsData.likesByUserId
           : {},
       setLikesByUserId: (likesByUserId) => set(() => ({ likesByUserId })),
-      // map between tweet.user.id_str and the liked tweet.id_str
+      // map between tweet.id_str and the retweeted tweet.id_str
       retweetsByTweetId:
         process.env.NODE_ENV === "development"
           ? mockTweetsData.retweetsByTweetId
@@ -278,6 +279,7 @@ export const useStoredSaves = () =>
 /** transform and save tweets to store */
 export const useSetTweets = () => {
   const { replace } = useConfig();
+  const setRetweets = useSetRetweetsByTweetId();
   const tweetsFromServer = useStore(
     (state: GlobalStateStoreType) => state.tweetsFromServer
   );
@@ -290,9 +292,54 @@ export const useSetTweets = () => {
       console.error(tweetsArg);
     }
     const tweets = isError ? [] : tweetsArg;
+
     const newTweets = replace
       ? tweets
       : uniqBy([...tweetsFromServer, ...tweets], (t) => t.id_str);
+
+    // * whenever we change the tweets,
+    // * scan all the tweets once to create
+    // * retweetsByTweetId
+
+    const retweetsByTweetId: { [tweetId: string]: string[] } = newTweets.reduce(
+      (acc, tweet) => {
+        // for each tweet,
+        // if the tweet has a retweet in it
+        const hasRetweet = tweet?.retweeted_status?.id_str;
+        // add its id_str to the array associated with its tweet.id_str
+        if (hasRetweet) {
+          console.log(
+            "🌟🚨: useSetTweets -> tweet?.retweeted_status?.id_str",
+            tweet?.retweeted_status?.id_str
+          );
+          // check the existing tweets for this tweet,
+          // if it exists, add it to the list to create a link
+          // *(this operation is now O^N2, but it's only performed when the tweets change)
+          console.log("🌟🚨: useSetTweets -> tweets", newTweets);
+          const isRetweetInAllTweets = Boolean(
+            newTweets.find((t) => t.id_str === tweet.retweeted_status.id_str)
+          );
+
+          if (isRetweetInAllTweets) {
+            acc = {
+              ...acc,
+              [tweet.id_str]: [
+                ...(acc[tweet.id_str] || []),
+                tweet.retweeted_status.id_str,
+              ],
+            };
+          }
+        }
+
+        return acc;
+      },
+      {}
+    );
+
+    console.log("🌟🚨: useSetTweets -> retweetsByTweetId", retweetsByTweetId);
+
+    setRetweets(retweetsByTweetId);
+
     setTweetsFromServer(newTweets);
   };
 };

@@ -23,6 +23,7 @@ export default function RightClickMenu({
   const tooltipNode = useTooltipNode();
   const isUserNode = tooltipNode?.isUserNode;
   const isTweetNode = !isUserNode;
+  const hasRetweet = isTweetNode && tooltipNode?.retweeted_status?.user;
   return (
     <Menu
       {...(anchorEl ? { anchorEl } : {})}
@@ -63,7 +64,7 @@ export default function RightClickMenu({
           Retweets of this tweet (if any)
         </MenuItem>
       ) : null}
-      {isTweetNode && tooltipNode?.retweeted_status?.user ? (
+      {hasRetweet ? (
         <MenuItem
           onClick={() => {
             fetchTimeline(tooltipNode.retweeted_status.user.id_str);

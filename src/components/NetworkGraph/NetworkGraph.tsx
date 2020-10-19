@@ -41,11 +41,11 @@ function Graph() {
 
   // uncomment to grab the current state and copy-paste into mockTweetsData.json
 
-  // console.log("🌟🚨: Graph -> mockTweetsData", {
-  //   tweets,
-  //   retweetsByTweetId,
-  //   likesByUserId,
-  // });
+  console.log("🌟🚨: Graph -> mockTweetsData", {
+    tweets,
+    retweetsByTweetId,
+    likesByUserId,
+  });
 
   // dynamic force graph updates WITHOUT re-rendering every node example: https://github.com/vasturiano/react-force-graph/blob/master/example/dynamic/index.html
 

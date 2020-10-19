@@ -15,7 +15,6 @@ export function useTheForce(
   const { gravity, charge } = useConfig();
   useEffect(() => {
     if (!fg) {
-      console.log("🌟🚨: !fg", fg);
       return;
     }
 
@@ -27,7 +26,6 @@ export function useTheForce(
     const gridColumnWidth = 100;
 
     if (isGridMode) {
-      console.log("🌟🚨: isGridMode", isGridMode);
       fg.d3Force("gravity", null);
       fg.d3Force("charge", null);
       fg.d3Force("link", null);

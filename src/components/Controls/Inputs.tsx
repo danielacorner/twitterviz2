@@ -131,7 +131,9 @@ export function HowManyTweets() {
         onChange={(e) => setConfig({ numTweets: +e.target.value })}
         type="number"
         inputProps={{
-          step: 5,
+          step: 10,
+          min: 1,
+          max: 500,
         }}
       />
     </Div>

@@ -21,10 +21,13 @@ import { useIsLight } from "../../providers/ThemeManager";
 
 export const NODE_DIAMETER = 25;
 const AVATAR_DIAMETER = NODE_DIAMETER * 2;
-
-/** https://www.npmjs.com/package/react-force-graph */
-
+const LIGHTGREY = "#D3D3D3";
+const DARKGREY = "#a9a9a9";
+const LIKE = "#a40880";
+const RETWEET_TO_TWEET = "#179245";
+const USER_TO_TWEET = LIGHTGREY;
 const DEFAULT_NODE_COLOR = "steelblue";
+/** https://www.npmjs.com/package/react-force-graph */
 
 export function useForceGraphProps() {
   const {
@@ -133,13 +136,7 @@ export function useForceGraphProps() {
     linkWidth: 1,
     backgroundColor: "transparent",
     linkColor: ({ source, target }) => {
-      const LIGHTGREY = "#D3D3D3";
-      const DARKGREY = "#a9a9a9";
-      const LIKE = "#ce03d8";
-      const RETWEET_TO_TWEET = "#13dc5e";
-      const USER_TO_TWEET = LIGHTGREY;
       // TODO: link by replies
-      // TODO: link by retweets
       const other = isLightTheme ? DARKGREY : LIGHTGREY;
 
       const isLikeLink = getIsLikeLink({ source, target });
@@ -153,9 +150,22 @@ export function useForceGraphProps() {
         ? USER_TO_TWEET
         : other;
     },
-    // linkOpacity: 0.2,
-    // linkDirectionalArrowLength: 8,
-    // linkDirectionalArrowRelPos: 1,
+    linkLineDash: ({ source, target }) => {
+      const isLikeLink = getIsLikeLink({ source, target });
+      const isRetweetLink = getIsRetweetLink({ source, target });
+      return isLikeLink ? [5, 15] : isRetweetLink ? [15, 15] : [1, 2];
+    },
+    // linkOpacity: ({ source, target }) => {
+    //   const isLikeLink = getIsLikeLink({ source, target });
+    //   const isRetweetLink = getIsRetweetLink({ source, target });
+    //   return isLikeLink ? 0.2 : isRetweetLink ? 0.8 : 1;
+    // },
+    linkDirectionalArrowLength: ({ source, target }) => {
+      const isLikeLink = getIsLikeLink({ source, target });
+      const isRetweetLink = getIsRetweetLink({ source, target });
+      return isLikeLink ? 15 : isRetweetLink ? 15 : null;
+    },
+    linkDirectionalArrowRelPos: 1,
     nodeThreeObject:
       colorBy === COLOR_BY.mediaType
         ? null
