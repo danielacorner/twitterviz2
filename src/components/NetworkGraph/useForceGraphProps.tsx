@@ -21,7 +21,7 @@ import {
 import { useIsLight } from "../../providers/ThemeManager";
 
 export const NODE_DIAMETER = 25;
-const AVATAR_DIAMETER = NODE_DIAMETER * 4;
+export const AVATAR_DIAMETER = NODE_DIAMETER * 8;
 const LIGHTGREY = "#D3D3D3";
 const DARKGREY = "#a9a9a9";
 const LIKE = "#a40880";
@@ -85,7 +85,7 @@ export function useForceGraphProps() {
     nodeRelSize: NODE_DIAMETER,
     // node size:
     nodeVal: (node) => {
-      return 4 * (node.isUserNode ? AVATAR_DIAMETER / NODE_DIAMETER : 1);
+      return 8 * (node.isUserNode ? AVATAR_DIAMETER / NODE_DIAMETER : 1);
     },
     nodeColor: (node) => getNodeColor(node, colorBy),
     // onEngineStop: () =>

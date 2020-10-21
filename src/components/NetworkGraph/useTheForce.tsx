@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { NODE_DIAMETER } from "./useForceGraphProps";
+import { NODE_DIAMETER, AVATAR_DIAMETER } from "./useForceGraphProps";
 import { useConfig } from "../../providers/store";
 import * as d3 from "d3";
 import {
@@ -7,6 +7,8 @@ import {
   getIsRetweetLink,
   getIsTweetToRetweetLink,
 } from "utils/hooks";
+import { SimulationNodeDatum } from "d3";
+import { Tweet } from "types";
 
 export function useTheForce(
   fg: any,
@@ -76,7 +78,12 @@ export function useTheForce(
       // gravitate nodes together
       fg.d3Force(
         "gravity",
-        d3.forceManyBody().strength(gravity)
+        d3.forceManyBody().strength((node, idx, nodes) => {
+          const nodeMass = (node as Tweet & SimulationNodeDatum).isUserNode
+            ? (AVATAR_DIAMETER / NODE_DIAMETER) ** 2
+            : 1;
+          return gravity * nodeMass;
+        })
         // turn off gravity when nodes get close enough together
         // .distanceMin(NODE_DIAMETER * 5)
         // so that you can drag nodes apart and have them stop pulling back together, max distance
@@ -88,7 +95,12 @@ export function useTheForce(
         "charge",
         d3
           .forceManyBody()
-          .strength(charge)
+          .strength((node, idx, nodes) => {
+            const nodeMass = (node as Tweet & SimulationNodeDatum).isUserNode
+              ? AVATAR_DIAMETER / NODE_DIAMETER
+              : 1;
+            return charge * nodeMass;
+          })
           // .strength((node) => ((node as Tweet).isUserNode ? -360 : -30))
           // max distance to push other nodes away
           .distanceMax(NODE_DIAMETER * (showUserNodes ? 10 : 5))
@@ -134,7 +146,7 @@ export function useTheForce(
               : isTweetToRetweetLink
               ? 0 // original tweet can be any distance from retweet
               : 1;
-            return mult * NODE_DIAMETER * 1.25;
+            return mult * NODE_DIAMETER * 10;
           })
       );
 
