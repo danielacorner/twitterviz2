@@ -106,12 +106,6 @@ export function useTheForce(fg: any, graph: { nodes: any[]; links: any[] }) {
           .distanceMax((showUserNodes ? AVATAR_DIAMETER : NODE_DIAMETER) * 5)
       );
 
-      // fg.d3Force(
-      //   "gravity",
-      //   d3.forceManyBody().strength(showUserNodes ? 120 : 0)
-      //   // max distance to push other nodes away
-      //   // .distanceMax(NODE_DIAMETER * 2)
-      // );
       // fg.d3Force("collide", d3.forceCollide(NODE_DIAMETER));
       // fg.d3Force("link", null);
       // apply custom forces
