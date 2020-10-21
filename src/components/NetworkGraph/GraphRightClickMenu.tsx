@@ -24,7 +24,6 @@ export default function GraphRightClickMenu() {
       mouseY: null,
     });
     // return cooldownTime to its previous value
-    setConfig({ cooldownTime: prevCooldownTime.current });
   }, [setConfig]);
 
   // close the menu when ?
@@ -62,6 +61,10 @@ export default function GraphRightClickMenu() {
         isMenuOpen: Boolean(tooltipNode && mousePosition.mouseY !== null),
         user: tooltipNode?.user,
         MenuProps: {
+          onClick: () => {
+            // restart the simulation
+            setConfig({ cooldownTime: prevCooldownTime.current });
+          },
           keepMounted: true,
           anchorReference: "anchorPosition",
           anchorPosition:
