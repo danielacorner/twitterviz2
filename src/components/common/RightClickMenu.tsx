@@ -5,7 +5,7 @@ import {
   useFetchTimeline,
   useFetchRetweets,
 } from "../../utils/hooks";
-import { useTooltipNode } from "providers/store";
+import { useTooltipNode, useTweets } from "providers/store";
 import RetweetedIcon from "@material-ui/icons/CachedRounded";
 
 export default function RightClickMenu({
@@ -24,6 +24,25 @@ export default function RightClickMenu({
   const isUserNode = tooltipNode?.isUserNode;
   const isTweetNode = !isUserNode;
   const hasRetweet = isTweetNode && tooltipNode?.retweeted_status?.user;
+
+  // send the user's tweets to the Botometer API https://rapidapi.com/OSoMe/api/botometer-pro/endpoints
+  const tweets = useTweets();
+  const generateBotScore = async () => {
+    if (!tooltipNode) {
+      return;
+    }
+    const tweetsByUser = tweets.filter(
+      (t) => t.user.id_str === tooltipNode.user.id_str
+    );
+    console.log("🌟🚨: generateBotScore -> tweetsByUser", tweetsByUser);
+    const resp = await fetch("/api/generate_bot_score", {
+      headers: { "content-type": "application/json" },
+      method: "POST",
+      body: JSON.stringify(tweetsByUser),
+    });
+    const botScore = await resp.json();
+    console.log("🌟🚨: generateBotScore -> botScore", botScore);
+  };
   return (
     <Menu
       {...(anchorEl ? { anchorEl } : {})}
@@ -74,6 +93,17 @@ export default function RightClickMenu({
           Tweets by <RetweetedIcon style={{ transform: "scale(0.8)" }} />{" "}
           {tooltipNode.retweeted_status.user.name} (@
           {tooltipNode.retweeted_status.user.screen_name})
+        </MenuItem>
+      ) : null}
+      {isUserNode ? (
+        <MenuItem
+          onClick={() => {
+            generateBotScore();
+            handleClose();
+          }}
+        >
+          Generate Bot Score for {tooltipNode?.user.name} (@
+          {tooltipNode?.user.screen_name})
         </MenuItem>
       ) : null}
     </Menu>
