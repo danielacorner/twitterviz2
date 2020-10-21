@@ -34,7 +34,7 @@ const NetworkGraph = () => {
 // https://github.com/vasturiano/react-force-graph
 function Graph() {
   const { fgRef, forceGraphProps } = useForceGraphProps();
-  const { is3d, showUserNodes, replace, isGridMode } = useConfig();
+  const { is3d, showUserNodes, replace } = useConfig();
   const tweets = useTweets();
   const likesByUserId = useLikesByUserId();
   const retweetsByTweetId = useRetweetsByTweetId();

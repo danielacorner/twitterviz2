@@ -38,7 +38,7 @@ export default function RightClickMenu({
     const resp = await fetch("/api/generate_bot_score", {
       headers: { "content-type": "application/json" },
       method: "POST",
-      body: JSON.stringify(tweetsByUser),
+      body: JSON.stringify(tweetsByUser.slice(0, 10)), // payload too large with >10 tweets
     });
     const botScore = await resp.json();
     console.log("🌟🚨: generateBotScore -> botScore", botScore);

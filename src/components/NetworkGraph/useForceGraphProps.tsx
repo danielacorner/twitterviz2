@@ -21,7 +21,7 @@ import {
 import { useIsLight } from "../../providers/ThemeManager";
 
 export const NODE_DIAMETER = 25;
-export const AVATAR_DIAMETER = NODE_DIAMETER * 8;
+export const AVATAR_DIAMETER = NODE_DIAMETER * 4;
 const LIGHTGREY = "#D3D3D3";
 const DARKGREY = "#a9a9a9";
 const LIKE = "#a40880";

@@ -105,6 +105,12 @@ export function SliderWithInputAndSwitch({
       }
       setConfig({ [configKeyString]: disabledValue as number });
     } else {
+    }
+  }, [disabled, setConfig, configKeyString, disabledValue, value]);
+
+  useEffect(() => {
+    const wasDisabled = value === disabledValue;
+    if (!disabled && wasDisabled) {
       // when we unpause, restore the previous value
       // * unless we're right-clicking
       const didPauseSimulationInGraphRightClickMenu =
@@ -113,7 +119,7 @@ export function SliderWithInputAndSwitch({
         setConfig({ [configKeyString]: prevValue.current as number });
       }
     }
-  }, [disabled, setConfig, configKeyString, disabledValue, value]);
+  }, [disabled]);
 
   return (
     <Grid container spacing={2} alignItems="center">
@@ -122,9 +128,10 @@ export function SliderWithInputAndSwitch({
       </Grid>
       <Grid item xs>
         <Slider
-          {...{ min, max, step, value }}
-          disabled={disabled}
+          {...{ min, max, step, value, disabled }}
           onChange={(event, newValue, ...rest) => {
+            console.log("🌟🚨: newValue", newValue);
+            console.log("🌟🚨: configKeyString", configKeyString);
             setConfig({ [configKeyString]: newValue as number });
           }}
           valueLabelDisplay="auto"
