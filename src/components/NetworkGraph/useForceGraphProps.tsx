@@ -178,12 +178,12 @@ export function useForceGraphProps() {
         ? null
         : isTweetToRetweetLink
         ? [15, 15]
-        : null;
+        : [1, 1];
     },
     // linkOpacity: ({ source, target }) => {
-    //   const isLikeLink = getIsLikeLink({ source, target });
-    //   const isRetweetLink = getIsRetweetLink({ source, target });
-    //   return isLikeLink ? 0.2 : isRetweetLink ? 0.8 : 1;
+    // const isLikeLink = getIsLikeLink({ source, target });
+    // const isRetweetLink = getIsRetweetLink({ source, target });
+    // return isLikeLink ? 0.2 : isRetweetLink ? 0.8 : 1;
     // },
     linkDirectionalArrowLength: ({ source, target }) => {
       const isLikeLink = getIsLikeLink({ source, target });

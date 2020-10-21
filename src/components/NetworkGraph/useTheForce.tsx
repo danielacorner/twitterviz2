@@ -10,14 +10,9 @@ import {
 import { SimulationNodeDatum } from "d3";
 import { Tweet } from "types";
 
-export function useTheForce(
-  fg: any,
-  showUserNodes: boolean,
-  graph: { nodes: any[]; links: any[] },
-  isGridMode: boolean
-) {
+export function useTheForce(fg: any, graph: { nodes: any[]; links: any[] }) {
   const getIsLikeLink = useGetIsLikeLink();
-  const { gravity, charge } = useConfig();
+  const { gravity, charge, showUserNodes, isGridMode } = useConfig();
   useEffect(() => {
     if (!fg) {
       return;
@@ -79,10 +74,15 @@ export function useTheForce(
       fg.d3Force(
         "gravity",
         d3.forceManyBody().strength((node, idx, nodes) => {
-          const nodeMass = (node as Tweet & SimulationNodeDatum).isUserNode
-            ? (AVATAR_DIAMETER / NODE_DIAMETER) ** 2
-            : 1;
-          return gravity * nodeMass;
+          if (showUserNodes) {
+            // if users are visible, only user nodes have gravity
+            const nodeMass = (node as Tweet & SimulationNodeDatum).isUserNode
+              ? (AVATAR_DIAMETER / NODE_DIAMETER) ** 2
+              : 0;
+            return gravity * nodeMass;
+          } else {
+            return gravity;
+          }
         })
         // turn off gravity when nodes get close enough together
         // .distanceMin(NODE_DIAMETER * 5)
@@ -103,7 +103,7 @@ export function useTheForce(
           })
           // .strength((node) => ((node as Tweet).isUserNode ? -360 : -30))
           // max distance to push other nodes away
-          .distanceMax(NODE_DIAMETER * (showUserNodes ? 10 : 5))
+          .distanceMax((showUserNodes ? AVATAR_DIAMETER : NODE_DIAMETER) * 5)
       );
 
       // fg.d3Force(
@@ -146,7 +146,7 @@ export function useTheForce(
               : isTweetToRetweetLink
               ? 0 // original tweet can be any distance from retweet
               : 1;
-            return mult * NODE_DIAMETER * 10;
+            return mult * AVATAR_DIAMETER;
           })
       );
 

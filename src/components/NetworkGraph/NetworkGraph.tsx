@@ -184,7 +184,7 @@ function Graph() {
   //
   // use the force!
   //
-  useTheForce(fg, showUserNodes, graph, isGridMode);
+  useTheForce(fg, graph);
 
   return (
     <div>
