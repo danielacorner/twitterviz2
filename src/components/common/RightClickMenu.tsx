@@ -5,7 +5,12 @@ import {
   useFetchTimeline,
   useFetchRetweets,
 } from "../../utils/hooks";
-import { useTooltipNode, useTweets } from "providers/store";
+import {
+  useConfig,
+  useSetTweets,
+  useTooltipNode,
+  useTweets,
+} from "providers/store";
 import RetweetedIcon from "@material-ui/icons/CachedRounded";
 
 export default function RightClickMenu({
@@ -16,6 +21,7 @@ export default function RightClickMenu({
   MenuProps = {},
 }) {
   const { fetchTimeline } = useFetchTimeline();
+  const { setConfig, replace } = useConfig();
   const fetchLikes = useFetchLikes();
   const fetchRetweets = useFetchRetweets();
   // TODO: fetch retweeters of a tweet GET statuses/retweeters/ids https://developer.twitter.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/get-statuses-retweets-id
@@ -41,6 +47,27 @@ export default function RightClickMenu({
     });
     const botScore = await resp.json();
     console.log("🌟🚨: generateBotScore -> botScore", botScore);
+  };
+
+  const setTweets = useSetTweets();
+  const deleteTweetsByUser = () => {
+    if (!tooltipNode) {
+      return;
+    }
+
+    const tweetsWithoutThisUser = tweets.filter(
+      (t) => t.user.id_str !== tooltipNode.user.id_str
+    );
+
+    const prevReplace = replace;
+    setConfig({ replace: true });
+    setTimeout(() => {
+      setTweets(tweetsWithoutThisUser, true);
+      setConfig({ replace: prevReplace });
+    });
+    // setTimeout(() => {
+    //   setConfig({ replace: false });
+    // });
   };
   return (
     <Menu
@@ -102,6 +129,17 @@ export default function RightClickMenu({
           }}
         >
           Generate Bot Score for {tooltipNode?.user.name} (@
+          {tooltipNode?.user.screen_name})
+        </MenuItem>
+      ) : null}
+      {isUserNode ? (
+        <MenuItem
+          onClick={() => {
+            deleteTweetsByUser();
+            handleClose();
+          }}
+        >
+          Delete all tweets by {tooltipNode?.user.name} (@
           {tooltipNode?.user.screen_name})
         </MenuItem>
       ) : null}

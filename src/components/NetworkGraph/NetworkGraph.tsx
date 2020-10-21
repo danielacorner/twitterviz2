@@ -157,10 +157,11 @@ function Graph() {
 
     // to prevent existing node re-renders, we'll spread existing nodes, and only spread new nodes on the end
 
-    // new nodes are ones whose ids aren't already in the graph
-    const newNodes = tweetsWithUser.filter(
-      (node) => !nodeIds.includes(node.id_str)
-    );
+    // if replacing, replace all
+    const newNodes = replace
+      ? tweets
+      : // new nodes are ones whose ids aren't already in the graph
+        tweetsWithUser.filter((node) => !nodeIds.includes(node.id_str));
 
     // * consider spreading newLinks if not doing so causes a performance issue
 

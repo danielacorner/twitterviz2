@@ -288,8 +288,8 @@ export const useSetTweets = () => {
   const setTweetsFromServer = useStore(
     (state: GlobalStateStoreType) => state.setTweetsFromServer
   );
-  return (tweetsArg: Tweet[]) => {
-    if (replace) {
+  return (tweetsArg: Tweet[], forceReplace) => {
+    if (replace || forceReplace) {
       // delete all likes, retweets
       setRetweets({});
       setLikes({});
@@ -301,9 +301,10 @@ export const useSetTweets = () => {
     }
     const tweets = isError ? [] : tweetsArg;
 
-    const newTweets = replace
-      ? tweets
-      : uniqBy([...tweetsFromServer, ...tweets], (t) => t.id_str);
+    const newTweets =
+      replace || forceReplace
+        ? tweets
+        : uniqBy([...tweetsFromServer, ...tweets], (t) => t.id_str);
 
     // * whenever we change the tweets,
     // * scan all the tweets once to create
