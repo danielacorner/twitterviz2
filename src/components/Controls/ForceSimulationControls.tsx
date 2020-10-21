@@ -119,7 +119,7 @@ export function SliderWithInputAndSwitch({
         setConfig({ [configKeyString]: prevValue.current as number });
       }
     }
-  }, [disabled]);
+  }, [disabled, configKeyString, disabledValue, setConfig, value]);
 
   return (
     <Grid container spacing={2} alignItems="center">
@@ -130,8 +130,6 @@ export function SliderWithInputAndSwitch({
         <Slider
           {...{ min, max, step, value, disabled }}
           onChange={(event, newValue, ...rest) => {
-            console.log("🌟🚨: newValue", newValue);
-            console.log("🌟🚨: configKeyString", configKeyString);
             setConfig({ [configKeyString]: newValue as number });
           }}
           valueLabelDisplay="auto"

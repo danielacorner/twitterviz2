@@ -34,7 +34,6 @@ export default function RightClickMenu({
     const tweetsByUser = tweets.filter(
       (t) => t.user.id_str === tooltipNode.user.id_str
     );
-    console.log("🌟🚨: generateBotScore -> tweetsByUser", tweetsByUser);
     const resp = await fetch("/api/generate_bot_score", {
       headers: { "content-type": "application/json" },
       method: "POST",

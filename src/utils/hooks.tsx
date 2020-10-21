@@ -169,7 +169,6 @@ export function useFetchLikes() {
     ).sort();
     const maxIdParam =
       allLikesIds.length === 0 ? "" : `&max_id=${allLikesIds[0]}`;
-    console.log("🌟🚨: useFetchLikes -> maxIdParam", maxIdParam);
     setLoading(true);
     const resp = await fetch(
       `${SERVER_URL}/api/user_likes?id_str=${userId}&num=${numTweets}${maxIdParam}${allowedMediaTypesParam}`
@@ -184,7 +183,6 @@ export function useFetchLikes() {
         ...likedTweets.map((tweet) => tweet.id_str),
       ]),
     };
-    console.log("🌟🚨: fetchLikes -> newLikesByUserId", newLikesByUserId);
     setLikesByUserId(newLikesByUserId);
     setTweets(likedTweets.map((tweet) => ({ ...tweet, isLikedNode: true })));
   };
