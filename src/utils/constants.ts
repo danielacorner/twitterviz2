@@ -26,3 +26,5 @@ export const TAB_INDICES = {
   WORDCLOUD: 1,
   GALLERY: 2,
 };
+
+export const PAUSE_SIMULATION = -999;

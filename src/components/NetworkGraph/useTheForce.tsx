@@ -115,9 +115,9 @@ export function useTheForce(
             const mult = isLikeLink
               ? 1
               : isRetweetLink
-              ? 0.1
+              ? 1
               : isTweetToRetweetLink
-              ? 0.1
+              ? 0 // original tweet can be any distance from retweet
               : 1;
 
             return mult * 0.2;
@@ -128,11 +128,11 @@ export function useTheForce(
             const isTweetToRetweetLink = getIsTweetToRetweetLink(link);
 
             const mult = isLikeLink
-              ? 10
+              ? 7
               : isRetweetLink
-              ? 20
+              ? 5
               : isTweetToRetweetLink
-              ? 20
+              ? 0 // original tweet can be any distance from retweet
               : 1;
             return mult * NODE_DIAMETER * 1.25;
           })

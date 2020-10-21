@@ -81,7 +81,12 @@ export function useForceGraphProps() {
     // warmupTicks: 10,
     // nodeAutoColorBy: "group",
     // cooldownTime: 400 * (showUserNodes ? 2 : 1),
+    // all nodes ratio of node area per value unit:
     nodeRelSize: NODE_DIAMETER,
+    // node size:
+    nodeVal: (node) => {
+      return 4 * (node.isUserNode ? AVATAR_DIAMETER / NODE_DIAMETER : 1);
+    },
     nodeColor: (node) => getNodeColor(node, colorBy),
     // onEngineStop: () =>
     //   fgRef.current && !is3d ? (fgRef.current as any).zoomToFit(400) : null,
@@ -167,13 +172,13 @@ export function useForceGraphProps() {
       const isLikeLink = getIsLikeLink({ source, target });
       const isRetweetLink = getIsRetweetLink({ source, target });
       const isTweetToRetweetLink = getIsTweetToRetweetLink({ source, target });
-      return isTweetToRetweetLink
-        ? null
-        : isLikeLink
+      return isLikeLink
         ? [5, 15]
         : isRetweetLink
+        ? null
+        : isTweetToRetweetLink
         ? [15, 15]
-        : [1, 2];
+        : null;
     },
     // linkOpacity: ({ source, target }) => {
     //   const isLikeLink = getIsLikeLink({ source, target });

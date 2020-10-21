@@ -9,6 +9,7 @@ import {
   Timer,
 } from "@material-ui/icons";
 import { TitleWithIcon } from "./NetworkGraphControls";
+import { PAUSE_SIMULATION } from "utils/constants";
 
 export function ForceSimulationControls() {
   const {
@@ -106,7 +107,8 @@ export function SliderWithInputAndSwitch({
     } else {
       // when we unpause, restore the previous value
       // * unless we're right-clicking
-      const didPauseSimulationInGraphRightClickMenu = value === -999;
+      const didPauseSimulationInGraphRightClickMenu =
+        value === PAUSE_SIMULATION;
       if (!didPauseSimulationInGraphRightClickMenu) {
         setConfig({ [configKeyString]: prevValue.current as number });
       }

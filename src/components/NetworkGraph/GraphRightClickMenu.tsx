@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { PAUSE_SIMULATION } from "utils/constants";
 // https://www.npmjs.com/package/react-force-graph
 import { useConfig, useTooltipNode } from "../../providers/store";
 import { useMount } from "../../utils/utils";
@@ -24,20 +25,20 @@ export default function GraphRightClickMenu() {
       mouseY: null,
     });
     // return cooldownTime to its previous value
-  }, [setConfig]);
+  }, []);
 
   // close the menu when ?
   useEffect(() => {
     if (!tooltipNode && mousePosition.mouseY) {
       handleCloseMenu();
     }
-  }, [tooltipNode, handleCloseMenu, mousePosition.mouseY, setConfig]);
+  }, [tooltipNode, handleCloseMenu, mousePosition.mouseY]);
 
   function handleRightClick(event) {
     // prevent default right-click menu
     event.preventDefault();
     // pause the simulation
-    setConfig({ cooldownTime: -999 });
+    setConfig({ cooldownTime: PAUSE_SIMULATION });
 
     // set the mouse position, triggering the menu to open
     setMousePosition({
