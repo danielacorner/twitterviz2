@@ -78,10 +78,12 @@ export function useFetchTimeline() {
     isFetchMore: boolean = false
   ) => {
     setLoading(true);
+
+    const tweetsByUser = tweets.filter((t) => t.user.id_str === userId);
+    const maxIdParam = getMaxIdParam(tweetsByUser);
+
     const resp = await fetch(
-      `${SERVER_URL}/api/user_timeline?id_str=${userId}&num=${numTweets}${allowedMediaTypesParam}${
-        isFetchMore ? `&maxId=${tweets[tweets.length - 1].id_str}` : ""
-      }`
+      `${SERVER_URL}/api/user_timeline?id_str=${userId}&num=${numTweets}${maxIdParam}${allowedMediaTypesParam}`
     );
     const data = await resp.json();
 
@@ -91,8 +93,13 @@ export function useFetchTimeline() {
   const fetchTimelineByHandle = async (userHandle: string) => {
     setLoading(true);
 
+    const tweetsByUser = tweets.filter(
+      (t) => t.user.screen_name === userHandle
+    );
+    const maxIdParam = getMaxIdParam(tweetsByUser);
+
     const resp = await fetch(
-      `${SERVER_URL}/api/user_timeline?screen_name=${userHandle}&num=${numTweets}${allowedMediaTypesParam}`
+      `${SERVER_URL}/api/user_timeline?screen_name=${userHandle}&num=${numTweets}${maxIdParam}${allowedMediaTypesParam}`
     );
     const data = await resp.json();
 
@@ -100,6 +107,16 @@ export function useFetchTimeline() {
   };
 
   return { loading, fetchTimeline, fetchTimelineByHandle };
+}
+
+function getMaxIdParam(tweetsByUser: Tweet[]) {
+  return tweetsByUser.length === 0
+    ? ""
+    : // find the smallest tweet id to use as max_id
+      `&max_id=${tweetsByUser.reduce(
+        (acc, tweet) => Math.min(acc, Number(tweet.id_str)),
+        Infinity
+      )}`;
 }
 
 export function useFetchUsers() {

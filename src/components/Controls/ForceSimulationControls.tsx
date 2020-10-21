@@ -115,7 +115,7 @@ export function SliderWithInputAndSwitch({
 
   return (
     <Grid container spacing={2} alignItems="center">
-      <Grid item xs>
+      <Grid item xs style={{ padding: 0 }}>
         <Switch onChange={() => setDisabled(!disabled)} checked={!disabled} />
       </Grid>
       <Grid item xs>

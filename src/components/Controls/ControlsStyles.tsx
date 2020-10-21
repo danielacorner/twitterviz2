@@ -72,6 +72,7 @@ const ControlsStyles = styled.div`
     width: 100%;
   }
   .controlsContainer {
+    width: 100%;
     display: grid;
     grid-auto-flow: row;
     grid-gap: 1.5em;
