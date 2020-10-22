@@ -56,7 +56,7 @@ export function SearchForm() {
     >
       <InputStyles>
         <TextField
-          label="🔎 Search"
+          label="🔎 Search for..."
           value={searchTerm}
           style={{ textAlign: "left" }}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -122,11 +122,13 @@ export function HowManyTweets() {
         .MuiFormLabel-root {
           white-space: nowrap;
         }
+        display: flex;
+        align-items: baseline;
       `}
     >
+      <Body1>Fetch</Body1>
       <TextField
-        style={{ width: 60 }}
-        label="How many?"
+        style={{ width: 60, padding: "0 10px" }}
         value={numTweets}
         onChange={(e) => setConfig({ numTweets: +e.target.value })}
         type="number"
@@ -136,6 +138,7 @@ export function HowManyTweets() {
           max: 500,
         }}
       />
+      <Body1>tweet{numTweets === 1 ? "" : "s"}</Body1>
     </Div>
   );
 }

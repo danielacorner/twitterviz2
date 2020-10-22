@@ -11,7 +11,6 @@ const ControlsStyles = styled.div`
   display: grid;
   place-items: baseline;
   place-content: baseline;
-  grid-gap: 72px;
   .section {
     display: grid;
     grid-gap: 12px;
@@ -75,7 +74,6 @@ const ControlsStyles = styled.div`
     width: 100%;
     display: grid;
     grid-auto-flow: row;
-    grid-gap: 1.5em;
     justify-items: center;
   }
   .diceIcon {

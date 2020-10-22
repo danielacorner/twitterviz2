@@ -9,28 +9,28 @@ import {
 } from "@material-ui/core";
 import { COLOR_BY } from "../../utils/constants";
 import { useConfig, AppConfig } from "../../providers/store";
-import {
-  H5,
-  CollapsibleSwitchWithLabels,
-  Body1,
-} from "../common/styledComponents";
+import { CollapsibleSwitchWithLabels, Body1 } from "../common/styledComponents";
 import { FormControlLabelCollapsible } from "./Checkboxes";
 import { Typography } from "@material-ui/core";
 import { ForceSimulationControls } from "./ForceSimulationControls";
+import { Collapsible } from "components/common/Collapsible";
 /** react-force-graph docs
  * https://www.npmjs.com/package/react-force-graph
  */
 const NetworkGraphControls = () => {
   return (
     <div className="networkGraphControls controlsContainer">
-      <H5 style={{ pointerEvents: "none" }}>Graph</H5>
-      <Switch3D />
-      <SwitchGridMode />
-      <H5 style={{ pointerEvents: "none" }}>Nodes</H5>
-      <SwitchUserNodes />
-      <SelectColorBy />
-      <H5 style={{ pointerEvents: "none" }}>Force Simulation</H5>
-      <ForceSimulationControls />
+      <Collapsible title={"Graph"}>
+        <Switch3D />
+        <SwitchGridMode />
+      </Collapsible>
+      <Collapsible title={"Nodes"}>
+        <SwitchUserNodes />
+        <SelectColorBy />
+      </Collapsible>
+      <Collapsible title={"Force Simulation"}>
+        <ForceSimulationControls />
+      </Collapsible>
     </div>
   );
 };

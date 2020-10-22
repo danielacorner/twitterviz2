@@ -4,6 +4,7 @@ import { Typography, Switch, Tooltip } from "@material-ui/core";
 import { FORM_HEIGHT } from "../../utils/constants";
 
 export const ColumnDiv = styled.div`
+  width: 100%;
   display: grid;
   place-items: center;
 `;
@@ -19,7 +20,12 @@ export const H5 = ({ children, ...props }) => (
   </Typography>
 );
 export const H6 = ({ children, ...props }) => (
-  <Typography color="textPrimary" variant="h6" {...props}>
+  <Typography
+    color="textPrimary"
+    variant="h6"
+    style={{ fontSize: "1.2rem" }}
+    {...props}
+  >
     {children}
   </Typography>
 );
@@ -34,10 +40,11 @@ export const Body2 = ({ children, ...props }) => (
   </Typography>
 );
 export const CollapsibleSwitchWithLabels = ({
-  labelLeft,
-  labelRight,
+  labelLeft = null,
+  labelRight = null,
   onChange,
   checked,
+  css = null,
   ...props
 }) => {
   return (
@@ -51,13 +58,18 @@ export const CollapsibleSwitchWithLabels = ({
         .label {
           min-width: 3em;
         }
+        ${css}
       `}
     >
-      <Body1 className="label">{labelLeft}</Body1>
-      <Tooltip title={`${labelLeft}/${labelRight}`}>
+      {labelLeft && <Body1 className="label">{labelLeft}</Body1>}
+      <Tooltip
+        title={`${labelLeft || ""}${labelLeft && labelRight ? "/" : ""}${
+          labelRight || ""
+        }`}
+      >
         <Switch onChange={onChange} checked={checked} {...props} />
       </Tooltip>
-      <Body1 className="label">{labelRight}</Body1>
+      {labelRight && <Body1 className="label">{labelRight}</Body1>}
     </ColumnDiv>
   );
 };

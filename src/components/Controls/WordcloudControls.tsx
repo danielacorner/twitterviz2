@@ -5,7 +5,6 @@ import { useWordcloudConfig } from "../../providers/store";
 export default function WordcloudControls() {
   return (
     <div className="wordcloudControls controlsContainer">
-      <h3>Word Cloud Controls</h3>
       <WordcloudCharsSlider />
       <WordcloudAnglesSlider />
       <WordcloudMinInstancesSlider />

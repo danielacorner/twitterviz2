@@ -37,6 +37,7 @@ export function useForceGraphProps() {
     d3AlphaDecay,
     cooldownTime,
     isPaused,
+    isGridMode,
   } = useConfig();
   const allowedMediaTypesStrings = useAllowedMediaTypes();
   const setTooltipNode = useSetTooltipNode();
@@ -85,7 +86,10 @@ export function useForceGraphProps() {
     nodeRelSize: NODE_DIAMETER,
     // node size:
     nodeVal: (node) => {
-      return 8 * (node.isUserNode ? AVATAR_DIAMETER / NODE_DIAMETER : 1);
+      return (
+        (isGridMode ? 0.5 : 8) *
+        (node.isUserNode ? AVATAR_DIAMETER / NODE_DIAMETER : 1)
+      );
     },
     nodeColor: (node) => getNodeColor(node, colorBy),
     // onEngineStop: () =>

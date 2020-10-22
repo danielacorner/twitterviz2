@@ -17,10 +17,10 @@ import {
   useSearchObj,
 } from "../../providers/store";
 import {
-  H5,
   Body2,
   CUSTOM_SCROLLBAR_CSS,
   RowDiv,
+  H6,
 } from "../common/styledComponents";
 import SelectGeolocation from "./SelectGeolocation";
 import { SelectCountry, SelectLanguage } from "./Dropdowns";
@@ -34,7 +34,6 @@ import { ControlTitle, TwoColFormStyles } from "../common/TwoColRowStyles";
 import ControlsStyles from "./ControlsStyles";
 import WordcloudControls from "./WordcloudControls";
 import NetworkGraphControls from "./NetworkGraphControls";
-import { SwitchReplace } from "./SwitchReplace";
 import { BtnFetchFavoriteTweets } from "./Buttons/BtnFetchFavoriteTweets";
 import { BtnStreamNewTweets } from "./Buttons/BtnStreamNewTweets";
 import { useSavedDatasets } from "../common/BtnFavorite";
@@ -43,6 +42,22 @@ import SaveIcon from "@material-ui/icons/Save";
 import ClearIcon from "@material-ui/icons/Clear";
 import styled from "styled-components/macro";
 import { BtnFetchFavoriteUsers } from "./Buttons/BtnFetchFavoriteUsers";
+import { useConfig } from "../../providers/store";
+import { CollapsibleSwitchWithLabels } from "../common/styledComponents";
+import { Collapsible } from "components/common/Collapsible";
+
+export function SwitchReplace() {
+  const { replace, setConfig } = useConfig();
+  return (
+    <CollapsibleSwitchWithLabels
+      // labelRight="Add"
+      labelRight="Replace all current"
+      onChange={() => setConfig({ replace: !replace })}
+      checked={replace}
+      css={``}
+    />
+  );
+}
 
 const Div = styled.div``;
 
@@ -57,8 +72,12 @@ const Controls = () => {
       isLight={theme.palette.type === "light"}
     >
       <VizSpecificControls />
-      <FetchTweetsControls />
-      <SaveDataControls />
+      <Collapsible title={"Fetch Tweets"}>
+        <FetchTweetsControls />
+      </Collapsible>
+      <Collapsible title={"Save Data"}>
+        <SaveDataControls />
+      </Collapsible>
     </ControlsStyles>
   );
 };
@@ -186,7 +205,9 @@ function VizSpecificControls() {
     "tab" in searchObj && searchObj.tab === `${TAB_INDICES.NETWORKGRAPH}`;
 
   return isWordcloud ? (
-    <WordcloudControls />
+    <Collapsible title={"Wordcloud"}>
+      <WordcloudControls />
+    </Collapsible>
   ) : isNetworkGraph ? (
     <NetworkGraphControls />
   ) : null;
@@ -196,9 +217,7 @@ function FetchTweetsControls() {
   return (
     <>
       <div className="fetchTweets section">
-        <H5 style={{ pointerEvents: "none" }}>Fetch Tweets</H5>
-        <RowDiv style={{ alignItems: "flex-end" }}>
-          <SwitchReplace />
+        <RowDiv style={{ ju: "flex-end" }}>
           <HowManyTweets />
         </RowDiv>
         <BtnStreamNewTweets />
@@ -208,9 +227,19 @@ function FetchTweetsControls() {
           <BtnFetchFavoriteTweets />
           <BtnFetchFavoriteUsers />
         </RowDiv>
+        <RowDiv style={{ alignItems: "flex-end" }}>
+          <SwitchReplace />
+        </RowDiv>
       </div>
       <div className="filterTweets section">
-        <H5>Filter Incoming Tweets</H5>
+        <H6
+          css={`
+          font-size:
+            padding-top: 2em;
+          `}
+        >
+          Filter Incoming Tweets
+        </H6>
         <TweetFilterControls />
       </div>
     </>

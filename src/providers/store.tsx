@@ -288,7 +288,7 @@ export const useSetTweets = () => {
   const setTweetsFromServer = useStore(
     (state: GlobalStateStoreType) => state.setTweetsFromServer
   );
-  return (tweetsArg: Tweet[], forceReplace) => {
+  return (tweetsArg: Tweet[], forceReplace: boolean = false) => {
     if (replace || forceReplace) {
       // delete all likes, retweets
       setRetweets({});
