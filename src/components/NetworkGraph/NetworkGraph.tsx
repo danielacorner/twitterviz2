@@ -224,14 +224,16 @@ function useGenerateBotScoresOnNewTweets() {
   // fetch only every 1s due to RapidAPI free tier rate limit
   useEffect(() => {
     // fetch the first one only
-    tweets.forEach((tweet) => {
+
+    // use a for loop to force synchronous (forEach is parallel)
+    for (let index = 0; index < tweets.length; index++) {
+      const tweet = tweets[index];
       if (!foundOne.current && !tweet.botScore) {
-        console.log("🌟🚨: useGenerateBotScoresOnNewTweets -> tweet", tweet);
+        foundOne.current = true;
         setTimeout(() => {
           fetchBotScoreForTweet(tweet);
         }, 1001);
-        foundOne.current = true;
       }
-    });
-  }, [tweets]);
+    }
+  }, [tweets, fetchBotScoreForTweet]);
 }

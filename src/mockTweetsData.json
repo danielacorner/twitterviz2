@@ -1,6 +1,15 @@
 {
   "tweets": [
     {
+      "botScore":{"overall": 1,
+        "astroturf": 2,
+        "fake_follower": 3,
+        "financial": 4,
+        "self_declared": 5,
+        "spammer": 6,
+        "other": 7
+      },
+      "isUserNode":true,
       "created_at": "Mon Oct 19 01:38:56 +0000 2020",
       "id": 1318003668768026600,
       "id_str": "1318003668768026624",

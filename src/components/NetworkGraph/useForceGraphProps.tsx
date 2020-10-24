@@ -95,6 +95,11 @@ export function useForceGraphProps() {
     // onEngineStop: () =>
     //   fgRef.current && !is3d ? (fgRef.current as any).zoomToFit(400) : null,
     nodeCanvasObject: (node, ctx) => {
+      // draw the bot score if we have one
+      if (node.isUserNode && node.botScore) {
+        drawBotScore(node, ctx);
+      }
+
       if (tooltipNode?.id_str === node.id_str) {
         drawHighlightCircle(node, ctx, tooltipNode?.isUserNode);
       }
@@ -299,6 +304,41 @@ function drawHighlightCircle(node: any, ctx: any, isUserNode: boolean) {
   );
   ctx.strokeStyle = "white";
   ctx.lineWidth = 2;
+  ctx.stroke();
+
+  /*
+   * restore() restores the canvas context to its original state
+   * before we defined the clipping region
+   */
+  // ctx.restore();
+  // ctx.beginPath();
+  // ctx.arc(node.x, node.y, AVATAR_DIAMETER / 2, 0, 2 * Math.PI, false);
+  // ctx.lineWidth = 10;
+  // ctx.strokeStyle = "blue";
+  // ctx.stroke();
+  // ctx.clip();
+  // ctx.closePath();
+  // ctx.clip();
+  // ctx.fill();
+}
+function drawBotScore(node: Tweet & any, ctx: any) {
+  // big circle around node, coloured based on bot score
+  // red = bot
+  // green = human
+  // bot score ranges from 0-5
+  const colorByBotScore = (num) => d3.interpolateRdYlGn(num / 5);
+  const color = colorByBotScore(node.botScore.overall);
+  ctx.beginPath();
+  // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/arc
+  ctx.arc(
+    node.x, // x: The horizontal coordinate of the arc's center.
+    node.y, // y: The vertical coordinate of the arc's center.
+    AVATAR_DIAMETER / 2, // radius
+    0, // startAngle
+    Math.PI * 2 // endAngle
+  );
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 8;
   ctx.stroke();
 
   /*
