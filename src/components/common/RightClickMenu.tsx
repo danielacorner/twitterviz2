@@ -12,7 +12,7 @@ import {
   useTweets,
 } from "providers/store";
 import RetweetedIcon from "@material-ui/icons/CachedRounded";
-import { BotScore, Tweet } from "types";
+import { useFetchBotScoreForTweet } from "./useFetchBotScoreForTweet";
 
 export default function RightClickMenu({
   anchorEl,
@@ -35,35 +35,8 @@ export default function RightClickMenu({
   // send the user's tweets to the Botometer API https://rapidapi.com/OSoMe/api/botometer-pro/endpoints
   const tweets = useTweets();
 
-  const generateBotScore = async () => {
-    if (!tooltipNode) {
-      return;
-    }
-    const tweetsByUser = tweets.filter(
-      (t) => t.user.id_str === tooltipNode.user.id_str
-    );
-    const resp = await fetch("/api/generate_bot_score", {
-      headers: { "content-type": "application/json" },
-      method: "POST",
-      body: JSON.stringify(tweetsByUser.slice(0, 10)), // payload too large with >10 tweets
-    });
-    const botScore = await resp.json();
-    console.log("🌟🚨: generateBotScore -> botScore", botScore);
-    setBotScoreForTweet(botScore, tooltipNode);
-  };
-  function setBotScoreForTweet(botScore: BotScore, tweet: Tweet) {
-    const tweetWithBotScore = { ...tweet, botScore };
-    const tweetIndex = tweets.findIndex((t) => t.id_str === tweet.id_str);
-    console.log(
-      "🌟🚨: setBotScoreForTweet -> tweetWithBotScore",
-      tweetWithBotScore
-    );
-    setTweets([
-      ...tweets.slice(0, tweetIndex),
-      tweetWithBotScore,
-      ...tweets.slice(tweetIndex + 1),
-    ]);
-  }
+  const fetchBotScoreForTweet = useFetchBotScoreForTweet();
+
   const setTweets = useSetTweets();
   const deleteTweetsByUser = () => {
     if (!tooltipNode) {
@@ -141,7 +114,7 @@ export default function RightClickMenu({
       {isUserNode ? (
         <MenuItem
           onClick={() => {
-            generateBotScore();
+            fetchBotScoreForTweet(tooltipNode);
             handleClose();
           }}
         >
