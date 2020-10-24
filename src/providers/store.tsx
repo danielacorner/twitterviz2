@@ -129,7 +129,7 @@ const [useStore] = create(
         replace: false,
         filterLevel: FILTER_LEVELS.none,
         searchTerm: "",
-        numTweets: 1,
+        numTweets: 10,
         // numTweets: 50,
       },
       isDrawerOpen: window.innerWidth > 600,

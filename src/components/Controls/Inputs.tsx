@@ -56,9 +56,11 @@ export function SearchForm() {
     >
       <InputStyles>
         <TextField
-          label="🔎 Search for..."
+          label="Search for..."
           value={searchTerm}
-          style={{ textAlign: "left" }}
+          variant="outlined"
+          style={{ textAlign: "left", height: 36, marginTop: -32 }}
+          InputProps={{ style: { height: 36 } }}
           onChange={(e) => setSearchTerm(e.target.value)}
           type="text"
         />
@@ -94,7 +96,9 @@ export function FetchUserTweetsForm() {
           @
         </Body1>
         <TextField
-          style={{ textAlign: "left" }}
+          variant="outlined"
+          style={{ textAlign: "left", height: 36, marginTop: -32 }}
+          InputProps={{ style: { height: 36 } }}
           label={"Fetch user..."}
           value={userHandle}
           onChange={(e) => setUserHandle(e.target.value)}

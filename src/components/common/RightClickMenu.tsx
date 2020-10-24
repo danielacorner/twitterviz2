@@ -22,7 +22,7 @@ export default function RightClickMenu({
   MenuProps = {},
 }) {
   const { fetchTimeline } = useFetchTimeline();
-  const { setConfig, replace } = useConfig();
+  const { setConfig, replace, numTweets } = useConfig();
   const fetchLikes = useFetchLikes();
   const fetchRetweets = useFetchRetweets();
   // TODO: fetch retweeters of a tweet GET statuses/retweeters/ids https://developer.twitter.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/get-statuses-retweets-id
@@ -97,7 +97,8 @@ export default function RightClickMenu({
           handleClose();
         }}
       >
-        Tweets by {tooltipNode?.user.name} (@{tooltipNode?.user.screen_name})
+        Fetch {numTweets} tweets by {tooltipNode?.user.name} (@
+        {tooltipNode?.user.screen_name})
       </MenuItem>
       {/* <MenuItem onClick={handleFetchMedia}>Media</MenuItem> */}
       {/* <MenuItem onClick={handleFetchFollowing}>Following</MenuItem> */}
@@ -110,7 +111,7 @@ export default function RightClickMenu({
             handleClose();
           }}
         >
-          Tweets liked by {tooltipNode?.user.name} (@
+          Fetch {numTweets} tweets liked by {tooltipNode?.user.name} (@
           {tooltipNode?.user.screen_name})
         </MenuItem>
       ) : null}
@@ -121,7 +122,7 @@ export default function RightClickMenu({
             handleClose();
           }}
         >
-          Retweets of this tweet (if any)
+          Fetch {numTweets} retweets of this tweet (if any)
         </MenuItem>
       ) : null}
       {hasRetweet ? (
@@ -131,7 +132,8 @@ export default function RightClickMenu({
             handleClose();
           }}
         >
-          Tweets by <RetweetedIcon style={{ transform: "scale(0.8)" }} />{" "}
+          Fetch {numTweets} tweets by{" "}
+          <RetweetedIcon style={{ transform: "scale(0.8)" }} />{" "}
           {tooltipNode.retweeted_status.user.name} (@
           {tooltipNode.retweeted_status.user.screen_name})
         </MenuItem>
