@@ -24,7 +24,7 @@ import BtnFetchMore from "./BtnFetchMore";
 import { UserAvatar } from "../BottomDrawer/UserInfo";
 
 /** smaller grid rows means finer but more time to compute layout */
-const GRID_ROW_PX = 20;
+const GRID_ROW_PX = 40;
 const MIN_TWEET_WIDTH = 300;
 const GRID_GAP = 24;
 

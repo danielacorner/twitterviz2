@@ -2,7 +2,7 @@ import { CONTROLS_WIDTH, COLOR_BY } from "../../utils/constants";
 import { getMediaArr } from "../../utils/utils";
 import * as THREE from "three";
 import * as d3 from "d3";
-import { Tweet } from "../../types";
+import { BotScore, Tweet } from "../../types";
 import { useCallback, useRef } from "react";
 // https://www.npmjs.com/package/react-force-graph
 import {
@@ -341,6 +341,20 @@ function drawBotScore(node: Tweet & any, ctx: any) {
   ctx.lineWidth = 8;
   ctx.stroke();
 
+  const botScore = node.botScore as BotScore;
+
+  // draw a small circle above the node, with radius according to botScore.astroturf
+  drawSmallCircle(node, ctx, colorByBotScore, botScore.astroturf, 0);
+  // draw a small circle above the node, with radius according to botScore.fake_follower
+  drawSmallCircle(node, ctx, colorByBotScore, botScore.fake_follower, 60);
+  // draw a small circle above the node, with radius according to botScore.financial
+  drawSmallCircle(node, ctx, colorByBotScore, botScore.financial, 120);
+  // draw a small circle above the node, with radius according to botScore.self_declared
+  drawSmallCircle(node, ctx, colorByBotScore, botScore.self_declared, 180);
+  // draw a small circle above the node, with radius according to botScore.spammer
+  drawSmallCircle(node, ctx, colorByBotScore, botScore.spammer, 240);
+  // draw a small circle above the node, with radius according to botScore.other
+  drawSmallCircle(node, ctx, colorByBotScore, botScore.other, 300);
   /*
    * restore() restores the canvas context to its original state
    * before we defined the clipping region
@@ -355,6 +369,35 @@ function drawBotScore(node: Tweet & any, ctx: any) {
   // ctx.closePath();
   // ctx.clip();
   // ctx.fill();
+}
+
+function drawSmallCircle(
+  node,
+  ctx,
+  colorByBotScore,
+  score,
+  rotateClockwiseDeg
+) {
+  const radians = (rotateClockwiseDeg / 360) * Math.PI * 2;
+  console.log("🌟🚨: rotateClockwiseDeg", rotateClockwiseDeg);
+
+  // X goes from 0 -> diameter -> 0 -> -diameter
+  const offsetX = Math.sin(radians) * AVATAR_DIAMETER;
+  // Y goes from -diameter -> 0 -> diamgeter -> 0
+  const offsetY = Math.cos(radians) * AVATAR_DIAMETER;
+
+  const color = colorByBotScore(score);
+  ctx.beginPath();
+  ctx.arc(
+    node.x + offsetX, // x: The horizontal coordinate of the arc's center.
+    node.y + offsetY, // y: The vertical coordinate of the arc's center.
+    AVATAR_DIAMETER / 4, // radius
+    0, // startAngle
+    Math.PI * 2 * (score / 5) // endAngle
+  );
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.stroke();
 }
 
 // https://codesandbox.io/s/distracted-nash-4251j?file=/src/index.js
