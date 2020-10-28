@@ -9,7 +9,7 @@ import {
 import DiceIcon from "@material-ui/icons/Casino";
 import { SERVER_URL } from "../../../utils/constants";
 import { CollapsibleButton } from "./CollapsibleButton";
-import { Body1, RowDiv } from "components/common/styledComponents";
+import { RowDiv } from "components/common/styledComponents";
 
 export function BtnStreamNewTweets() {
   const {
@@ -51,13 +51,10 @@ export function BtnStreamNewTweets() {
   };
 
   return (
-    <RowDiv style={{ margin: "auto" }}>
-      <Body1>From</Body1>
-
+    <RowDiv>
       <CollapsibleButton
         css={`
           width: fit-content;
-          margin: auto !important;
         `}
         text={"Twitter Stream"}
         icon={<DiceIcon className="diceIcon" />}

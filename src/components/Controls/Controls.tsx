@@ -29,13 +29,11 @@ import {
   MediaTypeCheckboxes,
   RecentPopularMixedRadioBtns,
 } from "./Checkboxes";
-import { FetchUserTweetsForm, HowManyTweets, SearchForm } from "./Inputs";
 import { ControlTitle, TwoColFormStyles } from "../common/TwoColRowStyles";
 import ControlsStyles from "./ControlsStyles";
 import WordcloudControls from "./WordcloudControls";
 import NetworkGraphControls from "./NetworkGraphControls";
 import { BtnFetchFavoriteTweets } from "./Buttons/BtnFetchFavoriteTweets";
-import { BtnStreamNewTweets } from "./Buttons/BtnStreamNewTweets";
 import { useSavedDatasets } from "../common/BtnFavorite";
 import { SERVER_URL, TAB_INDICES } from "../../utils/constants";
 import SaveIcon from "@material-ui/icons/Save";
@@ -217,18 +215,13 @@ function FetchTweetsControls() {
   return (
     <>
       <div className="fetchTweets section">
-        <RowDiv style={{ ju: "flex-end" }}>
-          <HowManyTweets />
+        <RowDiv style={{ alignItems: "flex-end" }}>
+          <SwitchReplace />
         </RowDiv>
-        <BtnStreamNewTweets />
-        <SearchForm />
-        <FetchUserTweetsForm />
+
         <RowDiv>
           <BtnFetchFavoriteTweets />
           <BtnFetchFavoriteUsers />
-        </RowDiv>
-        <RowDiv style={{ alignItems: "flex-end" }}>
-          <SwitchReplace />
         </RowDiv>
       </div>
       <div className="filterTweets section">

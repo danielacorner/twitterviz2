@@ -3,20 +3,9 @@ import {
   ThemeProvider,
   useTheme,
 } from "@material-ui/core/styles";
+import { NightsStayOutlined, WbSunny } from "@material-ui/icons";
 import React, { useState } from "react";
 import styled from "styled-components/macro";
-import { CollapsibleSwitchWithLabels } from "../components/common/styledComponents";
-
-const ThemeManagerStyles = styled.div`
-  .switchWrapper {
-    position: fixed;
-    top: 4px;
-    right: 12px;
-    display: grid;
-    grid-auto-flow: column;
-    align-items: center;
-  }
-`;
 
 export default function ThemeManager({ children }) {
   const [darkState, setDarkState] = useState(true);
@@ -49,17 +38,11 @@ export default function ThemeManager({ children }) {
   };
 
   return (
-    <ThemeManagerStyles>
+    <ThemeManagerStyles darkState={darkState}>
       <ThemeProvider theme={darkTheme}>
-        <div className="switchWrapper">
-          <CollapsibleSwitchWithLabels
-            labelLeft="Light"
-            labelRight="Dark"
-            className="themeSwitch"
-            checked={darkState}
-            onChange={handleThemeChange}
-          />
-        </div>
+        <SwitchStyles className="switchWrapper" onClick={handleThemeChange}>
+          {darkState ? <WbSunny /> : <NightsStayOutlined />}
+        </SwitchStyles>
         {children}
       </ThemeProvider>
     </ThemeManagerStyles>
@@ -70,3 +53,19 @@ export const useIsLight = () => {
   const theme = useTheme();
   return theme.palette.type === "light";
 };
+
+const ThemeManagerStyles = styled.div`
+  color: ${(props) => (props.darkState ? "white" : "black")};
+  .switchWrapper {
+    position: fixed;
+    bottom: 4px;
+    right: 12px;
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
+  }
+`;
+const SwitchStyles = styled.button`
+  border: none;
+  background: none;
+`;

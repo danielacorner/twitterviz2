@@ -15,7 +15,7 @@ import Controls from "./Controls/Controls";
 import styled from "styled-components/macro";
 import { useIsLeftDrawerOpen } from "../providers/store";
 
-const drawerWidth = 240;
+export const LEFT_DRAWER_WIDTH = 240;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -29,8 +29,8 @@ const useStyles = makeStyles((theme: Theme) =>
       // }),
     },
     appBarShift: {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: drawerWidth - theme.spacing(1),
+      width: `calc(100% - ${LEFT_DRAWER_WIDTH}px)`,
+      marginLeft: LEFT_DRAWER_WIDTH - theme.spacing(1),
       // transition: theme.transitions.create(["margin", "width"], {
       //   easing: theme.transitions.easing.easeOut,
       //   duration: theme.transitions.duration.enteringScreen,
@@ -43,11 +43,11 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "none",
     },
     drawer: {
-      width: drawerWidth,
+      width: LEFT_DRAWER_WIDTH,
       flexShrink: 0,
     },
     drawerPaper: {
-      width: drawerWidth,
+      width: LEFT_DRAWER_WIDTH,
     },
 
     drawerHeader: {
@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) =>
       //   easing: theme.transitions.easing.sharp,
       //   duration: theme.transitions.duration.leavingScreen,
       // }),
-      marginLeft: -drawerWidth - theme.spacing(1) + 64,
+      marginLeft: -LEFT_DRAWER_WIDTH - theme.spacing(1) + 64,
     },
     contentShift: {
       // transition: theme.transitions.create("margin", {

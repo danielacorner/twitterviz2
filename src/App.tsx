@@ -12,17 +12,17 @@ import {
 } from "./providers/store";
 import { query as q } from "faunadb";
 import { faunaClient } from "./providers/faunaProvider";
-import VisualizationTabs from "./components/VisualizationTabs";
 import { useIsLight } from "./providers/ThemeManager";
 import "./video-react.css"; // import video-react css
-import LeftDrawer from "./components/LeftDrawer";
+import LeftDrawer, { LEFT_DRAWER_WIDTH } from "./components/LeftDrawer";
 import qs from "query-string";
 import { useLocation } from "react-router";
+import NavAndViz from "components/NavAndViz/NavAndViz";
 
 const AppStyles = styled.div`
   transition: background 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: ${LEFT_DRAWER_WIDTH}px 1fr;
   min-height: 100vh;
   * {
     margin: 0;
@@ -40,7 +40,7 @@ function App() {
   return (
     <AppStyles className="App">
       <LeftDrawer />
-      <VisualizationTabs />
+      <NavAndViz />
       <BottomDrawer />
       <AppStylesHooks />
       <InitializeAppHooks />
