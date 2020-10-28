@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ForceGraph2D, ForceGraph3D } from "react-force-graph";
 import NodeTooltip from "../NodeTooltip";
 // https://www.npmjs.com/package/react-force-graph
@@ -16,7 +16,6 @@ import { uniqBy } from "lodash";
 import { EMPTY_TWEET } from "../../utils/emptyTweet";
 import GraphRightClickMenu from "./GraphRightClickMenu";
 import { useTheForce } from "./useTheForce";
-import { useFetchBotScoreForTweet } from "components/common/useFetchBotScoreForTweet";
 
 const GraphStyles = styled.div`
   width: 100%;
@@ -213,28 +212,3 @@ function Graph() {
 }
 
 export default NetworkGraph;
-
-/** when tweets change, fetch bot scores for each */
-function useGenerateBotScoresOnNewTweets() {
-  const tweets = useTweets();
-  const fetchBotScoreForTweet = useFetchBotScoreForTweet();
-
-  // faily rate limit of 500 so just fetch 1 per load
-  const foundOne = useRef(false);
-
-  // fetch only every 1s due to RapidAPI free tier rate limit
-  useEffect(() => {
-    // fetch the first one only
-
-    // use a for loop to force synchronous (forEach is parallel)
-    for (let index = 0; index < tweets.length; index++) {
-      const tweet = tweets[index];
-      if (!foundOne.current && !tweet.botScore) {
-        foundOne.current = true;
-        setTimeout(() => {
-          fetchBotScoreForTweet(tweet);
-        }, 1001);
-      }
-    }
-  }, [tweets, fetchBotScoreForTweet]);
-}

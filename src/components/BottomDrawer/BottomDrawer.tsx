@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Drawer, IconButton, Tooltip } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import TweetContent from "../TweetContent/TweetContent";
@@ -41,7 +41,9 @@ const BottomDrawer = () => {
     const delta = offsetY - event.deltaY;
     setOffsetY(Math.max(maxDrawerHeight, Math.min(DRAWER_HEIGHT - 100, delta)));
   };
-  const handleClose = () => setSelectedNode(null);
+  const handleClose = useCallback(() => setSelectedNode(null), [
+    setSelectedNode,
+  ]);
 
   // when we click a new node, open the bottom drawer
   const prevSelectedNode = useRef(null as Tweet | null);
@@ -60,7 +62,7 @@ const BottomDrawer = () => {
     if (offsetY === DRAWER_HEIGHT - 100) {
       handleClose();
     }
-  }, [offsetY]);
+  }, [offsetY, handleClose]);
 
   return (
     <BottomDrawerStyles>
