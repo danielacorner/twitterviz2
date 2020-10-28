@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Drawer, IconButton, Button, Tooltip } from "@material-ui/core";
+import React, { useState, useEffect, useRef } from "react";
+import { Drawer, IconButton, Tooltip } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import TweetContent from "../TweetContent/TweetContent";
 import UserInfo from "./UserInfo";
@@ -11,6 +11,8 @@ import {
   DrawerContentStyles,
   DRAWER_HEIGHT,
 } from "./BottomDrawerStyles";
+import { useMount } from "utils/utils";
+import { Tweet } from "types";
 
 const DRAWER_MAX_HEIGHT_MULTIPLIER = 3.5;
 
@@ -22,25 +24,43 @@ const BottomDrawer = () => {
     (state: GlobalStateStoreType) => state.selectedNode
   );
   const [offsetY, setOffsetY] = useState(0);
-  const { height } = useWindowSize();
+  const { height: windowHeight } = useWindowSize();
+  const maxDrawerHeight =
+    DRAWER_HEIGHT - windowHeight * DRAWER_MAX_HEIGHT_MULTIPLIER;
 
-  const handleWheel = (event) => {
-    const delta = offsetY - event.deltaY;
-    setOffsetY(
-      Math.max(
-        DRAWER_HEIGHT - height * DRAWER_MAX_HEIGHT_MULTIPLIER,
-        Math.min(DRAWER_HEIGHT - 100, delta)
-      )
-    );
-  };
-  const handleClose = () => setSelectedNode(null);
-
-  useEffect(() => {
+  // disable scrolling on the graph
+  useMount(() => {
     disableScroll();
+    // window.addEventListener(wheelEvent, handleWheel);
     return () => {
       enableScroll();
     };
-  }, []);
+  });
+
+  const handleWheel = (event) => {
+    const delta = offsetY - event.deltaY;
+    setOffsetY(Math.max(maxDrawerHeight, Math.min(DRAWER_HEIGHT - 100, delta)));
+  };
+  const handleClose = () => setSelectedNode(null);
+
+  // when we click a new node, open the bottom drawer
+  const prevSelectedNode = useRef(null as Tweet | null);
+  useEffect(() => {
+    if (
+      selectedNode &&
+      selectedNode.id_str !== prevSelectedNode.current?.id_str
+    ) {
+      prevSelectedNode.current = selectedNode;
+      setOffsetY(maxDrawerHeight);
+    }
+  }, [selectedNode, maxDrawerHeight]);
+
+  // close when we scroll the draewr down enough
+  useEffect(() => {
+    if (offsetY === DRAWER_HEIGHT - 100) {
+      handleClose();
+    }
+  }, [offsetY]);
 
   return (
     <BottomDrawerStyles>
@@ -48,8 +68,8 @@ const BottomDrawer = () => {
         anchor="bottom"
         open={Boolean(selectedNode)}
         onBackdropClick={handleClose}
-        onWheel={handleWheel}
         ModalProps={{
+          onWheel: handleWheel,
           BackdropProps: {
             style: {
               // backgroundColor: "transparent",
@@ -68,6 +88,7 @@ const BottomDrawer = () => {
         }}
         style={{
           bottom: `-${(DRAWER_MAX_HEIGHT_MULTIPLIER - 1) * 100}vh`,
+          top: "-70vh",
           transform: `translateY(calc(100vh - ${DRAWER_HEIGHT - offsetY}px))`,
         }}
       >
@@ -104,7 +125,7 @@ const BottomDrawer = () => {
   );
 };
 
-export function OpenTweetBtn({ tweet, offsetY = 0, iconOnly = false }) {
+export function OpenTweetBtn({ tweet, offsetY = 0 }) {
   return (
     <a
       className="viewTweet"
@@ -113,15 +134,9 @@ export function OpenTweetBtn({ tweet, offsetY = 0, iconOnly = false }) {
       target="_blank"
       rel="noopener noreferrer"
     >
-      {iconOnly ? (
-        <Tooltip title="Open in new">
-          <OpenInNewIcon />
-        </Tooltip>
-      ) : (
-        <Button variant="outlined" endIcon={<OpenInNewIcon />}>
-          Open tweet
-        </Button>
-      )}
+      <Tooltip title="Open in new">
+        <OpenInNewIcon />
+      </Tooltip>
     </a>
   );
 }

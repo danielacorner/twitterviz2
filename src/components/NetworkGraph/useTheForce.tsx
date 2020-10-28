@@ -12,7 +12,7 @@ import { Tweet } from "types";
 
 export function useTheForce(fg: any, graph: { nodes: any[]; links: any[] }) {
   const getIsLikeLink = useGetIsLikeLink();
-  const { gravity, charge, showUserNodes, isGridMode } = useConfig();
+  const { gravity, charge, showUserNodes, isGridMode, setConfig } = useConfig();
   useEffect(() => {
     if (!fg) {
       return;
@@ -26,6 +26,7 @@ export function useTheForce(fg: any, graph: { nodes: any[]; links: any[] }) {
     const gridColumnWidth = 100;
 
     if (isGridMode) {
+      // turn off forces
       fg.d3Force("gravity", null);
       fg.d3Force("charge", null);
       fg.d3Force("link", null);
@@ -65,7 +66,13 @@ export function useTheForce(fg: any, graph: { nodes: any[]; links: any[] }) {
           })
           .strength(0.6)
       );
+
+      // once the nodes have settled, pause the simulation
+      setTimeout(() => {
+        setConfig({ isPaused: true });
+      }, 1000);
     } else {
+      setConfig({ isPaused: false });
       // disable positioning forces
       fg.d3Force("forceY", null);
       fg.d3Force("forceX", null);
@@ -205,5 +212,14 @@ export function useTheForce(fg: any, graph: { nodes: any[]; links: any[] }) {
     //     }
     //   });
     // });
-  }, [graph, fg, isGridMode, showUserNodes, gravity, charge, getIsLikeLink]);
+  }, [
+    graph,
+    fg,
+    isGridMode,
+    showUserNodes,
+    gravity,
+    charge,
+    getIsLikeLink,
+    setConfig,
+  ]);
 }

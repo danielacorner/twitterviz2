@@ -40,7 +40,7 @@ const GalleryStyles = styled.div`
   }
   .tweetContent {
     position: relative;
-    .avatar {
+    .userAvatar {
       height: 48px;
       width: 48px;
       position: absolute;
@@ -51,7 +51,7 @@ const GalleryStyles = styled.div`
     }
   }
 
-  .avatar {
+  .userAvatar {
     overflow: hidden;
     border-radius: 999px;
     &:before {
@@ -104,7 +104,7 @@ const GalleryStyles = styled.div`
     display: grid;
     grid-gap: 0.5rem;
     place-items: center;
-    .avatar {
+    .userAvatar {
       width: 256px;
       height: 256px;
       position: relative;
@@ -199,7 +199,7 @@ function GridItem({ tweet }) {
       <UserAvatar user={tweet.user} imageOnly={true} />
       <div className="tweetButtons">
         <DeleteTweetBtn tweet={tweet} />
-        <OpenTweetBtn tweet={tweet} iconOnly={true} />
+        <OpenTweetBtn tweet={tweet} />
         <BtnFavorite tweet={tweet} tooltipTitle="favorite tweet" />
       </div>
       <TweetContent tweet={tweet} isTooltip={false} autoPlay={false} />

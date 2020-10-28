@@ -11,7 +11,7 @@ export const USER_INFO_WIDTH = 200;
 
 const UserInfoStyles = styled.div`
   height: ${USER_INFO_WIDTH}px;
-  .avatar {
+  .userAvatar {
     width: 100%;
     height: 100%;
     border-radius: 50%;
@@ -74,6 +74,8 @@ export function UserAvatar({
   return (
     <AvatarStyles
       css={`
+        width: 100%;
+        height: 100%;
         ${large ? "position: relative;" : ""}
         .MuiButtonBase-root {
           position: absolute;
@@ -91,7 +93,7 @@ export function UserAvatar({
         target="_blank"
         rel="noopener noreferrer"
       >
-        <div className="avatar">
+        <div className="userAvatar">
           <ImgUnmountOnError
             srcSet={`
               ${user?.profile_image_url_https} 480w,

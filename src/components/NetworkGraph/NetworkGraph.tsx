@@ -189,7 +189,8 @@ function Graph() {
   useTheForce(fg, graph);
 
   // when new tweets arrive, fetch their bot scores
-  useGenerateBotScoresOnNewTweets();
+  // TODO: disabled while testing
+  // useGenerateBotScoresOnNewTweets();
 
   return (
     <div>

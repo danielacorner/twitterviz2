@@ -379,7 +379,6 @@ function drawSmallCircle(
   rotateClockwiseDeg
 ) {
   const radians = (rotateClockwiseDeg / 360) * Math.PI * 2;
-  console.log("🌟🚨: rotateClockwiseDeg", rotateClockwiseDeg);
 
   // X goes from 0 -> diameter -> 0 -> -diameter
   const offsetX = Math.sin(radians) * AVATAR_DIAMETER;
