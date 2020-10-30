@@ -6,9 +6,9 @@ export const TweetStyles = styled.div`
   position: relative;
   display: grid;
   grid-gap: ${PADDING}px;
-  overflow: hidden;
+  overflow: ${(props) => (props.isBottomDrawer ? "visible" : "hidden")};
   word-break: break-all;
-
+  height: 100%;
   .user_name {
     white-space: nowrap;
     overflow: hidden;
@@ -91,7 +91,10 @@ export const TweetStyles = styled.div`
     }
     display: grid;
     ${(props) => (!props.isGallery ? "max-height: calc(100vh - 100px);" : "")}
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    ${(props) =>
+      props.isBottomDrawer
+        ? "grid-auto-flow:row"
+        : "grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))"};
     ${(props) => (props.isVideo ? "grid-template-columns: 1fr;" : "")}
     grid-gap: ${PADDING}px;
     img {

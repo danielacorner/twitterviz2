@@ -14,9 +14,9 @@ export const BottomDrawerStyles = styled.div`
 
 export const DrawerContentStyles = styled.div`
   box-sizing: border-box;
-  padding: 32px 16px 16px;
+  padding: 32px 16px 0px;
   position: relative;
-  height: ${DRAWER_HEIGHT}px;
+  height: ${(props) => props.drawerHeight}px;
   .viewTweet {
     position: absolute;
     right: 16px;
@@ -24,6 +24,7 @@ export const DrawerContentStyles = styled.div`
     transition: transform 225ms cubic-bezier(0, 0, 0.2, 1) 0ms;
   }
   .userAndTweetWrapper {
+    height: 100%;
     display: grid;
     grid-gap: ${PADDING}px;
     grid-template-columns: ${USER_INFO_WIDTH}px 1fr;
@@ -37,7 +38,9 @@ export const DrawerContentStyles = styled.div`
     right: 0;
   }
   .tweetContentWrapper {
-    max-height: 900px;
+    height: 100%;
+
+    /* max-height: 900px; */
   }
   .MuiDrawer-paper,
   .MuiDrawer-root {

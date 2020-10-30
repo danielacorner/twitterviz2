@@ -1,6 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { NODE_DIAMETER, AVATAR_DIAMETER } from "./useForceGraphProps";
-import { useConfig } from "../../providers/store";
+import { useConfig, useTweets } from "../../providers/store";
 import * as d3 from "d3";
 import {
   useGetIsLikeLink,
@@ -12,9 +12,36 @@ import { Tweet } from "types";
 
 export function useTheForce(fg: any, graph: { nodes: any[]; links: any[] }) {
   const getIsLikeLink = useGetIsLikeLink();
-  const { gravity, charge, showUserNodes, isGridMode, setConfig } = useConfig();
+  const {
+    gravity,
+    charge,
+    showUserNodes,
+    isGridMode,
+    setConfig,
+    isPaused,
+  } = useConfig();
 
-  // pause and unpause
+  // in Grid mode, when we fetch new tweets, temporarily unpause
+  const tweets = useTweets();
+  const prevTweets = useRef(tweets);
+  useEffect(() => {
+    let timer;
+    if (isGridMode && isPaused && tweets.length !== prevTweets.current.length) {
+      setConfig({ isPaused: false });
+      timer = window.setTimeout(() => setConfig({ isPaused: false }), 1000);
+    }
+
+    prevTweets.current = tweets;
+
+    return () => {
+      if (timer) {
+        window.clearTimeout(timer);
+      }
+    };
+  }, [setConfig, tweets, isGridMode, isPaused]);
+
+  // pause when we activate grid mode
+  // unpause when we deactivate grid mode
   useEffect(() => {
     if (isGridMode) {
       // once the nodes have settled, pause the simulation
@@ -44,8 +71,9 @@ export function useTheForce(fg: any, graph: { nodes: any[]; links: any[] }) {
       fg.d3Force("gravity", null);
       fg.d3Force("charge", null);
       fg.d3Force("link", null);
+      fg.d3Force("center", null);
 
-      const FORCE_GRID_STRENGTH = 3;
+      const FORCE_GRID_STRENGTH = 2;
 
       fg.d3Force(
         "forceX",
@@ -161,6 +189,7 @@ export function useTheForce(fg: any, graph: { nodes: any[]; links: any[] }) {
             return mult * AVATAR_DIAMETER;
           })
       );
+      fg.d3Force("center", d3.forceCenter());
 
       // fg.d3Force("pullTogether", d3.forceManyBody().strength(400));
       // setTimeout(() => {

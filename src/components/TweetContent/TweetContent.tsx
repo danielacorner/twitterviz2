@@ -12,14 +12,23 @@ import { useSearchObj } from "../../providers/store";
 import useContainerDimensions from "utils/useContainerDimensions";
 import MediaContent from "./Media/MediaContent";
 import { Tweet } from "types";
+import { useWindowSize } from "utils/hooks";
+
+type TweetContentProps = {
+  tweet: Tweet;
+  offsetY?: number;
+  autoPlay?: boolean;
+  isTooltip?: boolean;
+  isBottomDrawer?: boolean;
+};
 
 export default function TweetContent({
   tweet,
-  offset = 0,
+  offsetY = 0,
   autoPlay = true,
   isTooltip = false,
   isBottomDrawer = false,
-}) {
+}: TweetContentProps) {
   const {
     user,
     text,
@@ -29,7 +38,7 @@ export default function TweetContent({
     in_reply_to_screen_name,
     entities,
   } = tweet;
-
+  const { height: windowHeight } = useWindowSize();
   const retweetedUser = getRetweetedUser(tweet);
   let parsing = null; //TODO necessary?
 
@@ -93,14 +102,18 @@ export default function TweetContent({
 
   const [ref, dimensions] = useContainerDimensions();
   const searchObj = useSearchObj();
+  if (isBottomDrawer) {
+    console.log("🌟🚨: offsetY", offsetY);
+  }
   return (
     <TweetStyles
+      className={isBottomDrawer ? "bottomDrawerTweetStyles" : ""}
       ref={ref}
       isGallery={`${TAB_INDICES.GALLERY}` in searchObj}
       isRetweet={Boolean(retweetedUser)}
       isTooltip={isTooltip}
       isBottomDrawer={isBottomDrawer}
-      videoHeight={-offset + 270}
+      videoHeight={Math.min(windowHeight, -offsetY + 270)}
       isVideo={extended_entities?.media[0]?.type === "video"}
     >
       <div className="userInfo">
@@ -141,6 +154,7 @@ export default function TweetContent({
               {...{
                 autoPlay,
                 isTooltip,
+                numImages: mediaArr.length,
                 containerWidth: dimensions?.width || 0,
                 containerHeight: dimensions?.height || 0,
               }}

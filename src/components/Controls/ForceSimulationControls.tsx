@@ -18,19 +18,11 @@ export function ForceSimulationControls() {
     cooldownTime,
     gravity,
     charge,
-    isPaused,
-    setConfig,
   } = useConfig();
 
   return (
     <FormControl>
-      <RowDiv>
-        <Body1>Pause</Body1>
-        <Switch
-          checked={isPaused}
-          onChange={() => setConfig({ isPaused: !isPaused })}
-        />
-      </RowDiv>
+      <BtnPause />
       <SliderWithInputAndSwitch
         {...{
           value: charge,
@@ -101,6 +93,20 @@ export function ForceSimulationControls() {
         }}
       />
     </FormControl>
+  );
+}
+
+function BtnPause() {
+  const { isPaused, setConfig } = useConfig();
+
+  return (
+    <RowDiv>
+      <Body1>Pause</Body1>
+      <Switch
+        checked={isPaused}
+        onChange={() => setConfig({ isPaused: !isPaused })}
+      />
+    </RowDiv>
   );
 }
 

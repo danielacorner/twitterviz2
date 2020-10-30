@@ -4,7 +4,6 @@ import CloseIcon from "@material-ui/icons/Close";
 import TweetContent from "../TweetContent/TweetContent";
 import UserInfo from "./UserInfo";
 import useStore, { GlobalStateStoreType } from "../../providers/store";
-import { useWindowSize } from "../../utils/hooks";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import {
   BottomDrawerStyles,
@@ -24,9 +23,9 @@ const BottomDrawer = () => {
     (state: GlobalStateStoreType) => state.selectedNode
   );
   const [offsetY, setOffsetY] = useState(0);
-  const { height: windowHeight } = useWindowSize();
-  const maxDrawerHeight =
-    DRAWER_HEIGHT - windowHeight * DRAWER_MAX_HEIGHT_MULTIPLIER;
+  // const { height: windowHeight } = useWindowSize();
+  const maxDrawerHeight = Infinity;
+  // const maxDrawerHeight = windowHeight * DRAWER_MAX_HEIGHT_MULTIPLIER;
 
   // disable scrolling on the graph
   useMount(() => {
@@ -37,13 +36,24 @@ const BottomDrawer = () => {
     };
   });
 
+  const setBottomDrawerHeight = (newHeight: string) => {
+    const bottomDrawerTweet = document.querySelector("bottomDrawerTweetStyles");
+    if (bottomDrawerTweet) {
+      (bottomDrawerTweet as HTMLElement).style.height = newHeight;
+    }
+  };
+
   const handleWheel = (event) => {
     const delta = offsetY - event.deltaY;
-    setOffsetY(Math.max(maxDrawerHeight, Math.min(DRAWER_HEIGHT - 100, delta)));
+    setOffsetY(Math.min(maxDrawerHeight, delta));
+
+    // set the tweetStyles height
+    setBottomDrawerHeight(`${-offsetY + 200}px`);
   };
-  const handleClose = useCallback(() => setSelectedNode(null), [
-    setSelectedNode,
-  ]);
+  const handleClose = useCallback(() => {
+    setBottomDrawerHeight(undefined);
+    setSelectedNode(null);
+  }, [setSelectedNode]);
 
   // when we click a new node, open the bottom drawer
   const prevSelectedNode = useRef(null as Tweet | null);
@@ -54,6 +64,10 @@ const BottomDrawer = () => {
     ) {
       prevSelectedNode.current = selectedNode;
       setOffsetY(maxDrawerHeight);
+      const popUpBottomDrawer = () => {
+        setBottomDrawerHeight(`${400}px`);
+      };
+      popUpBottomDrawer();
     }
   }, [selectedNode, maxDrawerHeight]);
 
@@ -72,6 +86,14 @@ const BottomDrawer = () => {
         onBackdropClick={handleClose}
         ModalProps={{
           onWheel: handleWheel,
+          onClick: (event) => {
+            if (
+              (event.target as HTMLElement)?.getAttribute("role") ===
+              "presentation"
+            ) {
+              handleClose();
+            }
+          },
           BackdropProps: {
             style: {
               // backgroundColor: "transparent",
@@ -94,7 +116,7 @@ const BottomDrawer = () => {
           transform: `translateY(calc(100vh - ${DRAWER_HEIGHT - offsetY}px))`,
         }}
       >
-        <DrawerContentStyles>
+        <DrawerContentStyles drawerHeight={-offsetY + 400}>
           {/* absolute-position below here */}
           <Tooltip title="delete">
             <IconButton className="btnClose" onClick={handleClose}>

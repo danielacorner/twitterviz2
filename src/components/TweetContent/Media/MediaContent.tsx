@@ -6,6 +6,7 @@ type MediaProps = MediaItem & {
   autoPlay: boolean;
   containerWidth: number;
   containerHeight: number;
+  numImages: number;
   isTooltip: boolean;
 };
 export default function MediaContent({
@@ -13,6 +14,7 @@ export default function MediaContent({
   containerWidth,
   containerHeight,
   isTooltip,
+  numImages,
   ...mediaItem
 }: MediaProps) {
   const { poster, src, type, sizes } = mediaItem;
@@ -32,16 +34,15 @@ export default function MediaContent({
       setClickedOnce(true);
     }
   };
+  console.log("🌟🚨: containerHeight", containerHeight);
 
+  const VIDEO_CONTROLS_HEIGHT = 100;
   return (
     <div
       onClick={handleClick}
       className="media"
       style={{
-        height: Math.max(
-          containerHeight,
-          (containerWidth * sizes.large.h) / sizes.large.w
-        ),
+        height: containerHeight - VIDEO_CONTROLS_HEIGHT,
         width: containerWidth,
         position: "relative",
       }}
@@ -64,7 +65,7 @@ export default function MediaContent({
               loading="lazy"
               src={poster}
               alt=""
-              width={containerWidth}
+              width={containerWidth / numImages}
               height={(containerWidth * sizes.large.h) / sizes.large.w}
             />
           </div>

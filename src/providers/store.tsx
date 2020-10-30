@@ -71,10 +71,9 @@ export type AppConfig = {
 const [useStore] = create(
   (set) =>
     ({
-      tweetsFromServer:
-        process.env.NODE_ENV === "development"
+      tweetsFromServer: /* process.env.NODE_ENV === "development"
           ? mockTweetsData.tweets
-          : ([] as Tweet[]),
+          :  */ [] as Tweet[],
       // map between tweet.user.id_str and the liked tweet.id_str
       // likesByUserId is populated when we "fetch tweets liked by a user"
       likesByUserId:
