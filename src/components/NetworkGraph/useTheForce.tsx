@@ -44,6 +44,9 @@ export function useTheForce(fg: any, graph: { nodes: any[]; links: any[] }) {
       fg.d3Force("gravity", null);
       fg.d3Force("charge", null);
       fg.d3Force("link", null);
+
+      const FORCE_GRID_STRENGTH = 3;
+
       fg.d3Force(
         "forceX",
         d3
@@ -60,7 +63,7 @@ export function useTheForce(fg: any, graph: { nodes: any[]; links: any[] }) {
               gridColumn * gridColumnWidth * randomNumberNear1
             );
           })
-          .strength(0.6)
+          .strength(FORCE_GRID_STRENGTH)
       );
       fg.d3Force(
         "forceY",
@@ -78,7 +81,7 @@ export function useTheForce(fg: any, graph: { nodes: any[]; links: any[] }) {
               gridRow * gridColumnWidth * randomNumberNear1
             );
           })
-          .strength(0.6)
+          .strength(FORCE_GRID_STRENGTH)
       );
     } else {
       // disable positioning forces

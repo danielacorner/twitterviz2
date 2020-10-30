@@ -9,6 +9,7 @@ import {
   Timer,
 } from "@material-ui/icons";
 import { TitleWithIcon } from "./NetworkGraphControls";
+import { Body1, RowDiv } from "components/common/styledComponents";
 
 export function ForceSimulationControls() {
   const {
@@ -17,10 +18,29 @@ export function ForceSimulationControls() {
     cooldownTime,
     gravity,
     charge,
+    isPaused,
+    setConfig,
   } = useConfig();
 
   return (
     <FormControl>
+      <RowDiv>
+        <Body1>Pause</Body1>
+        <Switch
+          checked={isPaused}
+          onChange={() => setConfig({ isPaused: !isPaused })}
+        />
+      </RowDiv>
+      <SliderWithInputAndSwitch
+        {...{
+          value: charge,
+          configKeyString: "charge",
+          min: -1000,
+          max: 0,
+          disabledValue: 0,
+          step: 10,
+        }}
+      />
       <TitleWithIcon title={"Charge"} icon={<GroupWork />} />
       <SliderWithInputAndSwitch
         {...{
