@@ -105,6 +105,15 @@ export default function TweetContent({
   if (isBottomDrawer) {
     console.log("🌟🚨: offsetY", offsetY);
   }
+  const { firstItemWidth, totalHeight } = mediaArr.reduce(
+    (acc, media, idx) => ({
+      totalHeight: media.sizes.large.h + acc.totalHeight,
+      firstItemWidth:
+        (idx === 0 ? media.sizes.large.w : 0) + acc.firstItemWidth,
+    }),
+    { firstItemWidth: 0, totalHeight: 0 }
+  );
+
   return (
     <TweetStyles
       className={isBottomDrawer ? "bottomDrawerTweetStyles" : ""}
@@ -115,6 +124,8 @@ export default function TweetContent({
       isBottomDrawer={isBottomDrawer}
       videoHeight={Math.min(windowHeight, -offsetY + 270)}
       isVideo={extended_entities?.media[0]?.type === "video"}
+      mediaHeight={totalHeight}
+      mediaWidth={firstItemWidth}
     >
       <div className="userInfo">
         <div className="usersRows">
@@ -154,6 +165,7 @@ export default function TweetContent({
               {...{
                 autoPlay,
                 isTooltip,
+                isBottomDrawer,
                 numImages: mediaArr.length,
                 containerWidth: dimensions?.width || 0,
                 containerHeight: dimensions?.height || 0,

@@ -8,6 +8,7 @@ type MediaProps = MediaItem & {
   containerHeight: number;
   numImages: number;
   isTooltip: boolean;
+  isBottomDrawer: boolean;
 };
 export default function MediaContent({
   autoPlay,
@@ -15,6 +16,7 @@ export default function MediaContent({
   containerHeight,
   isTooltip,
   numImages,
+  isBottomDrawer,
   ...mediaItem
 }: MediaProps) {
   const { poster, src, type, sizes } = mediaItem;
@@ -34,15 +36,17 @@ export default function MediaContent({
       setClickedOnce(true);
     }
   };
-  console.log("🌟🚨: containerHeight", containerHeight);
 
   const VIDEO_CONTROLS_HEIGHT = 100;
+  const isVideo = mediaItem.type === "video";
   return (
     <div
       onClick={handleClick}
       className="media"
       style={{
-        height: containerHeight - VIDEO_CONTROLS_HEIGHT,
+        ...(isVideo && isBottomDrawer
+          ? { height: containerHeight / numImages - VIDEO_CONTROLS_HEIGHT }
+          : {}),
         width: containerWidth,
         position: "relative",
       }}

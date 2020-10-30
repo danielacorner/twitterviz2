@@ -16,7 +16,7 @@ import {
   CUSTOM_SCROLLBAR_CSS,
   LOADING_SCROLLBAR_CSS,
 } from "../common/styledComponents";
-import { useMount } from "../../utils/utils";
+import { getMediaArr, useMount } from "../../utils/utils";
 import BtnFavorite from "../common/BtnFavorite";
 import CloseIcon from "@material-ui/icons/Close";
 import { Tweet } from "../../types";
@@ -40,6 +40,17 @@ const GalleryStyles = styled.div`
   }
   .tweetContent {
     position: relative;
+
+    width: 100%;
+    height: fit-content;
+
+    display: grid;
+    place-content: start;
+
+    border: 1px solid hsl(0, 0%, ${(props) => (props.isLight ? "70" : "30")}%);
+    margin: -0.5px;
+    padding: 16px 16px 32px;
+
     .userAvatar {
       height: 48px;
       width: 48px;
@@ -77,13 +88,6 @@ const GalleryStyles = styled.div`
   padding: 18px;
   height: calc(100vh - ${TABS_HEIGHT}px);
   overflow-y: scroll;
-  .tweetContent {
-    height: fit-content;
-    border: 1px solid hsl(0, 0%, ${(props) => (props.isLight ? "70" : "30")}%);
-    margin: -0.5px;
-    padding: 16px 16px 32px;
-    position: relative;
-  }
   .tweetButtons {
     transform: scale(0.8);
     transform-origin: top right;
@@ -104,6 +108,7 @@ const GalleryStyles = styled.div`
     display: grid;
     grid-gap: 0.5rem;
     place-items: center;
+    place-content: start;
     .userAvatar {
       width: 256px;
       height: 256px;
@@ -185,16 +190,42 @@ const Gallery = () => {
 
 export default Gallery;
 
-function GridItem({ tweet }) {
+function GridItem({ tweet }: { tweet: Tweet }) {
   const [ref, dimensions] = useContainerDimensions();
   const rowSpan = Math.ceil(
     ((dimensions?.height || MIN_TWEET_WIDTH) + GRID_GAP) / GRID_ROW_PX
   );
+  const isMediaTweet = Boolean(getMediaArr(tweet)[0]);
+  const mediaArr = getMediaArr(tweet);
+  const { firstItemWidth, totalHeight } = mediaArr.reduce(
+    (acc, media, idx) => ({
+      totalHeight: media.sizes.large.h + acc.totalHeight,
+      firstItemWidth:
+        (idx === 0 ? media.sizes.large.w : 0) + acc.firstItemWidth,
+    }),
+    { firstItemWidth: 0, totalHeight: 0 }
+  );
+  // TODO
+  const tweetWidth = 430;
+  const avatarSectionHeight = 150;
+  const textSectionHeight = tweet.text ? 50 : 0;
+  const height =
+    (totalHeight / firstItemWidth) * tweetWidth +
+    avatarSectionHeight +
+    textSectionHeight;
   return (
     <div
       className="tweetContent"
       ref={ref}
-      style={{ gridRow: `span ${rowSpan}` }}
+      style={{
+        gridRow: `span ${rowSpan}`,
+        ...(isMediaTweet
+          ? {
+              height,
+              gridTemplateRows: `auto repeat(${mediaArr.length}, auto)`,
+            }
+          : {}),
+      }}
     >
       <UserAvatar user={tweet.user} imageOnly={true} />
       <div className="tweetButtons">

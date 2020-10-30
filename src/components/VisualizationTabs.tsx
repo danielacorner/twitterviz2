@@ -32,6 +32,7 @@ export default function VisualizationTabs() {
         place-items: center;
         grid-template-rows: auto 1fr;
         max-height: 100vh;
+        width: 100%;
         .tabs {
           width: 100%;
           display: grid;

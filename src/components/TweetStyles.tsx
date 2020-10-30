@@ -9,6 +9,13 @@ export const TweetStyles = styled.div`
   overflow: ${(props) => (props.isBottomDrawer ? "visible" : "hidden")};
   word-break: break-all;
   height: 100%;
+  ${(props) =>
+    props.isGallery && props.mediaHeight ? `width: ${props.mediaWidth}px;` : ""}
+  ${(props) =>
+    props.isGallery && props.mediaHeight
+      ? `min-height: ${props.mediaHeight}px;`
+      : ""}
+
   .user_name {
     white-space: nowrap;
     overflow: hidden;
@@ -86,13 +93,17 @@ export const TweetStyles = styled.div`
     text-align: left;
   }
   .allMedia {
+    height: 100%;
     .imgLink {
       cursor: pointer;
     }
     display: grid;
-    ${(props) => (!props.isGallery ? "max-height: calc(100vh - 100px);" : "")}
     ${(props) =>
-      props.isBottomDrawer
+      props.isBottomDrawer || props.isTooltip
+        ? "max-height: calc(100vh - 100px);"
+        : ""}
+    ${(props) =>
+      props.isBottomDrawer || props.isGallery
         ? "grid-auto-flow:row"
         : "grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))"};
     ${(props) => (props.isVideo ? "grid-template-columns: 1fr;" : "")}
@@ -103,7 +114,9 @@ export const TweetStyles = styled.div`
     video {
       transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
       height: ${(props) =>
-        props.isBottomDrawer ? props.videoHeight + "px" : "auto"};
+        props.isBottomDrawer || props.isGallery
+          ? props.videoHeight + "px"
+          : "auto"};
       width: 100%;
     }
   }
