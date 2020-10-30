@@ -9,6 +9,8 @@ export const TweetStyles = styled.div`
   overflow: ${(props) => (props.isBottomDrawer ? "visible" : "hidden")};
   word-break: break-all;
   height: 100%;
+  padding-right: 100%;
+
   ${(props) =>
     props.isGallery && props.mediaWidth ? `width: ${props.mediaWidth}px;` : ""}
   ${(props) =>
