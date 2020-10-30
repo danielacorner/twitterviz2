@@ -7,6 +7,7 @@ import {
   List,
   IconButton,
   Tooltip,
+  Checkbox,
 } from "@material-ui/core";
 import {
   useLoading,
@@ -21,6 +22,7 @@ import {
   CUSTOM_SCROLLBAR_CSS,
   RowDiv,
   H6,
+  Body1,
 } from "../common/styledComponents";
 import SelectGeolocation from "./SelectGeolocation";
 import { SelectCountry, SelectLanguage } from "./Dropdowns";
@@ -41,19 +43,18 @@ import ClearIcon from "@material-ui/icons/Clear";
 import styled from "styled-components/macro";
 import { BtnFetchFavoriteUsers } from "./Buttons/BtnFetchFavoriteUsers";
 import { useConfig } from "../../providers/store";
-import { CollapsibleSwitchWithLabels } from "../common/styledComponents";
 import { Collapsible } from "components/common/Collapsible";
 
 export function SwitchReplace() {
   const { replace, setConfig } = useConfig();
   return (
-    <CollapsibleSwitchWithLabels
-      // labelRight="Add"
-      labelRight="Replace all current"
-      onChange={() => setConfig({ replace: !replace })}
-      checked={replace}
-      css={``}
-    />
+    <RowDiv>
+      <Checkbox
+        onChange={() => setConfig({ replace: !replace })}
+        checked={replace}
+      />
+      <Body1>Replace all</Body1>
+    </RowDiv>
   );
 }
 
@@ -215,9 +216,9 @@ function FetchTweetsControls() {
   return (
     <>
       <div className="fetchTweets section">
-        <RowDiv style={{ alignItems: "flex-end" }}>
+        {/* <RowDiv style={{ alignItems: "flex-end" }}>
           <SwitchReplace />
-        </RowDiv>
+        </RowDiv> */}
 
         <RowDiv>
           <BtnFetchFavoriteTweets />

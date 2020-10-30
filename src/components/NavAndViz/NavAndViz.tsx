@@ -1,8 +1,11 @@
-import { Body1, RowDiv } from "components/common/styledComponents";
+import { Button } from "@material-ui/core";
+import { Body1, ColumnDiv, RowDiv } from "components/common/styledComponents";
 import { BtnStreamNewTweets } from "components/Controls/Buttons/BtnStreamNewTweets";
+import { SwitchReplace } from "components/Controls/Controls";
 import { HowManyTweets } from "components/Controls/Inputs";
 import { SearchForm } from "components/Controls/SearchForm";
 import VisualizationTabs from "components/VisualizationTabs";
+import { useSetTweets } from "providers/store";
 import React from "react";
 
 import styled from "styled-components/macro";
@@ -14,7 +17,7 @@ const NavAndVizStyles = styled.div`
 `;
 const NavBarStyles = styled.div`
   display: grid;
-  grid-template-columns: 200px 140px auto 1fr;
+  grid-template-columns: 200px 140px auto 1fr auto auto;
   align-items: baseline;
   grid-gap: 1em;
 `;
@@ -27,6 +30,16 @@ const NavAndViz = () => {
         <BtnStreamNewTweets />
         <Body1 style={{ height: "fit-content" }}>or</Body1>
         <SearchForm />
+        <ColumnDiv
+          style={{
+            height: 42,
+            transform: "translateY(-21px) scale(0.7)",
+            transformOrigin: "left",
+          }}
+        >
+          <SwitchReplace />
+          <BtnDeleteAllTweets />
+        </ColumnDiv>
       </NavBarStyles>
       <RowDiv>
         <VisualizationTabs />
@@ -36,3 +49,15 @@ const NavAndViz = () => {
 };
 
 export default NavAndViz;
+
+function BtnDeleteAllTweets() {
+  const setTweets = useSetTweets();
+  const deleteAllTweets = () => {
+    setTweets([], true);
+  };
+  return (
+    <Button color="secondary" variant="contained" onClick={deleteAllTweets}>
+      Delete all
+    </Button>
+  );
+}

@@ -142,6 +142,7 @@ export default function TweetContent({
                 autoPlay,
                 isTooltip,
                 containerWidth: dimensions?.width || 0,
+                containerHeight: dimensions?.height || 0,
               }}
             />
           );

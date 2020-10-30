@@ -5,11 +5,13 @@ import VideoWithControls from "./VideoWithControls";
 type MediaProps = MediaItem & {
   autoPlay: boolean;
   containerWidth: number;
+  containerHeight: number;
   isTooltip: boolean;
 };
 export default function MediaContent({
   autoPlay,
   containerWidth,
+  containerHeight,
   isTooltip,
   ...mediaItem
 }: MediaProps) {
@@ -36,7 +38,10 @@ export default function MediaContent({
       onClick={handleClick}
       className="media"
       style={{
-        height: (containerWidth * sizes.large.h) / sizes.large.w,
+        height: Math.max(
+          containerHeight,
+          (containerWidth * sizes.large.h) / sizes.large.w
+        ),
         width: containerWidth,
         position: "relative",
       }}
