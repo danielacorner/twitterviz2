@@ -10,7 +10,11 @@ export const TweetStyles = styled.div`
   word-break: break-all;
   height: 100%;
   ${(props) =>
-    props.isGallery && props.mediaHeight ? `width: ${props.mediaWidth}px;` : ""}
+    props.isGallery && props.mediaWidth ? `width: ${props.mediaWidth}px;` : ""}
+  ${(props) =>
+    props.isGallery && props.mediaHeight
+      ? `height: ${props.mediaHeight}px;`
+      : ""}
   ${(props) =>
     props.isGallery && props.mediaHeight
       ? `min-height: ${props.mediaHeight}px;`
@@ -93,7 +97,8 @@ export const TweetStyles = styled.div`
     text-align: left;
   }
   .allMedia {
-    height: 100%;
+    padding-bottom: 100%;
+    height: ${(props) => (props.isGallery ? props.mediaHeight + "px" : "100%")};
     .imgLink {
       cursor: pointer;
     }
