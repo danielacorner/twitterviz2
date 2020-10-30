@@ -174,7 +174,7 @@ export interface Tweet {
   user: User;
   geo: null;
   coordinates: null;
-  place: null;
+  place: Place | null;
   contributors: null;
   is_quote_status: boolean;
   quote_count: number;

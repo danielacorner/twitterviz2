@@ -36,7 +36,7 @@ export default function TweetContent({
     extended_tweet,
     extended_entities,
     in_reply_to_screen_name,
-    entities,
+    place,
   } = tweet;
   const { height: windowHeight } = useWindowSize();
   const retweetedUser = getRetweetedUser(tweet);
@@ -140,7 +140,7 @@ export default function TweetContent({
         </div>
       </div>
 
-      {(user.location || entities?.place?.country_code) && (
+      {(user.location || place?.country_code) && (
         <Body2 className="locationInfo">
           {user.location && (
             <>
@@ -148,9 +148,9 @@ export default function TweetContent({
               {user.location}
             </>
           )}
-          {entities?.place?.country_code && (
+          {place?.country_code && (
             <Body2 className="country">
-              | {countryCodes[entities?.place?.country_code]}
+              | {countryCodes[place?.country_code]}
             </Body2>
           )}
         </Body2>
