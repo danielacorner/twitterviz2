@@ -13,6 +13,20 @@ import { Tweet } from "types";
 export function useTheForce(fg: any, graph: { nodes: any[]; links: any[] }) {
   const getIsLikeLink = useGetIsLikeLink();
   const { gravity, charge, showUserNodes, isGridMode, setConfig } = useConfig();
+
+  // pause and unpause
+  useEffect(() => {
+    if (isGridMode) {
+      // once the nodes have settled, pause the simulation
+      setTimeout(() => {
+        setConfig({ isPaused: true });
+      }, 1000);
+    } else {
+      setConfig({ isPaused: false });
+    }
+  }, [setConfig, isGridMode]);
+
+  // handle the force simulation
   useEffect(() => {
     if (!fg) {
       return;
@@ -66,13 +80,7 @@ export function useTheForce(fg: any, graph: { nodes: any[]; links: any[] }) {
           })
           .strength(0.6)
       );
-
-      // once the nodes have settled, pause the simulation
-      setTimeout(() => {
-        setConfig({ isPaused: true });
-      }, 1000);
     } else {
-      setConfig({ isPaused: false });
       // disable positioning forces
       fg.d3Force("forceY", null);
       fg.d3Force("forceX", null);
