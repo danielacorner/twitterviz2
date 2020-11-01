@@ -8,8 +8,8 @@ import {
   Speed,
   Timer,
 } from "@material-ui/icons";
-import { TitleWithIcon } from "./NetworkGraphControls";
 import { Body1, RowDiv } from "components/common/styledComponents";
+import { TitleWithIcon } from "components/common/TitleWithIcon";
 
 export function ForceSimulationControls() {
   const {
@@ -117,7 +117,7 @@ export function SliderWithInputAndSwitch({
   min,
   max,
   step,
-}) {
+}: any) {
   const { setConfig } = useConfig();
   const [disabled, setDisabled] = useState(false);
   const prevValue = useRef(value);
@@ -129,7 +129,6 @@ export function SliderWithInputAndSwitch({
         prevValue.current = value;
       }
       setConfig({ [configKeyString]: disabledValue as number });
-    } else {
     }
   }, [disabled, setConfig, configKeyString, disabledValue, value]);
 
@@ -142,11 +141,11 @@ export function SliderWithInputAndSwitch({
   }, [disabled, configKeyString, disabledValue, setConfig, value]);
 
   return (
-    <Grid container spacing={2} alignItems="center">
-      <Grid item xs style={{ padding: 0 }}>
+    <Grid container={true} spacing={2} alignItems="center">
+      <Grid item={true} xs={true} style={{ padding: 0 }}>
         <Switch onChange={() => setDisabled(!disabled)} checked={!disabled} />
       </Grid>
-      <Grid item xs>
+      <Grid item={true} xs={true}>
         <Slider
           {...{ min, max, step, value, disabled }}
           onChange={(event, newValue, ...rest) => {
@@ -156,7 +155,7 @@ export function SliderWithInputAndSwitch({
           aria-labelledby={`input-slider-${configKeyString}`}
         />
       </Grid>
-      <Grid item xs>
+      <Grid item={true} xs={true}>
         <Input
           value={disabled ? disabledValue : value}
           disabled={disabled}

@@ -17,10 +17,10 @@ const DRAWER_MAX_HEIGHT_MULTIPLIER = 3.5;
 
 const BottomDrawer = () => {
   const setSelectedNode = useStore(
-    (state: GlobalStateStoreType) => state.setSelectedNode
+    (state) => (state as GlobalStateStoreType).setSelectedNode
   );
   const selectedNode = useStore(
-    (state: GlobalStateStoreType) => state.selectedNode
+    (state) => (state as GlobalStateStoreType).selectedNode
   );
   const [offsetY, setOffsetY] = useState(0);
   // const { height: windowHeight } = useWindowSize();
@@ -51,7 +51,7 @@ const BottomDrawer = () => {
     setBottomDrawerHeight(`${-offsetY + 200}px`);
   };
   const handleClose = useCallback(() => {
-    setBottomDrawerHeight(undefined);
+    setBottomDrawerHeight("0px");
     setSelectedNode(null);
   }, [setSelectedNode]);
 
@@ -149,7 +149,13 @@ const BottomDrawer = () => {
   );
 };
 
-export function OpenTweetBtn({ tweet, offsetY = 0 }) {
+export function OpenTweetBtn({
+  tweet,
+  offsetY = 0,
+}: {
+  tweet: Tweet;
+  offsetY: number;
+}) {
   return (
     <a
       className="viewTweet"
@@ -175,10 +181,10 @@ const keys = { 37: 1, 38: 1, 39: 1, 40: 1 };
 const wheelEvent =
   "onwheel" in document.createElement("div") ? "wheel" : "mousewheel";
 
-function preventDefault(e) {
+function preventDefault(e: Event) {
   e.preventDefault();
 }
-function preventDefaultForScrollKeys(e) {
+function preventDefaultForScrollKeys(e: KeyboardEvent) {
   if (keys[e.keyCode]) {
     preventDefault(e);
     return false;

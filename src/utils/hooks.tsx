@@ -123,7 +123,7 @@ export function useFetchUsers() {
   const { allowedMediaTypesParam } = useParamsForFetch();
   const { toggleFavoriteUser } = getFavorites();
   const setTweets = useSetTweets();
-  const fetchUsers = async (userHandles: string[]) => {
+  return async (userHandles: string[]) => {
     const results = await (Promise as any).allSettled(
       userHandles.map((userHandle) =>
         // TODO: GET users/lookup https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/get-users-lookup
@@ -151,8 +151,6 @@ export function useFetchUsers() {
     );
     setTweets(newTweets);
   };
-
-  return fetchUsers;
 }
 
 export function useFetchLikes() {
@@ -165,7 +163,10 @@ export function useFetchLikes() {
 
   return async (userId: string) => {
     const allLikesIds = uniq(
-      Object.values(likesByUserId).reduce((acc, cur) => [...acc, ...cur], [])
+      Object.values(likesByUserId).reduce(
+        (acc, cur) => [...acc, ...cur],
+        [] as string[]
+      )
     ).sort();
     const maxIdParam =
       allLikesIds.length === 0 ? "" : `&max_id=${allLikesIds[0]}`;

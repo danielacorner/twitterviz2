@@ -1,5 +1,5 @@
 import faunadb from "faunadb";
 
 export const faunaClient = new faunadb.Client({
-  secret: process.env.REACT_APP_FAUNA_KEY,
+  secret: process.env.REACT_APP_FAUNA_KEY || "",
 });

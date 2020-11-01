@@ -80,6 +80,15 @@ const useStyles = makeStyles((theme: Theme) =>
 const Div = styled.div``;
 
 /** https://material-ui.com/components/drawers/#persistent-drawer */
+
+const BtnCollapse = ({ drawerHeader, toggleOpen, direction }) => (
+  <div className={drawerHeader}>
+    <IconButton className={"btnChevron"} onClick={toggleOpen}>
+      {direction === "ltr" ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+    </IconButton>
+  </div>
+);
+
 export default function LeftDrawer() {
   const classes = useStyles();
   const theme = useTheme();
@@ -123,15 +132,11 @@ export default function LeftDrawer() {
           },
         }}
       >
-        <div className={classes.drawerHeader}>
-          <IconButton className={"btnChevron"} onClick={toggleOpen}>
-            {theme.direction === "ltr" ? (
-              <ChevronLeftIcon />
-            ) : (
-              <ChevronRightIcon />
-            )}
-          </IconButton>
-        </div>
+        <BtnCollapse
+          drawerHeader={classes.drawerHeader}
+          direction={theme.direction}
+          toggleOpen={toggleOpen}
+        />
 
         <Controls />
       </Drawer>

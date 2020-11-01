@@ -129,8 +129,10 @@ function useFetchTweetsOnMount() {
           q.Lambda((x) => q.Get(x))
         )
       )
-      .then((ret: { data: any[] }) => {
-        setTweets(ret.data.map((d) => d.data));
+      .then((ret: { data: any[] } | any) => {
+        if (ret.data) {
+          setTweets(ret.data.map((d) => d.data));
+        }
       })
       .catch((err) => {
         console.error(err);

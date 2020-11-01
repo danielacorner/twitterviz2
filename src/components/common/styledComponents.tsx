@@ -46,7 +46,7 @@ export const CollapsibleSwitchWithLabels = ({
   checked,
   css = null,
   ...props
-}) => {
+}: any) => {
   return (
     <ColumnDiv
       css={`

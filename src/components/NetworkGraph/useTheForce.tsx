@@ -10,6 +10,7 @@ import {
 import { SimulationNodeDatum } from "d3";
 import { Tweet } from "types";
 
+// tslint:disable-next-line
 export function useTheForce(fg: any, graph: { nodes: any[]; links: any[] }) {
   const getIsLikeLink = useGetIsLikeLink();
   const {

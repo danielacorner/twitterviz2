@@ -17,7 +17,7 @@ const Wordcloud = () => {
   const tweetsWithText: {
     id_str: string;
     text: string;
-    quotedText: string | null;
+    quotedText?: string;
   }[] = tweets.map((t) => ({
     id_str: t.id_str,
     text: t.text,

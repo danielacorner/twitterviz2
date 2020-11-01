@@ -30,6 +30,7 @@ const USER_TO_TWEET = LIGHTGREY;
 const DEFAULT_NODE_COLOR = "steelblue";
 /** https://www.npmjs.com/package/react-force-graph */
 
+// tslint:disable-next-line
 export function useForceGraphProps() {
   const {
     colorBy,
@@ -101,7 +102,7 @@ export function useForceGraphProps() {
       }
 
       if (tooltipNode?.id_str === node.id_str) {
-        drawHighlightCircle(node, ctx, tooltipNode?.isUserNode);
+        drawHighlightCircle(node, ctx, Boolean(tooltipNode?.isUserNode));
       }
 
       if (colorBy === COLOR_BY.profilePhoto || node.isUserNode) {
@@ -149,7 +150,7 @@ export function useForceGraphProps() {
     },
     linkWidth: 1,
     backgroundColor: "transparent",
-    linkColor: ({ source, target }) => {
+    linkColor: (({ source, target }) => {
       // TODO: link by replies
       const other = isLightTheme ? DARKGREY : LIGHTGREY;
 
@@ -164,37 +165,37 @@ export function useForceGraphProps() {
         : source.isUserNode
         ? USER_TO_TWEET
         : other;
-    },
-    linkCurvature: ({ source, target }) => {
+    }) as any,
+    linkCurvature: (({ source, target }) => {
       const isLikeLink = getIsLikeLink({ source, target });
       const isRetweetLink = getIsRetweetLink({ source, target });
       // const isTweetToRetweetLink = getIsTweetToRetweetLink({ source, target });
       return isLikeLink ? 0.1 : isRetweetLink ? 0.2 : 0;
-    },
+    }) as any,
     // linkCurveRotation: ({ source, target }) => {
     //   const isLikeLink = getIsLikeLink({ source, target });
     //   const isRetweetLink = getIsRetweetLink({ source, target });
     //   // const isTweetToRetweetLink = getIsTweetToRetweetLink({ source, target });
     //   return isLikeLink ? 1 : isRetweetLink ? Math.PI * -2 : 0;
     // },
-    linkLineDash: ({ source, target }) => {
+    linkLineDash: (({ source, target }) => {
       const isLikeLink = getIsLikeLink({ source, target });
       const isRetweetLink = getIsRetweetLink({ source, target });
       const isTweetToRetweetLink = getIsTweetToRetweetLink({ source, target });
       return isLikeLink
         ? [5, 15]
         : isRetweetLink
-        ? null
+        ? undefined
         : isTweetToRetweetLink
         ? [15, 15]
         : [1, 1];
-    },
+    }) as any,
     // linkOpacity: ({ source, target }) => {
     // const isLikeLink = getIsLikeLink({ source, target });
     // const isRetweetLink = getIsRetweetLink({ source, target });
     // return isLikeLink ? 0.2 : isRetweetLink ? 0.8 : 1;
     // },
-    linkDirectionalArrowLength: ({ source, target }) => {
+    linkDirectionalArrowLength: (({ source, target }) => {
       const isLikeLink = getIsLikeLink({ source, target });
       const isRetweetLink = getIsRetweetLink({ source, target });
       const isTweetToRetweetLink = getIsTweetToRetweetLink({ source, target });
@@ -203,8 +204,8 @@ export function useForceGraphProps() {
         : isRetweetLink || isTweetToRetweetLink
         ? 15
         : null;
-    },
-    linkDirectionalArrowRelPos: ({ source, target }) => {
+    }) as any,
+    linkDirectionalArrowRelPos: (({ source, target }) => {
       const isLikeLink = getIsLikeLink({ source, target });
       const isRetweetLink = getIsRetweetLink({ source, target });
       const isTweetToRetweetLink = getIsTweetToRetweetLink({ source, target });
@@ -213,76 +214,75 @@ export function useForceGraphProps() {
         : isTweetToRetweetLink
         ? 0
         : null;
-    },
-    nodeThreeObject:
-      colorBy === COLOR_BY.mediaType
-        ? null
-        : colorBy === COLOR_BY.media
-        ? (node: Tweet) => {
-            const mediaArr = getMediaArr(node);
-            const first = mediaArr[0];
-            if (!allowedMediaTypesStrings.includes(first?.type)) {
-              return null;
-            }
-            const imgSrc = node.isUserNode
-              ? node.user.profile_image_url_https
-              : first?.poster || first?.src;
-
-            const imgTexture = new THREE.TextureLoader().load(imgSrc);
-            const color = new THREE.Color(
-              node.isUserNode
-                ? "hsl(200,100%,75%)"
-                : first?.type === "video"
-                ? "hsl(10,100%,80%)"
-                : "hsl(120,100%,80%)"
-            );
-            const material = new THREE.SpriteMaterial({
-              map: imgTexture,
-              color,
-            });
-            const sprite = new THREE.Sprite(material);
-            const scaleDown = 0.35;
-            const { h, w, d } = node.isUserNode
-              ? {
-                  h: 48,
-                  w: 48,
-                  d: 48,
-                }
-              : {
-                  h: first?.sizes.small.h * scaleDown,
-                  w: first?.sizes.small.w * scaleDown,
-                  d: 0,
-                };
-            sprite.scale.set(w, h, d);
-
-            return sprite;
+    }) as any,
+    nodeThreeObject: (colorBy === COLOR_BY.mediaType
+      ? undefined
+      : colorBy === COLOR_BY.media
+      ? (node: Tweet) => {
+          const mediaArr = getMediaArr(node);
+          const first = mediaArr[0];
+          if (!allowedMediaTypesStrings.includes(first?.type)) {
+            return null;
           }
-        : colorBy === COLOR_BY.profilePhoto
-        ? (node) => {
-            const imgSrc = node.user.profile_image_url_https;
-            const imgTexture = new THREE.TextureLoader().load(imgSrc);
-            const color = new THREE.Color("hsl(10,100%,100%)");
-            const material = new THREE.SpriteMaterial({
-              map: imgTexture,
-              color,
-            });
-            const sprite = new THREE.Sprite(material);
-            const { h, w, d } = {
-              h: 48,
-              w: 48,
-              d: 0,
-            };
-            sprite.scale.set(w, h, d);
+          const imgSrc = node.isUserNode
+            ? node.user.profile_image_url_https
+            : first?.poster || first?.src;
 
-            return sprite;
-          }
-        : null,
+          const imgTexture = new THREE.TextureLoader().load(imgSrc);
+          const color = new THREE.Color(
+            node.isUserNode
+              ? "hsl(200,100%,75%)"
+              : first?.type === "video"
+              ? "hsl(10,100%,80%)"
+              : "hsl(120,100%,80%)"
+          );
+          const material = new THREE.SpriteMaterial({
+            map: imgTexture,
+            color,
+          });
+          const sprite = new THREE.Sprite(material);
+          const scaleDown = 0.35;
+          const { h, w, d } = node.isUserNode
+            ? {
+                h: 48,
+                w: 48,
+                d: 48,
+              }
+            : {
+                h: first?.sizes.small.h * scaleDown,
+                w: first?.sizes.small.w * scaleDown,
+                d: 0,
+              };
+          sprite.scale.set(w, h, d);
+
+          return sprite;
+        }
+      : colorBy === COLOR_BY.profilePhoto
+      ? (node) => {
+          const imgSrc = node.user.profile_image_url_https;
+          const imgTexture = new THREE.TextureLoader().load(imgSrc);
+          const color = new THREE.Color("hsl(10,100%,100%)");
+          const material = new THREE.SpriteMaterial({
+            map: imgTexture,
+            color,
+          });
+          const sprite = new THREE.Sprite(material);
+          const { h, w, d } = {
+            h: 48,
+            w: 48,
+            d: 0,
+          };
+          sprite.scale.set(w, h, d);
+
+          return sprite;
+        }
+      : undefined) as any,
 
     onBackgroundClick,
 
     enableZoomPanInteraction: true,
     enableNavigationControls: true,
-    onLinkHover: (link, prevLink) => {},
+    // onLinkHover: (link, prevLink) => {},
     enablePointerInteraction: /* tweets.length<500 */ true,
     enableNodeDrag: true,
     // when we start to drag, pause the simulation
@@ -321,7 +321,7 @@ function drawHighlightCircle(node: any, ctx: any, isUserNode: boolean) {
   // ctx.clip();
   // ctx.fill();
 }
-function drawBotScore(node: Tweet & any, ctx: any) {
+function drawBotScore(node: Tweet | any, ctx: any) {
   // big circle around node, coloured based on bot score
   // red = bot
   // green = human
@@ -372,11 +372,11 @@ function drawBotScore(node: Tweet & any, ctx: any) {
 }
 
 function drawSmallCircle(
-  node,
-  ctx,
-  colorByBotScore,
-  score,
-  rotateClockwiseDeg
+  node: Tweet | any,
+  ctx: CanvasRenderingContext2D,
+  colorByBotScore: Function,
+  score: number,
+  rotateClockwiseDeg: number
 ) {
   const radians = (rotateClockwiseDeg / 360) * Math.PI * 2;
 
@@ -430,7 +430,7 @@ function drawProfilePhoto(node: any, ctx: any) {
   );
 }
 
-function getNodeColor(node, colorBy) {
+function getNodeColor(node: Tweet | any, colorBy: string | null) {
   switch (colorBy) {
     case COLOR_BY.mediaType:
       const type = node.extended_entities?.media[0].type;

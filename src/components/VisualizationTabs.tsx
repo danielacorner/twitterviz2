@@ -9,7 +9,7 @@ import useSyncStateToUrl from "./useSyncStateToUrl";
 
 const Div = styled.div``;
 
-function a11yProps(index) {
+function a11yProps(index: any) {
   return {
     id: `tab-${index}`,
     "aria-controls": `tabpanel-${index}`,
@@ -90,7 +90,7 @@ export default function VisualizationTabs() {
   );
 }
 
-function TabPanel({ children, value, index, ...other }) {
+function TabPanel({ children, value, index, ...other }: any) {
   const hidden = value !== index;
   return (
     <div

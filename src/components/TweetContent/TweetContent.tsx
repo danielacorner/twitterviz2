@@ -11,7 +11,7 @@ import BtnFetchTimeline from "../common/BtnFetchTimeline";
 import { useSearchObj } from "../../providers/store";
 import useContainerDimensions from "utils/useContainerDimensions";
 import MediaContent from "./Media/MediaContent";
-import { Tweet } from "types";
+import { Tweet, User } from "types";
 import { useWindowSize } from "utils/hooks";
 
 type TweetContentProps = {
@@ -22,6 +22,7 @@ type TweetContentProps = {
   isBottomDrawer?: boolean;
 };
 
+// tslint:disable-next-line: cognitive-complexity
 export default function TweetContent({
   tweet,
   offsetY = 0,
@@ -40,14 +41,16 @@ export default function TweetContent({
   } = tweet;
   const { height: windowHeight } = useWindowSize();
   const retweetedUser = getRetweetedUser(tweet);
-  let parsing = null; //TODO necessary?
+  let parsing: string | null = null; // TODO necessary?
 
   const mediaArr = getMediaArr(tweet);
+
   const fullText =
     extended_tweet?.full_text ||
     retweeted_status?.extended_tweet?.full_text ||
     retweeted_status?.text ||
     text;
+
   const textWithLinks = fullText
     .split(" ")
     // if first two are "RT: someUser", store separately
@@ -61,7 +64,7 @@ export default function TweetContent({
       } else {
         return [...acc, cur];
       }
-    }, [])
+    }, [] as string[])
     .map((word) =>
       word[0] === "@" ? (
         <a
@@ -178,7 +181,13 @@ export default function TweetContent({
   );
 }
 
-function RetweetedByUser({ user, isTooltip }) {
+function RetweetedByUser({
+  user,
+  isTooltip,
+}: {
+  user: User;
+  isTooltip: boolean;
+}) {
   return (
     <div className="retweetedByUser">
       <RetweetedIcon /> <div className="retweetedBy">by </div>
@@ -195,7 +204,13 @@ function RetweetedByUser({ user, isTooltip }) {
     </div>
   );
 }
-function OriginalUser({ originalUser, isTooltip }) {
+function OriginalUser({
+  originalUser,
+  isTooltip,
+}: {
+  originalUser: User;
+  isTooltip: boolean;
+}) {
   return (
     <div className="originalUser">
       <Body1 className="user_name">{originalUser.name}</Body1>
@@ -211,7 +226,13 @@ function OriginalUser({ originalUser, isTooltip }) {
     </div>
   );
 }
-function RetweetedUser({ retweetedUser, isTooltip }) {
+function RetweetedUser({
+  retweetedUser,
+  isTooltip,
+}: {
+  retweetedUser: User;
+  isTooltip: boolean;
+}) {
   return (
     <div className="retweetedUser">
       <Body1 className="user_name">{retweetedUser.name}</Body1>
@@ -227,7 +248,11 @@ function RetweetedUser({ retweetedUser, isTooltip }) {
     </div>
   );
 }
-function InReplyToUser({ in_reply_to_screen_name }) {
+function InReplyToUser({
+  in_reply_to_screen_name,
+}: {
+  in_reply_to_screen_name: string;
+}) {
   return (
     <Body2 className="inReplyToUser">
       <ReplyIcon />
@@ -244,12 +269,6 @@ function InReplyToUser({ in_reply_to_screen_name }) {
   );
 }
 
-export function getRetweetedUser(tweet: Tweet) {
-  return tweet?.retweeted_status?.user
-    ? {
-        name: tweet.retweeted_status.user.name,
-        screen_name: tweet.retweeted_status.user.screen_name,
-        id_str: tweet.retweeted_status.user.id_str,
-      }
-    : null;
+export function getRetweetedUser(tweet: Tweet): User | null {
+  return tweet?.retweeted_status?.user || null;
 }

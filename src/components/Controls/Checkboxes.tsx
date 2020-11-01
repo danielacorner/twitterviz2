@@ -159,7 +159,7 @@ export function FormControlLabelCollapsible({
   label,
   groupTitle = "",
   ...props
-}) {
+}: any) {
   const { isDrawerOpen } = useIsLeftDrawerOpen();
 
   return (

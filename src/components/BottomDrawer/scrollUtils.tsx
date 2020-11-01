@@ -6,10 +6,10 @@ export const keys = { 37: 1, 38: 1, 39: 1, 40: 1 };
 export const wheelEvent =
   "onwheel" in document.createElement("div") ? "wheel" : "mousewheel";
 
-export function preventDefault(e) {
+export function preventDefault(e: Event) {
   e.preventDefault();
 }
-export function preventDefaultForScrollKeys(e) {
+export function preventDefaultForScrollKeys(e: KeyboardEvent) {
   if (keys[e.keyCode]) {
     preventDefault(e);
     return false;

@@ -14,8 +14,8 @@ export default function GraphRightClickMenu() {
   }, [cooldownTime]);
 
   const [mousePosition, setMousePosition] = useState({
-    mouseX: null,
-    mouseY: null,
+    mouseX: null as number | null,
+    mouseY: null as number | null,
   });
 
   // when we right-click, pause, when we clickaway, unpause
@@ -37,7 +37,7 @@ export default function GraphRightClickMenu() {
     }
   }, [tooltipNode, handleCloseMenu, mousePosition.mouseY]);
 
-  function handleRightClick(event) {
+  function handleRightClick(event: MouseEvent) {
     // prevent default right-click menu
     event.preventDefault();
     // pause the simulation
@@ -51,6 +51,10 @@ export default function GraphRightClickMenu() {
   }
   useMount(() => {
     const canvas = document.querySelector("canvas");
+    if (!canvas) {
+      return;
+    }
+
     canvas.addEventListener("contextmenu", handleRightClick);
     return () => {
       canvas.removeEventListener("contextmenu", handleRightClick);

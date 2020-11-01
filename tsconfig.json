@@ -7,7 +7,7 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "strict": false,
+    "strict": true,
     "forceConsistentCasingInFileNames": true,
     "module": "esnext",
     "moduleResolution": "node",
@@ -15,7 +15,10 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react",
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "strictNullChecks": true,
+    "noImplicitAny": false,
+    "pretty": true,
   },
   "include": ["src", "types/types-cogeden.ts", "types/operations-types.ts"]
 }

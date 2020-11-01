@@ -11,7 +11,7 @@ import {
   useTweets,
 } from "../../providers/store";
 // https://www.npmjs.com/package/d3-force-cluster
-import { Tweet } from "../../types";
+import { Link, Tweet } from "../../types";
 import { uniqBy } from "lodash";
 import { EMPTY_TWEET } from "../../utils/emptyTweet";
 import GraphRightClickMenu from "./GraphRightClickMenu";
@@ -32,6 +32,7 @@ const NetworkGraph = () => {
 };
 
 // https://github.com/vasturiano/react-force-graph
+// tslint:disable-next-line: cognitive-complexity
 function Graph() {
   const { fgRef, forceGraphProps } = useForceGraphProps();
   const { is3d, showUserNodes, replace } = useConfig();
@@ -56,7 +57,10 @@ function Graph() {
   // and use the setState (setGraph) callback function to update
 
   // sync internal state to prevent node re-renders
-  const [graph, setGraph] = useState({ nodes: [], links: [] });
+  const [graph, setGraph] = useState({
+    nodes: [] as Tweet[],
+    links: [] as Link[],
+  });
   const [userNodes, setUserNodes] = useState([] as Tweet[]);
 
   const userToLikesLinks = showUserNodes
@@ -72,7 +76,7 @@ function Graph() {
         } else {
           return acc;
         }
-      }, [])
+      }, [] as Link[])
     : [];
 
   const tweetToRetweetsLinks = showUserNodes
@@ -90,7 +94,7 @@ function Graph() {
         } else {
           return acc;
         }
-      }, [])
+      }, [] as Link[])
     : [];
 
   const graphWithUsers = {

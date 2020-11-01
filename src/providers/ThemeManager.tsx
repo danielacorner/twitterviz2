@@ -7,7 +7,7 @@ import { NightsStayOutlined, WbSunny } from "@material-ui/icons";
 import React, { useState } from "react";
 import styled from "styled-components/macro";
 
-export default function ThemeManager({ children }) {
+export default function ThemeManager({ children }: { children: any }) {
   const [darkState, setDarkState] = useState(true);
   const palletType = darkState ? "dark" : "light";
   const mainPrimaryColor = darkState ? `hsl(200,70%,40%)` : `hsl(200,70%,50%)`;

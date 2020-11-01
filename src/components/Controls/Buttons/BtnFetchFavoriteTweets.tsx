@@ -42,7 +42,7 @@ export function BtnFetchFavoriteTweets() {
   );
 }
 
-function TweetIconPath({ ...props }) {
+function TweetIconPath({ ...props }: any) {
   return (
     <path
       {...props}

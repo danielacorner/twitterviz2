@@ -89,12 +89,20 @@ const SelectGeolocation = ({ google }) => {
 };
 
 export default GoogleApiWrapper({
-  apiKey: process.env.REACT_APP_GOOGLE_API_KEY,
+  apiKey: process.env.REACT_APP_GOOGLE_API_KEY || "",
 })(SelectGeolocation);
 
-function MapPopup({ setIsModalOpen, google }) {
+function MapPopup({
+  setIsModalOpen,
+  google,
+}: {
+  setIsModalOpen: Function;
+  google: any;
+}) {
   const { geolocation: geo, setConfig } = useConfig();
-  const [initialCenter, setInitialCenter] = useState(getCenterFromGeo(geo));
+  const [initialCenter, setInitialCenter] = useState(
+    geo && getCenterFromGeo(geo)
+  );
   const [currentGeo, setCurrentGeo] = useState(geo);
 
   useMount(() => {
@@ -163,7 +171,7 @@ function MapPopup({ setIsModalOpen, google }) {
 function getCenterFromGeo(geo: {
   latitude: { left: number; right: number };
   longitude: { left: number; right: number };
-}): { lat: number; lng: number } | (() => { lat: number; lng: number }) {
+}): { lat: number; lng: number } {
   return {
     lat: geo ? (geo.latitude.left + geo.latitude.right) / 2 : 0,
     lng: geo ? (geo.longitude.left + geo.longitude.right) / 2 : 0,

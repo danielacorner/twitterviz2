@@ -8,6 +8,7 @@ import useContainerDimensions from "../utils/useContainerDimensions";
 import { useWindowSize } from "../utils/hooks";
 import { CONTROLS_WIDTH } from "../utils/constants";
 import { useIsLight } from "../providers/ThemeManager";
+import { Tweet } from "types";
 
 const AVATAR_WIDTH = 46;
 const TOOLTIP_WIDTH = 380;
@@ -49,7 +50,7 @@ const AvatarStyles = styled.div`
 const NodeTooltip = () => {
   const tooltipNode = useStore((state) => state.tooltipNode);
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const lastTooltipNode = useRef();
+  const lastTooltipNode = useRef(null as Tweet | null);
   const [ref, dimensions] = useContainerDimensions();
   const { height: windowHeight, width: windowWidth } = useWindowSize();
   const tooltipHeight = dimensions?.height || 0;
@@ -95,28 +96,53 @@ const NodeTooltip = () => {
     },
   });
 
-  const tweet = tooltipNode || lastTooltipNode.current;
+  const tweet: Tweet = tooltipNode || (lastTooltipNode.current as Tweet);
   const isLight = useIsLight();
 
   const retweetedUser = getRetweetedUser(tweet);
   const originalPoster = retweetedUser ? retweetedUser : tweet?.user;
   return (
-    <animated.div style={springToMousePosition}>
-      <TooltipStyles ref={ref} isLight={isLight}>
-        <div className="profileAndContent">
-          <AvatarStyles>
-            <img src={originalPoster?.profile_image_url_https} alt="" />
-          </AvatarStyles>
-          {tweet && (
-            <>
-              <div className="id_str">{tweet.id_str}</div>
-              <TweetContent {...{ tweet, isTooltip: true }} />
-            </>
-          )}
-        </div>
-      </TooltipStyles>
-    </animated.div>
+    <NodeTooltipContent
+      {...{ springToMousePosition, ref, isLight, originalPoster, tweet }}
+    />
   );
 };
 
 export default NodeTooltip;
+
+export type NodeTooltipContentProps = {
+  springToMousePosition: any;
+  ref: React.MutableRefObject<any>;
+  isLight: boolean;
+  originalPoster: any;
+  tweet: any;
+};
+export const NodeTooltipContent = React.forwardRef(
+  (
+    {
+      springToMousePosition,
+      isLight,
+      originalPoster,
+      tweet,
+    }: NodeTooltipContentProps,
+    ref
+  ) => {
+    return (
+      <animated.div style={springToMousePosition}>
+        <TooltipStyles ref={ref} isLight={isLight}>
+          <div className="profileAndContent">
+            <AvatarStyles>
+              <img src={originalPoster?.profile_image_url_https} alt="" />
+            </AvatarStyles>
+            {tweet && (
+              <>
+                <div className="id_str">{tweet.id_str}</div>
+                <TweetContent {...{ tweet, isTooltip: true }} />
+              </>
+            )}
+          </div>
+        </TooltipStyles>
+      </animated.div>
+    );
+  }
+);

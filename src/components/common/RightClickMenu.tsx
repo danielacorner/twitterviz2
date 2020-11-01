@@ -13,14 +13,24 @@ import {
 } from "providers/store";
 import RetweetedIcon from "@material-ui/icons/CachedRounded";
 import { useFetchBotScoreForTweet } from "./useFetchBotScoreForTweet";
+import { User } from "types";
 
+type RightClickMenuProps = {
+  anchorEl: any;
+  handleClose: Function;
+  isMenuOpen: boolean;
+  user?: User;
+  MenuProps?: any;
+};
+
+// tslint:disable-next-line: cognitive-complexity
 export default function RightClickMenu({
   anchorEl,
   handleClose,
   isMenuOpen,
   user,
   MenuProps = {},
-}) {
+}: RightClickMenuProps) {
   const { fetchTimeline } = useFetchTimeline();
   const { setConfig, replace, numTweets } = useConfig();
   const fetchLikes = useFetchLikes();
@@ -66,7 +76,9 @@ export default function RightClickMenu({
     >
       <MenuItem
         onClick={() => {
-          fetchTimeline(user.id_str);
+          if (user) {
+            fetchTimeline(user.id_str);
+          }
           handleClose();
         }}
       >
@@ -80,7 +92,9 @@ export default function RightClickMenu({
       {isUserNode ? (
         <MenuItem
           onClick={() => {
-            fetchLikes(user.id_str);
+            if (user) {
+              fetchLikes(user.id_str);
+            }
             handleClose();
           }}
         >
@@ -91,7 +105,9 @@ export default function RightClickMenu({
       {isTweetNode ? (
         <MenuItem
           onClick={() => {
-            fetchRetweets(tooltipNode?.id_str);
+            if (tooltipNode?.id_str) {
+              fetchRetweets(tooltipNode?.id_str);
+            }
             handleClose();
           }}
         >
@@ -101,20 +117,24 @@ export default function RightClickMenu({
       {hasRetweet ? (
         <MenuItem
           onClick={() => {
-            fetchTimeline(tooltipNode.retweeted_status.user.id_str);
+            if (tooltipNode?.retweeted_status?.user.id_str) {
+              fetchTimeline(tooltipNode?.retweeted_status?.user.id_str);
+            }
             handleClose();
           }}
         >
           Fetch {numTweets} tweets by{" "}
           <RetweetedIcon style={{ transform: "scale(0.8)" }} />{" "}
-          {tooltipNode.retweeted_status.user.name} (@
-          {tooltipNode.retweeted_status.user.screen_name})
+          {tooltipNode?.retweeted_status?.user.name} (@
+          {tooltipNode?.retweeted_status?.user.screen_name})
         </MenuItem>
       ) : null}
       {isUserNode ? (
         <MenuItem
           onClick={() => {
-            fetchBotScoreForTweet(tooltipNode);
+            if (tooltipNode) {
+              fetchBotScoreForTweet(tooltipNode);
+            }
             handleClose();
           }}
         >

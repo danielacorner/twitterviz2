@@ -5,13 +5,11 @@ import {
   InputLabel,
   FormControl,
   Checkbox,
-  Grid,
 } from "@material-ui/core";
 import { COLOR_BY } from "../../utils/constants";
 import { useConfig, AppConfig } from "../../providers/store";
 import { CollapsibleSwitchWithLabels, Body1 } from "../common/styledComponents";
 import { FormControlLabelCollapsible } from "./Checkboxes";
-import { Typography } from "@material-ui/core";
 import { ForceSimulationControls } from "./ForceSimulationControls";
 import { Collapsible } from "components/common/Collapsible";
 /** react-force-graph docs
@@ -97,16 +95,5 @@ function SelectColorBy() {
         <MenuItem value={COLOR_BY.profilePhoto}>Profile Photo</MenuItem>
       </Select>
     </FormControl>
-  );
-}
-
-export function TitleWithIcon({ title, icon }) {
-  return (
-    <Grid container spacing={2} alignItems="center">
-      <Grid item>{icon}</Grid>
-      <Grid item>
-        <Typography gutterBottom>{title}</Typography>
-      </Grid>
-    </Grid>
   );
 }

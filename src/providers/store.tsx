@@ -16,7 +16,7 @@ export type GlobalStateStoreType = {
   setSelectedNode: (node: Tweet | null) => void;
   tooltipNode: Tweet | null;
   setTooltipNode: (node: Tweet | null) => void;
-  setTweetsFromServer: (tweets) => void;
+  setTweetsFromServer: (tweets: Tweet[]) => void;
   config: AppConfig;
   setConfig: (newConfig: Partial<AppConfig>) => void;
   likesByUserId: { [userId: string]: string[] };
@@ -165,115 +165,121 @@ export const useConfig = () => {
   // ? const {getLoading} = useConfig(); const loading = getLoading())
 
   return {
-    // useLoading: ()=> useStore((state: GlobalStateStoreType) => state.loading, shallow),
-    is3d: useStore((state: GlobalStateStoreType) => state.config.is3d, shallow),
+    // useLoading: ()=> useStore((state) => (state as GlobalStateStoreType).loading, shallow),
+    is3d: useStore(
+      (state) => (state as GlobalStateStoreType).config.is3d,
+      shallow
+    ),
     gravity: useStore(
-      (state: GlobalStateStoreType) => state.config.gravity,
+      (state) => (state as GlobalStateStoreType).config.gravity,
       shallow
     ),
     charge: useStore(
-      (state: GlobalStateStoreType) => state.config.charge,
+      (state) => (state as GlobalStateStoreType).config.charge,
       shallow
     ),
     isPaused: useStore(
-      (state: GlobalStateStoreType) => state.config.isPaused,
+      (state) => (state as GlobalStateStoreType).config.isPaused,
       shallow
     ),
     d3VelocityDecay: useStore(
-      (state: GlobalStateStoreType) => state.config.d3VelocityDecay,
+      (state) => (state as GlobalStateStoreType).config.d3VelocityDecay,
       shallow
     ),
     d3AlphaDecay: useStore(
-      (state: GlobalStateStoreType) => state.config.d3AlphaDecay,
+      (state) => (state as GlobalStateStoreType).config.d3AlphaDecay,
       shallow
     ),
     cooldownTime: useStore(
-      (state: GlobalStateStoreType) => state.config.cooldownTime,
+      (state) => (state as GlobalStateStoreType).config.cooldownTime,
       shallow
     ),
     isGridMode: useStore(
-      (state: GlobalStateStoreType) => state.config.isGridMode,
+      (state) => (state as GlobalStateStoreType).config.isGridMode,
       shallow
     ),
     showUserNodes: useStore(
-      (state: GlobalStateStoreType) => state.config.showUserNodes,
+      (state) => (state as GlobalStateStoreType).config.showUserNodes,
       shallow
     ),
     colorBy: useStore(
-      (state: GlobalStateStoreType) => state.config.colorBy,
+      (state) => (state as GlobalStateStoreType).config.colorBy,
       shallow
     ),
-    lang: useStore((state: GlobalStateStoreType) => state.config.lang, shallow),
+    lang: useStore(
+      (state) => (state as GlobalStateStoreType).config.lang,
+      shallow
+    ),
     countryCode: useStore(
-      (state: GlobalStateStoreType) => state.config.countryCode,
+      (state) => (state as GlobalStateStoreType).config.countryCode,
       shallow
     ),
     geolocation: useStore(
-      (state: GlobalStateStoreType) => state.config.geolocation,
+      (state) => (state as GlobalStateStoreType).config.geolocation,
       shallow
     ),
     resultType: useStore(
-      (state: GlobalStateStoreType) => state.config.resultType,
+      (state) => (state as GlobalStateStoreType).config.resultType,
       shallow
     ),
     allowedMediaTypes: useStore(
-      (state: GlobalStateStoreType) => state.config.allowedMediaTypes,
+      (state) => (state as GlobalStateStoreType).config.allowedMediaTypes,
       shallow
     ),
     replace: useStore(
-      (state: GlobalStateStoreType) => state.config.replace,
+      (state) => (state as GlobalStateStoreType).config.replace,
       shallow
     ),
     filterLevel: useStore(
-      (state: GlobalStateStoreType) => state.config.filterLevel,
+      (state) => (state as GlobalStateStoreType).config.filterLevel,
       shallow
     ),
     searchTerm: useStore(
-      (state: GlobalStateStoreType) => state.config.searchTerm,
+      (state) => (state as GlobalStateStoreType).config.searchTerm,
       shallow
     ),
     numTweets: useStore(
-      (state: GlobalStateStoreType) => state.config.numTweets,
+      (state) => (state as GlobalStateStoreType).config.numTweets,
       shallow
     ),
     setConfig: useStore(
-      (state: GlobalStateStoreType) => state.setConfig,
+      (state) => (state as GlobalStateStoreType).setConfig,
       shallow
     ),
   };
 };
 
 export const useTweets = (): Tweet[] =>
-  useStore((state: GlobalStateStoreType) => state.tweetsFromServer);
+  useStore((state) => (state as GlobalStateStoreType).tweetsFromServer);
 export const useSelectedNode = () =>
-  useStore((state: GlobalStateStoreType) => state.selectedNode);
+  useStore((state) => (state as GlobalStateStoreType).selectedNode);
 export const useSetSelectedNode = () =>
-  useStore((state: GlobalStateStoreType) => state.setSelectedNode);
+  useStore((state) => (state as GlobalStateStoreType).setSelectedNode);
 export const useTooltipNode = (): Tweet | null =>
-  useStore((state: GlobalStateStoreType) => state.tooltipNode);
+  useStore((state) => (state as GlobalStateStoreType).tooltipNode);
 export const useSetTooltipNode = () =>
-  useStore((state: GlobalStateStoreType) => state.setTooltipNode);
+  useStore((state) => (state as GlobalStateStoreType).setTooltipNode);
 export const useLoading = () =>
-  useStore((state: GlobalStateStoreType) => state.loading);
+  useStore((state) => (state as GlobalStateStoreType).loading);
 export const useSetLoading = () =>
-  useStore((state: GlobalStateStoreType) => state.setLoading);
+  useStore((state) => (state as GlobalStateStoreType).setLoading);
 export const useLikesByUserId = () =>
-  useStore((state: GlobalStateStoreType) => state.likesByUserId);
+  useStore((state) => (state as GlobalStateStoreType).likesByUserId);
 export const useSetLikesByUserId = () =>
-  useStore((state: GlobalStateStoreType) => state.setLikesByUserId);
+  useStore((state) => (state as GlobalStateStoreType).setLikesByUserId);
 // export const useRepliesByUserId = () =>
-//   useStore((state: GlobalStateStoreType) => state.repliesByUserId);
+//   useStore((state) => (state as GlobalStateStoreType).repliesByUserId);
 // export const useSetRepliesByUserId = () =>
-//   useStore((state: GlobalStateStoreType) => state.setRepliesByUserId);
+//   useStore((state) => (state as GlobalStateStoreType).setRepliesByUserId);
 export const useRetweetsByTweetId = () =>
-  useStore((state: GlobalStateStoreType) => state.retweetsByTweetId);
+  useStore((state) => (state as GlobalStateStoreType).retweetsByTweetId);
 export const useSetRetweetsByTweetId = () =>
-  useStore((state: GlobalStateStoreType) => state.setRetweetsByTweetId);
+  useStore((state) => (state as GlobalStateStoreType).setRetweetsByTweetId);
 
 export const useStoredSaves = () =>
-  useStore((state: GlobalStateStoreType) => ({
-    saves: state.savedDatasets,
-    setSaves: state.setSavedDatasets,
+  useStore((state) => ({
+    saves: (state as GlobalStateStoreType).savedDatasets,
+    setSaves: (state as GlobalStateStoreType).setSavedDatasets,
   }));
 
 /** transform and save tweets to store */
@@ -282,10 +288,10 @@ export const useSetTweets = () => {
   const setRetweets = useSetRetweetsByTweetId();
   const setLikes = useSetLikesByUserId();
   const tweetsFromServer = useStore(
-    (state: GlobalStateStoreType) => state.tweetsFromServer
+    (state) => (state as GlobalStateStoreType).tweetsFromServer
   );
   const setTweetsFromServer = useStore(
-    (state: GlobalStateStoreType) => state.setTweetsFromServer
+    (state) => (state as GlobalStateStoreType).setTweetsFromServer
   );
   return (tweetsArg: Tweet[], forceReplace: boolean = false) => {
     if (replace || forceReplace) {
@@ -320,7 +326,7 @@ export const useSetTweets = () => {
           // if it exists, add it to the list to create a link
           // *(this operation is now O^N2, but it's only performed when the tweets change)
           const isRetweetInAllTweets = Boolean(
-            newTweets.find((t) => t.id_str === tweet.retweeted_status.id_str)
+            newTweets.find((t) => t.id_str === tweet.retweeted_status?.id_str)
           );
 
           if (isRetweetInAllTweets) {
@@ -328,7 +334,7 @@ export const useSetTweets = () => {
               ...acc,
               [tweet.id_str]: [
                 ...(acc[tweet.id_str] || []),
-                tweet.retweeted_status.id_str,
+                tweet.retweeted_status?.id_str,
               ],
             };
           }
@@ -342,11 +348,11 @@ export const useSetTweets = () => {
     // for each retweet node, tag is as such
     const tweetIdsToTagAsOriginal = Object.values(retweetsByTweetId).reduce(
       (acc, retweetIds) => [...acc, ...retweetIds],
-      []
+      [] as string[]
     );
     const tweetIdsToTagAsRetweet = Object.keys(retweetsByTweetId).reduce(
       (acc, tweetId) => [...acc, tweetId],
-      []
+      [] as string[]
     );
 
     setRetweets(retweetsByTweetId);
@@ -368,10 +374,10 @@ export const useSetTweets = () => {
 /** transform and add tweets to store */
 export const useAddTweets = () => {
   const tweetsFromServer = useStore(
-    (state: GlobalStateStoreType) => state.tweetsFromServer
+    (state) => (state as GlobalStateStoreType).tweetsFromServer
   );
   const setTweetsFromServer = useStore(
-    (state: GlobalStateStoreType) => state.setTweetsFromServer
+    (state) => (state as GlobalStateStoreType).setTweetsFromServer
   );
 
   return (tweets: Tweet[]) => {
@@ -383,11 +389,11 @@ export const useAddTweets = () => {
 /** delete a tweet from store */
 export const useDeleteTweet = () => {
   const tweetsFromServer = useStore(
-    (state: GlobalStateStoreType) => state.tweetsFromServer,
+    (state) => (state as GlobalStateStoreType).tweetsFromServer,
     shallow
   );
   const setTweetsFromServer = useStore(
-    (state: GlobalStateStoreType) => state.setTweetsFromServer
+    (state) => (state as GlobalStateStoreType).setTweetsFromServer
   );
   return useCallback(
     (tweetId: string) => {
@@ -408,19 +414,19 @@ export type WordcloudConfig = {
 export const useWordcloudConfig = () => {
   return {
     minChars: useStore(
-      (state: GlobalStateStoreType) => state.wordcloudConfig.minChars
+      (state) => (state as GlobalStateStoreType).wordcloudConfig.minChars
     ),
     maxChars: useStore(
-      (state: GlobalStateStoreType) => state.wordcloudConfig.maxChars
+      (state) => (state as GlobalStateStoreType).wordcloudConfig.maxChars
     ),
     minInstances: useStore(
-      (state: GlobalStateStoreType) => state.wordcloudConfig.minInstances
+      (state) => (state as GlobalStateStoreType).wordcloudConfig.minInstances
     ),
     numAngles: useStore(
-      (state: GlobalStateStoreType) => state.wordcloudConfig.numAngles
+      (state) => (state as GlobalStateStoreType).wordcloudConfig.numAngles
     ),
     setWordcloudConfig: useStore(
-      (state: GlobalStateStoreType) => state.setWordcloudConfig
+      (state) => (state as GlobalStateStoreType).setWordcloudConfig
     ),
   };
 };
@@ -428,7 +434,7 @@ export const useWordcloudConfig = () => {
 /** returns some of ["all","video","photo","text"] */
 export function useAllowedMediaTypes(): string[] {
   const allowedMediaTypes = useStore(
-    (state: GlobalStateStoreType) => state.config.allowedMediaTypes
+    (state) => (state as GlobalStateStoreType).config.allowedMediaTypes
   );
 
   return [
@@ -441,10 +447,10 @@ export function useAllowedMediaTypes(): string[] {
 
 export const useIsLeftDrawerOpen = () => {
   const isDrawerOpen = useStore(
-    (state: GlobalStateStoreType) => state.isDrawerOpen
+    (state) => (state as GlobalStateStoreType).isDrawerOpen
   );
   const setIsDrawerOpen = useStore(
-    (state: GlobalStateStoreType) => state.setIsDrawerOpen
+    (state) => (state as GlobalStateStoreType).setIsDrawerOpen
   );
   return { isDrawerOpen, setIsDrawerOpen };
 };
@@ -455,7 +461,7 @@ export const useRecomputeGraph = () => {
   return () => setTimeout(() => setTweets(tweets));
 };
 
-export function usePrevious(value): typeof value {
+export function usePrevious(value: any): typeof value {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
   const ref = useRef();

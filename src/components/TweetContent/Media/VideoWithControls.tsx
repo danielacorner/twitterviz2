@@ -67,7 +67,7 @@ export default function VideoWithControls({
         ref={videoRef}
         muted={isTooltip}
         controls={true}
-        src={variants.find((v) => v.bitrate === bitrate).url}
+        src={variants.find((v) => v.bitrate === bitrate)?.url}
         poster={poster}
         autoPlay={true}
         loop={true}
@@ -117,7 +117,7 @@ function BitrateControls({
     <BitrateStyles>
       <IconButton
         size="small"
-        ref={ref}
+        ref={ref as any}
         onClick={() => setIsMenuOpen((p) => !p)}
       >
         <HighQualityIcon />
@@ -131,7 +131,9 @@ function BitrateControls({
         onBackdropClick={() => setIsMenuOpen(false)}
       >
         {variants
-          .sort((a, b) => a.bitrate - b.bitrate)
+          .sort((a, b) =>
+            a?.bitrate && b?.bitrate ? a.bitrate - b.bitrate : 0
+          )
           .map((variant) => (
             <MenuItem
               {...(variant.bitrate === bitrate

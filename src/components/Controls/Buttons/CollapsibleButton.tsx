@@ -14,7 +14,7 @@ export function CollapsibleButton({
   css,
   tooltipTitle = null,
   ...props
-}) {
+}: any) {
   const { isDrawerOpen } = useIsLeftDrawerOpen();
 
   return (

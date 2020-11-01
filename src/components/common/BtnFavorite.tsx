@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { User } from "../../types";
+import { Tweet, User } from "../../types";
 
 import { IconButton, Tooltip } from "@material-ui/core";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import { useStoredSaves } from "../../providers/store";
 
+type BtnFavoriteProps = {
+  tweet: Tweet | null;
+  user?: User | null;
+  tooltipTitle: string | null;
+};
+
 export default function BtnFavorite({
   tweet = null,
   user = null as null | User,
   tooltipTitle = null,
-}) {
+}: BtnFavoriteProps) {
   const {
     favorites,
     toggleFavorite,
@@ -29,7 +35,7 @@ export default function BtnFavorite({
   const rerender = () => setKey(Math.random());
 
   return (
-    <Tooltip title={tooltipTitle}>
+    <Tooltip title={tooltipTitle || ""}>
       <IconButton
         key={key}
         style={{
@@ -38,9 +44,9 @@ export default function BtnFavorite({
           width: 18,
         }}
         onClick={() => {
-          if (isUser) {
+          if (isUser && user) {
             toggleFavoriteUser(user.screen_name);
-          } else {
+          } else if (!isUser && tweet) {
             toggleFavorite(tweet.id_str);
           }
           rerender();

@@ -12,7 +12,7 @@ export default function WordcloudControls() {
   );
 }
 
-function valuetextInstances(value) {
+function valuetextInstances(value: string | number) {
   return `${value} instances`;
 }
 function WordcloudMinInstancesSlider() {
@@ -22,7 +22,7 @@ function WordcloudMinInstancesSlider() {
   };
   return (
     <div className="wordcloudMinInstancesSlider">
-      <Typography id="instances-slider" gutterBottom>
+      <Typography id="instances-slider" gutterBottom={true}>
         Minimum instances
       </Typography>
       <Slider
@@ -38,17 +38,17 @@ function WordcloudMinInstancesSlider() {
   );
 }
 
-function valuetextAngles(value) {
+function valuetextAngles(value: string | number) {
   return `${value} angles`;
 }
 function WordcloudAnglesSlider() {
   const { numAngles, setWordcloudConfig } = useWordcloudConfig();
-  const handleChange = (event, [newNum]) => {
+  const handleChange = (event, [newNum]: any) => {
     setWordcloudConfig({ numAngles: newNum });
   };
   return (
     <div className="wordcloudAnglesSlider">
-      <Typography id="angles-slider" gutterBottom>
+      <Typography id="angles-slider" gutterBottom={true}>
         Number of angles
       </Typography>
       <Slider
@@ -64,17 +64,17 @@ function WordcloudAnglesSlider() {
   );
 }
 
-function valuetextLetters(value) {
+function valuetextLetters(value: string | number) {
   return `${value} letters`;
 }
 function WordcloudCharsSlider() {
   const { minChars, maxChars, setWordcloudConfig } = useWordcloudConfig();
-  const handleChange = (event, [newMin, newMax]) => {
+  const handleChange = (event, [newMin, newMax]: any) => {
     setWordcloudConfig({ minChars: newMin, maxChars: newMax });
   };
   return (
     <div className="wordcloudCharsSlider">
-      <Typography id="chars-slider" gutterBottom>
+      <Typography id="chars-slider" gutterBottom={true}>
         Number of letters
       </Typography>
       <Slider

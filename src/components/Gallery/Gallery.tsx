@@ -285,9 +285,9 @@ function ScrollMoreIndicator() {
   useMount(() => setMounted(true));
   return (
     <ScrollMoreStyles mounted={mounted}>
-      <div className="dot"></div>
-      <div className="dot"></div>
-      <div className="dot"></div>
+      <div className="dot" />
+      <div className="dot" />
+      <div className="dot" />
     </ScrollMoreStyles>
   );
 }

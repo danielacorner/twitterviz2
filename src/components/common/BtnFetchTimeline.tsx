@@ -6,7 +6,7 @@ import { User } from "../../types";
 import { useIsLight } from "../../providers/ThemeManager";
 import RightClickMenu from "./RightClickMenu";
 
-export default function BtnFetchTimeline({ user }: { user: Partial<User> }) {
+export default function BtnFetchTimeline({ user }: { user: User }) {
   const { fetchTimeline } = useFetchTimeline();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isLight = useIsLight();
@@ -16,14 +16,14 @@ export default function BtnFetchTimeline({ user }: { user: Partial<User> }) {
     <>
       <Tooltip title="right-click for more options">
         <Button
-          ref={ref}
+          ref={ref as any}
           className="btnFetchTimeline"
           variant="outlined"
           style={{
             border: "1px solid cornflowerblue",
             color: `hsl(200,50%,${isLight ? 30 : 70}%)`,
           }}
-          onClick={() => fetchTimeline(user.id_str)}
+          onClick={() => user?.id_str && fetchTimeline(user.id_str)}
           onContextMenu={(e) => {
             e.preventDefault();
             setIsMenuOpen(true);

@@ -1,9 +1,15 @@
-import React, { useState } from "react";
+import React, { Component, useState } from "react";
 import { IconButton, Collapse } from "@material-ui/core";
 import { ColumnDiv, H5, RowDiv } from "../common/styledComponents";
 import { ArrowDropDown } from "@material-ui/icons";
 
-export function Collapsible({ children, title }) {
+export function Collapsible({
+  children,
+  title,
+}: {
+  children: any;
+  title: string | Component;
+}) {
   const [open, setOpen] = useState(true);
 
   return (

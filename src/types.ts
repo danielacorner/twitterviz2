@@ -136,19 +136,19 @@
 
 export type BotScore = {
   /** overall bot score on scale [0-5] */
-  overall;
+  overall: number;
   /** astroturf: manually labeled political bots and accounts involved in follow trains that systematically delete content on scale [0-5] */
-  astroturf;
+  astroturf: number;
   /** fake_follower: bots purchased to increase follower counts on scale [0-5] */
-  fake_follower;
+  fake_follower: number;
   /** financial: bots that post using cashtags on scale [0-5] */
-  financial;
+  financial: number;
   /** self_declared: bots from botwiki.org on scale [0-5] */
-  self_declared;
+  self_declared: number;
   /** spammer: accounts labeled as spambots from several datasets on scale [0-5] */
-  spammer;
+  spammer: number;
   /** other: miscellaneous other bots obtained from manual annotation, user feedback, etc. on scale [0-5] */
-  other;
+  other: number;
 };
 
 export interface Tweet {

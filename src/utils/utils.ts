@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { EffectCallback, useEffect } from "react";
 import { Variant } from "../types";
 
 export const PADDING = 6;
@@ -35,6 +35,6 @@ export function getMediaArr(tweet: any): MediaItem[] {
   );
 }
 
-export function useMount(cb) {
+export function useMount(cb: EffectCallback) {
   return useEffect(cb, []);
 }
