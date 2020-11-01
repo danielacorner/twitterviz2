@@ -2,7 +2,6 @@ import React from "react";
 // also exported from '@storybook/react' if you can deal with breaking changes in 6.1
 import { Story, Meta } from "@storybook/react/types-6-0";
 import mockTweets from "../mockTweetsData.json";
-import { Button } from "./Button";
 import {
   NodeTooltipContent,
   NodeTooltipContentProps,
@@ -12,10 +11,7 @@ const mockTweet = mockTweets[0];
 
 export default {
   title: "NetworkGraph/NodeTooltip",
-  component: Button,
-  argTypes: {
-    backgroundColor: { control: "color" },
-  },
+  component: NodeTooltipContent,
 } as Meta;
 
 // https://www.learnstorybook.com/intro-to-storybook/react/en/simple-component/
@@ -26,8 +22,9 @@ const Template: Story<NodeTooltipContentProps> = (args) => (
   <NodeTooltipContent {...args} />
 );
 
-export const TweetTooltip = Template.bind({});
-TweetTooltip.args = {
+export const TooltipWithTweet = Template.bind({});
+
+TooltipWithTweet.args = {
   springToMousePosition: null,
   isLight: false,
   originalPoster: mockTweet.user,
