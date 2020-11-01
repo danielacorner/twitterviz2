@@ -15,5 +15,14 @@ module.exports = ({ config, mode }) => {
   });
   config.resolve.extensions.push(".ts", ".tsx");
 
+  config.resolve.modules = [path.resolve(__dirname, ".."), "node_modules"];
+
+  config.resolve.alias = {
+    ...config.resolve.alias,
+    utils: path.resolve(__dirname, "../src/utils"),
+    hooks: path.resolve(__dirname, "../src/hooks"),
+    providers: path.resolve(__dirname, "../src/providers"),
+  };
+
   return config;
 };

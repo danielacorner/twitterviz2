@@ -35,7 +35,7 @@ const UserInfoStyles = styled.div`
 export default function UserInfo({
   tweetDisplay = null,
 }: {
-  tweetDisplay?: Tweet;
+  tweetDisplay?: Tweet | null;
 }) {
   const tweet = useSelectedNode();
   const user = (tweetDisplay || tweet)?.user;
@@ -67,7 +67,7 @@ export function UserAvatar({
   imageOnly = false,
   large = false,
 }: {
-  user?: User;
+  user?: User | null;
   imageOnly?: boolean;
   large?: boolean;
 }) {

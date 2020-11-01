@@ -1,7 +1,7 @@
 import React from "react";
-import { getMediaArr } from "utils/utils";
-import { TAB_INDICES } from "utils/constants";
-import countryCodes from "utils/countryCodes";
+import { getMediaArr } from "../../utils/utils";
+import { TAB_INDICES } from "../../utils/constants";
+import countryCodes from "../../utils/countryCodes";
 import RetweetedIcon from "@material-ui/icons/CachedRounded";
 import LocationIcon from "@material-ui/icons/LocationOnRounded";
 import ReplyIcon from "@material-ui/icons/Reply";
@@ -9,10 +9,10 @@ import { TweetStyles } from "../TweetStyles";
 import { Body2, Body1 } from "../common/styledComponents";
 import BtnFetchTimeline from "../common/BtnFetchTimeline";
 import { useSearchObj } from "../../providers/store";
-import useContainerDimensions from "utils/useContainerDimensions";
+import useContainerDimensions from "../../utils/useContainerDimensions";
 import MediaContent from "./Media/MediaContent";
 import { Tweet, User } from "types";
-import { useWindowSize } from "utils/hooks";
+import { useWindowSize } from "../../utils/hooks";
 
 type TweetContentProps = {
   tweet: Tweet;

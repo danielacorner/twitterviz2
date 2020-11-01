@@ -154,7 +154,7 @@ export function OpenTweetBtn({
   offsetY = 0,
 }: {
   tweet: Tweet;
-  offsetY: number;
+  offsetY?: number;
 }) {
   return (
     <a

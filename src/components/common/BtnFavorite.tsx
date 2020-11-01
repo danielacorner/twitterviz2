@@ -6,14 +6,14 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import { useStoredSaves } from "../../providers/store";
 
 type BtnFavoriteProps = {
-  tweet: Tweet | null;
+  tweet?: Tweet | null;
   user?: User | null;
   tooltipTitle: string | null;
 };
 
 export default function BtnFavorite({
   tweet = null,
-  user = null as null | User,
+  user = null,
   tooltipTitle = null,
 }: BtnFavoriteProps) {
   const {
