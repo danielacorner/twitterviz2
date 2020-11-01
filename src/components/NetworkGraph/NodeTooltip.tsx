@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useSpring, animated } from "react-spring";
 import styled from "styled-components/macro";
-import TweetContent, { getRetweetedUser } from "./TweetContent/TweetContent";
-import { PADDING } from "../utils/utils";
-import useStore from "../providers/store";
-import useContainerDimensions from "../utils/useContainerDimensions";
-import { useWindowSize } from "../utils/hooks";
-import { CONTROLS_WIDTH } from "../utils/constants";
-import { useIsLight } from "../providers/ThemeManager";
+import TweetContent, { getRetweetedUser } from "../TweetContent/TweetContent";
+import { PADDING } from "../../utils/utils";
+import useStore from "../../providers/store";
+import useContainerDimensions from "../../utils/useContainerDimensions";
+import { useWindowSize } from "../../utils/hooks";
+import { CONTROLS_WIDTH } from "../../utils/constants";
+import { useIsLight } from "../../providers/ThemeManager";
 import { Tweet } from "types";
 
 const AVATAR_WIDTH = 46;
@@ -115,7 +115,7 @@ export type NodeTooltipContentProps = {
   ref: React.MutableRefObject<any>;
   isLight: boolean;
   originalPoster: any;
-  tweet: any;
+  tweet: Tweet | null;
 };
 export const NodeTooltipContent = React.forwardRef(
   (
@@ -127,6 +127,7 @@ export const NodeTooltipContent = React.forwardRef(
     }: NodeTooltipContentProps,
     ref
   ) => {
+    console.log("🌟🚨: tweet", tweet);
     return (
       <animated.div style={springToMousePosition}>
         <TooltipStyles ref={ref} isLight={isLight}>

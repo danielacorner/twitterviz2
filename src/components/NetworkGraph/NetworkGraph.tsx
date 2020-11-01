@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ForceGraph2D, ForceGraph3D } from "react-force-graph";
-import NodeTooltip from "../NodeTooltip";
+import NodeTooltip from "./NodeTooltip";
 // https://www.npmjs.com/package/react-force-graph
 import styled from "styled-components/macro";
 import { useForceGraphProps } from "./useForceGraphProps";

@@ -5,9 +5,10 @@ import mockTweets from "../mockTweetsData.json";
 import {
   NodeTooltipContent,
   NodeTooltipContentProps,
-} from "../components/NodeTooltip";
+} from "../components/NetworkGraph/NodeTooltip";
+import { Tweet } from "types";
 
-const mockTweet = mockTweets[0];
+const mockTweet = mockTweets.tweets[0];
 
 export default {
   title: "NetworkGraph/NodeTooltip",
@@ -25,8 +26,15 @@ const Template: Story<NodeTooltipContentProps> = (args) => (
 export const TooltipWithTweet = Template.bind({});
 
 TooltipWithTweet.args = {
-  springToMousePosition: null,
+  springToMousePosition: {
+    pointerEvents: "none",
+    position: "fixed",
+    opacity: 1,
+    top: 16,
+    left: 16,
+    transform: `translate(${0}px,${0}px)`,
+  },
   isLight: false,
   originalPoster: mockTweet.user,
-  tweet: mockTweet,
+  tweet: (mockTweet as unknown) as Tweet,
 };
