@@ -5,7 +5,7 @@ import countryCodes from "../../utils/countryCodes";
 import RetweetedIcon from "@material-ui/icons/CachedRounded";
 import LocationIcon from "@material-ui/icons/LocationOnRounded";
 import ReplyIcon from "@material-ui/icons/Reply";
-import { TweetStyles } from "../TweetStyles";
+import { TweetStyles } from "./TweetStyles";
 import { Body2, Body1 } from "../common/styledComponents";
 import BtnFetchTimeline from "../common/BtnFetchTimeline";
 import { useSearchObj } from "../../providers/store";

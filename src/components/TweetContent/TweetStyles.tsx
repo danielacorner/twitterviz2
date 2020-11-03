@@ -1,5 +1,5 @@
 import styled from "styled-components/macro";
-import { PADDING } from "../utils/utils";
+import { PADDING } from "../../utils/utils";
 import playArrowSvg from "./icon-play-white.svg";
 
 export const TweetStyles = styled.div`
