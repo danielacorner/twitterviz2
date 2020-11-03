@@ -159,24 +159,26 @@ export default function TweetContent({
         </Body2>
       )}
       <Body2 className="text">{textWithLinks}</Body2>
-      <div className="allMedia">
-        {mediaArr.map((mediaItem) => {
-          return (
-            <MediaContent
-              key={mediaItem.id_str}
-              {...mediaItem}
-              {...{
-                autoPlay,
-                isTooltip,
-                isBottomDrawer,
-                numImages: mediaArr.length,
-                containerWidth: dimensions?.width || 0,
-                containerHeight: dimensions?.height || 0,
-              }}
-            />
-          );
-        })}
-      </div>
+      {mediaArr.length > 0 && (
+        <div className="allMedia">
+          {mediaArr.map((mediaItem) => {
+            return (
+              <MediaContent
+                key={mediaItem.id_str}
+                {...mediaItem}
+                {...{
+                  autoPlay,
+                  isTooltip,
+                  isBottomDrawer,
+                  numImages: mediaArr.length,
+                  containerWidth: dimensions?.width || 0,
+                  containerHeight: dimensions?.height || 0,
+                }}
+              />
+            );
+          })}
+        </div>
+      )}
     </TweetStyles>
   );
 }

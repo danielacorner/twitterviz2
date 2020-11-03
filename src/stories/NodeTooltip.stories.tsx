@@ -37,4 +37,7 @@ TooltipWithTweet.args = {
   isLight: false,
   originalPoster: mockTweet.user,
   tweet: (mockTweet as unknown) as Tweet,
+  tooltipStyles: {
+    pointerEvents: "auto",
+  },
 };

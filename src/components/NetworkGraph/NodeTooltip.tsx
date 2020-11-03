@@ -116,6 +116,7 @@ export type NodeTooltipContentProps = {
   isLight: boolean;
   originalPoster: any;
   tweet: Tweet | null;
+  tooltipStyles?: any;
 };
 export const NodeTooltipContent = React.forwardRef(
   (
@@ -124,13 +125,14 @@ export const NodeTooltipContent = React.forwardRef(
       isLight,
       originalPoster,
       tweet,
+      tooltipStyles,
     }: NodeTooltipContentProps,
     ref
   ) => {
     console.log("🌟🚨: tweet", tweet);
     return (
       <animated.div style={springToMousePosition}>
-        <TooltipStyles ref={ref} isLight={isLight}>
+        <TooltipStyles ref={ref} isLight={isLight} style={tooltipStyles}>
           <div className="profileAndContent">
             <AvatarStyles>
               <img src={originalPoster?.profile_image_url_https} alt="" />
