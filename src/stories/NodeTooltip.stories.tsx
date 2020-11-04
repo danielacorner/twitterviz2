@@ -1,7 +1,9 @@
 import React from "react";
 // also exported from '@storybook/react' if you can deal with breaking changes in 6.1
 import { Story, Meta } from "@storybook/react/types-6-0";
-import mockTweets from "../mockTweetsData.json";
+import mockTweets from "../mockTweetsData 2.json";
+
+import { mockTweetWithMedia, mockTweetWithImage } from "./mockData";
 import {
   NodeTooltipContent,
   NodeTooltipContentProps,
@@ -23,9 +25,9 @@ const Template: Story<NodeTooltipContentProps> = (args) => (
   <NodeTooltipContent {...args} />
 );
 
-export const TooltipWithTweet = Template.bind({});
+export const TooltipTweet = Template.bind({});
 
-TooltipWithTweet.args = {
+TooltipTweet.args = {
   springToMousePosition: {
     pointerEvents: "none",
     position: "fixed",
@@ -37,6 +39,44 @@ TooltipWithTweet.args = {
   isLight: false,
   originalPoster: mockTweet.user,
   tweet: (mockTweet as unknown) as Tweet,
+  tooltipStyles: {
+    pointerEvents: "auto",
+  },
+};
+
+export const TooltipTweetAndVideo = Template.bind({});
+
+TooltipTweetAndVideo.args = {
+  springToMousePosition: {
+    pointerEvents: "none",
+    position: "fixed",
+    opacity: 1,
+    top: 16,
+    left: 16,
+    transform: `translate(${0}px,${0}px)`,
+  },
+  isLight: false,
+  originalPoster: mockTweetWithMedia?.user,
+  tweet: (mockTweetWithMedia as unknown) as Tweet,
+  tooltipStyles: {
+    pointerEvents: "auto",
+  },
+};
+
+export const TooltipTweetAndImage = Template.bind({});
+
+TooltipTweetAndImage.args = {
+  springToMousePosition: {
+    pointerEvents: "none",
+    position: "fixed",
+    opacity: 1,
+    top: 16,
+    left: 16,
+    transform: `translate(${0}px,${0}px)`,
+  },
+  isLight: false,
+  originalPoster: mockTweetWithImage?.user,
+  tweet: (mockTweetWithImage as unknown) as Tweet,
   tooltipStyles: {
     pointerEvents: "auto",
   },

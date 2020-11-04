@@ -22,6 +22,7 @@
     "strictNullChecks": true,
     "noImplicitAny": false,
     "pretty": true,
+    "noEmit": true
   },
   "include": [
     "src",
