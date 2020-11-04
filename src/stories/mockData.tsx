@@ -1,3 +1,4 @@
+// tslint:disable
 import mockTweetsData from "../mockTweetsData.json";
 
 export const mockTweetWithMedia = {
