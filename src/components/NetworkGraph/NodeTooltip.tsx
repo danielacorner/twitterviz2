@@ -60,6 +60,7 @@ const NodeTooltip = () => {
 
   useEffect(() => {
     if (tooltipNode) {
+      console.log("🌟🚨: NodeTooltip -> tooltipNode", tooltipNode);
       lastTooltipNode.current = tooltipNode;
     }
   });
