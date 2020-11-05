@@ -1,19 +1,22 @@
 import React from "react";
 // also exported from '@storybook/react' if you can deal with breaking changes in 6.1
 import { Story, Meta } from "@storybook/react/types-6-0";
-import mockTweets from "../mockTweetsData 2.json";
 
-import { mockTweetWithMedia, mockTweetWithImage } from "./mockData";
+import {
+  mockTweetWithSubtweet,
+  mockTweetWithSubtweetImage,
+  mockTweetWithSubtweetVideo,
+} from "./mockData";
 import {
   NodeTooltipContent,
   NodeTooltipContentProps,
 } from "../components/NetworkGraph/NodeTooltip";
 import { Tweet } from "types";
 
-const mockTweet = mockTweets.tweets[0];
+// TODO: "used before initilaization" error -- doesn't work with >3 stories?
 
 export default {
-  title: "NetworkGraph/NodeTooltip",
+  title: "NetworkGraph/NodeTooltipWithSubtweet",
   component: NodeTooltipContent,
   args: {
     springToMousePosition: {
@@ -46,11 +49,11 @@ function getArgs(tweet: any) {
   };
 }
 
-export const TooltipTweet = Template.bind({});
-TooltipTweet.args = getArgs(mockTweet);
+export const TooltipTweetAndSubtweet = Template.bind({});
+TooltipTweetAndSubtweet.args = getArgs(mockTweetWithSubtweet);
 
-export const TooltipTweetAndVideo = Template.bind({});
-TooltipTweetAndVideo.args = getArgs(mockTweetWithMedia);
+export const TooltipTweetAndSubtweetImage = Template.bind({});
+TooltipTweetAndSubtweetImage.args = getArgs(mockTweetWithSubtweetImage);
 
-export const TooltipTweetAndImage = Template.bind({});
-TooltipTweetAndImage.args = getArgs(mockTweetWithImage);
+export const TooltipTweetAndSubtweetVideo = Template.bind({});
+TooltipTweetAndSubtweetVideo.args = getArgs(mockTweetWithSubtweetVideo);
