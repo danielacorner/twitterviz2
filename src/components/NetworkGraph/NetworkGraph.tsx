@@ -119,6 +119,7 @@ function Graph() {
         : []),
     ],
   };
+  console.log("🌟🚨: Graph -> graphWithUsers", graphWithUsers);
 
   //
   // show/hide user nodes
