@@ -17,7 +17,7 @@ import { EMPTY_TWEET } from "../../utils/emptyTweet";
 import GraphRightClickMenu from "./GraphRightClickMenu";
 import { useTheForce } from "./useTheForce";
 
-const GraphStyles = styled.div`
+export const GraphStyles = styled.div`
   width: 100%;
 `;
 
@@ -35,6 +35,7 @@ const NetworkGraph = () => {
 // tslint:disable-next-line: cognitive-complexity
 function Graph() {
   const { fgRef, forceGraphProps } = useForceGraphProps();
+  console.log("🌟🚨: Graph -> forceGraphProps", forceGraphProps);
   const { is3d, showUserNodes, replace } = useConfig();
   const tweets = useTweets();
   const likesByUserId = useLikesByUserId();

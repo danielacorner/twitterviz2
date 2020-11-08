@@ -3,7 +3,7 @@ import shallow from "zustand/shallow";
 import { uniqBy } from "lodash";
 import { Tweet } from "../types";
 import { COLOR_BY, FILTER_LEVELS } from "../utils/constants";
-import mockTweetsData from "../mockTweetsData.json";
+import mockTweetsData from "../assets/mockTweetsData.json";
 import { useCallback, useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 import qs from "query-string";

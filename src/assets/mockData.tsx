@@ -1,5 +1,5 @@
 // tslint:disable
-import mockTweetsData from "../mockTweetsData.json";
+import mockTweetsData from "./mockTweetsData.json";
 
 export const mockTweetWithMedia = {
   created_at: "Sat Oct 17 02:06:10 +0000 2020",

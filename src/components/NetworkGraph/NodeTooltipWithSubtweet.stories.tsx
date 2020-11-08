@@ -6,11 +6,11 @@ import {
   mockTweetWithSubtweet,
   mockTweetWithSubtweetImage,
   mockTweetWithSubtweetVideo,
-} from "./mockData";
+} from "../../assets/mockData";
 import {
   NodeTooltipContent,
   NodeTooltipContentProps,
-} from "../components/NetworkGraph/NodeTooltip";
+} from "../../components/NetworkGraph/NodeTooltip";
 import { Tweet } from "types";
 
 // TODO: "used before initilaization" error -- doesn't work with >3 stories?

@@ -1,16 +1,16 @@
 import React from "react";
 // also exported from '@storybook/react' if you can deal with breaking changes in 6.1
 import { Story, Meta } from "@storybook/react/types-6-0";
-import mockTweets from "../mockTweetsData 2.json";
+import mockTweetWithBotScore from "../../assets/mockTweetWithBotScore.json";
 
-import { mockTweetWithMedia, mockTweetWithImage } from "./mockData";
+import { mockTweetWithMedia, mockTweetWithImage } from "../../assets/mockData";
 import {
   NodeTooltipContent,
   NodeTooltipContentProps,
-} from "../components/NetworkGraph/NodeTooltip";
+} from "../../components/NetworkGraph/NodeTooltip";
 import { Tweet } from "types";
 
-const mockTweet = mockTweets.tweets[0];
+const mockTweet = mockTweetWithBotScore;
 
 export default {
   title: "NetworkGraph/NodeTooltip",
