@@ -2,13 +2,11 @@ import React from "react";
 // also exported from '@storybook/react' if you can deal with breaking changes in 6.1
 import { Story, Meta } from "@storybook/react/types-6-0";
 import mockTweets from "../../assets/mockTweetsData 2.json";
-
+import mockTweetWithBotScore from "../../assets/mockTweetWithBotScore.json";
 import { mockTweetWithMedia, mockTweetWithImage } from "../../assets/mockData";
 import { Tweet } from "types";
 import { ForceGraph2D } from "react-force-graph";
 import { GraphStyles } from "./NetworkGraph";
-
-const mockTweet = mockTweets.tweets[0];
 
 const mockForceGraphProps = {
   width: 794,
@@ -67,10 +65,8 @@ function getArgs(tweet: any) {
 }
 
 export const UserNodeWithBotScore = Template.bind({});
-UserNodeWithBotScore.args = getArgs(mockTweet);
-
-export const TooltipTweetAndVideo = Template.bind({});
-TooltipTweetAndVideo.args = getArgs(mockTweetWithMedia);
-
-export const TooltipTweetAndImage = Template.bind({});
-TooltipTweetAndImage.args = getArgs(mockTweetWithImage);
+UserNodeWithBotScore.args = getArgs(mockTweetWithBotScore);
+export const UserNodeWithMedia = Template.bind({});
+UserNodeWithMedia.args = getArgs(mockTweetWithMedia);
+export const UserNodeWithImage = Template.bind({});
+UserNodeWithImage.args = getArgs(mockTweetWithImage);
