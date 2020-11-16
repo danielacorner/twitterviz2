@@ -9,6 +9,7 @@ import {
   useLoading,
   useTweets,
   useSetLoading,
+  useConfig,
 } from "./providers/store";
 import { query as q } from "faunadb";
 import { faunaClient } from "./providers/faunaProvider";
@@ -43,17 +44,27 @@ function App() {
       <NavAndViz />
       <BottomDrawer />
       <AppStylesHooks />
-      <InitializeAppHooks />
+      <AppFunctionalHooks />
     </AppStyles>
   );
 }
 
-function InitializeAppHooks() {
+function AppFunctionalHooks() {
   useFetchTweetsOnMount();
   useFetchQueryTweetsOnMount();
   useStopLoadingEventually();
+  useDetectOffline();
 
   return null;
+}
+
+function useDetectOffline() {
+  const { setConfig } = useConfig();
+  useMount(() => {
+    window.addEventListener("offline", () => {
+      setConfig({ isOffline: true });
+    });
+  });
 }
 
 const MAX_LOADING_TIME = 2 * 1000;

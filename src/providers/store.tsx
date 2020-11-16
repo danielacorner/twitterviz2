@@ -47,6 +47,7 @@ export type AppConfig = {
   d3AlphaDecay: number;
   cooldownTime: number;
   isGridMode: boolean;
+  isOffline: boolean;
   showUserNodes: boolean;
   colorBy: keyof typeof COLOR_BY | null;
   lang: string;
@@ -68,12 +69,16 @@ export type AppConfig = {
   numTweets: number;
 };
 
+// use to turn off mock tweets in dev mode
+const SHOULD_MOCK_TWEETS = true;
+
 const [useStore] = create(
   (set) =>
     ({
-      tweetsFromServer: /* process.env.NODE_ENV === "development"
+      tweetsFromServer:
+        process.env.NODE_ENV === "development" && SHOULD_MOCK_TWEETS
           ? mockTweetsData.tweets
-          :  */ [] as Tweet[],
+          : ([] as Tweet[]),
       // map between tweet.user.id_str and the liked tweet.id_str
       // likesByUserId is populated when we "fetch tweets liked by a user"
       likesByUserId:
@@ -130,6 +135,7 @@ const [useStore] = create(
         searchTerm: "",
         numTweets: 10,
         // numTweets: 50,
+        isOffline: false,
       },
       isDrawerOpen: window.innerWidth > 600,
       setIsDrawerOpen: (next) => set((state) => ({ isDrawerOpen: next })),
@@ -240,6 +246,10 @@ export const useConfig = () => {
     ),
     numTweets: useStore(
       (state) => (state as GlobalStateStoreType).config.numTweets,
+      shallow
+    ),
+    isOffline: useStore(
+      (state) => (state as GlobalStateStoreType).config.isOffline,
       shallow
     ),
     setConfig: useStore(

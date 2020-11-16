@@ -19,6 +19,7 @@ import {
   useTooltipNode,
 } from "../../providers/store";
 import { useIsLight } from "../../providers/ThemeManager";
+import { AccountCircle } from "@material-ui/icons";
 
 export const NODE_DIAMETER = 25;
 export const AVATAR_DIAMETER = NODE_DIAMETER * 4;
@@ -39,7 +40,13 @@ export function useForceGraphProps() {
     cooldownTime,
     isPaused,
     isGridMode,
+    isOffline: isOffline2,
   } = useConfig();
+
+  // TODO: detect offline
+  console.log("🌟🚨: useForceGraphProps -> isOffline", isOffline2);
+  const isOffline = true;
+
   const allowedMediaTypesStrings = useAllowedMediaTypes();
   const setTooltipNode = useSetTooltipNode();
   const tooltipNode = useTooltipNode();
@@ -107,7 +114,7 @@ export function useForceGraphProps() {
 
       if (colorBy === COLOR_BY.profilePhoto || node.isUserNode) {
         // show profile photo
-        drawProfilePhoto(node, ctx);
+        drawProfilePhoto(node, ctx, isOffline);
       } else if (colorBy === COLOR_BY.media) {
         // show media
         const mediaArr = getMediaArr(node);
@@ -400,7 +407,7 @@ function drawSmallCircle(
 }
 
 // https://codesandbox.io/s/distracted-nash-4251j?file=/src/index.js
-function drawProfilePhoto(node: any, ctx: any) {
+function drawProfilePhoto(node: any, ctx: any, isOffline: boolean) {
   const img = new Image(AVATAR_DIAMETER, AVATAR_DIAMETER);
   img.src = node.user.profile_image_url_https;
   ctx.save();
@@ -421,13 +428,27 @@ function drawProfilePhoto(node: any, ctx: any) {
 
   // execute drawImage statements here
   // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
-  ctx.drawImage(
-    img,
-    node.x - AVATAR_DIAMETER / 2, // dx: The x-axis coordinate in the destination canvas at which to place the top-left corner of the source
-    node.y - AVATAR_DIAMETER / 2, // dy: The y-axis coordinate in the destination canvas at which to place the top-left corner of the source
-    AVATAR_DIAMETER, // dWidth: The width to draw the image in the destination canvas. This allows scaling of the drawn image. If not specified, the image is not scaled in width when drawn.
-    AVATAR_DIAMETER // dHeight: The height to draw the image in the destination canvas. This allows scaling of the drawn image. If not specified, the image is not scaled in height when drawn.
-  );
+
+  if (isOffline) {
+    ctx.beginPath();
+    ctx.arc(
+      node.x, // x: The horizontal coordinate of the arc's center.
+      node.y, // y: The vertical coordinate of the arc's center.
+      AVATAR_DIAMETER / 2 - 10, // radius
+      0, // startAngle
+      Math.PI * 2 // endAngle
+    );
+    ctx.fillStyle = "tomato";
+    ctx.fill();
+  } else {
+    ctx.drawImage(
+      AccountCircle,
+      node.x - AVATAR_DIAMETER / 2, // dx: The x-axis coordinate in the destination canvas at which to place the top-left corner of the source
+      node.y - AVATAR_DIAMETER / 2, // dy: The y-axis coordinate in the destination canvas at which to place the top-left corner of the source
+      AVATAR_DIAMETER, // dWidth: The width to draw the image in the destination canvas. This allows scaling of the drawn image. If not specified, the image is not scaled in width when drawn.
+      AVATAR_DIAMETER // dHeight: The height to draw the image in the destination canvas. This allows scaling of the drawn image. If not specified, the image is not scaled in height when drawn.
+    );
+  }
 }
 
 function getNodeColor(node: Tweet | any, colorBy: string | null) {
