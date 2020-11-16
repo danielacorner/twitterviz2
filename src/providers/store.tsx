@@ -171,6 +171,7 @@ export const useConfig = () => {
   // ? const {getLoading} = useConfig(); const loading = getLoading())
 
   return {
+    isStorybook: window.location.href.includes("localhost:6006"),
     // useLoading: ()=> useStore((state) => (state as GlobalStateStoreType).loading, shallow),
     is3d: useStore(
       (state) => (state as GlobalStateStoreType).config.is3d,

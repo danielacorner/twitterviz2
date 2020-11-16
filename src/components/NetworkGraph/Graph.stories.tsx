@@ -7,6 +7,7 @@ import { mockTweetWithMedia, mockTweetWithImage } from "../../assets/mockData";
 import { ForceGraph2D } from "react-force-graph";
 import { GraphStyles } from "./NetworkGraph";
 import { useTheForce } from "./useTheForce";
+import { useForceGraphProps } from "./useForceGraphProps";
 
 const mockForceGraphProps = {
   width: 794,
@@ -31,9 +32,16 @@ const MockNetworkGraph: typeof ForceGraph2D = (props) => {
   const fgRef = useRef();
   // useTheForce(fg, props.graphData);
   useTheForce(fgRef.current, mockGraphWithUsers);
+  const forceGraphProps = useForceGraphProps();
   return (
     <GraphStyles style={{ height: WIDTH, width: WIDTH, background: "black" }}>
-      <ForceGraph2D ref={fgRef} {...props} width={WIDTH} height={WIDTH} />
+      <ForceGraph2D
+        ref={fgRef}
+        {...forceGraphProps}
+        {...props}
+        width={WIDTH}
+        height={WIDTH}
+      />
     </GraphStyles>
   );
 };
