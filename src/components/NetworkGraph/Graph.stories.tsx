@@ -62,5 +62,10 @@ export default {
 const Template: Story<any> = (args) => <MockNetworkGraph {...args} />;
 
 export const UserNodeWithBotScore = Template.bind({});
-export const UserNodeWithMedia = Template.bind({ graphData: {} });
+export const UserNodeWithMedia = Template.bind({
+  graphData: {
+    ...mockGraphWithUsers,
+    nodes: [...mockGraphWithUsers.nodes, mockTweetWithMedia],
+  },
+});
 export const UserNodeWithImage = Template.bind({ graphData: {} });
