@@ -60,7 +60,6 @@ const NodeTooltip = () => {
 
   useEffect(() => {
     if (tooltipNode) {
-      console.log("🌟🚨: NodeTooltip -> tooltipNode", tooltipNode);
       lastTooltipNode.current = tooltipNode;
     }
   });
@@ -130,7 +129,6 @@ export const NodeTooltipContent = React.forwardRef(
     }: NodeTooltipContentProps,
     ref
   ) => {
-    console.log("🌟🚨: tweet", tweet);
     return (
       <animated.div style={springToMousePosition}>
         <TooltipStyles ref={ref} isLight={isLight} style={tooltipStyles}>

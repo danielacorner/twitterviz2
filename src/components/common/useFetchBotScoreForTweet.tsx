@@ -8,10 +8,7 @@ export function useFetchBotScoreForTweet() {
   function setBotScoreForTweet(botScore: BotScore, tweet: Tweet) {
     const tweetWithBotScore = { ...tweet, botScore };
     const tweetIndex = tweets.findIndex((t) => t.id_str === tweet.id_str);
-    console.log(
-      "🌟🚨: setBotScoreForTweet -> tweetWithBotScore",
-      tweetWithBotScore
-    );
+
     setTweets([
       ...tweets.slice(0, tweetIndex),
       tweetWithBotScore,
@@ -32,7 +29,6 @@ export function useFetchBotScoreForTweet() {
       body: JSON.stringify(tweetsByUser.slice(0, 10)),
     });
     const botScore = await resp.json();
-    console.log("🌟🚨: fetchBotScoreForTweet -> botScore", botScore);
     setBotScoreForTweet(botScore, tweetOrUserNode);
   };
 }

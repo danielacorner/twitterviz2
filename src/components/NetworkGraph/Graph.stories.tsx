@@ -1,9 +1,8 @@
 import React, { useRef } from "react";
 // also exported from '@storybook/react' if you can deal with breaking changes in 6.1
 import { Story, Meta } from "@storybook/react/types-6-0";
-import mockTweetWithBotScore from "../../assets/mockTweetWithBotScore.json";
 import mockGraphWithUsers from "../../assets/mockGraphWithUsers.json";
-import { mockTweetWithMedia, mockTweetWithImage } from "../../assets/mockData";
+import { mockTweetWithMedia } from "../../assets/mockData";
 import { ForceGraph2D } from "react-force-graph";
 import { GraphStyles } from "./NetworkGraph";
 import { useTheForce } from "./useTheForce";

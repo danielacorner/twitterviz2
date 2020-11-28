@@ -19,7 +19,6 @@ import {
   useTooltipNode,
 } from "../../providers/store";
 import { useIsLight } from "../../providers/ThemeManager";
-import { AccountCircle } from "@material-ui/icons";
 
 export const NODE_DIAMETER = 25;
 export const AVATAR_DIAMETER = NODE_DIAMETER * 4;
@@ -41,12 +40,8 @@ export function useForceGraphProps() {
     isPaused,
     isGridMode,
     isStorybook,
-    isOffline: isOffline2,
+    isOffline,
   } = useConfig();
-
-  // TODO: detect offline
-  console.log("🌟🚨: useForceGraphProps -> isOffline", isOffline2);
-  const isOffline = true;
 
   const allowedMediaTypesStrings = useAllowedMediaTypes();
   const setTooltipNode = useSetTooltipNode();
@@ -114,7 +109,7 @@ export function useForceGraphProps() {
       }
 
       if (colorBy === COLOR_BY.profilePhoto || node.isUserNode) {
-        if (isOffline || isStorybook) {
+        if (isStorybook) {
           // draw offline indicatr
           ctx.beginPath();
           ctx.arc(
@@ -445,7 +440,7 @@ function drawProfilePhoto(node: any, ctx: any) {
   // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
 
   ctx.drawImage(
-    AccountCircle,
+    img,
     node.x - AVATAR_DIAMETER / 2, // dx: The x-axis coordinate in the destination canvas at which to place the top-left corner of the source
     node.y - AVATAR_DIAMETER / 2, // dy: The y-axis coordinate in the destination canvas at which to place the top-left corner of the source
     AVATAR_DIAMETER, // dWidth: The width to draw the image in the destination canvas. This allows scaling of the drawn image. If not specified, the image is not scaled in width when drawn.

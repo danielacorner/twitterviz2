@@ -35,9 +35,9 @@ const NetworkGraph = () => {
 // tslint:disable-next-line: cognitive-complexity
 function Graph() {
   const { fgRef, forceGraphProps } = useForceGraphProps();
-  console.log("🌟🚨: Graph -> forceGraphProps", forceGraphProps);
   const { is3d, showUserNodes, replace } = useConfig();
   const tweets = useTweets();
+  console.log("🌟🚨: Graph -> tweets", tweets);
   const likesByUserId = useLikesByUserId();
   const retweetsByTweetId = useRetweetsByTweetId();
 
@@ -184,12 +184,12 @@ function Graph() {
       };
     });
     // eslint-disable-next-line
-  }, [tweets]);
+  }, [tweets, replace]);
 
   const fg = fgRef.current as any;
 
   //
-  // use the force!
+  // use the force (d3 force simulation controls)
   //
   useTheForce(fg, graph);
 

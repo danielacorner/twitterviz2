@@ -5,7 +5,7 @@ import { SwitchReplace } from "components/Controls/Controls";
 import { HowManyTweets } from "components/Controls/Inputs";
 import { SearchForm } from "components/Controls/SearchForm";
 import VisualizationTabs from "components/VisualizationTabs";
-import { useSetTweets } from "providers/store";
+import { useConfig, useSetTweets } from "providers/store";
 import React from "react";
 
 import styled from "styled-components/macro";
@@ -52,8 +52,14 @@ export default NavAndViz;
 
 function BtnDeleteAllTweets() {
   const setTweets = useSetTweets();
+  const { setConfig } = useConfig();
+
   const deleteAllTweets = () => {
+    setConfig({ replace: true });
     setTweets([], true);
+    setTimeout(() => {
+      setConfig({ replace: false });
+    });
   };
   return (
     <Button color="secondary" variant="contained" onClick={deleteAllTweets}>

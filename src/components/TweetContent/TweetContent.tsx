@@ -106,7 +106,6 @@ export default function TweetContent({
   const [ref, dimensions] = useContainerDimensions();
   const searchObj = useSearchObj();
   if (isBottomDrawer) {
-    console.log("🌟🚨: offsetY", offsetY);
   }
   const { firstItemWidth, totalHeight } = mediaArr.reduce(
     (acc, media, idx) => ({
