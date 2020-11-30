@@ -82,8 +82,6 @@ export const TweetStyles = styled.div`
     align-content: end;
     grid-gap: 2px;
     height: 16px;
-    transform: translateY(-6px);
-    transform-origin: top left;
   }
   .inReplyToUser {
     text-align: left;

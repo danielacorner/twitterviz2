@@ -49,6 +49,10 @@ export default function TweetContent({
     text;
 
   const textWithLinks = addLinksToText(fullText);
+  console.log(
+    "🌟🚨 ~ file: TweetContent.tsx ~ line 52 ~ textWithLinks",
+    textWithLinks
+  );
 
   const [ref, dimensions] = useContainerDimensions();
   const searchObj = useSearchObj();
@@ -169,6 +173,8 @@ function addLinksToText(fullText: string) {
           >
             {word}
           </a>
+        ) : word.includes("https://t.co/") ? (
+          ""
         ) : word.slice(0, 5) === "https" ? (
           <a
             style={{ marginRight: "0.5ch" }}
