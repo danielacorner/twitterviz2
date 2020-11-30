@@ -1,7 +1,10 @@
 // tslint:disable
 import mockTweetsData from "./mockTweetsData.json";
+import mockTweetWithTextJSON from "./mockTweetWithText.json";
 import mockTweetWithVideoJSON from "./mockTweetWithVideo.json";
-export const mockTweetWithImage = mockTweetsData[2];
+import mockTweetWithImageJSON from "./mockTweetWithImage.json";
+export const mockTweetWithText = mockTweetWithTextJSON;
+export const mockTweetWithImage = mockTweetWithImageJSON;
 export const mockTweetWithVideo = mockTweetWithVideoJSON;
 
 export const mockTweetWithSubtweet = {

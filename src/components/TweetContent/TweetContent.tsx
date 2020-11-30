@@ -10,6 +10,7 @@ import useContainerDimensions from "../../utils/useContainerDimensions";
 import MediaContent from "./Media/MediaContent";
 import { Place, Tweet, User } from "types";
 import { useWindowSize } from "../../utils/hooks";
+import TweetUserInfo from "./TweetUserInfo";
 
 type TweetContentProps = {
   tweet: Tweet;
@@ -34,6 +35,7 @@ export default function TweetContent({
     extended_tweet,
     extended_entities,
     place,
+    in_reply_to_screen_name,
   } = tweet;
   const { height: windowHeight } = useWindowSize();
   const retweetedUser = getRetweetedUser(tweet);
@@ -72,6 +74,14 @@ export default function TweetContent({
       mediaHeight={totalHeight}
       mediaWidth={firstItemWidth}
     >
+      <TweetUserInfo
+        {...{
+          retweetedUser,
+          user,
+          isTooltip,
+          in_reply_to_screen_name,
+        }}
+      />
       {(user.location || place?.country_code) && (
         <LocationInfo {...{ user, place }} />
       )}

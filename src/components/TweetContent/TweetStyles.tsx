@@ -77,9 +77,11 @@ export const TweetStyles = styled.div`
   .locationInfo {
     display: grid;
     grid-auto-flow: column;
-    place-content: start;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: end;
     grid-gap: 2px;
-    height: 8px;
+    height: 16px;
     transform: translateY(-6px);
     transform-origin: top left;
   }

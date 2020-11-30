@@ -3,15 +3,17 @@ import React from "react";
 import { Story, Meta } from "@storybook/react/types-6-0";
 import mockTweetWithBotScore from "../../assets/mockTweetWithBotScore.json";
 
-import { mockTweetWithVideo, mockTweetWithImage } from "../../assets/mockData";
+import {
+  mockTweetWithVideo,
+  mockTweetWithImage,
+  mockTweetWithText,
+} from "../../assets/mockData";
 import {
   NodeTooltipContent,
   NodeTooltipContentProps,
 } from "../../components/NetworkGraph/NodeTooltip";
 import { Tweet } from "types";
 import ThemeManager from "providers/ThemeManager";
-
-const mockTweet = mockTweetWithBotScore;
 
 export default {
   title: "NetworkGraph/NodeTooltip",
@@ -49,8 +51,8 @@ function getArgs(tweet: any) {
   };
 }
 
-export const TooltipTweet = Template.bind({});
-TooltipTweet.args = getArgs(mockTweet);
+export const TooltipTweetTextOnly = Template.bind({});
+TooltipTweetTextOnly.args = getArgs(mockTweetWithText);
 
 export const TooltipTweetAndVideo = Template.bind({});
 TooltipTweetAndVideo.args = getArgs(mockTweetWithVideo);

@@ -11,10 +11,10 @@ export default function TweetUserInfo({
   isTooltip,
   in_reply_to_screen_name,
 }: {
-  retweetedUser: User | null;
+  retweetedUser?: User | null;
   user: User;
   isTooltip: boolean;
-  in_reply_to_screen_name: string | null;
+  in_reply_to_screen_name?: string | null;
 }) {
   return (
     <div className="userInfo">
