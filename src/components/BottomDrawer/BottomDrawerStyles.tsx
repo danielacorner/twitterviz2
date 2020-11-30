@@ -1,6 +1,6 @@
 import styled from "styled-components/macro";
 import { CONTROLS_WIDTH } from "../../utils/constants";
-import { USER_INFO_WIDTH } from "./UserInfo";
+import { USER_INFO_WIDTH } from "../common/UserInfo";
 import { PADDING } from "../../utils/utils";
 
 export const DRAWER_HEIGHT = 400;

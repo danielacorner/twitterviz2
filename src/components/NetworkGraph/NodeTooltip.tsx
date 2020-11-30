@@ -9,6 +9,8 @@ import { useWindowSize } from "../../utils/hooks";
 import { CONTROLS_WIDTH } from "../../utils/constants";
 import { useIsLight } from "../../providers/ThemeManager";
 import { Tweet } from "types";
+import UserInfo from "../common/UserInfo";
+import { RowDiv } from "../common/styledComponents";
 
 const AVATAR_WIDTH = 46;
 const TOOLTIP_WIDTH = 380;
@@ -133,9 +135,11 @@ export const NodeTooltipContent = React.forwardRef(
       <animated.div style={springToMousePosition}>
         <TooltipStyles ref={ref} isLight={isLight} style={tooltipStyles}>
           <div className="profileAndContent">
-            <AvatarStyles>
-              <img src={originalPoster?.profile_image_url_https} alt="" />
-            </AvatarStyles>
+            <RowDiv style={{ alignItems: "start" }}>
+              <AvatarStyles>
+                <img src={originalPoster?.profile_image_url_https} alt="" />
+              </AvatarStyles>
+            </RowDiv>
             {tweet && (
               <>
                 <div className="id_str">{tweet.id_str}</div>

@@ -61,8 +61,9 @@ export default function VideoWithControls({
   const [bitrate, setBitrate] = useState(
     variants[variants.length - 1].bitrate || 0
   );
+  const height = (containerWidth * sizes.large.h) / sizes.large.w;
   return (
-    <VideoStyles>
+    <VideoStyles style={{ height }}>
       <Player
         ref={videoRef}
         muted={isTooltip}
@@ -72,7 +73,7 @@ export default function VideoWithControls({
         autoPlay={true}
         loop={true}
         width={containerWidth}
-        height={(containerWidth * sizes.large.h) / sizes.large.w}
+        height={height}
         preload="none"
       >
         <ControlBar autoHide={true}>

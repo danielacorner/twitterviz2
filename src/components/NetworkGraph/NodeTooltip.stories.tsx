@@ -3,12 +3,13 @@ import React from "react";
 import { Story, Meta } from "@storybook/react/types-6-0";
 import mockTweetWithBotScore from "../../assets/mockTweetWithBotScore.json";
 
-import { mockTweetWithMedia, mockTweetWithImage } from "../../assets/mockData";
+import { mockTweetWithVideo, mockTweetWithImage } from "../../assets/mockData";
 import {
   NodeTooltipContent,
   NodeTooltipContentProps,
 } from "../../components/NetworkGraph/NodeTooltip";
 import { Tweet } from "types";
+import ThemeManager from "providers/ThemeManager";
 
 const mockTweet = mockTweetWithBotScore;
 
@@ -36,7 +37,9 @@ export default {
 // As we have multiple permutations of our component, it's convenient to assign it to a Template variable.
 // Introducing this pattern in your stories will reduce the amount of code you need to write and maintain.
 const Template: Story<NodeTooltipContentProps> = (args) => (
-  <NodeTooltipContent {...args} />
+  <ThemeManager>
+    <NodeTooltipContent {...args} />
+  </ThemeManager>
 );
 
 function getArgs(tweet: any) {
@@ -50,7 +53,7 @@ export const TooltipTweet = Template.bind({});
 TooltipTweet.args = getArgs(mockTweet);
 
 export const TooltipTweetAndVideo = Template.bind({});
-TooltipTweetAndVideo.args = getArgs(mockTweetWithMedia);
+TooltipTweetAndVideo.args = getArgs(mockTweetWithVideo);
 
 export const TooltipTweetAndImage = Template.bind({});
 TooltipTweetAndImage.args = getArgs(mockTweetWithImage);

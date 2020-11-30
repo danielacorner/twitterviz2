@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Drawer, IconButton, Tooltip } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import TweetContent from "../TweetContent/TweetContent";
-import UserInfo from "./UserInfo";
+import UserInfo from "../common/UserInfo";
 import useStore, { GlobalStateStoreType } from "../../providers/store";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import {

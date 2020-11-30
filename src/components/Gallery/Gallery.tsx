@@ -21,7 +21,7 @@ import BtnFavorite from "../common/BtnFavorite";
 import CloseIcon from "@material-ui/icons/Close";
 import { Tweet } from "../../types";
 import BtnFetchMore from "./BtnFetchMore";
-import { UserAvatar } from "../BottomDrawer/UserInfo";
+import { UserAvatar } from "../common/UserInfo";
 
 /** smaller grid rows means finer but more time to compute layout */
 const GRID_ROW_PX = 40;

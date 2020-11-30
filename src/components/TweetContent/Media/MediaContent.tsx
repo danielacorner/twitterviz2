@@ -58,38 +58,77 @@ export default function MediaContent({
           />
         ) : (
           // must use custom element to enable lazy-loading poster image
-          <div
-            className="poster"
-            style={{
-              height: (containerWidth * sizes.large.h) / sizes.large.w,
-              width: containerWidth,
+          <PosterImage
+            {...{
+              containerWidth,
+              numImages,
+              poster,
+              large: sizes.large,
             }}
-          >
-            <img
-              loading="lazy"
-              src={poster}
-              alt=""
-              width={containerWidth / numImages}
-              height={(containerWidth * sizes.large.h) / sizes.large.w}
-            />
-          </div>
+          />
         )
       ) : (
-        <a
-          className="imgLink"
-          href={src}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img
-            loading="lazy"
-            src={src}
-            alt=""
-            width={containerWidth}
-            height={(containerWidth * sizes.large.h) / sizes.large.w}
-          />
-        </a>
+        <ImageLinked
+          {...{
+            containerWidth,
+            src,
+            large: sizes.large,
+          }}
+        />
       )}
     </div>
+  );
+}
+
+function PosterImage({
+  containerWidth,
+  large,
+  poster,
+  numImages,
+}: {
+  containerWidth: number;
+  large: any;
+  poster?: string;
+  numImages: number;
+}) {
+  return (
+    // must use custom element to enable lazy-loading poster image
+    <div
+      className="poster"
+      style={{
+        height: (containerWidth * large.h) / large.w,
+        width: containerWidth,
+      }}
+    >
+      <img
+        loading="lazy"
+        src={poster}
+        alt=""
+        width={containerWidth / numImages}
+        height={(containerWidth * large.h) / large.w}
+      />
+    </div>
+  );
+}
+
+function ImageLinked({
+  src,
+  containerWidth,
+  large,
+}: {
+  src: string;
+  containerWidth: number;
+  large: any;
+}) {
+  return (
+    <a className="imgLink" href={src} target="_blank" rel="noopener noreferrer">
+      <img
+        loading="lazy"
+        src={src}
+        alt=""
+        width={containerWidth}
+        height={(containerWidth * large.h) / large.w}
+      />
+    </a>
   );
 }
