@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ForceGraph2D, ForceGraph3D } from "react-force-graph";
 import NodeTooltip from "./NodeTooltip";
 // https://www.npmjs.com/package/react-force-graph
@@ -100,7 +100,7 @@ function useGraphWithUsersAndLinks() {
   // });
 
   const tweets = useTweets();
-  const [userNodes, setUserNodes] = useState([] as Tweet[]);
+  const [userNodes /*, setUserNodes */] = useState([] as Tweet[]);
   const { showUserNodes } = useConfig();
   const likesByUserId = useLikesByUserId();
   const retweetsByTweetId = useRetweetsByTweetId();
@@ -172,51 +172,51 @@ function useGraphWithUsersAndLinks() {
   return graphWithUsers;
 }
 
-function useSyncGraphWithStore(
-  graph: { nodes: Tweet[]; links: Link[] },
-  setGraph: React.Dispatch<
-    React.SetStateAction<{ nodes: Tweet[]; links: Link[] }>
-  >
-) {
-  const { replace } = useConfig();
-  const tweets = useTweets();
+// function useSyncGraphWithStore(
+//   graph: { nodes: Tweet[]; links: Link[] },
+//   setGraph: React.Dispatch<
+//     React.SetStateAction<{ nodes: Tweet[]; links: Link[] }>
+//   >
+// ) {
+//   const { replace } = useConfig();
+//   const tweets = useTweets();
 
-  useEffect(() => {
-    const tweetsWithUser: Tweet[] = tweets
-      // id <- +id_str
-      .map((t) => ({
-        ...t,
-        id: Number(t.id_str),
-      }))
-      .filter((t) => Boolean(t.user?.id_str));
-    // filter out tweets without users
-    const nodeIds = graph.nodes.map((node) => node.id_str);
+//   useEffect(() => {
+//     const tweetsWithUser: Tweet[] = tweets
+//       // id <- +id_str
+//       .map((t) => ({
+//         ...t,
+//         id: Number(t.id_str),
+//       }))
+//       .filter((t) => Boolean(t.user?.id_str));
+//     // filter out tweets without users
+//     const nodeIds = graph.nodes.map((node) => node.id_str);
 
-    // * consider spreading newLinks if not doing so causes a performance issue
-    setGraph((prev) => {
-      // to prevent existing node re-renders, we'll spread existing nodes, and only spread new nodes on the end
-      // if replacing, replace all
-      const newNodes = replace
-        ? tweets
-        : // new nodes are ones whose ids aren't already in the graph
-          tweetsWithUser.filter((node) => !nodeIds.includes(node.id_str));
+//     // * consider spreading newLinks if not doing so causes a performance issue
+//     setGraph((prev) => {
+//       // to prevent existing node re-renders, we'll spread existing nodes, and only spread new nodes on the end
+//       // if replacing, replace all
+//       const newNodes = replace
+//         ? tweets
+//         : // new nodes are ones whose ids aren't already in the graph
+//           tweetsWithUser.filter((node) => !nodeIds.includes(node.id_str));
 
-      const nodes = [
-        ...(replace
-          ? []
-          : prev.nodes) /* .filter(tweet=>showUserNodes?true:!tweet.isUserNode)*/,
-        ...newNodes,
-      ];
+//       const nodes = [
+//         ...(replace
+//           ? []
+//           : prev.nodes) /* .filter(tweet=>showUserNodes?true:!tweet.isUserNode)*/,
+//         ...newNodes,
+//       ];
 
-      return {
-        ...prev,
-        // links: [],
-        nodes,
-      };
-    });
-    // eslint-disable-next-line
-  }, [tweets, replace]);
-}
+//       return {
+//         ...prev,
+//         // links: [],
+//         nodes,
+//       };
+//     });
+//     // eslint-disable-next-line
+//   }, [tweets, replace]);
+// }
 
 // function useShowHideUserNodes(
 //   showUserNodes: boolean,
