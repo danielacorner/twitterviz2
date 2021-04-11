@@ -3,7 +3,7 @@ import { Drawer, IconButton, Tooltip } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import TweetContent from "../TweetContent/TweetContent";
 import UserInfo from "../common/UserInfo";
-import useStore, { GlobalStateStoreType } from "../../providers/store";
+import useStore from "../../providers/store";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import {
   BottomDrawerStyles,
@@ -16,12 +16,8 @@ import { Tweet } from "types";
 const DRAWER_MAX_HEIGHT_MULTIPLIER = 3.5;
 
 const BottomDrawer = () => {
-  const setSelectedNode = useStore(
-    (state) => (state as GlobalStateStoreType).setSelectedNode
-  );
-  const selectedNode = useStore(
-    (state) => (state as GlobalStateStoreType).selectedNode
-  );
+  const setSelectedNode = useStore((state) => state.setSelectedNode);
+  const selectedNode = useStore((state) => state.selectedNode);
   const [offsetY, setOffsetY] = useState(0);
   // const { height: windowHeight } = useWindowSize();
   const maxDrawerHeight = Infinity;

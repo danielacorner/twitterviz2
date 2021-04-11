@@ -10,7 +10,7 @@ import qs from "query-string";
 
 export const useSearchObj = () => qs.parse(useLocation().search);
 
-export type GlobalStateStoreType = {
+export type GlobalStateType = {
   tweetsFromServer: Tweet[];
   selectedNode: Tweet | null;
   setSelectedNode: (node: Tweet | null) => void;
@@ -72,90 +72,87 @@ export type AppConfig = {
 // use to turn off mock tweets in dev mode
 const SHOULD_MOCK_TWEETS = true;
 
-const [useStore] = create(
-  (set) =>
-    ({
-      tweetsFromServer:
-        process.env.NODE_ENV === "development" && SHOULD_MOCK_TWEETS
-          ? mockTweetsData.tweets
-          : ([] as Tweet[]),
-      // map between tweet.user.id_str and the liked tweet.id_str
-      // likesByUserId is populated when we "fetch tweets liked by a user"
-      likesByUserId:
-        process.env.NODE_ENV === "development"
-          ? mockTweetsData.likesByUserId
-          : {},
-      setLikesByUserId: (likesByUserId) => set(() => ({ likesByUserId })),
-      // map between tweet.id_str and the retweeted tweet.id_str
-      retweetsByTweetId:
-        process.env.NODE_ENV === "development"
-          ? mockTweetsData.retweetsByTweetId
-          : {},
-      setRetweetsByTweetId: (retweetsByTweetId) =>
-        set(() => ({ retweetsByTweetId })),
-      /** which node is displayed in the BottomDrawer */
-      selectedNode: null as Tweet | null,
-      setSelectedNode: (node: Tweet | null) =>
-        set(() => ({ selectedNode: node })),
+const [useStore] = create<GlobalStateType>(
+  (set): GlobalStateType => ({
+    tweetsFromServer: (process.env.NODE_ENV === "development" &&
+    SHOULD_MOCK_TWEETS
+      ? mockTweetsData.tweets
+      : []) as Tweet[],
+    // map between tweet.user.id_str and the liked tweet.id_str
+    // likesByUserId is populated when we "fetch tweets liked by a user"
+    likesByUserId:
+      process.env.NODE_ENV === "development"
+        ? mockTweetsData.likesByUserId
+        : {},
+    setLikesByUserId: (likesByUserId) => set(() => ({ likesByUserId })),
+    // map between tweet.id_str and the retweeted tweet.id_str
+    retweetsByTweetId:
+      process.env.NODE_ENV === "development"
+        ? mockTweetsData.retweetsByTweetId
+        : {},
+    setRetweetsByTweetId: (retweetsByTweetId) =>
+      set(() => ({ retweetsByTweetId })),
+    /** which node is displayed in the BottomDrawer */
+    selectedNode: null as Tweet | null,
+    setSelectedNode: (node: Tweet | null) =>
+      set(() => ({ selectedNode: node })),
 
-      tooltipNode: null as Tweet | null,
-      setTooltipNode: (node: Tweet | null) =>
-        set(() => ({ tooltipNode: node })),
-      setTweetsFromServer: (tweets) =>
-        set(() => ({ tweetsFromServer: tweets })),
-      loading: false,
-      // * only works for authenticated user (me)
-      // repliesByUserId: {},
-      // setRepliesByUserId: (repliesByUserId) => set(() => ({ repliesByUserId })),
-      setLoading: (loading) => set(() => ({ loading })),
-      config: {
-        isGridMode: false,
-        showUserNodes: false,
-        is3d: false,
-        /** is the simulation paused */
-        isPaused: false,
-        gravity: 10,
-        charge: -500,
-        d3VelocityDecay: 0.9,
-        d3AlphaDecay: 0.007,
-        cooldownTime: 15 * 1000,
-        colorBy: COLOR_BY.mediaType as keyof typeof COLOR_BY | null,
-        lang: "All",
-        countryCode: "All",
-        resultType: "mixed",
-        geolocation: null,
-        allowedMediaTypes: {
-          text: true,
-          video: true,
-          photo: true,
-          animated_gif: true,
-        },
-        replace: false,
-        filterLevel: FILTER_LEVELS.none,
-        searchTerm: "",
-        numTweets: 10,
-        // numTweets: 50,
-        isOffline: false,
+    tooltipNode: null as Tweet | null,
+    setTooltipNode: (node: Tweet | null) => set(() => ({ tooltipNode: node })),
+    setTweetsFromServer: (tweets) => set(() => ({ tweetsFromServer: tweets })),
+    loading: false,
+    // * only works for authenticated user (me)
+    // repliesByUserId: {},
+    // setRepliesByUserId: (repliesByUserId) => set(() => ({ repliesByUserId })),
+    setLoading: (loading) => set(() => ({ loading })),
+    config: {
+      isGridMode: false,
+      showUserNodes: false,
+      is3d: false,
+      /** is the simulation paused */
+      isPaused: false,
+      gravity: 10,
+      charge: -500,
+      d3VelocityDecay: 0.9,
+      d3AlphaDecay: 0.007,
+      cooldownTime: 15 * 1000,
+      colorBy: COLOR_BY.mediaType as keyof typeof COLOR_BY | null,
+      lang: "All",
+      countryCode: "All",
+      resultType: "mixed",
+      geolocation: null,
+      allowedMediaTypes: {
+        text: true,
+        video: true,
+        photo: true,
+        animated_gif: true,
       },
-      isDrawerOpen: window.innerWidth > 600,
-      setIsDrawerOpen: (next) => set((state) => ({ isDrawerOpen: next })),
-      /** overwrite any values passed in */
-      setConfig: (newConfig) =>
-        set((state) => ({ config: { ...state.config, ...newConfig } })),
-      wordcloudConfig: {
-        minChars: 1,
-        maxChars: 25,
-        minInstances: 1,
-        numAngles: 3,
-      },
-      setWordcloudConfig: (newConfig) =>
-        set((state) => ({
-          wordcloudConfig: { ...state.wordcloudConfig, ...newConfig },
-        })),
-      savedDatasets: JSON.parse(window.localStorage.getItem("saves") || "[]"),
-      setSavedDatasets: (newSaves) =>
-        set((state) => ({ savedDatasets: newSaves })),
-    } as GlobalStateStoreType)
+      replace: false,
+      filterLevel: FILTER_LEVELS.none as keyof typeof FILTER_LEVELS,
+      searchTerm: "",
+      numTweets: 10,
+      // numTweets: 50,
+      isOffline: false,
+    },
+    isDrawerOpen: window.innerWidth > 600,
+    setIsDrawerOpen: (next) => set((state) => ({ isDrawerOpen: next })),
+    /** overwrite any values passed in */
+    setConfig: (newConfig) =>
+      set((state) => ({ config: { ...state.config, ...newConfig } })),
+    wordcloudConfig: {
+      minChars: 1,
+      maxChars: 25,
+      minInstances: 1,
+      numAngles: 3,
+    },
+    setWordcloudConfig: (newConfig) =>
+      set((state) => ({
+        wordcloudConfig: { ...state.wordcloudConfig, ...newConfig },
+      })),
+    savedDatasets: JSON.parse(window.localStorage.getItem("saves") || "[]"),
+    setSavedDatasets: (newSaves) =>
+      set((state) => ({ savedDatasets: newSaves })),
+  })
 );
 
 export default useStore;
@@ -172,125 +169,61 @@ export const useConfig = () => {
 
   return {
     isStorybook: window.location.href.includes("localhost:6006"),
-    // useLoading: ()=> useStore((state) => (state as GlobalStateStoreType).loading, shallow),
-    is3d: useStore(
-      (state) => (state as GlobalStateStoreType).config.is3d,
-      shallow
-    ),
-    gravity: useStore(
-      (state) => (state as GlobalStateStoreType).config.gravity,
-      shallow
-    ),
-    charge: useStore(
-      (state) => (state as GlobalStateStoreType).config.charge,
-      shallow
-    ),
-    isPaused: useStore(
-      (state) => (state as GlobalStateStoreType).config.isPaused,
-      shallow
-    ),
-    d3VelocityDecay: useStore(
-      (state) => (state as GlobalStateStoreType).config.d3VelocityDecay,
-      shallow
-    ),
-    d3AlphaDecay: useStore(
-      (state) => (state as GlobalStateStoreType).config.d3AlphaDecay,
-      shallow
-    ),
-    cooldownTime: useStore(
-      (state) => (state as GlobalStateStoreType).config.cooldownTime,
-      shallow
-    ),
-    isGridMode: useStore(
-      (state) => (state as GlobalStateStoreType).config.isGridMode,
-      shallow
-    ),
-    showUserNodes: useStore(
-      (state) => (state as GlobalStateStoreType).config.showUserNodes,
-      shallow
-    ),
-    colorBy: useStore(
-      (state) => (state as GlobalStateStoreType).config.colorBy,
-      shallow
-    ),
-    lang: useStore(
-      (state) => (state as GlobalStateStoreType).config.lang,
-      shallow
-    ),
-    countryCode: useStore(
-      (state) => (state as GlobalStateStoreType).config.countryCode,
-      shallow
-    ),
-    geolocation: useStore(
-      (state) => (state as GlobalStateStoreType).config.geolocation,
-      shallow
-    ),
-    resultType: useStore(
-      (state) => (state as GlobalStateStoreType).config.resultType,
-      shallow
-    ),
+    // useLoading: ()=> useStore((state) => (state).loading, shallow),
+    is3d: useStore((state) => state.config.is3d, shallow),
+    gravity: useStore((state) => state.config.gravity, shallow),
+    charge: useStore((state) => state.config.charge, shallow),
+    isPaused: useStore((state) => state.config.isPaused, shallow),
+    d3VelocityDecay: useStore((state) => state.config.d3VelocityDecay, shallow),
+    d3AlphaDecay: useStore((state) => state.config.d3AlphaDecay, shallow),
+    cooldownTime: useStore((state) => state.config.cooldownTime, shallow),
+    isGridMode: useStore((state) => state.config.isGridMode, shallow),
+    showUserNodes: useStore((state) => state.config.showUserNodes, shallow),
+    colorBy: useStore((state) => state.config.colorBy, shallow),
+    lang: useStore((state) => state.config.lang, shallow),
+    countryCode: useStore((state) => state.config.countryCode, shallow),
+    geolocation: useStore((state) => state.config.geolocation, shallow),
+    resultType: useStore((state) => state.config.resultType, shallow),
     allowedMediaTypes: useStore(
-      (state) => (state as GlobalStateStoreType).config.allowedMediaTypes,
+      (state) => state.config.allowedMediaTypes,
       shallow
     ),
-    replace: useStore(
-      (state) => (state as GlobalStateStoreType).config.replace,
-      shallow
-    ),
-    filterLevel: useStore(
-      (state) => (state as GlobalStateStoreType).config.filterLevel,
-      shallow
-    ),
-    searchTerm: useStore(
-      (state) => (state as GlobalStateStoreType).config.searchTerm,
-      shallow
-    ),
-    numTweets: useStore(
-      (state) => (state as GlobalStateStoreType).config.numTweets,
-      shallow
-    ),
-    isOffline: useStore(
-      (state) => (state as GlobalStateStoreType).config.isOffline,
-      shallow
-    ),
-    setConfig: useStore(
-      (state) => (state as GlobalStateStoreType).setConfig,
-      shallow
-    ),
+    replace: useStore((state) => state.config.replace, shallow),
+    filterLevel: useStore((state) => state.config.filterLevel, shallow),
+    searchTerm: useStore((state) => state.config.searchTerm, shallow),
+    numTweets: useStore((state) => state.config.numTweets, shallow),
+    isOffline: useStore((state) => state.config.isOffline, shallow),
+    setConfig: useStore((state) => state.setConfig, shallow),
   };
 };
 
 export const useTweets = (): Tweet[] =>
-  useStore((state) => (state as GlobalStateStoreType).tweetsFromServer);
-export const useSelectedNode = () =>
-  useStore((state) => (state as GlobalStateStoreType).selectedNode);
+  useStore((state) => state.tweetsFromServer);
+export const useSelectedNode = () => useStore((state) => state.selectedNode);
 export const useSetSelectedNode = () =>
-  useStore((state) => (state as GlobalStateStoreType).setSelectedNode);
+  useStore((state) => state.setSelectedNode);
 export const useTooltipNode = (): Tweet | null =>
-  useStore((state) => (state as GlobalStateStoreType).tooltipNode);
+  useStore((state) => state.tooltipNode);
 export const useSetTooltipNode = () =>
-  useStore((state) => (state as GlobalStateStoreType).setTooltipNode);
-export const useLoading = () =>
-  useStore((state) => (state as GlobalStateStoreType).loading);
-export const useSetLoading = () =>
-  useStore((state) => (state as GlobalStateStoreType).setLoading);
-export const useLikesByUserId = () =>
-  useStore((state) => (state as GlobalStateStoreType).likesByUserId);
+  useStore((state) => state.setTooltipNode);
+export const useLoading = () => useStore((state) => state.loading);
+export const useSetLoading = () => useStore((state) => state.setLoading);
+export const useLikesByUserId = () => useStore((state) => state.likesByUserId);
 export const useSetLikesByUserId = () =>
-  useStore((state) => (state as GlobalStateStoreType).setLikesByUserId);
+  useStore((state) => state.setLikesByUserId);
 // export const useRepliesByUserId = () =>
-//   useStore((state) => (state as GlobalStateStoreType).repliesByUserId);
+//   useStore((state) => (state).repliesByUserId);
 // export const useSetRepliesByUserId = () =>
-//   useStore((state) => (state as GlobalStateStoreType).setRepliesByUserId);
+//   useStore((state) => (state).setRepliesByUserId);
 export const useRetweetsByTweetId = () =>
-  useStore((state) => (state as GlobalStateStoreType).retweetsByTweetId);
+  useStore((state) => state.retweetsByTweetId);
 export const useSetRetweetsByTweetId = () =>
-  useStore((state) => (state as GlobalStateStoreType).setRetweetsByTweetId);
+  useStore((state) => state.setRetweetsByTweetId);
 
 export const useStoredSaves = () =>
   useStore((state) => ({
-    saves: (state as GlobalStateStoreType).savedDatasets,
-    setSaves: (state as GlobalStateStoreType).setSavedDatasets,
+    saves: state.savedDatasets,
+    setSaves: state.setSavedDatasets,
   }));
 
 /** transform and save tweets to store */
@@ -298,12 +231,8 @@ export const useSetTweets = () => {
   const { replace } = useConfig();
   const setRetweets = useSetRetweetsByTweetId();
   const setLikes = useSetLikesByUserId();
-  const tweetsFromServer = useStore(
-    (state) => (state as GlobalStateStoreType).tweetsFromServer
-  );
-  const setTweetsFromServer = useStore(
-    (state) => (state as GlobalStateStoreType).setTweetsFromServer
-  );
+  const tweetsFromServer = useStore((state) => state.tweetsFromServer);
+  const setTweetsFromServer = useStore((state) => state.setTweetsFromServer);
   return (tweetsArg: Tweet[], forceReplace: boolean = false) => {
     if (replace || forceReplace) {
       // delete all likes, retweets
@@ -384,12 +313,8 @@ export const useSetTweets = () => {
 
 /** transform and add tweets to store */
 export const useAddTweets = () => {
-  const tweetsFromServer = useStore(
-    (state) => (state as GlobalStateStoreType).tweetsFromServer
-  );
-  const setTweetsFromServer = useStore(
-    (state) => (state as GlobalStateStoreType).setTweetsFromServer
-  );
+  const tweetsFromServer = useStore((state) => state.tweetsFromServer);
+  const setTweetsFromServer = useStore((state) => state.setTweetsFromServer);
 
   return (tweets: Tweet[]) => {
     const newTweets = uniqBy([...tweetsFromServer, ...tweets], (t) => t.id_str);
@@ -399,13 +324,8 @@ export const useAddTweets = () => {
 
 /** delete a tweet from store */
 export const useDeleteTweet = () => {
-  const tweetsFromServer = useStore(
-    (state) => (state as GlobalStateStoreType).tweetsFromServer,
-    shallow
-  );
-  const setTweetsFromServer = useStore(
-    (state) => (state as GlobalStateStoreType).setTweetsFromServer
-  );
+  const tweetsFromServer = useStore((state) => state.tweetsFromServer, shallow);
+  const setTweetsFromServer = useStore((state) => state.setTweetsFromServer);
   return useCallback(
     (tweetId: string) => {
       const newTweets = tweetsFromServer.filter((t) => t.id_str !== tweetId);
@@ -424,29 +344,17 @@ export type WordcloudConfig = {
 
 export const useWordcloudConfig = () => {
   return {
-    minChars: useStore(
-      (state) => (state as GlobalStateStoreType).wordcloudConfig.minChars
-    ),
-    maxChars: useStore(
-      (state) => (state as GlobalStateStoreType).wordcloudConfig.maxChars
-    ),
-    minInstances: useStore(
-      (state) => (state as GlobalStateStoreType).wordcloudConfig.minInstances
-    ),
-    numAngles: useStore(
-      (state) => (state as GlobalStateStoreType).wordcloudConfig.numAngles
-    ),
-    setWordcloudConfig: useStore(
-      (state) => (state as GlobalStateStoreType).setWordcloudConfig
-    ),
+    minChars: useStore((state) => state.wordcloudConfig.minChars),
+    maxChars: useStore((state) => state.wordcloudConfig.maxChars),
+    minInstances: useStore((state) => state.wordcloudConfig.minInstances),
+    numAngles: useStore((state) => state.wordcloudConfig.numAngles),
+    setWordcloudConfig: useStore((state) => state.setWordcloudConfig),
   };
 };
 
 /** returns some of ["all","video","photo","text"] */
 export function useAllowedMediaTypes(): string[] {
-  const allowedMediaTypes = useStore(
-    (state) => (state as GlobalStateStoreType).config.allowedMediaTypes
-  );
+  const allowedMediaTypes = useStore((state) => state.config.allowedMediaTypes);
 
   return [
     ...(allowedMediaTypes.video ? ["video"] : []),
@@ -457,12 +365,8 @@ export function useAllowedMediaTypes(): string[] {
 }
 
 export const useIsLeftDrawerOpen = () => {
-  const isDrawerOpen = useStore(
-    (state) => (state as GlobalStateStoreType).isDrawerOpen
-  );
-  const setIsDrawerOpen = useStore(
-    (state) => (state as GlobalStateStoreType).setIsDrawerOpen
-  );
+  const isDrawerOpen = useStore((state) => state.isDrawerOpen);
+  const setIsDrawerOpen = useStore((state) => state.setIsDrawerOpen);
   return { isDrawerOpen, setIsDrawerOpen };
 };
 

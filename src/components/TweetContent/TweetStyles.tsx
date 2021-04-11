@@ -147,4 +147,7 @@ export const TweetStyles = styled.div`
       height: 96px;
     }
   }
+  a{
+    color: hsl(213, 72%, 39%)
+  }
 `;
