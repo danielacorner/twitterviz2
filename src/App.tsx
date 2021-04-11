@@ -19,6 +19,7 @@ import { useLocation } from "react-router";
 import NavAndViz from "components/NavAndViz/NavAndViz";
 import { AppFunctionalHooks } from "./AppFunctionalHooks";
 import SelectedTweetModal from "components/SelectedTweetModal/SelectedTweetModal";
+import LeftDrawerCollapsible from "components/LeftDrawer";
 
 const AppStyles = styled.div`
   transition: background 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
@@ -38,8 +39,8 @@ const AppStyles = styled.div`
 function App() {
   return (
     <AppStyles className="App">
-      {/* <LeftDrawer /> */}
       <NavAndViz />
+      <LeftDrawerCollapsible />
       <SelectedTweetModal />
       {/* <BottomDrawer /> */}
       <AppStylesHooks />
