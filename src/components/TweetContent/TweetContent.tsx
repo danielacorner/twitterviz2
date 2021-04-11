@@ -49,10 +49,6 @@ export default function TweetContent({
     text;
 
   const textWithLinks = addLinksToText(fullText);
-  console.log(
-    "🌟🚨 ~ file: TweetContent.tsx ~ line 52 ~ textWithLinks",
-    textWithLinks
-  );
 
   const [ref, dimensions] = useContainerDimensions();
   const searchObj = useSearchObj();

@@ -70,7 +70,7 @@ export type AppConfig = {
 };
 
 // use to turn off mock tweets in dev mode
-const SHOULD_MOCK_TWEETS = false;
+const SHOULD_MOCK_TWEETS = true;
 
 const [useStore] = create(
   (set) =>

@@ -11,7 +11,7 @@ import { Tweet } from "types";
 import { RowDiv } from "../common/styledComponents";
 
 const AVATAR_WIDTH = 46;
-const TOOLTIP_WIDTH = 380;
+export const TOOLTIP_WIDTH = 380;
 const MOUSE_WIDTH = 12;
 const WINDOW_PADDING_HZ = 12;
 const WINDOW_PADDING_VERT = 100;

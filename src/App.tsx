@@ -18,6 +18,7 @@ import qs from "query-string";
 import { useLocation } from "react-router";
 import NavAndViz from "components/NavAndViz/NavAndViz";
 import { AppFunctionalHooks } from "./AppFunctionalHooks";
+import SelectedTweetModal from "components/SelectedTweetModal/SelectedTweetModal";
 
 const AppStyles = styled.div`
   transition: background 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
@@ -39,6 +40,7 @@ function App() {
     <AppStyles className="App">
       {/* <LeftDrawer /> */}
       <NavAndViz />
+      <SelectedTweetModal />
       {/* <BottomDrawer /> */}
       <AppStylesHooks />
       <AppFunctionalHooks />

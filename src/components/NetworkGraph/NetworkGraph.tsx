@@ -12,8 +12,6 @@ import {
 } from "../../providers/store";
 // https://www.npmjs.com/package/d3-force-cluster
 import { Link, Tweet } from "../../types";
-import { uniqBy } from "lodash";
-import { EMPTY_TWEET } from "../../utils/emptyTweet";
 import GraphRightClickMenu from "./GraphRightClickMenu";
 import { useTheForce } from "./useTheForce";
 
@@ -36,18 +34,28 @@ const NetworkGraph = () => {
 function Graph() {
   const { fgRef, forceGraphProps } = useForceGraphProps();
   const { is3d } = useConfig();
-  const tweets = useTweets();
-  console.log("🌟🚨: Graph -> tweets", tweets);
 
-  // uncomment to grab the current state and copy-paste into mockTweetsData.json
-
-  // console.log("🌟🚨: Graph -> mockTweetsData", {
-  //   tweets,
-  //   retweetsByTweetId,
-  //   likesByUserId,
-  // });
+  //
+  // use the force (d3 force simulation controls)
+  //
 
   const graphWithUsers = useGraphWithUsersAndLinks();
+
+  useTheForce(fgRef.current, graphWithUsers);
+
+  console.log("🌟🌟🌟🌟🚨 ~ Graph ~ graphWithUsers", graphWithUsers);
+
+  //
+  // show/hide user nodes
+  //
+  // useShowHideUserNodes(showUserNodes, setUserNodes);
+
+  //
+  // sync graph with store
+  //
+  // useSyncGraphWithStore(graph, setGraph);
+
+  // const graphWithUsers = { nodes: tweets, links: [] };
 
   // when new tweets arrive, fetch their bot scores
   // TODO: disabled while testing
@@ -77,13 +85,6 @@ export default NetworkGraph;
 
 /** preprocess tweets to add links & user nodes */
 function useGraphWithUsersAndLinks() {
-  const { fgRef } = useForceGraphProps();
-  const tweets = useTweets();
-  const [userNodes, setUserNodes] = useState([] as Tweet[]);
-  const { showUserNodes } = useConfig();
-  const likesByUserId = useLikesByUserId();
-  const retweetsByTweetId = useRetweetsByTweetId();
-
   // dynamic force graph updates WITHOUT re-rendering every node example: https://github.com/vasturiano/react-force-graph/blob/master/example/dynamic/index.html
 
   // New force graph nodes should be able to mount without causing all others to re-mount
@@ -93,15 +94,24 @@ function useGraphWithUsersAndLinks() {
   // and use the setState (setGraph) callback function to update
 
   // sync internal state to prevent node re-renders
-  const [graph, setGraph] = useState({
-    nodes: [] as Tweet[],
-    links: [] as Link[],
-  });
+  // const [graph, setGraph] = useState({
+  //   nodes: [] as Tweet[],
+  //   links: [] as Link[],
+  // });
 
-  //
-  // use the force (d3 force simulation controls)
-  //
-  useTheForce(fgRef.current, graph);
+  const tweets = useTweets();
+  const [userNodes, setUserNodes] = useState([] as Tweet[]);
+  const { showUserNodes } = useConfig();
+  const likesByUserId = useLikesByUserId();
+  const retweetsByTweetId = useRetweetsByTweetId();
+
+  // uncomment to grab the current state and copy-paste into mockTweetsData.json
+
+  console.log("🚨🚨: Graph -> mockTweetsData", {
+    tweets,
+    retweetsByTweetId,
+    likesByUserId,
+  });
 
   const userToLikesLinks = showUserNodes
     ? userNodes.reduce((acc, userNode) => {
@@ -145,10 +155,8 @@ function useGraphWithUsersAndLinks() {
   }));
 
   const graphWithUsers = {
-    ...graph,
-    nodes: [...graph.nodes, ...(showUserNodes ? userNodes : [])],
+    nodes: [...tweets, ...(showUserNodes ? userNodes : [])],
     links: [
-      ...graph.links,
       ...tweetToRetweetsLinks,
       ...(showUserNodes
         ? [
@@ -160,18 +168,6 @@ function useGraphWithUsersAndLinks() {
         : []),
     ],
   };
-  console.log("🌟🚨 ~ graph", graph);
-  console.log("🌟🚨: Graph -> graphWithUsers", graphWithUsers);
-
-  //
-  // show/hide user nodes
-  //
-  // useShowHideUserNodes(showUserNodes, setUserNodes);
-
-  //
-  // sync graph with store
-  //
-  useSyncGraphWithStore(graph, setGraph);
 
   return graphWithUsers;
 }
@@ -196,54 +192,54 @@ function useSyncGraphWithStore(
     // filter out tweets without users
     const nodeIds = graph.nodes.map((node) => node.id_str);
 
-    // to prevent existing node re-renders, we'll spread existing nodes, and only spread new nodes on the end
-    // if replacing, replace all
-    const newNodes = replace
-      ? tweets
-      : // new nodes are ones whose ids aren't already in the graph
-        tweetsWithUser.filter((node) => !nodeIds.includes(node.id_str));
-    console.log("🌟🚨 ~ useEffect ~ tweetsWithUser", tweetsWithUser);
-    console.log("🌟🚨🌟🚨🌟🚨🌟🚨🌟🚨 ~ useEffect ~ newNodes", newNodes);
-
     // * consider spreading newLinks if not doing so causes a performance issue
     setGraph((prev) => {
+      // to prevent existing node re-renders, we'll spread existing nodes, and only spread new nodes on the end
+      // if replacing, replace all
+      const newNodes = replace
+        ? tweets
+        : // new nodes are ones whose ids aren't already in the graph
+          tweetsWithUser.filter((node) => !nodeIds.includes(node.id_str));
+
+      const nodes = [
+        ...(replace
+          ? []
+          : prev.nodes) /* .filter(tweet=>showUserNodes?true:!tweet.isUserNode)*/,
+        ...newNodes,
+      ];
+
       return {
         ...prev,
-        links: [],
-        nodes: [
-          ...(replace
-            ? []
-            : prev.nodes) /* .filter(tweet=>showUserNodes?true:!tweet.isUserNode)*/,
-          ...newNodes,
-        ],
+        // links: [],
+        nodes,
       };
     });
     // eslint-disable-next-line
   }, [tweets, replace]);
 }
 
-function useShowHideUserNodes(
-  showUserNodes: boolean,
-  setUserNodes: React.Dispatch<React.SetStateAction<Tweet[]>>
-) {
-  const tweets = useTweets();
+// function useShowHideUserNodes(
+//   showUserNodes: boolean,
+//   setUserNodes: React.Dispatch<React.SetStateAction<Tweet[]>>
+// ) {
+//   const tweets = useTweets();
 
-  useEffect(() => {
-    if (!showUserNodes) {
-      setUserNodes([]);
-    } else {
-      // add nodes for each user
-      const nonUniqueUserNodes: Tweet[] = tweets.map((tweet) => ({
-        ...EMPTY_TWEET,
-        id: Number(tweet.user.id_str),
-        id_str: tweet.user.id_str,
-        user: tweet.user,
-        isUserNode: true,
-      }));
+//   useEffect(() => {
+//     if (!showUserNodes) {
+//       setUserNodes([]);
+//     } else {
+//       // add nodes for each user
+//       const nonUniqueUserNodes: Tweet[] = tweets.map((tweet) => ({
+//         ...EMPTY_TWEET,
+//         id: Number(tweet.user.id_str),
+//         id_str: tweet.user.id_str,
+//         user: tweet.user,
+//         isUserNode: true,
+//       }));
 
-      // deduplicate
-      const newUserNodes = uniqBy(nonUniqueUserNodes, (d) => d.user.id_str);
-      setUserNodes(newUserNodes);
-    }
-  }, [showUserNodes, setUserNodes, tweets]);
-}
+//       // deduplicate
+//       const newUserNodes = uniqBy(nonUniqueUserNodes, (d) => d.user.id_str);
+//       setUserNodes(newUserNodes);
+//     }
+//   }, [showUserNodes, setUserNodes, tweets]);
+// }

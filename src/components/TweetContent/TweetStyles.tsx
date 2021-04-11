@@ -109,7 +109,7 @@ export const TweetStyles = styled.div`
         : ""}
     ${(props) =>
       props.isBottomDrawer || props.isGallery
-        ? "grid-auto-flow:row"
+        ? "grid-auto-flow: row"
         : "grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))"};
     ${(props) => (props.isVideo ? "grid-template-columns: 1fr;" : "")}
     grid-gap: ${PADDING}px;
