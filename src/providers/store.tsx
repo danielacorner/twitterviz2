@@ -70,7 +70,7 @@ export type AppConfig = {
 };
 
 // use to turn off mock tweets in dev mode
-const SHOULD_MOCK_TWEETS = true;
+const SHOULD_MOCK_TWEETS = false;
 
 const [useStore] = create(
   (set) =>
@@ -110,7 +110,7 @@ const [useStore] = create(
       setLoading: (loading) => set(() => ({ loading })),
       config: {
         isGridMode: false,
-        showUserNodes: true,
+        showUserNodes: false,
         is3d: false,
         /** is the simulation paused */
         isPaused: false,

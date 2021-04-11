@@ -40,9 +40,11 @@ export default function ThemeManager({ children }: { children: any }) {
   return (
     <ThemeManagerStyles darkState={darkState}>
       <ThemeProvider theme={darkTheme}>
-        <SwitchStyles className="switchWrapper" onClick={handleThemeChange}>
-          {darkState ? <WbSunny /> : <NightsStayOutlined />}
-        </SwitchStyles>
+        {false && (
+          <SwitchStyles className="switchWrapper" onClick={handleThemeChange}>
+            {darkState ? <WbSunny /> : <NightsStayOutlined />}
+          </SwitchStyles>
+        )}
         {children}
       </ThemeProvider>
     </ThemeManagerStyles>

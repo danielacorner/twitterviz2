@@ -1,10 +1,8 @@
-import { Button } from "@material-ui/core";
-import { Body1, ColumnDiv, RowDiv } from "components/common/styledComponents";
+import { Body1, RowDiv } from "components/common/styledComponents";
 import { BtnStreamNewTweets } from "components/Controls/Buttons/BtnStreamNewTweets";
 import { HowManyTweets } from "components/Controls/Inputs";
 import { SearchForm } from "components/Controls/SearchForm";
 import NetworkGraph from "components/NetworkGraph/NetworkGraph";
-import { useConfig, useSetTweets } from "providers/store";
 import React from "react";
 
 import styled from "styled-components/macro";

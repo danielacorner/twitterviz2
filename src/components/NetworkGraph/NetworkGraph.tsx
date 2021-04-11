@@ -98,6 +98,13 @@ function Graph() {
       }, [] as Link[])
     : [];
 
+  const userToTweetsLinks = tweets.map((t) => ({
+    // source: its user
+    source: Number(t.user.id_str),
+    // target: the tweet
+    target: Number(t.id_str),
+  }));
+
   const graphWithUsers = {
     ...graph,
     nodes: [...graph.nodes, ...(showUserNodes ? userNodes : [])],
@@ -107,12 +114,7 @@ function Graph() {
       ...(showUserNodes
         ? [
             // links from each user to their tweets
-            ...tweets.map((t) => ({
-              // source: its user
-              source: Number(t.user.id_str),
-              // target: the tweet
-              target: Number(t.id_str),
-            })),
+            ...userToTweetsLinks,
             // links from each user to their likes
             ...userToLikesLinks,
           ]
@@ -223,5 +225,5 @@ function useShowHideUserNodes(
       const newUserNodes = uniqBy(nonUniqueUserNodes, (d) => d.user.id_str);
       setUserNodes(newUserNodes);
     }
-  }, [showUserNodes, tweets]);
+  }, [showUserNodes, setUserNodes, tweets]);
 }

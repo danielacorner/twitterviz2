@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import "./App.css";
 import styled from "styled-components/macro";
-import BottomDrawer from "./components/BottomDrawer/BottomDrawer";
 import { useMount } from "./utils/utils";
 import { useFetchTweetsByIds } from "./utils/hooks";
 import {
