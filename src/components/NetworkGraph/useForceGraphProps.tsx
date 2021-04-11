@@ -1,4 +1,4 @@
-import { CONTROLS_WIDTH, COLOR_BY } from "../../utils/constants";
+import { COLOR_BY } from "../../utils/constants";
 import { getMediaArr } from "../../utils/utils";
 import * as THREE from "three";
 import * as d3 from "d3";
@@ -76,7 +76,7 @@ export function useForceGraphProps() {
   );
 
   const forceGraphProps = {
-    width: width - CONTROLS_WIDTH,
+    width,
     height,
     onNodeHover,
     onNodeClick,

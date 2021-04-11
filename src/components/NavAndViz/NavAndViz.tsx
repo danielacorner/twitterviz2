@@ -1,10 +1,9 @@
 import { Button } from "@material-ui/core";
 import { Body1, ColumnDiv, RowDiv } from "components/common/styledComponents";
 import { BtnStreamNewTweets } from "components/Controls/Buttons/BtnStreamNewTweets";
-import { SwitchReplace } from "components/Controls/Controls";
 import { HowManyTweets } from "components/Controls/Inputs";
 import { SearchForm } from "components/Controls/SearchForm";
-import VisualizationTabs from "components/VisualizationTabs";
+import NetworkGraph from "components/NetworkGraph/NetworkGraph";
 import { useConfig, useSetTweets } from "providers/store";
 import React from "react";
 
@@ -30,19 +29,18 @@ const NavAndViz = () => {
         <BtnStreamNewTweets />
         <Body1 style={{ height: "fit-content" }}>or</Body1>
         <SearchForm />
-        <ColumnDiv
+        {/* <ColumnDiv
           style={{
             height: 42,
             transform: "translateY(-21px) scale(0.7)",
             transformOrigin: "left",
           }}
         >
-          <SwitchReplace />
           <BtnDeleteAllTweets />
-        </ColumnDiv>
+        </ColumnDiv> */}
       </NavBarStyles>
       <RowDiv>
-        <VisualizationTabs />
+        <NetworkGraph />
       </RowDiv>
     </NavAndVizStyles>
   );
@@ -50,20 +48,11 @@ const NavAndViz = () => {
 
 export default NavAndViz;
 
-function BtnDeleteAllTweets() {
-  const setTweets = useSetTweets();
-  const { setConfig } = useConfig();
-
-  const deleteAllTweets = () => {
-    setConfig({ replace: true });
-    setTweets([], true);
-    setTimeout(() => {
-      setConfig({ replace: false });
-    });
-  };
-  return (
-    <Button color="secondary" variant="contained" onClick={deleteAllTweets}>
-      Delete all
-    </Button>
-  );
-}
+// function BtnDeleteAllTweets() {
+//   const deleteAllTweets = useDeleteAllTweets();
+//   return (
+//     <Button color="secondary" variant="contained" onClick={deleteAllTweets}>
+//       Delete all
+//     </Button>
+//   );
+// }

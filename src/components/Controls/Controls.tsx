@@ -216,10 +216,6 @@ function FetchTweetsControls() {
   return (
     <>
       <div className="fetchTweets section">
-        {/* <RowDiv style={{ alignItems: "flex-end" }}>
-          <SwitchReplace />
-        </RowDiv> */}
-
         <RowDiv>
           <BtnFetchFavoriteTweets />
           <BtnFetchFavoriteUsers />

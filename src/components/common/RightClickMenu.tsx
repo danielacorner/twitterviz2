@@ -31,6 +31,7 @@ export default function RightClickMenu({
   user,
   MenuProps = {},
 }: RightClickMenuProps) {
+  const deleteAllTweets = useDeleteAllTweets();
   const { fetchTimeline } = useFetchTimeline();
   const { setConfig, replace, numTweets } = useConfig();
   const fetchLikes = useFetchLikes();
@@ -44,7 +45,6 @@ export default function RightClickMenu({
 
   // send the user's tweets to the Botometer API https://rapidapi.com/OSoMe/api/botometer-pro/endpoints
   const tweets = useTweets();
-
   const fetchBotScoreForTweet = useFetchBotScoreForTweet();
 
   const setTweets = useSetTweets();
@@ -153,6 +153,28 @@ export default function RightClickMenu({
           {tooltipNode?.user.screen_name})
         </MenuItem>
       ) : null}
+      <MenuItem
+        onClick={() => {
+          deleteAllTweets();
+          handleClose();
+        }}
+      >
+        Delete all tweets
+      </MenuItem>
     </Menu>
   );
+}
+
+function useDeleteAllTweets() {
+  const setTweets = useSetTweets();
+  const { setConfig } = useConfig();
+
+  const deleteAllTweets = () => {
+    setConfig({ replace: true });
+    setTweets([], true);
+    setTimeout(() => {
+      setConfig({ replace: false });
+    });
+  };
+  return deleteAllTweets;
 }

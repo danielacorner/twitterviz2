@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextField, IconButton } from "@material-ui/core";
+import { TextField, IconButton, Tooltip } from "@material-ui/core";
 import { SERVER_URL } from "../../utils/constants";
 import { useFetchTimeline, useParamsForFetch } from "../../utils/hooks";
 import {
@@ -42,41 +42,46 @@ export function SearchForm() {
       setTweets(data);
     }
   };
+  const disabled = loading || process.env.NODE_ENV !== "development";
   return (
-    <Form
-      css={`
-        display: flex;
-        /* place-items: center;
-        grid-gap: 0.5em;
-        grid-template-columns: 1fr auto; */
-      `}
-      onSubmit={(e) => {
-        e.preventDefault();
-        fetchSearchResults();
-      }}
-    >
-      <TextField
-        label="Search by terms or @username"
-        value={searchTerm}
-        style={{
-          // textAlign: "left",
-          // height: 36,
-          // marginTop: -32,
-          width: "100%",
+    <Tooltip title={disabled ? "Premium only" : ""}>
+      <Form
+        css={`
+          display: flex;
+          /* place-items: center;
+          grid-gap: 0.5em;
+          grid-template-columns: 1fr auto; */
+        `}
+        onSubmit={(e) => {
+          e.preventDefault();
+          fetchSearchResults();
         }}
-        // InputProps={{ style: { height: 36 } }}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        type="text"
-      />
-      <IconButton
-        color="primary"
-        onClick={fetchSearchResults}
-        disabled={loading || searchTerm === ""}
-        type="submit"
       >
-        <SearchIcon />
-      </IconButton>
-    </Form>
+        <TextField
+          label="Search by terms or @username"
+          value={searchTerm}
+          style={{
+            // textAlign: "left",
+            // height: 36,
+            // marginTop: -32,
+            width: "100%",
+          }}
+          disabled={disabled}
+          // InputProps={{ style: { height: 36 } }}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          type="text"
+        />
+        <IconButton
+          color="primary"
+          onClick={fetchSearchResults}
+          // disabled={loading || searchTerm === ""}
+          disabled={disabled}
+          type="submit"
+        >
+          <SearchIcon />
+        </IconButton>
+      </Form>
+    </Tooltip>
   );
 }
 const Form = styled.form``;

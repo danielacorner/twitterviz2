@@ -1,6 +1,6 @@
 {
-  "name": "TwitViz",
-  "short_name": "TwitViz",
+  "name": "Twitter-Viz",
+  "short_name": "Twitter-Viz",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",

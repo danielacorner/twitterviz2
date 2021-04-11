@@ -15,15 +15,13 @@ import { query as q } from "faunadb";
 import { faunaClient } from "./providers/faunaProvider";
 import { useIsLight } from "./providers/ThemeManager";
 import "./video-react.css"; // import video-react css
-import LeftDrawer, { LEFT_DRAWER_WIDTH } from "./components/LeftDrawer";
 import qs from "query-string";
 import { useLocation } from "react-router";
 import NavAndViz from "components/NavAndViz/NavAndViz";
+import { AppFunctionalHooks } from "./AppFunctionalHooks";
 
 const AppStyles = styled.div`
   transition: background 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
-  display: grid;
-  grid-template-columns: ${LEFT_DRAWER_WIDTH}px 1fr;
   min-height: 100vh;
   * {
     margin: 0;
@@ -40,25 +38,16 @@ const AppStyles = styled.div`
 function App() {
   return (
     <AppStyles className="App">
-      <LeftDrawer />
+      {/* <LeftDrawer /> */}
       <NavAndViz />
-      <BottomDrawer />
+      {/* <BottomDrawer /> */}
       <AppStylesHooks />
       <AppFunctionalHooks />
     </AppStyles>
   );
 }
 
-function AppFunctionalHooks() {
-  useFetchTweetsOnMount();
-  useFetchQueryTweetsOnMount();
-  useStopLoadingEventually();
-  useDetectOffline();
-
-  return null;
-}
-
-function useDetectOffline() {
+export function useDetectOffline() {
   const { setConfig } = useConfig();
   useMount(() => {
     window.addEventListener("offline", () => {
@@ -70,7 +59,7 @@ function useDetectOffline() {
 const MAX_LOADING_TIME = 2 * 1000;
 
 /** stop loading after MAX_LOADING_TIME */
-function useStopLoadingEventually() {
+export function useStopLoadingEventually() {
   const loading = useLoading();
   const setLoading = useSetLoading();
   const tweets = useTweets();
@@ -124,7 +113,7 @@ export default App;
  *
  * [docs](https://docs.fauna.com/fauna/current/tutorials/crud?lang=javascript#retrieve)
  */
-function useFetchTweetsOnMount() {
+export function useFetchTweetsOnMount() {
   const setTweets = useSetTweets();
 
   // fetch tweets from DB on mount
@@ -156,7 +145,7 @@ function useFetchTweetsOnMount() {
  *
  * [docs](https://docs.fauna.com/fauna/current/tutorials/crud?lang=javascript#retrieve)
  */
-function useFetchQueryTweetsOnMount() {
+export function useFetchQueryTweetsOnMount() {
   const query = useQueryString();
   const qTweets = query.tweets;
   const fetchTweetsByIds = useFetchTweetsByIds();

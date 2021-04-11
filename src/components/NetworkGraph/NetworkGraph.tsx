@@ -125,25 +125,7 @@ function Graph() {
   // show/hide user nodes
   //
 
-  useEffect(() => {
-    if (!showUserNodes) {
-      setUserNodes([]);
-    } else {
-      // add nodes for each user
-
-      const nonUniqueUserNodes: Tweet[] = tweets.map((tweet) => ({
-        ...EMPTY_TWEET,
-        id: Number(tweet.user.id_str),
-        id_str: tweet.user.id_str,
-        user: tweet.user,
-        isUserNode: true,
-      }));
-
-      // deduplicate
-      const newUserNodes = uniqBy(nonUniqueUserNodes, (d) => d.user.id_str);
-      setUserNodes(newUserNodes);
-    }
-  }, [showUserNodes, tweets]);
+  useShowHideUserNodes(showUserNodes, setUserNodes, tweets);
 
   //
   // sync graph with store
@@ -218,3 +200,28 @@ function Graph() {
 }
 
 export default NetworkGraph;
+
+function useShowHideUserNodes(
+  showUserNodes: boolean,
+  setUserNodes: React.Dispatch<React.SetStateAction<Tweet[]>>,
+  tweets: Tweet[]
+) {
+  useEffect(() => {
+    if (!showUserNodes) {
+      setUserNodes([]);
+    } else {
+      // add nodes for each user
+      const nonUniqueUserNodes: Tweet[] = tweets.map((tweet) => ({
+        ...EMPTY_TWEET,
+        id: Number(tweet.user.id_str),
+        id_str: tweet.user.id_str,
+        user: tweet.user,
+        isUserNode: true,
+      }));
+
+      // deduplicate
+      const newUserNodes = uniqBy(nonUniqueUserNodes, (d) => d.user.id_str);
+      setUserNodes(newUserNodes);
+    }
+  }, [showUserNodes, tweets]);
+}
