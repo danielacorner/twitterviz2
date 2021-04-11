@@ -45,13 +45,7 @@ export function SearchForm() {
   const disabled = loading || process.env.NODE_ENV !== "development";
   return (
     <Tooltip title={disabled ? "Premium only" : ""}>
-      <Form
-        css={`
-          display: flex;
-          /* place-items: center;
-          grid-gap: 0.5em;
-          grid-template-columns: 1fr auto; */
-        `}
+      <StyledForm
         onSubmit={(e) => {
           e.preventDefault();
           fetchSearchResults();
@@ -61,10 +55,7 @@ export function SearchForm() {
           label="Search by terms or @username"
           value={searchTerm}
           style={{
-            // textAlign: "left",
-            // height: 36,
-            // marginTop: -32,
-            width: "100%",
+            width: 240,
           }}
           disabled={disabled}
           // InputProps={{ style: { height: 36 } }}
@@ -77,11 +68,17 @@ export function SearchForm() {
           // disabled={loading || searchTerm === ""}
           disabled={disabled}
           type="submit"
+          className="btnSearch"
         >
           <SearchIcon />
         </IconButton>
-      </Form>
+      </StyledForm>
     </Tooltip>
   );
 }
-const Form = styled.form``;
+const StyledForm = styled.form`
+  display: flex;
+  .btnSearch {
+    margin-bottom: -12px;
+  }
+`;

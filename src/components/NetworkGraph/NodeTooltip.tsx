@@ -6,17 +6,15 @@ import { PADDING } from "../../utils/utils";
 import useStore from "../../providers/store";
 import useContainerDimensions from "../../utils/useContainerDimensions";
 import { useWindowSize } from "../../utils/hooks";
-import { CONTROLS_WIDTH } from "../../utils/constants";
 import { useIsLight } from "../../providers/ThemeManager";
 import { Tweet } from "types";
-import UserInfo from "../common/UserInfo";
 import { RowDiv } from "../common/styledComponents";
 
 const AVATAR_WIDTH = 46;
 const TOOLTIP_WIDTH = 380;
 const MOUSE_WIDTH = 12;
 const WINDOW_PADDING_HZ = 12;
-const WINDOW_PADDING_VERT = 12;
+const WINDOW_PADDING_VERT = 100;
 
 const TooltipStyles = styled.div`
   opacity: 0.9;
@@ -56,7 +54,7 @@ const NodeTooltip = () => {
   const [ref, dimensions] = useContainerDimensions();
   const { height: windowHeight, width: windowWidth } = useWindowSize();
   const tooltipHeight = dimensions?.height || 0;
-  const minYPosition = windowHeight - tooltipHeight - WINDOW_PADDING_VERT;
+  const maxYPosition = windowHeight - tooltipHeight - WINDOW_PADDING_VERT;
   const minXPosition =
     windowWidth - TOOLTIP_WIDTH - MOUSE_WIDTH - WINDOW_PADDING_HZ;
 
@@ -68,11 +66,11 @@ const NodeTooltip = () => {
 
   const handleMouseMove = useCallback(
     (event) => {
-      const x = Math.max(CONTROLS_WIDTH, Math.min(event.x, minXPosition));
-      const y = Math.min(event.y, minYPosition);
+      const x = Math.min(event.x, minXPosition);
+      const y = Math.max(Math.min(event.y, maxYPosition), WINDOW_PADDING_VERT);
       setPosition({ x, y });
     },
-    [minXPosition, minYPosition]
+    [minXPosition, maxYPosition]
   );
 
   // on mount, start listening to mouse position
@@ -81,7 +79,7 @@ const NodeTooltip = () => {
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
     };
-  }, [minYPosition, minXPosition, handleMouseMove]);
+  }, [maxYPosition, minXPosition, handleMouseMove]);
 
   const springToMousePosition = useSpring({
     pointerEvents: "none",
