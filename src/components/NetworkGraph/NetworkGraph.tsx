@@ -35,11 +35,9 @@ const NetworkGraph = () => {
 // tslint:disable-next-line: cognitive-complexity
 function Graph() {
   const { fgRef, forceGraphProps } = useForceGraphProps();
-  const { is3d, showUserNodes, replace } = useConfig();
+  const { is3d } = useConfig();
   const tweets = useTweets();
   console.log("🌟🚨: Graph -> tweets", tweets);
-  const likesByUserId = useLikesByUserId();
-  const retweetsByTweetId = useRetweetsByTweetId();
 
   // uncomment to grab the current state and copy-paste into mockTweetsData.json
 
@@ -49,6 +47,36 @@ function Graph() {
   //   likesByUserId,
   // });
 
+  const graphWithUsers = useGraphWithUsersAndLinks();
+
+  // when new tweets arrive, fetch their bot scores
+  // TODO: disabled while testing
+  // useGenerateBotScoresOnNewTweets();
+
+  return (
+    <div>
+      {is3d ? (
+        // https://www.npmjs.com/package/react-force-graph
+        <ForceGraph3D
+          ref={fgRef}
+          graphData={graphWithUsers}
+          {...forceGraphProps}
+        />
+      ) : (
+        <ForceGraph2D
+          ref={fgRef}
+          graphData={graphWithUsers}
+          {...forceGraphProps}
+        />
+      )}
+    </div>
+  );
+}
+
+export default NetworkGraph;
+
+/** preprocess tweets to add links & user nodes */
+function useGraphWithUsersAndLinks() {
   // dynamic force graph updates WITHOUT re-rendering every node example: https://github.com/vasturiano/react-force-graph/blob/master/example/dynamic/index.html
 
   // New force graph nodes should be able to mount without causing all others to re-mount
@@ -62,7 +90,21 @@ function Graph() {
     nodes: [] as Tweet[],
     links: [] as Link[],
   });
+
+  const { fgRef } = useForceGraphProps();
+  const tweets = useTweets();
+
+  const fg = fgRef.current as any;
+
+  //
+  // use the force (d3 force simulation controls)
+  //
+  useTheForce(fg, graph);
+
   const [userNodes, setUserNodes] = useState([] as Tweet[]);
+  const { showUserNodes, replace } = useConfig();
+  const likesByUserId = useLikesByUserId();
+  const retweetsByTweetId = useRetweetsByTweetId();
 
   const userToLikesLinks = showUserNodes
     ? userNodes.reduce((acc, userNode) => {
@@ -121,18 +163,17 @@ function Graph() {
         : []),
     ],
   };
+  console.log("🌟🚨 ~ graph", graph);
   console.log("🌟🚨: Graph -> graphWithUsers", graphWithUsers);
 
   //
   // show/hide user nodes
   //
-
   useShowHideUserNodes(showUserNodes, setUserNodes, tweets);
 
   //
   // sync graph with store
   //
-
   useEffect(() => {
     const tweetsWithUser: Tweet[] = tweets
       // id <- +id_str
@@ -142,11 +183,9 @@ function Graph() {
       }))
       .filter((t) => Boolean(t.user?.id_str));
     // filter out tweets without users
-
     const nodeIds = graph.nodes.map((node) => node.id_str);
 
     // to prevent existing node re-renders, we'll spread existing nodes, and only spread new nodes on the end
-
     // if replacing, replace all
     const newNodes = replace
       ? tweets
@@ -154,7 +193,6 @@ function Graph() {
         tweetsWithUser.filter((node) => !nodeIds.includes(node.id_str));
 
     // * consider spreading newLinks if not doing so causes a performance issue
-
     setGraph((prev) => {
       return {
         ...prev,
@@ -170,38 +208,8 @@ function Graph() {
     // eslint-disable-next-line
   }, [tweets, replace]);
 
-  const fg = fgRef.current as any;
-
-  //
-  // use the force (d3 force simulation controls)
-  //
-  useTheForce(fg, graph);
-
-  // when new tweets arrive, fetch their bot scores
-  // TODO: disabled while testing
-  // useGenerateBotScoresOnNewTweets();
-
-  return (
-    <div>
-      {is3d ? (
-        // https://www.npmjs.com/package/react-force-graph
-        <ForceGraph3D
-          ref={fgRef}
-          graphData={graphWithUsers}
-          {...forceGraphProps}
-        />
-      ) : (
-        <ForceGraph2D
-          ref={fgRef}
-          graphData={graphWithUsers}
-          {...forceGraphProps}
-        />
-      )}
-    </div>
-  );
+  return graphWithUsers;
 }
-
-export default NetworkGraph;
 
 function useShowHideUserNodes(
   showUserNodes: boolean,
