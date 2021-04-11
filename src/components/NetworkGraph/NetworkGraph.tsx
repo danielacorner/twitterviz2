@@ -77,6 +77,13 @@ export default NetworkGraph;
 
 /** preprocess tweets to add links & user nodes */
 function useGraphWithUsersAndLinks() {
+  const { fgRef } = useForceGraphProps();
+  const tweets = useTweets();
+  const [userNodes, setUserNodes] = useState([] as Tweet[]);
+  const { showUserNodes } = useConfig();
+  const likesByUserId = useLikesByUserId();
+  const retweetsByTweetId = useRetweetsByTweetId();
+
   // dynamic force graph updates WITHOUT re-rendering every node example: https://github.com/vasturiano/react-force-graph/blob/master/example/dynamic/index.html
 
   // New force graph nodes should be able to mount without causing all others to re-mount
@@ -91,20 +98,10 @@ function useGraphWithUsersAndLinks() {
     links: [] as Link[],
   });
 
-  const { fgRef } = useForceGraphProps();
-  const tweets = useTweets();
-
-  const fg = fgRef.current as any;
-
   //
   // use the force (d3 force simulation controls)
   //
-  useTheForce(fg, graph);
-
-  const [userNodes, setUserNodes] = useState([] as Tweet[]);
-  const { showUserNodes, replace } = useConfig();
-  const likesByUserId = useLikesByUserId();
-  const retweetsByTweetId = useRetweetsByTweetId();
+  useTheForce(fgRef.current, graph);
 
   const userToLikesLinks = showUserNodes
     ? userNodes.reduce((acc, userNode) => {
@@ -169,11 +166,25 @@ function useGraphWithUsersAndLinks() {
   //
   // show/hide user nodes
   //
-  useShowHideUserNodes(showUserNodes, setUserNodes, tweets);
+  // useShowHideUserNodes(showUserNodes, setUserNodes);
 
   //
   // sync graph with store
   //
+  useSyncGraphWithStore(graph, setGraph);
+
+  return graphWithUsers;
+}
+
+function useSyncGraphWithStore(
+  graph: { nodes: Tweet[]; links: Link[] },
+  setGraph: React.Dispatch<
+    React.SetStateAction<{ nodes: Tweet[]; links: Link[] }>
+  >
+) {
+  const { replace } = useConfig();
+  const tweets = useTweets();
+
   useEffect(() => {
     const tweetsWithUser: Tweet[] = tweets
       // id <- +id_str
@@ -191,6 +202,8 @@ function useGraphWithUsersAndLinks() {
       ? tweets
       : // new nodes are ones whose ids aren't already in the graph
         tweetsWithUser.filter((node) => !nodeIds.includes(node.id_str));
+    console.log("🌟🚨 ~ useEffect ~ tweetsWithUser", tweetsWithUser);
+    console.log("🌟🚨🌟🚨🌟🚨🌟🚨🌟🚨 ~ useEffect ~ newNodes", newNodes);
 
     // * consider spreading newLinks if not doing so causes a performance issue
     setGraph((prev) => {
@@ -207,15 +220,14 @@ function useGraphWithUsersAndLinks() {
     });
     // eslint-disable-next-line
   }, [tweets, replace]);
-
-  return graphWithUsers;
 }
 
 function useShowHideUserNodes(
   showUserNodes: boolean,
-  setUserNodes: React.Dispatch<React.SetStateAction<Tweet[]>>,
-  tweets: Tweet[]
+  setUserNodes: React.Dispatch<React.SetStateAction<Tweet[]>>
 ) {
+  const tweets = useTweets();
+
   useEffect(() => {
     if (!showUserNodes) {
       setUserNodes([]);
