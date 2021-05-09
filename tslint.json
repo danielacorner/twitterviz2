@@ -4,8 +4,7 @@
     "tslint-react-hooks",
     "tslint-sonarts",
     "tslint-config-prettier",
-    "tslint-no-circular-imports",
-    "plugin:react-hooks/recommended"
+    "tslint-no-circular-imports"
   ],
   "rules": {
     "ban": false,

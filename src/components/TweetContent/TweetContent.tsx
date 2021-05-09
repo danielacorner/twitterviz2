@@ -130,6 +130,7 @@ export function getRetweetedUser(tweet: Tweet): User | null {
   return tweet?.retweeted_status?.user || null;
 }
 
+// tslint:disable-next-line
 function addLinksToText(fullText: string) {
   return (
     fullText

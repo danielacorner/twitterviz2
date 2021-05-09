@@ -169,12 +169,11 @@ function useDeleteAllTweets() {
   const setTweets = useSetTweets();
   const { setConfig } = useConfig();
 
-  const deleteAllTweets = () => {
+  return () => {
     setConfig({ replace: true });
     setTweets([], true);
     setTimeout(() => {
       setConfig({ replace: false });
     });
   };
-  return deleteAllTweets;
 }

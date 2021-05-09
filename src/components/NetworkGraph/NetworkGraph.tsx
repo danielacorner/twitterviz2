@@ -154,7 +154,7 @@ function useGraphWithUsersAndLinks() {
     target: Number(t.id_str),
   }));
 
-  const graphWithUsers = {
+  return {
     nodes: [...tweets, ...(showUserNodes ? userNodes : [])],
     links: [
       ...tweetToRetweetsLinks,
@@ -168,8 +168,6 @@ function useGraphWithUsersAndLinks() {
         : []),
     ],
   };
-
-  return graphWithUsers;
 }
 
 // function useSyncGraphWithStore(

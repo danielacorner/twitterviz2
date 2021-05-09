@@ -4,7 +4,6 @@ import {
   Checkbox,
   Radio,
   RadioGroup,
-  Tooltip,
 } from "@material-ui/core";
 import { FILTER_LEVELS } from "../../utils/constants";
 import { useConfig, useIsLeftDrawerOpen } from "../../providers/store";
