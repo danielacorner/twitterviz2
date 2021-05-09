@@ -7,9 +7,9 @@ const ControlsStyles = styled.div`
   background: ${(props) => (props.isLight ? "hsl(0,0%,90%)" : "hsl(0,0%,15%)")};
   width: 100%;
   overflow: hidden auto;
-  max-height: calc(100vh - 64px);
-
+  height: calc(100vh - 64px);
   display: grid;
+  align-content: start;
   grid-gap: 18px;
   .section {
     display: grid;

@@ -210,8 +210,10 @@ function FetchTweetsControls() {
   return (
     <>
       <TweetFilterControls />
-      <div className="fetchTweets section">
+      <div className="section">
         <BtnFetchFavoriteTweets />
+      </div>
+      <div className="section">
         <BtnFetchFavoriteUsers />
       </div>
     </>
