@@ -3,7 +3,7 @@ import { useLoading } from "../../../providers/store";
 import UserIcon from "@material-ui/icons/Face";
 import { getFavorites } from "../../common/BtnFavorite";
 import { useFetchUsers } from "../../../utils/hooks";
-import { CollapsibleButton } from "./CollapsibleButton";
+import { StyledButton } from "./StyledButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import { RowDiv } from "../../common/styledComponents";
 
@@ -12,20 +12,31 @@ export function BtnFetchFavoriteUsers() {
   const loading = useLoading();
 
   return (
-    <CollapsibleButton
+    <StyledButton
       tooltipTitle="Favorite users"
       css={`
-        margin: auto !important;
-        width: fit-content;
         .MuiButton-startIcon {
           margin-left: 0;
-          margin-right: 0;
+          margin-right: 24px;
+        }
+        .MuiButton-label {
+          font-size: 15px;
         }
       `}
       startIcon={
-        <RowDiv>
+        <RowDiv style={{ position: "relative", transform: `scale(0.8)` }}>
           <UserIcon />
-          <FavoriteIcon />
+          <div
+            style={{
+              position: "absolute",
+              transform: `scale(0.5)`,
+              right: -14,
+              top: -2,
+              transformOrigin: "top right",
+            }}
+          >
+            <FavoriteIcon />
+          </div>
         </RowDiv>
       }
       type="submit"
@@ -37,6 +48,8 @@ export function BtnFetchFavoriteUsers() {
       }}
       variant="outlined"
       color="secondary"
-    />
+    >
+      Peeps
+    </StyledButton>
   );
 }

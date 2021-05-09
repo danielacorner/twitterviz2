@@ -13,7 +13,7 @@ import { useTheme } from "@material-ui/core";
 import { OpenTweetBtn } from "../BottomDrawer/BottomDrawer";
 import useContainerDimensions from "../../utils/useContainerDimensions";
 import {
-  CUSTOM_SCROLLBAR_CSS,
+  CUSTOM_DISAPPEARING_SCROLLBAR_CSS,
   LOADING_SCROLLBAR_CSS,
 } from "../common/styledComponents";
 import { getMediaArr, useMount } from "../../utils/utils";
@@ -121,7 +121,7 @@ const GalleryStyles = styled.div`
       }
     }
   }
-  ${CUSTOM_SCROLLBAR_CSS}
+  ${CUSTOM_DISAPPEARING_SCROLLBAR_CSS}
   ${(props) => (props.isLoading ? LOADING_SCROLLBAR_CSS : "")}
 `;
 

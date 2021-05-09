@@ -19,9 +19,8 @@ import {
 } from "../../providers/store";
 import {
   Body2,
-  CUSTOM_SCROLLBAR_CSS,
+  CUSTOM_DISAPPEARING_SCROLLBAR_CSS,
   RowDiv,
-  H6,
   Body1,
 } from "../common/styledComponents";
 import SelectGeolocation from "./SelectGeolocation";
@@ -43,7 +42,7 @@ import ClearIcon from "@material-ui/icons/Clear";
 import styled from "styled-components/macro";
 import { BtnFetchFavoriteUsers } from "./Buttons/BtnFetchFavoriteUsers";
 import { useConfig } from "../../providers/store";
-import { Collapsible } from "components/common/Collapsible";
+import TitleRow from "components/common/TitleRow";
 
 export function SwitchReplace() {
   const { replace, setConfig } = useConfig();
@@ -60,7 +59,7 @@ export function SwitchReplace() {
 
 const Div = styled.div``;
 
-const Controls = () => {
+export default function Controls() {
   const theme = useTheme();
   const loading = useLoading();
   const { isDrawerOpen } = useIsLeftDrawerOpen();
@@ -71,17 +70,13 @@ const Controls = () => {
       isLight={theme.palette.type === "light"}
     >
       <VizSpecificControls />
-      <Collapsible title={"Fetch Tweets"}>
-        <FetchTweetsControls />
-      </Collapsible>
-      <Collapsible title={"Save Data"}>
+      <FetchTweetsControls />
+      {/* <TitleRow title={"Save Data"}>
         <SaveDataControls />
-      </Collapsible>
+      </TitleRow> */}
     </ControlsStyles>
   );
-};
-
-export default Controls;
+}
 
 function SaveDataControls() {
   return (
@@ -146,10 +141,9 @@ function SavedDatasetsList() {
       css={`
         max-height: 4.5rem;
         border: 1px solid grey;
-        ${CUSTOM_SCROLLBAR_CSS};
+        ${CUSTOM_DISAPPEARING_SCROLLBAR_CSS};
         button {
           width: fit-content;
-          margin: 0;
           min-width: 0;
           &.fetch {
             font-size: 0.7em;
@@ -204,9 +198,9 @@ function VizSpecificControls() {
     "tab" in searchObj && searchObj.tab === `${TAB_INDICES.NETWORKGRAPH}`;
 
   return isWordcloud ? (
-    <Collapsible title={"Wordcloud"}>
+    <TitleRow title={"Wordcloud"}>
       <WordcloudControls />
-    </Collapsible>
+    </TitleRow>
   ) : isNetworkGraph ? (
     <NetworkGraphControls />
   ) : null;
@@ -215,22 +209,10 @@ function VizSpecificControls() {
 function FetchTweetsControls() {
   return (
     <>
+      <TweetFilterControls />
       <div className="fetchTweets section">
-        <RowDiv>
-          <BtnFetchFavoriteTweets />
-          <BtnFetchFavoriteUsers />
-        </RowDiv>
-      </div>
-      <div className="filterTweets section">
-        <H6
-          css={`
-          font-size:
-            padding-top: 2em;
-          `}
-        >
-          Filter Incoming Tweets
-        </H6>
-        <TweetFilterControls />
+        <BtnFetchFavoriteTweets />
+        <BtnFetchFavoriteUsers />
       </div>
     </>
   );
@@ -239,15 +221,23 @@ function FetchTweetsControls() {
 function TweetFilterControls() {
   return (
     <>
-      <ControlTitle>Recent/Popular</ControlTitle>
-      <RecentPopularMixedRadioBtns />
-      <ControlTitle>Media</ControlTitle>
-      <MediaTypeCheckboxes />
-      <ControlTitle>Content Filter</ControlTitle>
-      <FilterLevelCheckboxes />
-      <SelectCountry />
-      <SelectGeolocation />
-      <SelectLanguage />
+      <div className="section">
+        <ControlTitle>Recent / Popular</ControlTitle>
+        <RecentPopularMixedRadioBtns />
+      </div>
+      <div className="section">
+        <ControlTitle>Media Types</ControlTitle>
+        <MediaTypeCheckboxes />
+      </div>
+      <div className="section">
+        <ControlTitle>Content Filter</ControlTitle>
+        <FilterLevelCheckboxes />
+      </div>
+      <div className="section">
+        <SelectCountry />
+        <SelectGeolocation />
+        <SelectLanguage />
+      </div>
     </>
   );
 }

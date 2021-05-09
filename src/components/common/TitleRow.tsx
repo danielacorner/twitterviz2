@@ -1,14 +1,16 @@
 import React, { Component, useState } from "react";
 import { IconButton, Collapse } from "@material-ui/core";
-import { ColumnDiv, H5, RowDiv } from "../common/styledComponents";
+import { ColumnDiv, H5, RowDiv } from "./styledComponents";
 import { ArrowDropDown } from "@material-ui/icons";
 
-export function Collapsible({
+export default function TitleRow({
   children,
   title,
+  collapsible = false,
 }: {
   children: any;
   title: string | Component;
+  collapsible?: boolean;
 }) {
   const [open, setOpen] = useState(true);
 
@@ -27,17 +29,19 @@ export function Collapsible({
         }}
         onClick={() => setOpen(!open)}
       >
-        <IconButton
-          style={{
-            position: "absolute",
-            left: -28,
-            width: "fit-content",
-            transition: "transform 0.3s ease-in-out",
-            transform: `rotate(${open ? 0 : -0.25}turn)`,
-          }}
-        >
-          <ArrowDropDown />
-        </IconButton>
+        {collapsible && (
+          <IconButton
+            style={{
+              position: "absolute",
+              left: -28,
+              width: "fit-content",
+              transition: "transform 0.3s ease-in-out",
+              transform: `rotate(${open ? 0 : -0.25}turn)`,
+            }}
+          >
+            <ArrowDropDown />
+          </IconButton>
+        )}
         <H5 style={{ margin: 0, padding: 0 }}>
           <span style={{ marginLeft: "1em" }}>{title}</span>
         </H5>

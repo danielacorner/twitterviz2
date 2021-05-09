@@ -1,47 +1,39 @@
 import styled from "styled-components/macro";
-import { CUSTOM_SCROLLBAR_CSS } from "../common/styledComponents";
+import { CUSTOM_DISAPPEARING_SCROLLBAR_CSS } from "../common/styledComponents";
 import { CONTROLS_PADDING_INNER, FORM_HEIGHT } from "../../utils/constants";
 
 const ControlsStyles = styled.div`
-  ${CUSTOM_SCROLLBAR_CSS}
+  ${CUSTOM_DISAPPEARING_SCROLLBAR_CSS}
   background: ${(props) => (props.isLight ? "hsl(0,0%,90%)" : "hsl(0,0%,15%)")};
   width: 100%;
   overflow: hidden auto;
-  max-height: 100vh;
+  max-height: calc(100vh - 64px);
+
   display: grid;
-  place-items: baseline;
-  place-content: baseline;
+  grid-gap: 18px;
   .section {
     display: grid;
-    grid-gap: 12px;
   }
 
   button {
-    width: ${(props) =>
-      props.isDrawerOpen
-        ? `calc(100% - ${FORM_HEIGHT / 2}px)`
-        : `${FORM_HEIGHT}px`};
-    margin: ${(props) => (props.isDrawerOpen ? "0 10px" : "0 0 0 auto")};
+    width: fit-content;
+    margin: auto;
     height: ${FORM_HEIGHT}px;
     min-width: 0;
   }
   .MuiFormControlLabel-root {
-    ${(props) => (props.isDrawerOpen ? "" : "margin-right: 0;")}
+    margin-right: 0;
   }
   [class*="Checkboxes__RadioBtnsStyles"] {
-    ${(props) => (props.isDrawerOpen ? "" : "margin-right: -8px;")}
+    margin-right: -8px;
   }
   .checkboxes {
     display: grid;
     max-width: ${(props) => (props.isDrawerOpen ? 200 : FORM_HEIGHT)}px;
-    ${(props) =>
-      props.isDrawerOpen
-        ? "grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));"
-        : "margin-left: auto;"};
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   }
   .MuiFormGroup-root {
-    ${(props) =>
-      props.isDrawerOpen ? "" : `width: ${FORM_HEIGHT}px; margin: 0 0 0 auto;`};
+    width: ${FORM_HEIGHT}px;
   }
   h5 {
     padding-bottom: 12px;

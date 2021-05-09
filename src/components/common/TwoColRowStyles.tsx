@@ -15,6 +15,8 @@ export const ControlTitle = styled(Typography).attrs({
 })`
   white-space: nowrap;
   font-size: 1rem;
+  text-align: left;
+  text-transform: Capitalize;
 `;
 
 export const TwoColFormStyles = styled.form`

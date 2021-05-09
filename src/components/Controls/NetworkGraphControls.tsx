@@ -5,30 +5,30 @@ import {
   InputLabel,
   FormControl,
   Checkbox,
+  FormControlLabel,
 } from "@material-ui/core";
 import { COLOR_BY } from "../../utils/constants";
 import { useConfig, AppConfig } from "../../providers/store";
 import { CollapsibleSwitchWithLabels, Body1 } from "../common/styledComponents";
-import { FormControlLabelCollapsible } from "./Checkboxes";
 import { ForceSimulationControls } from "./ForceSimulationControls";
-import { Collapsible } from "components/common/Collapsible";
+import TitleRow from "components/common/TitleRow";
 /** react-force-graph docs
  * https://www.npmjs.com/package/react-force-graph
  */
 const NetworkGraphControls = () => {
   return (
     <div className="networkGraphControls controlsContainer">
-      <Collapsible title={"Graph"}>
+      <TitleRow title={"Graph"}>
         <Switch3D />
         <SwitchGridMode />
-      </Collapsible>
-      <Collapsible title={"Nodes"}>
+      </TitleRow>
+      <TitleRow title={"Nodes"}>
         <SwitchUserNodes />
         <SelectColorBy />
-      </Collapsible>
-      <Collapsible title={"Force Simulation"}>
+      </TitleRow>
+      <TitleRow title={"Force Simulation"}>
         <ForceSimulationControls />
-      </Collapsible>
+      </TitleRow>
     </div>
   );
 };
@@ -62,8 +62,7 @@ function SwitchGridMode() {
 function SwitchUserNodes() {
   const { showUserNodes, setConfig } = useConfig();
   return (
-    <FormControlLabelCollapsible
-      groupTitle="Media"
+    <FormControlLabel
       control={<Checkbox checked={showUserNodes} />}
       onChange={() => {
         setConfig({ showUserNodes: !showUserNodes });
@@ -89,7 +88,7 @@ function SelectColorBy() {
           <em>None</em>
         </MenuItem>
         <MenuItem value={COLOR_BY.mediaType}>Media type</MenuItem>
-        <MenuItem value={COLOR_BY.media}>Media</MenuItem>
+        <MenuItem value={COLOR_BY.media}>Must Contain</MenuItem>
         <MenuItem value={COLOR_BY.textLength}>Text length</MenuItem>
         <MenuItem value={COLOR_BY.sentiment}>Sentiment</MenuItem>
         <MenuItem value={COLOR_BY.profilePhoto}>Profile Photo</MenuItem>

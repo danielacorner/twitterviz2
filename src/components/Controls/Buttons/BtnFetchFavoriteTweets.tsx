@@ -3,7 +3,7 @@ import { useLoading } from "../../../providers/store";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import { getFavorites } from "../../common/BtnFavorite";
 import { useFetchTweetsByIds } from "../../../utils/hooks";
-import { CollapsibleButton } from "./CollapsibleButton";
+import { StyledButton } from "./StyledButton";
 import { SvgIcon } from "@material-ui/core";
 import { RowDiv } from "../../common/styledComponents";
 
@@ -11,22 +11,32 @@ export function BtnFetchFavoriteTweets() {
   const fetchTweetsByIds = useFetchTweetsByIds();
   const loading = useLoading();
   return (
-    <CollapsibleButton
-      tooltipTitle="Favorite tweets"
+    <StyledButton
       css={`
-        margin: auto !important;
-        width: fit-content;
         .MuiButton-startIcon {
           margin-left: 0;
-          margin-right: 0;
+          margin-right: 24px;
+        }
+        .MuiButton-label {
+          font-size: 15px;
         }
       `}
       startIcon={
-        <RowDiv>
+        <RowDiv style={{ position: "relative", transform: `scale(0.8)` }}>
           <SvgIcon>
             <TweetIconPath color="secondary" />
           </SvgIcon>
-          <FavoriteIcon />
+          <div
+            style={{
+              position: "absolute",
+              transform: `scale(0.5)`,
+              right: -14,
+              top: -2,
+              transformOrigin: "top right",
+            }}
+          >
+            <FavoriteIcon />
+          </div>
         </RowDiv>
       }
       type="submit"
@@ -38,7 +48,9 @@ export function BtnFetchFavoriteTweets() {
       }}
       variant="outlined"
       color="secondary"
-    />
+    >
+      Faves
+    </StyledButton>
   );
 }
 

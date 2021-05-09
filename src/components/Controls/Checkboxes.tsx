@@ -28,20 +28,17 @@ export function RecentPopularMixedRadioBtns() {
         onChange={handleChange}
         row={true}
       >
-        <FormControlLabelCollapsible
-          groupTitle="Recent/Popular"
+        <FormControlLabel
           value="mixed"
           control={<Radio />}
           label={<Body1>Mixed</Body1>}
         />
-        <FormControlLabelCollapsible
-          groupTitle="Recent/Popular"
+        <FormControlLabel
           value="recent"
           control={<Radio />}
           label={<Body1>Recent</Body1>}
         />
-        <FormControlLabelCollapsible
-          groupTitle="Recent/Popular"
+        <FormControlLabel
           value="popular"
           control={<Radio />}
           label={<Body1>Popular</Body1>}
@@ -68,20 +65,17 @@ export function FilterLevelCheckboxes() {
         onChange={handleChange}
         row={true}
       >
-        <FormControlLabelCollapsible
-          groupTitle="Content Filter"
+        <FormControlLabel
           value={FILTER_LEVELS.medium}
           control={<Radio />}
           label={<Body1>Medium</Body1>}
         />
-        <FormControlLabelCollapsible
-          groupTitle="Content Filter"
+        <FormControlLabel
           value={FILTER_LEVELS.low}
           control={<Radio />}
           label={<Body1>Low</Body1>}
         />
-        <FormControlLabelCollapsible
-          groupTitle="Content Filter"
+        <FormControlLabel
           value={FILTER_LEVELS.none}
           control={<Radio />}
           label={<Body1>None</Body1>}
@@ -98,8 +92,7 @@ export function MediaTypeCheckboxes() {
 
   return (
     <MediaTypeCheckboxesStyles className="checkboxes">
-      <FormControlLabelCollapsible
-        groupTitle="Media"
+      <FormControlLabel
         control={<Checkbox checked={text} name="checkedA" />}
         onChange={() =>
           setConfig({
@@ -111,8 +104,7 @@ export function MediaTypeCheckboxes() {
         }
         label={<Body1>Text</Body1>}
       />
-      <FormControlLabelCollapsible
-        groupTitle="Media"
+      <FormControlLabel
         control={<Checkbox checked={photo} name="checkedA" />}
         onChange={() =>
           setConfig({
@@ -124,8 +116,7 @@ export function MediaTypeCheckboxes() {
         }
         label={<Body1>Image</Body1>}
       />
-      <FormControlLabelCollapsible
-        groupTitle="Media"
+      <FormControlLabel
         control={<Checkbox checked={video} name="checkedA" />}
         onChange={() =>
           setConfig({
@@ -137,8 +128,7 @@ export function MediaTypeCheckboxes() {
         }
         label={<Body1>Video</Body1>}
       />
-      <FormControlLabelCollapsible
-        groupTitle="Media"
+      <FormControlLabel
         control={<Checkbox checked={animated_gif} name="checkedA" />}
         onChange={() =>
           setConfig({
@@ -151,37 +141,5 @@ export function MediaTypeCheckboxes() {
         label={<Body1>GIF</Body1>}
       />
     </MediaTypeCheckboxesStyles>
-  );
-}
-
-export function FormControlLabelCollapsible({
-  control,
-  label,
-  groupTitle = "",
-  ...props
-}: any) {
-  const { isDrawerOpen } = useIsLeftDrawerOpen();
-
-  return (
-    <FormControlLabel
-      {...{
-        control: isDrawerOpen ? (
-          control
-        ) : (
-          <Tooltip
-            title={
-              <>
-                {groupTitle}
-                {label}
-              </>
-            }
-          >
-            {control}
-          </Tooltip>
-        ),
-        label: isDrawerOpen ? label : null,
-        ...props,
-      }}
-    />
   );
 }

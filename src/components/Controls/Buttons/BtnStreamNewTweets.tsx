@@ -8,7 +8,7 @@ import {
 } from "../../../providers/store";
 import DiceIcon from "@material-ui/icons/Casino";
 import { SERVER_URL } from "../../../utils/constants";
-import { CollapsibleButton } from "./CollapsibleButton";
+import { StyledButton } from "./StyledButton";
 import { RowDiv } from "components/common/styledComponents";
 
 export function BtnStreamNewTweets() {
@@ -52,7 +52,7 @@ export function BtnStreamNewTweets() {
 
   return (
     <RowDiv>
-      <CollapsibleButton
+      <StyledButton
         css={`
           width: fit-content;
         `}
