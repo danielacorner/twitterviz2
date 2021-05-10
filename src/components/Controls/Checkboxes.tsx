@@ -6,7 +6,7 @@ import {
   RadioGroup,
 } from "@material-ui/core";
 import { FILTER_LEVELS } from "../../utils/constants";
-import { useConfig, useIsLeftDrawerOpen } from "../../providers/store";
+import { useConfig } from "../../providers/store";
 import { Body1 } from "../common/styledComponents";
 import styled from "styled-components/macro";
 

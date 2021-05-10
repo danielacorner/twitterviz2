@@ -30,9 +30,6 @@ export default function LeftDrawerCollapsible() {
 
 const AnimatedLeftDrawerStyles = styled(animated.div)`
   width: ${LEFT_DRAWER_WIDTH}px;
-  /* @media (min-width: ${BREAKPOINTS.TABLET}) {
-  width: ${LEFT_DRAWER_WIDTH}px;
-  } */
   position: fixed;
   left: 0;
   top: 0;
