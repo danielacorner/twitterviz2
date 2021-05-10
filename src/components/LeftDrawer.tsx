@@ -8,7 +8,7 @@ import { animated, useSpring } from "react-spring";
 export const LEFT_DRAWER_WIDTH = 170;
 
 export default function LeftDrawerCollapsible() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(process.env.NODE_ENV === "development");
   const springRightOnOpen = useSpring({
     transform: `translate(${open ? 0 : -LEFT_DRAWER_WIDTH}px, 64px)`,
   });
