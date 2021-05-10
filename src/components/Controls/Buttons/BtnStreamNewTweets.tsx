@@ -56,14 +56,15 @@ export function BtnStreamNewTweets() {
         css={`
           width: fit-content;
         `}
-        text={"Twitter Stream"}
         icon={<DiceIcon className="diceIcon" />}
         disabled={loading}
         onClick={fetchNewTweets}
         className="btnFetch"
         variant="contained"
         color="primary"
-      />
+      >
+        Twitter Stream
+      </StyledButton>
     </RowDiv>
   );
 }
