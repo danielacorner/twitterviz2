@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { NODE_DIAMETER, AVATAR_DIAMETER } from "./useForceGraphProps";
-import { useConfig, useTweets } from "../../providers/store";
+import { useTweets } from "../../providers/store/useSelectors";
+import { useConfig } from "../../providers/store/useConfig";
 import * as d3 from "d3";
 import {
   useGetIsLikeLink,
@@ -13,14 +14,8 @@ import { Tweet } from "types";
 // tslint:disable-next-line
 export function useTheForce(fg: any, graph: { nodes: any[]; links: any[] }) {
   const getIsLikeLink = useGetIsLikeLink();
-  const {
-    gravity,
-    charge,
-    showUserNodes,
-    isGridMode,
-    setConfig,
-    isPaused,
-  } = useConfig();
+  const { gravity, charge, showUserNodes, isGridMode, setConfig, isPaused } =
+    useConfig();
 
   // in Grid mode, when we fetch new tweets, temporarily unpause
   const tweets = useTweets();

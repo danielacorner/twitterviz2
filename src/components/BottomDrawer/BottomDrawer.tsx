@@ -3,7 +3,7 @@ import { Drawer, IconButton, Tooltip } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import TweetContent from "../TweetContent/TweetContent";
 import UserInfo from "../common/UserInfo";
-import useStore from "../../providers/store";
+import useStore from "../../providers/store/store";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import {
   BottomDrawerStyles,

@@ -1,4 +1,4 @@
-import { useSetTweets } from "providers/store";
+import { useSetTweets } from "providers/store/useSelectors";
 import { useMount } from "utils/utils";
 
 import { useEffect, useRef } from "react";
@@ -8,8 +8,8 @@ import {
   useLoading,
   useTweets,
   useSetLoading,
-  useConfig,
-} from "./providers/store";
+} from "./providers/store/useSelectors";
+import { useConfig } from "./providers/store/useConfig";
 import { query as q } from "faunadb";
 import { faunaClient } from "./providers/faunaProvider";
 import "./video-react.css"; // import video-react css

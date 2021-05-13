@@ -2,7 +2,7 @@ import React from "react";
 import { MenuItem, Select } from "@material-ui/core";
 import countryCodes from "../../utils/countryCodes";
 import languages from "../../utils/languages";
-import { useConfig } from "../../providers/store";
+import { useConfig } from "../../providers/store/useConfig";
 import { ControlTitle, TwoColRowStyles } from "../common/TwoColRowStyles";
 
 export function SelectLanguage() {

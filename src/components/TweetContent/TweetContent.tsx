@@ -5,7 +5,7 @@ import countryCodes from "../../utils/countryCodes";
 import LocationIcon from "@material-ui/icons/LocationOnRounded";
 import { TweetStyles } from "./TweetStyles";
 import { Body2 } from "../common/styledComponents";
-import { useSearchObj } from "../../providers/store";
+import { useSearchObj } from "../../providers/store/store";
 import useContainerDimensions from "../../utils/useContainerDimensions";
 import MediaContent from "./Media/MediaContent";
 import { Place, Tweet, User } from "types";

@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
-  useConfig,
   useTweets,
   useLoading,
   useDeleteTweet,
   usePrevious,
-} from "../../providers/store";
+} from "../../providers/store/useSelectors";
+import { useConfig } from "../../providers/store/useConfig";
 import styled from "styled-components/macro";
 import TweetContent from "../TweetContent/TweetContent";
 import { TABS_HEIGHT } from "../../utils/constants";
@@ -240,10 +240,10 @@ function GridItem({ tweet }: { tweet: Tweet }) {
 
 function DeleteTweetBtn({ tweet }: { tweet: Tweet }) {
   const deleteTweet = useDeleteTweet();
-  const handleDelete = useCallback(() => deleteTweet(tweet.id_str), [
-    tweet.id_str,
-    deleteTweet,
-  ]);
+  const handleDelete = useCallback(
+    () => deleteTweet(tweet.id_str),
+    [tweet.id_str, deleteTweet]
+  );
   return <CloseIcon onClick={handleDelete} />;
 }
 

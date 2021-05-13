@@ -3,11 +3,11 @@ import { TextField, IconButton, Tooltip } from "@material-ui/core";
 import { SERVER_URL } from "../../utils/constants";
 import { useFetchTimeline, useParamsForFetch } from "../../utils/hooks";
 import {
-  useConfig,
   useSetTweets,
   useLoading,
   useSetLoading,
-} from "../../providers/store";
+} from "../../providers/store/useSelectors";
+import { useConfig } from "../../providers/store/useConfig";
 import SearchIcon from "@material-ui/icons/Search";
 import styled from "styled-components/macro";
 
@@ -19,12 +19,8 @@ export function SearchForm() {
   const setTweets = useSetTweets();
   const { fetchTimelineByHandle } = useFetchTimeline();
 
-  const {
-    langParam,
-    allowedMediaTypesParam,
-    countryParam,
-    geocodeParam,
-  } = useParamsForFetch();
+  const { langParam, allowedMediaTypesParam, countryParam, geocodeParam } =
+    useParamsForFetch();
 
   const fetchSearchResults = async () => {
     setLoading(true);

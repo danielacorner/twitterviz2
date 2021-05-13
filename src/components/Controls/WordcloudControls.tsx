@@ -1,6 +1,6 @@
 import React from "react";
 import { Slider, Typography } from "@material-ui/core";
-import { useWordcloudConfig } from "../../providers/store";
+import { useWordcloudConfig } from "../../providers/store/useSelectors";
 
 export default function WordcloudControls() {
   return (

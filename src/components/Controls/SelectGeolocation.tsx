@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components/macro";
-import { useConfig } from "../../providers/store";
+import { useConfig } from "../../providers/store/useConfig";
 import { Map, GoogleApiWrapper } from "google-maps-react";
 import { useMount } from "../../utils/utils";
 import { Modal, IconButton, Button, Input } from "@material-ui/core";

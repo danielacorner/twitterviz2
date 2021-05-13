@@ -8,7 +8,8 @@ import {
   FormControlLabel,
 } from "@material-ui/core";
 import { COLOR_BY } from "../../utils/constants";
-import { useConfig, AppConfig } from "../../providers/store";
+import { AppConfig } from "../../providers/store/store";
+import { useConfig } from "../../providers/store/useConfig";
 import { CollapsibleSwitchWithLabels, Body1 } from "../common/styledComponents";
 import { ForceSimulationControls } from "./ForceSimulationControls";
 import TitleRow from "components/common/TitleRow";

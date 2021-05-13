@@ -6,13 +6,12 @@ import {
   useFetchRetweets,
 } from "../../utils/hooks";
 import {
-  useConfig,
   useSetTweets,
   useTooltipNode,
   useTweets,
-} from "providers/store";
+} from "providers/store/useSelectors";
+import { useConfig } from "providers/store/useConfig";
 import RetweetedIcon from "@material-ui/icons/CachedRounded";
-import { useFetchBotScoreForTweet } from "./useFetchBotScoreForTweet";
 import { User } from "types";
 
 type RightClickMenuProps = {
@@ -45,7 +44,6 @@ export default function RightClickMenu({
 
   // send the user's tweets to the Botometer API https://rapidapi.com/OSoMe/api/botometer-pro/endpoints
   const tweets = useTweets();
-  const fetchBotScoreForTweet = useFetchBotScoreForTweet();
 
   const setTweets = useSetTweets();
   const deleteTweetsByUser = () => {
@@ -132,9 +130,6 @@ export default function RightClickMenu({
       {isUserNode ? (
         <MenuItem
           onClick={() => {
-            if (tooltipNode) {
-              fetchBotScoreForTweet(tooltipNode);
-            }
             handleClose();
           }}
         >

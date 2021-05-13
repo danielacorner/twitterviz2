@@ -1,7 +1,6 @@
 import { SERVER_URL } from "./constants";
 import { useState, useEffect } from "react";
 import {
-  useConfig,
   useSetTweets,
   useLoading,
   useAddTweets,
@@ -10,7 +9,8 @@ import {
   useSetLoading,
   useLikesByUserId,
   useSetLikesByUserId,
-} from "../providers/store";
+} from "../providers/store/useSelectors";
+import { useConfig } from "../providers/store/useConfig";
 import { geoDistanceKm } from "./distanceFromCoords";
 import { Tweet } from "../types";
 import { getFavorites } from "../components/common/BtnFavorite";

@@ -12,14 +12,14 @@ import {
   getIsTweetToRetweetLink,
 } from "../../utils/hooks";
 import {
-  useConfig,
   useSetTooltipNode,
   useSetSelectedNode,
   useAllowedMediaTypes,
   useTooltipNode,
-} from "../../providers/store";
+} from "../../providers/store/useSelectors";
+import { useConfig } from "../../providers/store/useConfig";
 import { useIsLight } from "../../providers/ThemeManager";
-
+let inc = 0;
 export const NODE_DIAMETER = 25;
 export const AVATAR_DIAMETER = NODE_DIAMETER * 4;
 const LIGHTGREY = "#D3D3D3";
@@ -100,8 +100,21 @@ export function useForceGraphProps() {
     //   fgRef.current && !is3d ? (fgRef.current as any).zoomToFit(400) : null,
     nodeCanvasObject: (node, ctx) => {
       // draw the bot score if we have one
-      if (node.isUserNode && node.botScore) {
+      if (node.botScore) {
+        if (inc < 10) {
+          console.log(
+            "🌟🚨 ~ useForceGraphProps ~ node.botScore",
+            node.botScore
+          );
+
+          inc++;
+        }
+        // if (node.isUserNode && node.botScore) {
         drawBotScore(node, ctx);
+      }
+      if (node.sentimentResult) {
+        // if (node.isUserNode && node.botScore) {
+        drawSentimentResult(node, ctx);
       }
 
       if (tooltipNode?.id_str === node.id_str) {
@@ -338,12 +351,15 @@ function drawHighlightCircle(node: any, ctx: any, isUserNode: boolean) {
   // ctx.clip();
   // ctx.fill();
 }
+// TODO: draw a thumbs up emoji tilted?
+function drawSentimentResult(node: Tweet | any, ctx: any) {}
 function drawBotScore(node: Tweet | any, ctx: any) {
   // big circle around node, coloured based on bot score
-  // red = bot
-  // green = human
+  // steelblue = bot
+  // transparent = human
   // bot score ranges from 0-5
-  const colorByBotScore = (num) => d3.interpolateRdYlGn(num / 5);
+  const colorByBotScore = (num) =>
+    d3.interpolateLab("steelblue", "transparent")(num);
   const color = colorByBotScore(node.botScore.overall);
   ctx.beginPath();
   // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/arc

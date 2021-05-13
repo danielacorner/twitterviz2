@@ -1,5 +1,5 @@
 import React from "react";
-import { useLoading } from "../../../providers/store";
+import { useLoading } from "../../../providers/store/useSelectors";
 import UserIcon from "@material-ui/icons/Face";
 import { getFavorites } from "../../common/BtnFavorite";
 import { useFetchUsers } from "../../../utils/hooks";

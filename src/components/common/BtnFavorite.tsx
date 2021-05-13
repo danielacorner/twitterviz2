@@ -3,7 +3,7 @@ import { Tweet, User } from "../../types";
 
 import { IconButton, Tooltip } from "@material-ui/core";
 import FavoriteIcon from "@material-ui/icons/Favorite";
-import { useStoredSaves } from "../../providers/store";
+import { useStoredSaves } from "../../providers/store/useSelectors";
 
 type BtnFavoriteProps = {
   tweet?: Tweet | null;
@@ -16,12 +16,8 @@ export default function BtnFavorite({
   user = null,
   tooltipTitle = null,
 }: BtnFavoriteProps) {
-  const {
-    favorites,
-    toggleFavorite,
-    favoriteUsers,
-    toggleFavoriteUser,
-  } = getFavorites();
+  const { favorites, toggleFavorite, favoriteUsers, toggleFavoriteUser } =
+    getFavorites();
   const isUser = Boolean(user);
   const isTweet = !isUser;
 

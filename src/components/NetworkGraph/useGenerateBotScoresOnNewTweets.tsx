@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useTweets } from "../../providers/store";
+import { useTweets } from "../../providers/store/useSelectors";
 import { useFetchBotScoreForTweet } from "components/common/useFetchBotScoreForTweet";
 
 /** when tweets change, fetch bot scores for each */
@@ -12,6 +12,10 @@ export function useGenerateBotScoresOnNewTweets() {
 
   // fetch only every 1s due to RapidAPI free tier rate limit
   useEffect(() => {
+    // TODO: disabled while testing
+    if (process.env.NODE_ENV !== "development") {
+      return;
+    }
     // fetch the first one only
     // use a for loop to force synchronous (forEach is parallel)
     for (let index = 0; index < tweets.length; index++) {

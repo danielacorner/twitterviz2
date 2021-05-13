@@ -1,24 +1,19 @@
 import React from "react";
 import {
-  useConfig,
   useSetTweets,
   useLoading,
   useAllowedMediaTypes,
   useSetLoading,
-} from "../../../providers/store";
+} from "../../../providers/store/useSelectors";
+import { useConfig } from "../../../providers/store/useConfig";
 import DiceIcon from "@material-ui/icons/Casino";
 import { SERVER_URL } from "../../../utils/constants";
 import { StyledButton } from "./StyledButton";
 import { RowDiv } from "components/common/styledComponents";
 
 export function BtnStreamNewTweets() {
-  const {
-    lang,
-    countryCode,
-    numTweets,
-    filterLevel,
-    geolocation,
-  } = useConfig();
+  const { lang, countryCode, numTweets, filterLevel, geolocation } =
+    useConfig();
   const allowedMediaTypesStrings = useAllowedMediaTypes();
   const loading = useLoading();
   const setLoading = useSetLoading();

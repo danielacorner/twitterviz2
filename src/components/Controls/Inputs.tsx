@@ -1,6 +1,6 @@
 import React from "react";
 import { TextField } from "@material-ui/core";
-import { useConfig } from "../../providers/store";
+import { useConfig } from "../../providers/store/useConfig";
 import { Body1 } from "../common/styledComponents";
 import styled from "styled-components/macro";
 export const Div = styled.div``;

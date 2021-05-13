@@ -1,7 +1,8 @@
 import { ClickAwayListener, Modal } from "@material-ui/core";
 import TweetContent from "components/TweetContent/TweetContent";
 import { TOOLTIP_WIDTH } from "components/NetworkGraph/NodeTooltip";
-import useStore, { useSelectedNode } from "providers/store";
+import useStore from "providers/store/store";
+import { useSelectedNode } from "providers/store/useSelectors";
 import React from "react";
 import styled from "styled-components/macro";
 

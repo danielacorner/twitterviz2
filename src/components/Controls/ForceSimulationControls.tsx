@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FormControl, Grid, Input, Slider, Switch } from "@material-ui/core";
-import { useConfig } from "../../providers/store";
+import { useConfig } from "../../providers/store/useConfig";
 import {
   GroupWork,
   GroupWorkOutlined,
@@ -12,13 +12,8 @@ import { Body1, RowDiv } from "components/common/styledComponents";
 import { TitleWithIcon } from "components/common/TitleWithIcon";
 
 export function ForceSimulationControls() {
-  const {
-    d3VelocityDecay,
-    d3AlphaDecay,
-    cooldownTime,
-    gravity,
-    charge,
-  } = useConfig();
+  const { d3VelocityDecay, d3AlphaDecay, cooldownTime, gravity, charge } =
+    useConfig();
 
   return (
     <FormControl>

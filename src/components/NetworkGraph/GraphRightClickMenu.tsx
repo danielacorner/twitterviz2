@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 // https://www.npmjs.com/package/react-force-graph
-import { useConfig, useTooltipNode } from "../../providers/store";
+import { useTooltipNode } from "../../providers/store/useSelectors";
+import { useConfig } from "../../providers/store/useConfig";
 import { useMount } from "../../utils/utils";
 import RightClickMenu from "../common/RightClickMenu";
 // https://www.npmjs.com/package/d3-force-cluster

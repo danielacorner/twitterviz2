@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router";
-import { useTweets } from "../providers/store";
+import { useTweets } from "../providers/store/useSelectors";
 import { TAB_INDICES } from "utils/constants";
 import qs from "query-string";
 

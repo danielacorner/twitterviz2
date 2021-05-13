@@ -5,15 +5,16 @@ import NodeTooltip from "./NodeTooltip";
 import styled from "styled-components/macro";
 import { useForceGraphProps } from "./useForceGraphProps";
 import {
-  useConfig,
   useLikesByUserId,
   useRetweetsByTweetId,
   useTweets,
-} from "../../providers/store";
+} from "../../providers/store/useSelectors";
+import { useConfig } from "../../providers/store/useConfig";
 // https://www.npmjs.com/package/d3-force-cluster
 import { Link, Tweet } from "../../types";
 import GraphRightClickMenu from "./GraphRightClickMenu";
 import { useTheForce } from "./useTheForce";
+import { useGenerateBotScoresOnNewTweets } from "./useGenerateBotScoresOnNewTweets";
 
 export const GraphStyles = styled.div`
   width: 100%;
@@ -43,7 +44,7 @@ function Graph() {
 
   useTheForce(fgRef.current, graphWithUsers);
 
-  console.log("🌟🌟🌟🌟🚨 ~ Graph ~ graphWithUsers", graphWithUsers);
+  // console.log("🌟🌟🌟🌟🚨 ~ Graph ~ graphWithUsers", graphWithUsers);
 
   //
   // show/hide user nodes
@@ -58,8 +59,7 @@ function Graph() {
   // const graphWithUsers = { nodes: tweets, links: [] };
 
   // when new tweets arrive, fetch their bot scores
-  // TODO: disabled while testing
-  // useGenerateBotScoresOnNewTweets();
+  useGenerateBotScoresOnNewTweets();
 
   return (
     <div>
@@ -107,11 +107,11 @@ function useGraphWithUsersAndLinks() {
 
   // uncomment to grab the current state and copy-paste into mockTweetsData.json
 
-  console.log("🚨🚨: Graph -> mockTweetsData", {
-    tweets,
-    retweetsByTweetId,
-    likesByUserId,
-  });
+  // console.log("🚨🚨: Graph -> mockTweetsData", {
+  //   tweets,
+  //   retweetsByTweetId,
+  //   likesByUserId,
+  // });
 
   const userToLikesLinks = showUserNodes
     ? userNodes.reduce((acc, userNode) => {

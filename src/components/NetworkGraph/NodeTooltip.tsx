@@ -3,7 +3,7 @@ import { useSpring, animated } from "react-spring";
 import styled from "styled-components/macro";
 import TweetContent, { getRetweetedUser } from "../TweetContent/TweetContent";
 import { PADDING } from "../../utils/utils";
-import useStore from "../../providers/store";
+import useStore from "../../providers/store/store";
 import useContainerDimensions from "../../utils/useContainerDimensions";
 import { useWindowSize } from "../../utils/hooks";
 import { useIsLight } from "../../providers/ThemeManager";

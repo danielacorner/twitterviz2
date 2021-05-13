@@ -1,10 +1,10 @@
 import React from "react";
 import { useTheme, Checkbox } from "@material-ui/core";
+import { useSearchObj } from "../../providers/store/store";
 import {
   useLoading,
   useIsLeftDrawerOpen,
-  useSearchObj,
-} from "../../providers/store";
+} from "../../providers/store/useSelectors";
 import { RowDiv, Body1 } from "../common/styledComponents";
 import SelectGeolocation from "./SelectGeolocation";
 import { SelectCountry, SelectLanguage } from "./Dropdowns";
@@ -20,7 +20,7 @@ import NetworkGraphControls from "./NetworkGraphControls";
 import { BtnFetchFavoriteTweets } from "./Buttons/BtnFetchFavoriteTweets";
 import { TAB_INDICES } from "../../utils/constants";
 import { BtnFetchFavoriteUsers } from "./Buttons/BtnFetchFavoriteUsers";
-import { useConfig } from "../../providers/store";
+import { useConfig } from "../../providers/store/useConfig";
 import TitleRow from "components/common/TitleRow";
 
 export function SwitchReplace() {

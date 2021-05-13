@@ -1,6 +1,7 @@
-import { useSetTweets, useTweets } from "providers/store";
+import { useSetTweets, useTweets } from "providers/store/useSelectors";
 import { BotScore, Tweet } from "types";
 
+// https://rapidapi.com/OSoMe/api/botometer-pro/pricing 500 per day
 export function useFetchBotScoreForTweet() {
   const tweets = useTweets();
   const setTweets = useSetTweets();
