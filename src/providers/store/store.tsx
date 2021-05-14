@@ -68,11 +68,10 @@ export type AppConfig = {
 };
 
 // use to turn off mock tweets in dev mode
-const SHOULD_MOCK_TWEETS = true;
+// const SHOULD_MOCK_TWEETS = true;
 
 function getInitialTweets() {
   const tweetsLS = localStorage.getItem("tweets");
-  console.log("🌟🚨 ~ getInitialTweets ~ tweetsLS", tweetsLS);
   console.log(tweetsLS);
   return tweetsLS && JSON.parse(tweetsLS)?.[0]?.id_str
     ? JSON.parse(tweetsLS)

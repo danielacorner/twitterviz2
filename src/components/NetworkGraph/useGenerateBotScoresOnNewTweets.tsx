@@ -13,7 +13,7 @@ export function useGenerateBotScoresOnNewTweets() {
   // fetch only every 1s due to RapidAPI free tier rate limit
   useEffect(() => {
     // TODO: disabled while testing
-    if (process.env.NODE_ENV !== "development") {
+    if (process.env.NODE_ENV === "production") {
       return;
     }
     // fetch the first one only
