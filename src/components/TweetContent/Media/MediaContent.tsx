@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { MediaItem } from "../../../utils/utils";
 import VideoWithControls from "./VideoWithControls";
+import styled from "styled-components/macro";
 
 type MediaProps = MediaItem & {
   autoPlay: boolean;
@@ -40,7 +41,7 @@ export default function MediaContent({
   const VIDEO_CONTROLS_HEIGHT = 100;
   const isVideo = mediaItem.type === "video";
   return (
-    <div
+    <MediaContentStyles
       onClick={handleClick}
       className="media"
       style={{
@@ -48,7 +49,6 @@ export default function MediaContent({
           ? { height: containerHeight / numImages - VIDEO_CONTROLS_HEIGHT }
           : {}),
         width: containerWidth,
-        position: "relative",
       }}
     >
       {["video", "animated_gif"].includes(type) ? (
@@ -76,9 +76,16 @@ export default function MediaContent({
           }}
         />
       )}
-    </div>
+    </MediaContentStyles>
   );
 }
+
+const MediaContentStyles = styled.div`
+  position: relative;
+  img {
+    border-radius: 8px;
+  }
+`;
 
 function PosterImage({
   containerWidth,

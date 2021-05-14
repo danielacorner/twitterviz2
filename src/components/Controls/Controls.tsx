@@ -22,6 +22,7 @@ import { TAB_INDICES } from "../../utils/constants";
 import { BtnFetchFavoriteUsers } from "./Buttons/BtnFetchFavoriteUsers";
 import { useConfig } from "../../providers/store/useConfig";
 import TitleRow from "components/common/TitleRow";
+import styled from "styled-components/macro";
 
 export function SwitchReplace() {
   const { replace, setConfig } = useConfig();
@@ -188,14 +189,17 @@ function FetchTweetsControls() {
     <>
       <TweetFilterControls />
       <div className="section">
-        <BtnFetchFavoriteTweets />
-      </div>
-      <div className="section">
-        <BtnFetchFavoriteUsers />
+        <ControlTitle>Faves</ControlTitle>
+        <FavesStyles>
+          <BtnFetchFavoriteTweets />
+          <BtnFetchFavoriteUsers />
+        </FavesStyles>
       </div>
     </>
   );
 }
+
+const FavesStyles = styled.div``;
 
 function TweetFilterControls() {
   return (

@@ -59,7 +59,8 @@ function Graph() {
   // const graphWithUsers = { nodes: tweets, links: [] };
 
   // when new tweets arrive, fetch their bot scores
-  useGenerateBotScoresOnNewTweets();
+  // TODO: 500 per day limit... hmmm
+  // useGenerateBotScoresOnNewTweets();
 
   return (
     <div>

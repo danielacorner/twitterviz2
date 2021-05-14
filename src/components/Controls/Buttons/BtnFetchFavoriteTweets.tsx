@@ -49,7 +49,7 @@ export function BtnFetchFavoriteTweets() {
       variant="outlined"
       color="secondary"
     >
-      Faves
+      Tweets
     </StyledButton>
   );
 }
