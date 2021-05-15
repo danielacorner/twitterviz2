@@ -1,6 +1,7 @@
 import styled from "styled-components/macro";
 import { CUSTOM_SHRINKING_SCROLLBAR_CSS } from "../common/styledComponents";
 import { CONTROLS_PADDING_INNER, FORM_HEIGHT } from "../../utils/constants";
+import { darkBorderColor } from "utils/colors";
 
 const ControlsStyles = styled.div`
   ${CUSTOM_SHRINKING_SCROLLBAR_CSS}
@@ -58,7 +59,7 @@ const ControlsStyles = styled.div`
   }
   padding: ${CONTROLS_PADDING_INNER}px ${CONTROLS_PADDING_INNER + 2}px
     ${CONTROLS_PADDING_INNER}px ${CONTROLS_PADDING_INNER - 2}px;
-  border-right: 1px solid black;
+  border-right: 1px solid ${darkBorderColor};
   [class*="TwoColRowStyles"] {
     width: 100%;
   }

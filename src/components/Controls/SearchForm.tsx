@@ -75,6 +75,6 @@ export function SearchForm() {
 const StyledForm = styled.form`
   display: flex;
   .btnSearch {
-    margin-bottom: -12px;
+    transform: translateY(8px);
   }
 `;

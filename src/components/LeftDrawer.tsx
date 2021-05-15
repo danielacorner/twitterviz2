@@ -4,7 +4,7 @@ import Controls from "./Controls/Controls";
 import styled from "styled-components/macro";
 import { Tune } from "@material-ui/icons";
 import { animated, useSpring } from "react-spring";
-
+import { NAV_HEIGHT } from "utils/constants";
 export const LEFT_DRAWER_WIDTH = 170;
 
 export default function LeftDrawerCollapsible() {
@@ -32,7 +32,7 @@ const AnimatedLeftDrawerStyles = styled(animated.div)`
   width: ${LEFT_DRAWER_WIDTH}px;
   position: fixed;
   left: 0;
-  top: 76px;
+  top: ${NAV_HEIGHT}px;
   bottom: 0;
   .contents {
     position: relative;

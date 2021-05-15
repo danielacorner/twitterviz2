@@ -4,17 +4,9 @@ import { HowManyTweets } from "components/Controls/Inputs";
 import { SearchForm } from "components/Controls/SearchForm";
 import NetworkGraph from "components/NetworkGraph/NetworkGraph";
 import React from "react";
-
 import styled from "styled-components/macro";
-
-const NavAndVizStyles = styled.div``;
-const NavBarStyles = styled.div`
-  padding: 0.5em 2em 1em;
-  display: grid;
-  grid-template-columns: 200px 140px auto 1fr auto auto;
-  align-items: baseline;
-  grid-gap: 1em;
-`;
+import { lightBorderColor } from "utils/colors";
+import { NAV_HEIGHT } from "utils/constants";
 
 const NavAndViz = () => {
   return (
@@ -42,6 +34,17 @@ const NavAndViz = () => {
 };
 
 export default NavAndViz;
+
+const NavAndVizStyles = styled.div``;
+const NavBarStyles = styled.div`
+  height: ${NAV_HEIGHT}px;
+  padding: 0em 1.5em 1em;
+  display: grid;
+  grid-template-columns: 200px 140px auto 1fr auto auto;
+  align-items: baseline;
+  grid-gap: 1em;
+  border-bottom: 1px solid ${lightBorderColor};
+`;
 
 // function BtnDeleteAllTweets() {
 //   const deleteAllTweets = useDeleteAllTweets();
