@@ -17,14 +17,14 @@ const WINDOW_PADDING_HZ = 12;
 const WINDOW_PADDING_VERT = 100;
 
 const TooltipStyles = styled.div`
-  opacity: 0.9;
   pointer-events: none;
-  border-radius: 4px;
-  background: ${(props) => (props.isLight ? "white" : "black")};
+  border-radius: 16px;
+  background: ${(props) =>
+    props.isLight ? "hsla(0,0%,100%,0.9)" : "hsla(0,0%,13%,0.9)"};
   width: ${TOOLTIP_WIDTH}px;
   height: fit-content;
   box-shadow: 1px 1px 8px hsla(0, 0%, 0%, 0.5);
-  padding: ${PADDING}px;
+  padding: 12px 18px 18px 12px;
   .profileAndContent {
     display: grid;
     grid-gap: ${PADDING}px;
@@ -36,7 +36,8 @@ const TooltipStyles = styled.div`
     position: absolute;
     top: -16px;
     right: 0;
-    text-shadow: 1px -1px 0px white;
+    color: ${(props) =>
+      props.isLight ? "hsla(0,0%,13%,0.9)" : "hsla(0,0%,95%,0.9)"};
   }
 `;
 

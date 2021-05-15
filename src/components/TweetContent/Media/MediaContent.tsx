@@ -83,7 +83,7 @@ export default function MediaContent({
 const MediaContentStyles = styled.div`
   position: relative;
   img {
-    border-radius: 8px;
+    border-radius: 16px;
   }
 `;
 

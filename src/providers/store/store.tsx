@@ -65,6 +65,7 @@ export type AppConfig = {
   filterLevel: keyof typeof FILTER_LEVELS;
   searchTerm: string;
   numTweets: number;
+  isDarkTheme: boolean;
 };
 
 // use to turn off mock tweets in dev mode
@@ -110,6 +111,9 @@ const [useStore] = create<GlobalStateType>(
     // setRepliesByUserId: (repliesByUserId) => set(() => ({ repliesByUserId })),
     setLoading: (loading) => set(() => ({ loading })),
     config: {
+      isDarkTheme: JSON.parse(
+        window.localStorage.getItem("theme:isDark") || "true" // default to true
+      ),
       isGridMode: false,
       showUserNodes: false,
       is3d: false,

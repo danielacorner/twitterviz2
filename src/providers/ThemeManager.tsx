@@ -4,11 +4,19 @@ import {
   useTheme,
 } from "@material-ui/core/styles";
 import { NightsStayOutlined, WbSunny } from "@material-ui/icons";
-import React, { useState } from "react";
+import { IconButton } from "@material-ui/core";
+import React from "react";
 import styled from "styled-components/macro";
+import { useLocalStorageState } from "utils/useLocalStorageState";
+import useStore from "./store/store";
 
 export default function ThemeManager({ children }: { children: any }) {
-  const [darkState, setDarkState] = useState(true);
+  const isDarkTheme = useStore((s) => s.config.isDarkTheme);
+  const [darkState, setDarkState] = useLocalStorageState(
+    "theme:isDark",
+    isDarkTheme
+  );
+
   const palletType = darkState ? "dark" : "light";
   const mainPrimaryColor = darkState ? `hsl(200,70%,40%)` : `hsl(200,70%,50%)`;
   const mainSecondaryColor = darkState
@@ -40,12 +48,10 @@ export default function ThemeManager({ children }: { children: any }) {
   return (
     <ThemeManagerStyles darkState={darkState}>
       <ThemeProvider theme={darkTheme}>
-        {false && (
-          <SwitchStyles className="switchWrapper" onClick={handleThemeChange}>
-            {darkState ? <WbSunny /> : <NightsStayOutlined />}
-          </SwitchStyles>
-        )}
         {children}
+        <SwitchStyles className="switchWrapper" onClick={handleThemeChange}>
+          {darkState ? <WbSunny /> : <NightsStayOutlined />}
+        </SwitchStyles>
       </ThemeProvider>
     </ThemeManagerStyles>
   );
@@ -58,16 +64,18 @@ export const useIsLight = () => {
 
 const ThemeManagerStyles = styled.div`
   color: ${(props) => (props.darkState ? "white" : "black")};
-  .switchWrapper {
-    position: fixed;
-    bottom: 4px;
-    right: 12px;
-    display: grid;
-    grid-auto-flow: column;
-    align-items: center;
-  }
 `;
-const SwitchStyles = styled.button`
+const SwitchStyles = styled(IconButton)`
   border: none;
   background: none;
+  position: fixed !important;
+  z-index: 10;
+  cursor: pointer;
+  opacity: 0.8;
+  bottom: 2px;
+  right: 2px;
+  display: grid;
+  grid-auto-flow: column;
+  align-items: center;
+  width: fit-content;
 `;
