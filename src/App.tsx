@@ -4,10 +4,12 @@ import styled from "styled-components/macro";
 import { useLoading } from "./providers/store/useSelectors";
 import { useIsLight } from "./providers/ThemeManager";
 import "./video-react.css"; // import video-react css
-import NavAndViz from "components/NavAndViz/NavAndViz";
 import AppFunctionalHooks from "./AppFunctionalHooks";
 import SelectedTweetModal from "components/SelectedTweetModal/SelectedTweetModal";
 import LeftDrawerCollapsible from "components/LeftDrawer";
+import { RowDiv } from "components/common/styledComponents";
+import { NavBar } from "components/NavBar/NavBar";
+import NetworkGraph from "components/NetworkGraph/NetworkGraph";
 
 const AppStyles = styled.div`
   transition: background 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
@@ -28,7 +30,10 @@ const AppStyles = styled.div`
 function App() {
   return (
     <AppStyles className="App">
-      <NavAndViz />
+      <NavBar />
+      <RowDiv>
+        <NetworkGraph />
+      </RowDiv>
       <LeftDrawerCollapsible />
       <SelectedTweetModal />
       {/* <BottomDrawer /> */}

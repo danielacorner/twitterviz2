@@ -3,13 +3,11 @@ import { TextField } from "@material-ui/core";
 import { useConfig } from "../../providers/store/useConfig";
 import { Body1 } from "../common/styledComponents";
 import styled from "styled-components/macro";
-export const Div = styled.div``;
+import { BREAKPOINTS } from "utils/constants";
 
 // export function FetchUserTweetsForm() {
 //   const [userHandle, setUserHandle] = useState("");
-
 //   const { fetchTimelineByHandle, loading } = useFetchTimeline();
-
 //   return (
 //     <TwoColFormStyles
 //       onSubmit={(e) => {
@@ -44,33 +42,73 @@ export const Div = styled.div``;
 //     </TwoColFormStyles>
 //   );
 // }
-
-export function HowManyTweets() {
+export default function HowManyTweets() {
   const { numTweets, setConfig } = useConfig();
 
   return (
-    <Div
-      css={`
-        .MuiFormLabel-root {
-          white-space: nowrap;
-        }
-        display: flex;
-        align-items: baseline;
-      `}
-    >
-      <Body1>Fetch</Body1>
-      <TextField
-        style={{ width: 60, padding: "0 10px" }}
-        value={numTweets}
-        onChange={(e) => setConfig({ numTweets: +e.target.value })}
-        type="number"
-        inputProps={{
-          step: 10,
-          min: 1,
-          max: 500,
-        }}
-      />
-      <Body1>tweet{numTweets === 1 ? "" : "s"} from...</Body1>
-    </Div>
+    <HowManyTweetsStyles>
+      <div className="fetchTweets">
+        <Body1>Fetch</Body1>
+        <TextField
+          className="textField"
+          value={numTweets}
+          onChange={(e) => setConfig({ numTweets: +e.target.value })}
+          type="number"
+          inputProps={{
+            step: 10,
+            min: 1,
+            max: 500,
+          }}
+        />
+        <Body1 className="tweetOrTweets">
+          tweet{numTweets === 1 ? "" : "s"}
+        </Body1>
+      </div>
+      <Body1 className="from">from...</Body1>
+    </HowManyTweetsStyles>
   );
 }
+const HowManyTweetsStyles = styled.div`
+  .MuiFormLabel-root {
+    white-space: nowrap;
+  }
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  .textField {
+    width: 60px;
+    padding-left: 4px;
+  }
+  .fetchTweets {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: translate(-8px, -26px);
+  }
+  input {
+    text-align: center;
+  }
+  p {
+    font-size: 12px;
+  }
+  .from {
+    font-size: 10px;
+    margin-left: -4px;
+  }
+  .tweetOrTweets {
+    text-align: right;
+  }
+  @media (min-width: ${BREAKPOINTS.TABLET}px) {
+    .textField {
+      width: 60px;
+      padding: 0 10px;
+    }
+    .fetchTweets {
+      flex-direction: row;
+      transform: none;
+    }
+    p {
+      font-size: 16px;
+    }
+  }
+`;

@@ -7,9 +7,8 @@ import {
 } from "../../../providers/store/useSelectors";
 import { useConfig } from "../../../providers/store/useConfig";
 import DiceIcon from "@material-ui/icons/Casino";
-import { SERVER_URL } from "../../../utils/constants";
+import { BREAKPOINTS, SERVER_URL } from "../../../utils/constants";
 import { StyledButton } from "./StyledButton";
-import { RowDiv } from "components/common/styledComponents";
 
 export function BtnStreamNewTweets() {
   const { lang, countryCode, numTweets, filterLevel, geolocation } =
@@ -46,20 +45,37 @@ export function BtnStreamNewTweets() {
   };
 
   return (
-    <RowDiv>
-      <StyledButton
-        css={`
+    <StyledButton
+      css={`
+        width: fit-content;
+        width: 60px;
+        &&& {
+          padding: 8px;
+        }
+        .MuiButton-label {
+          font-size: 12px;
+        }
+        justify-self: center;
+        align-self: start;
+        @media (min-width: ${BREAKPOINTS.TABLET}px) {
+          align-self: unset;
           width: fit-content;
-        `}
-        icon={<DiceIcon className="diceIcon" />}
-        disabled={loading}
-        onClick={fetchNewTweets}
-        className="btnFetch"
-        variant="contained"
-        color="primary"
-      >
-        Twitter Stream
-      </StyledButton>
-    </RowDiv>
+          &&& {
+            padding: 6px 16px;
+          }
+          .MuiButton-label {
+            font-size: 16px;
+          }
+        }
+      `}
+      icon={<DiceIcon className="diceIcon" />}
+      disabled={loading}
+      onClick={fetchNewTweets}
+      className="btnFetch"
+      variant="contained"
+      color="primary"
+    >
+      Twitter Stream
+    </StyledButton>
   );
 }

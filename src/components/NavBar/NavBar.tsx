@@ -1,11 +1,11 @@
 import { Body1 } from "components/common/styledComponents";
 import { BtnStreamNewTweets } from "components/Controls/Buttons/BtnStreamNewTweets";
-import { HowManyTweets } from "components/Controls/Inputs";
+import HowManyTweets from "components/Controls/Inputs";
 import { SearchForm } from "components/Controls/SearchForm";
 import React from "react";
 import styled from "styled-components/macro";
 import { lightBorderColor } from "utils/colors";
-import { NAV_HEIGHT } from "utils/constants";
+import { BREAKPOINTS, NAV_HEIGHT } from "utils/constants";
 
 export function NavBar() {
   return (
@@ -36,8 +36,12 @@ const NavBarStyles = styled.div`
   height: ${NAV_HEIGHT}px;
   padding: 0em 1.5em 1em;
   display: grid;
-  grid-template-columns: 200px 140px auto 1fr auto auto;
+  grid-template-columns: auto auto auto 1fr auto auto;
+  grid-gap: 0.5em;
+  @media (min-width: ${BREAKPOINTS.TABLET}px) {
+    grid-gap: 1em;
+    grid-template-columns: 200px 140px auto 1fr auto auto;
+  }
   align-items: baseline;
-  grid-gap: 1em;
   border-bottom: 1px solid ${lightBorderColor};
 `;
