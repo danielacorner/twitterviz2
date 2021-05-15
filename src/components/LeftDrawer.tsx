@@ -10,7 +10,7 @@ export const LEFT_DRAWER_WIDTH = 170;
 export default function LeftDrawerCollapsible() {
   const [open, setOpen] = useState(process.env.NODE_ENV === "development");
   const springRightOnOpen = useSpring({
-    transform: `translate(${open ? 0 : -LEFT_DRAWER_WIDTH}px, 64px)`,
+    transform: `translate(${open ? 0 : -LEFT_DRAWER_WIDTH}px)`,
   });
   return (
     <AnimatedLeftDrawerStyles style={springRightOnOpen}>
@@ -32,7 +32,7 @@ const AnimatedLeftDrawerStyles = styled(animated.div)`
   width: ${LEFT_DRAWER_WIDTH}px;
   position: fixed;
   left: 0;
-  top: 0;
+  top: 76px;
   bottom: 0;
   .contents {
     position: relative;

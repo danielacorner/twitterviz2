@@ -12,6 +12,7 @@ import LeftDrawerCollapsible from "components/LeftDrawer";
 const AppStyles = styled.div`
   transition: background 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
   min-height: 100vh;
+
   * {
     margin: 0;
     box-sizing: border-box;

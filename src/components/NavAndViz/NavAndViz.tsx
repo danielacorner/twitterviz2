@@ -7,12 +7,9 @@ import React from "react";
 
 import styled from "styled-components/macro";
 
-const NavAndVizStyles = styled.div`
-  display: grid;
-  grid-gap: 0.5em;
-  padding: 0.5em 1em;
-`;
+const NavAndVizStyles = styled.div``;
 const NavBarStyles = styled.div`
+  padding: 0.5em 2em 1em;
   display: grid;
   grid-template-columns: 200px 140px auto 1fr auto auto;
   align-items: baseline;
