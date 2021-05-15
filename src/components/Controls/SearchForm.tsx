@@ -1,6 +1,11 @@
 import React, { useState } from "react";
-import { TextField, IconButton, Tooltip } from "@material-ui/core";
-import { SERVER_URL } from "../../utils/constants";
+import {
+  TextField,
+  IconButton,
+  Tooltip,
+  useMediaQuery,
+} from "@material-ui/core";
+import { BREAKPOINTS, SERVER_URL } from "../../utils/constants";
 import { useFetchTimeline, useParamsForFetch } from "../../utils/hooks";
 import {
   useSetTweets,
@@ -39,6 +44,9 @@ export function SearchForm() {
     }
   };
   const disabled = loading || process.env.NODE_ENV !== "development";
+  const isTabletOrLarger = useMediaQuery(
+    `(min-width: ${BREAKPOINTS.TABLET}px)`
+  );
   return (
     <Tooltip title={disabled ? "Premium only" : ""}>
       <StyledForm
@@ -48,7 +56,9 @@ export function SearchForm() {
         }}
       >
         <TextField
-          label="Search by terms or @username"
+          label={
+            isTabletOrLarger ? "Search by terms or @username" : "Search..."
+          }
           value={searchTerm}
           style={{
             width: 240,
@@ -73,6 +83,10 @@ export function SearchForm() {
   );
 }
 const StyledForm = styled.form`
+  width: 200px;
+  @media (min-width: ${BREAKPOINTS.TABLET}px) {
+    width: fit-content;
+  }
   display: flex;
   .btnSearch {
     transform: translateY(8px);

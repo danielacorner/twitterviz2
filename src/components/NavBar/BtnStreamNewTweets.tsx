@@ -4,11 +4,11 @@ import {
   useLoading,
   useAllowedMediaTypes,
   useSetLoading,
-} from "../../../providers/store/useSelectors";
-import { useConfig } from "../../../providers/store/useConfig";
+} from "../../providers/store/useSelectors";
+import { useConfig } from "../../providers/store/useConfig";
 import DiceIcon from "@material-ui/icons/Casino";
-import { BREAKPOINTS, SERVER_URL } from "../../../utils/constants";
-import { StyledButton } from "./StyledButton";
+import { BREAKPOINTS, SERVER_URL } from "../../utils/constants";
+import { StyledButton } from "../Controls/Buttons/StyledButton";
 
 export function BtnStreamNewTweets() {
   const { lang, countryCode, numTweets, filterLevel, geolocation } =
@@ -49,19 +49,23 @@ export function BtnStreamNewTweets() {
       css={`
         width: fit-content;
         width: 60px;
+        transform: translateY(10px);
         &&& {
           padding: 8px;
         }
         .MuiButton-label {
           font-size: 12px;
+          line-height: 1.2em;
         }
         justify-self: center;
         align-self: start;
         @media (min-width: ${BREAKPOINTS.TABLET}px) {
+          transform: none;
           align-self: unset;
           width: fit-content;
+          white-space: nowrap;
           &&& {
-            padding: 6px 16px;
+            padding: 8px 16px;
           }
           .MuiButton-label {
             font-size: 16px;

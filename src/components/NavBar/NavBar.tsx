@@ -1,11 +1,11 @@
 import { Body1 } from "components/common/styledComponents";
-import { BtnStreamNewTweets } from "components/Controls/Buttons/BtnStreamNewTweets";
-import HowManyTweets from "components/Controls/Inputs";
+import { BtnStreamNewTweets } from "components/NavBar/BtnStreamNewTweets";
 import { SearchForm } from "components/Controls/SearchForm";
 import React from "react";
 import styled from "styled-components/macro";
 import { lightBorderColor } from "utils/colors";
 import { BREAKPOINTS, NAV_HEIGHT } from "utils/constants";
+import HowManyTweets from "./HowManyTweets";
 
 export function NavBar() {
   return (
