@@ -74,7 +74,7 @@ export const CollapsibleSwitchWithLabels = ({
   );
 };
 
-export const CUSTOM_DISAPPEARING_SCROLLBAR_CSS = `
+export const CUSTOM_SHRINKING_SCROLLBAR_CSS = `
 @supports (overflow: overlay){
   overflow: overlay;
   overflow-x: hidden;

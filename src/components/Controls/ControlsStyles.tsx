@@ -1,9 +1,9 @@
 import styled from "styled-components/macro";
-import { CUSTOM_DISAPPEARING_SCROLLBAR_CSS } from "../common/styledComponents";
+import { CUSTOM_SHRINKING_SCROLLBAR_CSS } from "../common/styledComponents";
 import { CONTROLS_PADDING_INNER, FORM_HEIGHT } from "../../utils/constants";
 
 const ControlsStyles = styled.div`
-  ${CUSTOM_DISAPPEARING_SCROLLBAR_CSS}
+  ${CUSTOM_SHRINKING_SCROLLBAR_CSS}
   background: ${(props) => (props.isLight ? "hsl(0,0%,90%)" : "hsl(0,0%,15%)")};
   width: 100%;
   overflow: hidden auto;

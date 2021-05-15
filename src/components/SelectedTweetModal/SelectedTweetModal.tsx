@@ -6,7 +6,10 @@ import { useSelectedNode } from "providers/store/useSelectors";
 import React from "react";
 import styled from "styled-components/macro";
 import { Tweet } from "react-twitter-widgets";
-import { CUSTOM_SCROLLBAR_CSS } from "components/common/styledComponents";
+import {
+  CUSTOM_SHRINKING_SCROLLBAR_CSS,
+  CUSTOM_SCROLLBAR_CSS,
+} from "components/common/styledComponents";
 import { LEFT_DRAWER_WIDTH } from "components/LeftDrawer";
 
 const SelectedTweetModal = () => {
@@ -44,7 +47,10 @@ const SelectedTweetModalStyles = styled.div`
     width: calc(${TOOLTIP_WIDTH * 2}px);
     max-width: calc(100vw - ${LEFT_DRAWER_WIDTH - 64}px);
     max-height: calc(100vh - 48px);
-    ${CUSTOM_SCROLLBAR_CSS}
+    ${CUSTOM_SHRINKING_SCROLLBAR_CSS}
+  }
+  .twitter-tweet {
+    margin: 64px auto;
   }
 `;
 

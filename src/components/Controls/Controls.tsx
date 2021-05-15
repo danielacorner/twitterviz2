@@ -119,7 +119,7 @@ export default function Controls() {
 //       css={`
 //         max-height: 4.5rem;
 //         border: 1px solid grey;
-//         ${CUSTOM_DISAPPEARING_SCROLLBAR_CSS};
+//         ${CUSTOM_SHRINKING_SCROLLBAR_CSS};
 //         button {
 //           width: fit-content;
 //           min-width: 0;
