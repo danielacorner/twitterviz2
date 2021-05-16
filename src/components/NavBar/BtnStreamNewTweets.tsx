@@ -18,6 +18,7 @@ export function BtnStreamNewTweets() {
   const setLoading = useSetLoading();
   const setTweets = useSetTweets();
 
+  // TODO: when we fetch tweets, for each user, fetch 3 more tweets from them??
   const fetchNewTweets = async () => {
     setLoading(true);
 

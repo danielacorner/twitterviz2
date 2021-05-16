@@ -19,7 +19,6 @@ import {
 } from "../../providers/store/useSelectors";
 import { useConfig } from "../../providers/store/useConfig";
 import { useIsLight } from "../../providers/ThemeManager";
-let inc = 0;
 export const NODE_DIAMETER = 25;
 export const AVATAR_DIAMETER = NODE_DIAMETER * 4;
 const LIGHTGREY = "#D3D3D3";
@@ -98,19 +97,22 @@ export function useForceGraphProps() {
     nodeColor: (node) => getNodeColor(node, colorBy),
     // onEngineStop: () =>
     //   fgRef.current && !is3d ? (fgRef.current as any).zoomToFit(400) : null,
-    nodeCanvasObject: (node, ctx) => {
+    nodeCanvasObject: (node: Tweet, ctx) => {
       // draw the bot score if we have one
-      if (node.botScore) {
-        if (inc < 10) {
-          console.log(
-            "🌟🚨 ~ useForceGraphProps ~ node.botScore",
-            node.botScore
-          );
+      const MOCK_BOT_SCORE: BotScore = {
+        overall: 1,
+        astroturf: 2,
+        fake_follower: 3,
+        financial: 4,
+        self_declared: 5,
+        spammer: 4,
+        other: 5,
+      };
+      if (MOCK_BOT_SCORE || node.botScore) {
+        console.log("🌟🚨 ~ useForceGraphProps ~ node.botScore", node.botScore);
 
-          inc++;
-        }
         // if (node.isUserNode && node.botScore) {
-        drawBotScore(node, ctx);
+        drawBotScore({ ...node, botScore: MOCK_BOT_SCORE }, ctx);
       }
       if (node.sentimentResult) {
         // if (node.isUserNode && node.botScore) {
@@ -353,6 +355,7 @@ function drawHighlightCircle(node: any, ctx: any, isUserNode: boolean) {
 }
 // TODO: draw a thumbs up emoji tilted?
 function drawSentimentResult(node: Tweet | any, ctx: any) {}
+// TODO: draw an translucent mesh overlay?
 function drawBotScore(node: Tweet | any, ctx: any) {
   // big circle around node, coloured based on bot score
   // steelblue = bot

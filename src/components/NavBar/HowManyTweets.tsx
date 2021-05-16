@@ -83,7 +83,7 @@ const HowManyTweetsStyles = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    transform: translate(-8px, -26px);
+    transform: translate(-8px, -26px) scale(0.9);
   }
   input {
     text-align: center;
@@ -99,6 +99,10 @@ const HowManyTweetsStyles = styled.div`
     text-align: right;
   }
   @media (min-width: ${BREAKPOINTS.TABLET}px) {
+    .from {
+      margin-left: auto;
+      margin-right: auto;
+    }
     .textField {
       width: 60px;
       padding: 0 10px;
