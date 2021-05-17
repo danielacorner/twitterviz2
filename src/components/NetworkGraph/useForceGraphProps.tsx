@@ -97,7 +97,7 @@ export function useForceGraphProps() {
     nodeColor: (node) => getNodeColor(node, colorBy),
     // onEngineStop: () =>
     //   fgRef.current && !is3d ? (fgRef.current as any).zoomToFit(400) : null,
-    nodeCanvasObject: (node: Tweet, ctx) => {
+    nodeCanvasObject: (node: Tweet & { x: number; y: number }, ctx) => {
       // draw the bot score if we have one
       const MOCK_BOT_SCORE: BotScore = {
         overall: 1,
@@ -109,8 +109,6 @@ export function useForceGraphProps() {
         other: 5,
       };
       if (MOCK_BOT_SCORE || node.botScore) {
-        console.log("🌟🚨 ~ useForceGraphProps ~ node.botScore", node.botScore);
-
         // if (node.isUserNode && node.botScore) {
         drawBotScore({ ...node, botScore: MOCK_BOT_SCORE }, ctx);
       }
@@ -356,7 +354,12 @@ function drawHighlightCircle(node: any, ctx: any, isUserNode: boolean) {
 // TODO: draw a thumbs up emoji tilted?
 function drawSentimentResult(node: Tweet | any, ctx: any) {}
 // TODO: draw an translucent mesh overlay?
+let inc = 0;
 function drawBotScore(node: Tweet | any, ctx: any) {
+  if (node.id_str === "1393765730232029184" && inc === 0) {
+    inc++;
+    console.log("🌟🚨 ~ drawBotScore ~ node", node);
+  }
   // big circle around node, coloured based on bot score
   // steelblue = bot
   // transparent = human
