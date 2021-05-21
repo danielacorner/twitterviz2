@@ -2,11 +2,12 @@ import styled from "styled-components/macro";
 import { CUSTOM_SHRINKING_SCROLLBAR_CSS } from "../common/styledComponents";
 import { CONTROLS_PADDING_INNER, FORM_HEIGHT } from "../../utils/constants";
 import { darkBorderColor } from "utils/colors";
+import { LEFT_DRAWER_WIDTH } from "components/LEFT_DRAWER_WIDTH";
 
 const ControlsStyles = styled.div`
   ${CUSTOM_SHRINKING_SCROLLBAR_CSS}
   background: ${(props) => (props.isLight ? "hsl(0,0%,90%)" : "hsl(0,0%,15%)")};
-  width: 100%;
+  width: ${LEFT_DRAWER_WIDTH}px;
   overflow: hidden auto;
   height: calc(100vh - 64px);
   display: grid;
@@ -27,11 +28,6 @@ const ControlsStyles = styled.div`
   }
   [class*="Checkboxes__RadioBtnsStyles"] {
     margin-right: -8px;
-  }
-  .checkboxes {
-    display: grid;
-    max-width: ${(props) => (props.isDrawerOpen ? 200 : FORM_HEIGHT)}px;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   }
   .MuiFormGroup-root {
     width: ${FORM_HEIGHT}px;

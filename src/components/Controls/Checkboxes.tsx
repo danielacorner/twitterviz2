@@ -83,14 +83,13 @@ export function FilterLevelCheckboxes() {
     </RadioBtnsStyles>
   );
 }
-const MediaTypeCheckboxesStyles = styled.div``;
 
 export function MediaTypeCheckboxes() {
   const { allowedMediaTypes, setConfig } = useConfig();
   const { video, photo, text, animated_gif } = allowedMediaTypes;
 
   return (
-    <MediaTypeCheckboxesStyles className="checkboxes">
+    <MediaTypeCheckboxesStyles>
       <FormControlLabel
         control={<Checkbox checked={text} name="checkedA" />}
         onChange={() =>
@@ -142,3 +141,7 @@ export function MediaTypeCheckboxes() {
     </MediaTypeCheckboxesStyles>
   );
 }
+
+const MediaTypeCheckboxesStyles = styled.div`
+  display: grid;
+`;

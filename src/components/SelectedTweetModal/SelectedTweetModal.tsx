@@ -7,7 +7,7 @@ import React from "react";
 import styled from "styled-components/macro";
 import { Tweet } from "react-twitter-widgets";
 import { CUSTOM_SHRINKING_SCROLLBAR_CSS } from "components/common/styledComponents";
-import { LEFT_DRAWER_WIDTH } from "components/LeftDrawer";
+import { LEFT_DRAWER_WIDTH } from "components/LEFT_DRAWER_WIDTH";
 
 const SelectedTweetModal = () => {
   const selectedNode = useSelectedNode();

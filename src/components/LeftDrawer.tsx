@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import IconButton from "@material-ui/core/IconButton";
 import Controls from "./Controls/Controls";
 import styled from "styled-components/macro";
 import { Tune } from "@material-ui/icons";
 import { animated, useSpring } from "react-spring";
 import { NAV_HEIGHT } from "utils/constants";
-export const LEFT_DRAWER_WIDTH = 170;
+import useStore from "providers/store/store";
+import { LEFT_DRAWER_WIDTH } from "./LEFT_DRAWER_WIDTH";
 
 export default function LeftDrawerCollapsible() {
-  const [open, setOpen] = useState(process.env.NODE_ENV === "development");
+  const open = useStore((s) => s.isDrawerOpen);
+  const setOpen = useStore((s) => s.setIsDrawerOpen);
   const springRightOnOpen = useSpring({
     transform: `translate(${open ? 0 : -LEFT_DRAWER_WIDTH}px)`,
   });
@@ -18,7 +20,7 @@ export default function LeftDrawerCollapsible() {
         <Controls />
         <IconButton
           className="btnOpenDrawer"
-          onClick={() => setOpen((prev) => !prev)}
+          onClick={() => setOpen(!open)}
           style={{ opacity: open ? 0.5 : 1 }}
         >
           <Tune />

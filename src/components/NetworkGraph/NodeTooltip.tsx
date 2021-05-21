@@ -9,6 +9,7 @@ import { useWindowSize } from "../../utils/hooks";
 import { useIsLight } from "../../providers/ThemeManager";
 import { Tweet } from "types";
 import { RowDiv } from "../common/styledComponents";
+import { LEFT_DRAWER_WIDTH } from "components/LEFT_DRAWER_WIDTH";
 
 const AVATAR_WIDTH = 46;
 export const TOOLTIP_WIDTH = 380;
@@ -55,9 +56,12 @@ const NodeTooltip = () => {
   const [ref, dimensions] = useContainerDimensions();
   const { height: windowHeight, width: windowWidth } = useWindowSize();
   const tooltipHeight = dimensions?.height || 0;
-  const maxYPosition = windowHeight - tooltipHeight - WINDOW_PADDING_VERT;
-  const minXPosition =
+  const minYPosition = windowHeight - tooltipHeight - WINDOW_PADDING_VERT;
+  const isLeftDrawerOpen = useStore((s) => s.isDrawerOpen);
+  const maxXPosition =
     windowWidth - TOOLTIP_WIDTH - MOUSE_WIDTH - WINDOW_PADDING_HZ;
+
+  const minXPosition = isLeftDrawerOpen ? LEFT_DRAWER_WIDTH : 0;
 
   useEffect(() => {
     if (tooltipNode) {
@@ -67,11 +71,11 @@ const NodeTooltip = () => {
 
   const handleMouseMove = useCallback(
     (event) => {
-      const x = Math.min(event.x, minXPosition);
-      const y = Math.max(Math.min(event.y, maxYPosition), WINDOW_PADDING_VERT);
+      const x = Math.max(Math.min(event.x, maxXPosition), minXPosition);
+      const y = Math.max(Math.min(event.y, minYPosition), WINDOW_PADDING_VERT);
       setPosition({ x, y });
     },
-    [minXPosition, maxYPosition]
+    [maxXPosition, minYPosition]
   );
 
   // on mount, start listening to mouse position
@@ -80,7 +84,7 @@ const NodeTooltip = () => {
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
     };
-  }, [maxYPosition, minXPosition, handleMouseMove]);
+  }, [minYPosition, maxXPosition, minXPosition, handleMouseMove]);
 
   const springToMousePosition = useSpring({
     pointerEvents: "none",

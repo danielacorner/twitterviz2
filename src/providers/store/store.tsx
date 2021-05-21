@@ -142,7 +142,7 @@ const [useStore] = create<GlobalStateType>(
       // numTweets: 50,
       isOffline: false,
     },
-    isDrawerOpen: false,
+    isDrawerOpen: process.env.NODE_ENV === "development",
     setIsDrawerOpen: (next) => set((state) => ({ isDrawerOpen: next })),
     /** overwrite any values passed in */
     setConfig: (newConfig) =>

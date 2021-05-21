@@ -187,23 +187,6 @@ function VizSpecificControls() {
 function FetchTweetsControls() {
   return (
     <>
-      <TweetFilterControls />
-      <div className="section">
-        <ControlTitle>Faves</ControlTitle>
-        <FavesStyles>
-          <BtnFetchFavoriteTweets />
-          <BtnFetchFavoriteUsers />
-        </FavesStyles>
-      </div>
-    </>
-  );
-}
-
-const FavesStyles = styled.div``;
-
-function TweetFilterControls() {
-  return (
-    <>
       <div className="section">
         <ControlTitle>Recent / Popular</ControlTitle>
         <RecentPopularMixedRadioBtns />
@@ -216,11 +199,26 @@ function TweetFilterControls() {
         <ControlTitle>Content Filter</ControlTitle>
         <FilterLevelCheckboxes />
       </div>
-      <div className="section">
+      <div className="section" style={{ display: "grid", gridGap: 16 }}>
+        <SelectLanguage />
         <SelectCountry />
         <SelectGeolocation />
-        <SelectLanguage />
+      </div>
+      <div className="section">
+        <ControlTitle style={{ marginBottom: 8 }}>Faves</ControlTitle>
+        <FavesStyles>
+          <BtnFetchFavoriteTweets />
+          <BtnFetchFavoriteUsers />
+        </FavesStyles>
       </div>
     </>
   );
 }
+
+const FavesStyles = styled.div`
+  display: grid;
+  grid-gap: 16px;
+  button {
+    width: 100%;
+  }
+`;
