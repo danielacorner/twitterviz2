@@ -359,41 +359,45 @@ function drawBotScore(node: Tweet | any, ctx: any) {
   if (node.id_str === "1393765730232029184" && inc === 0) {
     inc++;
     console.log("🌟🚨 ~ drawBotScore ~ node", node);
+    console.log(
+      "🌟🚨 ~ drawBotScore ~ node.botScore.overall",
+      node.botScore.overall
+    );
   }
+  const botScore = node.botScore as BotScore;
+
   // big circle around node, coloured based on bot score
   // steelblue = bot
   // transparent = human
   // bot score ranges from 0-5
   const colorByBotScore = (num) =>
-    d3.interpolateLab("steelblue", "transparent")(num);
-  const color = colorByBotScore(node.botScore.overall);
+    d3.interpolateLab("transparent", "lightsteelblue")(num);
+  const color = colorByBotScore(botScore.overall);
   ctx.beginPath();
   // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/arc
   ctx.arc(
     node.x, // x: The horizontal coordinate of the arc's center.
     node.y, // y: The vertical coordinate of the arc's center.
-    AVATAR_DIAMETER / 2, // radius
+    NODE_DIAMETER * 0.65, // radius
     0, // startAngle
     Math.PI * 2 // endAngle
   );
   ctx.strokeStyle = color;
-  ctx.lineWidth = 8;
+  ctx.lineWidth = 10;
   ctx.stroke();
 
-  const botScore = node.botScore as BotScore;
-
-  // draw a small circle above the node, with radius according to botScore.astroturf
-  drawSmallCircle(node, ctx, colorByBotScore, botScore.astroturf, 0);
-  // draw a small circle above the node, with radius according to botScore.fake_follower
-  drawSmallCircle(node, ctx, colorByBotScore, botScore.fake_follower, 60);
-  // draw a small circle above the node, with radius according to botScore.financial
-  drawSmallCircle(node, ctx, colorByBotScore, botScore.financial, 120);
-  // draw a small circle above the node, with radius according to botScore.self_declared
-  drawSmallCircle(node, ctx, colorByBotScore, botScore.self_declared, 180);
-  // draw a small circle above the node, with radius according to botScore.spammer
-  drawSmallCircle(node, ctx, colorByBotScore, botScore.spammer, 240);
-  // draw a small circle above the node, with radius according to botScore.other
-  drawSmallCircle(node, ctx, colorByBotScore, botScore.other, 300);
+  // // draw a small circle above the node, with radius according to botScore.astroturf
+  // drawSmallCircle(node, ctx, colorByBotScore, botScore.astroturf, 0);
+  // // draw a small circle above the node, with radius according to botScore.fake_follower
+  // drawSmallCircle(node, ctx, colorByBotScore, botScore.fake_follower, 60);
+  // // draw a small circle above the node, with radius according to botScore.financial
+  // drawSmallCircle(node, ctx, colorByBotScore, botScore.financial, 120);
+  // // draw a small circle above the node, with radius according to botScore.self_declared
+  // drawSmallCircle(node, ctx, colorByBotScore, botScore.self_declared, 180);
+  // // draw a small circle above the node, with radius according to botScore.spammer
+  // drawSmallCircle(node, ctx, colorByBotScore, botScore.spammer, 240);
+  // // draw a small circle above the node, with radius according to botScore.other
+  // drawSmallCircle(node, ctx, colorByBotScore, botScore.other, 300);
   /*
    * restore() restores the canvas context to its original state
    * before we defined the clipping region
