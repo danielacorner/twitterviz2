@@ -7,6 +7,8 @@ import qs from "query-string";
 import { WordcloudConfig } from "./useSelectors";
 import { atom } from "jotai";
 
+export const selectedNodeHistoryAtom = atom<Tweet[]>([]);
+
 export const nodeMouseCoordsAtom = atom({ x: 0, y: 0 });
 
 export const useSearchObj = () => qs.parse(useLocation().search);

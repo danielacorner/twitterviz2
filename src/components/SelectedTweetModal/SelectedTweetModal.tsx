@@ -1,5 +1,4 @@
 import { ClickAwayListener, Modal } from "@material-ui/core";
-import TweetContent from "components/TweetContent/TweetContent";
 import { TOOLTIP_WIDTH } from "components/NetworkGraph/NodeTooltip";
 import useStore from "providers/store/store";
 import { useSelectedNode } from "providers/store/useSelectors";
@@ -10,7 +9,6 @@ import { LEFT_DRAWER_WIDTH } from "components/LEFT_DRAWER_WIDTH";
 
 const SelectedTweetModal = () => {
   const selectedNode = useSelectedNode();
-  console.log("🌟🚨 ~ SelectedTweetModal ~ selectedNode", selectedNode);
   const setSelectedNode = useStore((state) => state.setSelectedNode);
   return (
     <Modal open={Boolean(selectedNode)}>

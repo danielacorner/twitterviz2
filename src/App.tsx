@@ -10,6 +10,7 @@ import LeftDrawerCollapsible from "components/LeftDrawer";
 import { RowDiv } from "components/common/styledComponents";
 import { NavBar } from "components/NavBar/NavBar";
 import NetworkGraph from "components/NetworkGraph/NetworkGraph";
+import { useRecordSelectedNodeHistory } from "./useRecordSelectedNodeHistory";
 
 const AppStyles = styled.div`
   transition: background 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
@@ -28,6 +29,7 @@ const AppStyles = styled.div`
 `;
 
 function App() {
+  useRecordSelectedNodeHistory();
   return (
     <AppStyles className="App">
       <NavBar />
