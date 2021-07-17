@@ -4,9 +4,19 @@ import { Tweet } from "../../types";
 import { useCallback, useEffect, useRef } from "react";
 import { useConfig } from "./useConfig";
 import useStore from "./store";
+import { useAtom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
 
-export const useTweets = (): Tweet[] =>
-  useStore((state) => state.tweetsFromServer);
+const tweetsFromServerAtom = atomWithStorage<Tweet[]>(
+  "atoms:tweetsFromServerAtom",
+  []
+);
+
+export const useTweets = (): Tweet[] => {
+  const [tweetsFromServer] = useAtom(tweetsFromServerAtom);
+  return tweetsFromServer;
+  // useStore((state) => state.tweetsFromServer);
+};
 export const useSelectedNode = () => useStore((state) => state.selectedNode);
 export const useSetSelectedNode = () =>
   useStore((state) => state.setSelectedNode);
@@ -40,20 +50,16 @@ export const useSetTweets = () => {
   const setRetweets = useSetRetweetsByTweetId();
   const setLikes = useSetLikesByUserId();
   const tweetsFromServer = useStore((state) => state.tweetsFromServer);
-  const setTweetsFromServer = useStore((state) => state.setTweetsFromServer);
+  const [, setTweetsFromServer] = useAtom(tweetsFromServerAtom);
 
   return (tweetsArg: Tweet[], forceReplace: boolean = false) => {
+    const tweets = handleTweetsErrors(tweetsArg);
+
     if (replace || forceReplace) {
       // delete all likes, retweets
       setRetweets({});
       setLikes({});
     }
-
-    const isError = !Array.isArray(tweetsArg);
-    if (isError) {
-      console.error(tweetsArg);
-    }
-    const tweets = isError ? [] : tweetsArg;
 
     const newTweets =
       replace || forceReplace
@@ -160,6 +166,15 @@ export const useWordcloudConfig = () => {
     setWordcloudConfig: useStore((state) => state.setWordcloudConfig),
   };
 };
+function handleTweetsErrors(tweetsArg: Tweet[]) {
+  const isError = !Array.isArray(tweetsArg);
+  if (isError) {
+    console.error(tweetsArg);
+  }
+  const tweets = isError ? [] : tweetsArg;
+  return tweets;
+}
+
 /** returns some of ["all","video","photo","text"] */
 
 export function useAllowedMediaTypes(): string[] {

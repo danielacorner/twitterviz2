@@ -33,6 +33,11 @@ export function NavBar() {
   );
 }
 const NavBarStyles = styled.div`
+  z-index: 9;
+  position: fixed;
+  top: 0;
+  left: 0;
+  /* right: 0; */
   height: ${NAV_HEIGHT}px;
   padding: 0em 1.5em 1em;
   display: grid;
