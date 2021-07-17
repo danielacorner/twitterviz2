@@ -1,8 +1,10 @@
 import { OrbitControls } from "@react-three/drei";
 import { useGraphWithUsersAndLinks } from "../useGraphWithUsersAndLinks";
 // import ThreeForceGraph from "three-forcegraph";
-import { Physics, useBox } from "@react-three/cannon";
-import { useFrame } from "@react-three/fiber";
+import { Physics, useConvexPolyhedron } from "@react-three/cannon";
+import { useMemo } from "react";
+import { toConvexProps } from "./toConvexProps";
+import * as THREE from "three";
 
 export function Scene() {
   const graphWithUsers = useGraphWithUsersAndLinks();
@@ -13,9 +15,9 @@ export function Scene() {
   return (
     <>
       <OrbitControls {...({} as any)} />
-      <Physics>
+      <Physics {...{ gravity: [0, 0, 0] }}>
         {graphWithUsers.nodes.map((node) => (
-          <Node node={node} />
+          <Node key={node.id_str} node={node} />
         ))}
       </Physics>
       {/* <mesh>
@@ -27,16 +29,57 @@ export function Scene() {
   );
 }
 
-const Node = ({ node }) => {
-  const [boxRef, api] = useBox(() => ({ mass: 1 }));
-
-  // useFrame(({ clock }) =>
-  //   api.position.set(Math.sin(clock.getElapsedTime()) * 5, 0, 0)
+function getRandPosition(min, max): [x: number, y: number, z: number] {
+  return [
+    Math.random() * (max - min) + min,
+    Math.random() * (max - min) + min,
+    Math.random() * (max - min) + min,
+  ];
+  // return new THREE.Vector3(
+  //   Math.random() * (max - min) + min,
+  //   Math.random() * (max - min) + min,
+  //   Math.random() * (max - min) + min
   // );
+}
+
+const Node = ({ node }) => {
+  const radius = 1;
+  const detail = 1;
+  const geo = useMemo(
+    () => toConvexProps(new THREE.IcosahedronBufferGeometry(radius, detail)),
+    [radius, detail]
+  );
+
+  const [ref, api] = useConvexPolyhedron(() => ({
+    mass: 1, // approximate mass using volume of a sphere equation
+    position: getRandPosition(-10, 10),
+    // type: !paused ? "Dynamic" : "Static",
+    // https://threejs.org/docs/scenes/geometry-browser.html#IcosahedronBufferGeometry
+    args: geo as any,
+  }));
+
+  // const position = useRef([0, 0, 0]);
+  // useMount(() => {
+  //   const unsubscribe = api.position.subscribe(
+  //     (v) => (position.current = v)
+  //   ) as any;
+  //   return () => unsubscribe();
+  // });
+
+  // useFrame(({ clock }) => {
+  //   console.log("🌟🚨 ~ useFrame ~ clock", clock);
+  //   const shouldTick = Math.round(clock.elapsedTime * 100) % 10 === 0;
+  //   console.log("🌟🚨 ~ useFrame ~ shouldTick", shouldTick);
+  //   if (shouldTick) {
+  //     const [x, y, z] = position.current.map((xyz) => -xyz / 1);
+  //     // api.position.set(x, y, z);
+  //     return;
+  //   }
+  // });
 
   return (
-    <mesh ref={boxRef}>
-      <boxBufferGeometry />
+    <mesh ref={ref}>
+      <sphereBufferGeometry />
       <meshBasicMaterial />
     </mesh>
   );
