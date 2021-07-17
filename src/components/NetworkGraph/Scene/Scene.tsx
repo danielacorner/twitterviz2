@@ -5,7 +5,9 @@ import { Physics, useConvexPolyhedron } from "@react-three/cannon";
 import { useMemo } from "react";
 import { toConvexProps } from "./toConvexProps";
 import * as THREE from "three";
-
+import useStore from "providers/store/store";
+import { useThree } from "@react-three/fiber";
+import { atom, useAtom } from "jotai";
 export function Scene() {
   const graphWithUsers = useGraphWithUsersAndLinks();
   console.log("🌟🚨 ~ Scene ~ graphWithUsers", graphWithUsers);
@@ -41,7 +43,7 @@ function getRandPosition(min, max): [x: number, y: number, z: number] {
   //   Math.random() * (max - min) + min
   // );
 }
-
+const nodeMouseCoordsAtom = atom([0, 0]);
 const Node = ({ node }) => {
   const radius = 1;
   const detail = 1;
@@ -49,6 +51,15 @@ const Node = ({ node }) => {
     () => toConvexProps(new THREE.IcosahedronBufferGeometry(radius, detail)),
     [radius, detail]
   );
+  const [nodeMouseCoords, setNodeMouseCoords] = useAtom(nodeMouseCoordsAtom);
+  const setSelectedNode = useStore((state) => state.setSelectedNode);
+  const { mouse } = useThree();
+  const onPointerEnter = () => {
+    console.log("🌟🚨 ~ Node ~ nodeMouseCoords", nodeMouseCoords);
+    console.log("🌟🚨 ~ Node ~ mouse", mouse);
+    setSelectedNode(node);
+    setNodeMouseCoords(mouse);
+  };
 
   const [ref, api] = useConvexPolyhedron(() => ({
     mass: 1, // approximate mass using volume of a sphere equation
@@ -78,7 +89,7 @@ const Node = ({ node }) => {
   // });
 
   return (
-    <mesh ref={ref}>
+    <mesh ref={ref} onPointerEnter={onPointerEnter}>
       <sphereBufferGeometry />
       <meshBasicMaterial />
     </mesh>
