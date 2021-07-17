@@ -8,6 +8,7 @@ import { WordcloudConfig } from "./useSelectors";
 import { atom } from "jotai";
 
 export const selectedNodeHistoryAtom = atom<Tweet[]>([]);
+export const tooltipHistoryAtom = atom<Tweet[]>([]);
 
 export const nodeMouseCoordsAtom = atom({ x: 0, y: 0 });
 

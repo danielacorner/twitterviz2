@@ -1,19 +1,19 @@
 import { useEffect, useState, useRef, useCallback, forwardRef } from "react";
-import { useSpring, animated } from "react-spring";
+import { animated } from "react-spring";
 import styled from "styled-components/macro";
-import TweetContent, { getRetweetedUser } from "../TweetContent/TweetContent";
+import TweetContent from "../TweetContent/TweetContent";
 import { PADDING } from "../../utils/utils";
 import useStore from "../../providers/store/store";
 import useContainerDimensions from "../../utils/useContainerDimensions";
 import { useWindowSize } from "../../utils/hooks";
-import { useIsLight } from "../../providers/ThemeManager";
 import { Tweet } from "types";
 import { RowDiv } from "../common/styledComponents";
 import { LEFT_DRAWER_WIDTH } from "components/LEFT_DRAWER_WIDTH";
+import { useNodeTooltipContentProps } from "./useNodeTooltipContentProps";
 
 const AVATAR_WIDTH = 46;
 export const TOOLTIP_WIDTH = 380;
-const MOUSE_WIDTH = 12;
+export const MOUSE_WIDTH = 12;
 const WINDOW_PADDING_HZ = 12;
 const WINDOW_PADDING_VERT = 100;
 
@@ -86,37 +86,20 @@ const NodeTooltip = () => {
     };
   }, [minYPosition, maxXPosition, minXPosition, handleMouseMove]);
 
-  const springToMousePosition = useSpring({
-    pointerEvents: "none",
-    position: "fixed",
-    opacity: tooltipNode ? 1 : 0,
-    top: 16,
-    left: MOUSE_WIDTH,
-    transform: `translate(${position.x}px,${position.y}px)`,
-    config: { tension: 170, mass: 0.1 },
-    onRest: () => {
-      if (!tooltipNode) {
-        lastTooltipNode.current = null;
-      }
-    },
-  });
-
-  const tweet: Tweet = tooltipNode || (lastTooltipNode.current as Tweet);
-  const isLight = useIsLight();
-
-  const retweetedUser = getRetweetedUser(tweet);
-  const originalPoster = retweetedUser ? retweetedUser : tweet?.user;
+  const { springToMousePosition, isLight, originalPoster, tweet } =
+    useNodeTooltipContentProps(tooltipNode, position);
   return (
-    <NodeTooltipContent
-      {...{ springToMousePosition, ref, isLight, originalPoster, tweet }}
-    />
+    <animated.div style={springToMousePosition as any}>
+      <NodeTooltipContent
+        {...{ springToMousePosition, ref, isLight, originalPoster, tweet }}
+      />
+    </animated.div>
   );
 };
 
 export default NodeTooltip;
 
 export type NodeTooltipContentProps = {
-  springToMousePosition: any;
   ref: React.MutableRefObject<any>;
   isLight: boolean;
   originalPoster: any;
@@ -125,33 +108,25 @@ export type NodeTooltipContentProps = {
 };
 export const NodeTooltipContent = forwardRef(
   (
-    {
-      springToMousePosition,
-      isLight,
-      originalPoster,
-      tweet,
-      tooltipStyles,
-    }: NodeTooltipContentProps,
+    { isLight, originalPoster, tweet, tooltipStyles }: NodeTooltipContentProps,
     ref
   ) => {
     return (
-      <animated.div style={springToMousePosition}>
-        <TooltipStyles ref={ref} isLight={isLight} style={tooltipStyles}>
-          <div className="profileAndContent">
-            <RowDiv style={{ alignItems: "start" }}>
-              <AvatarStyles>
-                <img src={originalPoster?.profile_image_url_https} alt="" />
-              </AvatarStyles>
-            </RowDiv>
-            {tweet && (
-              <>
-                <div className="id_str">{tweet.id_str}</div>
-                <TweetContent {...{ tweet, isTooltip: true }} />
-              </>
-            )}
-          </div>
-        </TooltipStyles>
-      </animated.div>
+      <TooltipStyles ref={ref} isLight={isLight} style={tooltipStyles}>
+        <div className="profileAndContent">
+          <RowDiv style={{ alignItems: "start" }}>
+            <AvatarStyles>
+              <img src={originalPoster?.profile_image_url_https} alt="" />
+            </AvatarStyles>
+          </RowDiv>
+          {tweet && (
+            <>
+              <div className="id_str">{tweet.id_str}</div>
+              <TweetContent {...{ tweet, isTooltip: true }} />
+            </>
+          )}
+        </div>
+      </TooltipStyles>
     );
   }
 );

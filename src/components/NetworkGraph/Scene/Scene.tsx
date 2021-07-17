@@ -1,13 +1,8 @@
 import { OrbitControls } from "@react-three/drei";
 import { useGraphWithUsersAndLinks } from "../useGraphWithUsersAndLinks";
 // import ThreeForceGraph from "three-forcegraph";
-import { Physics, useConvexPolyhedron } from "@react-three/cannon";
-import { useMemo } from "react";
-import { toConvexProps } from "./toConvexProps";
-import * as THREE from "three";
-import useStore, { nodeMouseCoordsAtom } from "providers/store/store";
-import { useThree } from "@react-three/fiber";
-import { useAtom } from "jotai";
+import { Physics } from "@react-three/cannon";
+import { Node } from "./Node";
 export function Scene() {
   const graphWithUsers = useGraphWithUsersAndLinks();
   console.log("🌟🚨 ~ Scene ~ graphWithUsers", graphWithUsers);
@@ -31,7 +26,7 @@ export function Scene() {
   );
 }
 
-function getRandPosition(min, max): [x: number, y: number, z: number] {
+export function getRandPosition(min, max): [x: number, y: number, z: number] {
   return [
     Math.random() * (max - min) + min,
     Math.random() * (max - min) + min,
@@ -43,64 +38,6 @@ function getRandPosition(min, max): [x: number, y: number, z: number] {
   //   Math.random() * (max - min) + min
   // );
 }
-const Node = ({ node }) => {
-  const radius = 1;
-  const detail = 1;
-  const geo = useMemo(
-    () => toConvexProps(new THREE.IcosahedronBufferGeometry(radius, detail)),
-    [radius, detail]
-  );
-  const [nodeMouseCoords, setNodeMouseCoords] = useAtom(nodeMouseCoordsAtom);
-  const setTooltipNode = useStore((state) => state.setTooltipNode);
-  const setSelectedNode = useStore((state) => state.setSelectedNode);
-
-  const { mouse } = useThree();
-  const onPointerEnter = () => {
-    console.log("🌟🚨 ~ Node ~ nodeMouseCoords", nodeMouseCoords);
-    console.log("🌟🚨 ~ Node ~ mouse", mouse);
-    setTooltipNode(node);
-    setNodeMouseCoords(mouse);
-  };
-  const onClick = () => {
-    setSelectedNode(node);
-    setNodeMouseCoords(mouse);
-  };
-
-  const [ref, api] = useConvexPolyhedron(() => ({
-    mass: 1, // approximate mass using volume of a sphere equation
-    position: getRandPosition(-10, 10),
-    // type: !paused ? "Dynamic" : "Static",
-    // https://threejs.org/docs/scenes/geometry-browser.html#IcosahedronBufferGeometry
-    args: geo as any,
-  }));
-
-  // const position = useRef([0, 0, 0]);
-  // useMount(() => {
-  //   const unsubscribe = api.position.subscribe(
-  //     (v) => (position.current = v)
-  //   ) as any;
-  //   return () => unsubscribe();
-  // });
-
-  // useFrame(({ clock }) => {
-  //   console.log("🌟🚨 ~ useFrame ~ clock", clock);
-  //   const shouldTick = Math.round(clock.elapsedTime * 100) % 10 === 0;
-  //   console.log("🌟🚨 ~ useFrame ~ shouldTick", shouldTick);
-  //   if (shouldTick) {
-  //     const [x, y, z] = position.current.map((xyz) => -xyz / 1);
-  //     // api.position.set(x, y, z);
-  //     return;
-  //   }
-  // });
-
-  return (
-    <mesh ref={ref} {...{ onPointerEnter, onClick }}>
-      <sphereBufferGeometry />
-      <meshBasicMaterial />
-    </mesh>
-  );
-};
-
 interface GraphData {
   nodes: NodeObject[];
   links: LinkObject[];
