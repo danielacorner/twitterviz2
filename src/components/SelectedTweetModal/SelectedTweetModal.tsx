@@ -16,8 +16,8 @@ const SelectedTweetModal = () => {
     <Modal open={Boolean(selectedNode)}>
       <SelectedTweetModalStyles>
         <ClickAwayListener onClickAway={() => setSelectedNode(null)}>
-          <div className="tweetContentWrapper">
-            {selectedNode && <TweetContent tweet={selectedNode} />}
+          <div /* className="tweetContentWrapper" */>
+            {/* {selectedNode && <TweetContent tweet={selectedNode} />} */}
             {selectedNode && (
               <Tweet
                 tweetId={selectedNode.id_str}
