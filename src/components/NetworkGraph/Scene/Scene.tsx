@@ -5,9 +5,9 @@ import { Physics, useConvexPolyhedron } from "@react-three/cannon";
 import { useMemo } from "react";
 import { toConvexProps } from "./toConvexProps";
 import * as THREE from "three";
-import useStore from "providers/store/store";
+import useStore, { nodeMouseCoordsAtom } from "providers/store/store";
 import { useThree } from "@react-three/fiber";
-import { atom, useAtom } from "jotai";
+import { useAtom } from "jotai";
 export function Scene() {
   const graphWithUsers = useGraphWithUsersAndLinks();
   console.log("🌟🚨 ~ Scene ~ graphWithUsers", graphWithUsers);
@@ -43,7 +43,6 @@ function getRandPosition(min, max): [x: number, y: number, z: number] {
   //   Math.random() * (max - min) + min
   // );
 }
-const nodeMouseCoordsAtom = atom([0, 0]);
 const Node = ({ node }) => {
   const radius = 1;
   const detail = 1;
@@ -52,12 +51,12 @@ const Node = ({ node }) => {
     [radius, detail]
   );
   const [nodeMouseCoords, setNodeMouseCoords] = useAtom(nodeMouseCoordsAtom);
-  const setSelectedNode = useStore((state) => state.setSelectedNode);
+  const setTooltipNode = useStore((state) => state.setTooltipNode);
   const { mouse } = useThree();
   const onPointerEnter = () => {
     console.log("🌟🚨 ~ Node ~ nodeMouseCoords", nodeMouseCoords);
     console.log("🌟🚨 ~ Node ~ mouse", mouse);
-    setSelectedNode(node);
+    setTooltipNode(node);
     setNodeMouseCoords(mouse);
   };
 

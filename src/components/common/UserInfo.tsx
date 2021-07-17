@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components/macro";
-import { useSelectedNode } from "../../providers/store/useSelectors";
+import { useTooltipNode } from "../../providers/store/useSelectors";
 import { Tweet, User } from "../../types";
 import BtnFavorite from "./BtnFavorite";
 
@@ -38,7 +38,7 @@ export default function UserInfo({
 }: {
   tweetDisplay?: Tweet | null;
 }) {
-  const tweet = useSelectedNode();
+  const tweet = useTooltipNode();
   const user = (tweetDisplay || tweet)?.user;
   // const [user, setUser] = useState(tweet?.user || null);
 

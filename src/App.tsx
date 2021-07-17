@@ -36,7 +36,6 @@ function App() {
       </RowDiv>
       <LeftDrawerCollapsible />
       <SelectedTweetModal />
-      {/* <BottomDrawer /> */}
       <AppStylesHooks />
       <AppFunctionalHooks />
     </AppStyles>

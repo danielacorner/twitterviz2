@@ -10,7 +10,6 @@ import styled from "styled-components/macro";
 import TweetContent from "../TweetContent/TweetContent";
 import { TABS_HEIGHT } from "../../utils/constants";
 import { useTheme } from "@material-ui/core";
-import { OpenTweetBtn } from "../BottomDrawer/BottomDrawer";
 import useContainerDimensions from "../../utils/useContainerDimensions";
 import {
   CUSTOM_SHRINKING_SCROLLBAR_CSS,
@@ -230,7 +229,6 @@ function GridItem({ tweet }: { tweet: Tweet }) {
       <UserAvatar user={tweet.user} imageOnly={true} />
       <div className="tweetButtons">
         <DeleteTweetBtn tweet={tweet} />
-        <OpenTweetBtn tweet={tweet} />
         <BtnFavorite tweet={tweet} tooltipTitle="favorite tweet" />
       </div>
       <TweetContent tweet={tweet} isTooltip={false} autoPlay={false} />

@@ -17,11 +17,7 @@ export const useTweets = (): Tweet[] => {
   return tweetsFromServer;
   // useStore((state) => state.tweetsFromServer);
 };
-export const useSelectedNode = () => useStore((state) => state.selectedNode);
-export const useSetSelectedNode = () =>
-  useStore((state) => state.setSelectedNode);
-export const useTooltipNode = (): Tweet | null =>
-  useStore((state) => state.tooltipNode);
+export const useTooltipNode = () => useStore((state) => state.tooltipNode);
 export const useSetTooltipNode = () =>
   useStore((state) => state.setTooltipNode);
 export const useLoading = () => useStore((state) => state.loading);
