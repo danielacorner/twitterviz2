@@ -126,5 +126,4 @@ transform: scale(0.2);
 const StyledDiv = styled.div`
   width: 200px;
   height: 200px;
-  ${DISABLE_SELECTION_OF_TEXT_CSS}
 `;

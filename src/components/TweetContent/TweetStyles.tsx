@@ -1,8 +1,10 @@
 import styled from "styled-components/macro";
+import { DISABLE_SELECTION_OF_TEXT_CSS } from "utils/constants";
 import { PADDING } from "../../utils/utils";
 import playArrowSvg from "./icon-play-white.svg";
 
 export const TweetStyles = styled.div`
+  ${DISABLE_SELECTION_OF_TEXT_CSS}
   position: relative;
   display: grid;
   grid-gap: ${PADDING}px;
