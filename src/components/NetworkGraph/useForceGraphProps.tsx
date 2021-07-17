@@ -13,6 +13,7 @@ import {
 } from "../../utils/hooks";
 import {
   useSetTooltipNode,
+  useSetSelectedNode,
   useAllowedMediaTypes,
   useTooltipNode,
 } from "../../providers/store/useSelectors";
@@ -44,10 +45,12 @@ export function useForceGraphProps() {
   const allowedMediaTypesStrings = useAllowedMediaTypes();
   const setTooltipNode = useSetTooltipNode();
   const tooltipNode = useTooltipNode();
+  const setSelectedNode = useSetSelectedNode();
   const isLightTheme = useIsLight();
   const fgRef = useRef();
   const getIsLikeLink = useGetIsLikeLink();
   const onBackgroundClick = useCallback(() => {
+    setSelectedNode(null);
     setTooltipNode(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -65,9 +68,10 @@ export function useForceGraphProps() {
   // on click, open the bottom drawer containing tweet info
   const onNodeClick = useCallback(
     (node) => {
+      setSelectedNode(node);
       setTooltipNode(null);
     },
-    [setTooltipNode]
+    [setSelectedNode, setTooltipNode]
   );
 
   const forceGraphProps = {

@@ -7,12 +7,14 @@ import qs from "query-string";
 import { WordcloudConfig } from "./useSelectors";
 import { atom } from "jotai";
 
-export const nodeMouseCoordsAtom = atom([0, 0]);
+export const nodeMouseCoordsAtom = atom({ x: 0, y: 0 });
 
 export const useSearchObj = () => qs.parse(useLocation().search);
 
 export type GlobalStateType = {
   tweetsFromServer: Tweet[];
+  selectedNode: Tweet | null;
+  setSelectedNode: (node: Tweet | null) => void;
   tooltipNode: Tweet | null;
   setTooltipNode: (node: Tweet | null) => void;
   setTweetsFromServer: (tweets: Tweet[]) => void;
@@ -99,6 +101,10 @@ const [useStore] = create<GlobalStateType>(
     setRetweetsByTweetId: (retweetsByTweetId) =>
       set(() => ({ retweetsByTweetId })),
     /** which node is displayed in the Tooltip */
+    selectedNode: null as Tweet | null,
+    setSelectedNode: (node: Tweet | null) =>
+      set(() => ({ selectedNode: node })),
+
     tooltipNode: null as Tweet | null,
     setTooltipNode: (node: Tweet | null) => set(() => ({ tooltipNode: node })),
     setTweetsFromServer: (tweets) => set(() => ({ tweetsFromServer: tweets })),

@@ -2,26 +2,25 @@ import { ClickAwayListener, Modal } from "@material-ui/core";
 import TweetContent from "components/TweetContent/TweetContent";
 import { TOOLTIP_WIDTH } from "components/NetworkGraph/NodeTooltip";
 import useStore from "providers/store/store";
-import { useTooltipNode } from "providers/store/useSelectors";
-
+import { useSelectedNode } from "providers/store/useSelectors";
 import styled from "styled-components/macro";
 import { Tweet } from "react-twitter-widgets";
 import { CUSTOM_SHRINKING_SCROLLBAR_CSS } from "components/common/styledComponents";
 import { LEFT_DRAWER_WIDTH } from "components/LEFT_DRAWER_WIDTH";
 
 const SelectedTweetModal = () => {
-  const tooltipNode = useTooltipNode();
-  console.log("🌟🚨 ~ SelectedTweetModal ~ tooltipNode", tooltipNode);
-  const setTooltipNode = useStore((state) => state.setTooltipNode);
+  const selectedNode = useSelectedNode();
+  console.log("🌟🚨 ~ SelectedTweetModal ~ selectedNode", selectedNode);
+  const setSelectedNode = useStore((state) => state.setSelectedNode);
   return (
-    <Modal open={Boolean(tooltipNode)}>
+    <Modal open={Boolean(selectedNode)}>
       <SelectedTweetModalStyles>
-        <ClickAwayListener onClickAway={() => setTooltipNode(null)}>
+        <ClickAwayListener onClickAway={() => setSelectedNode(null)}>
           <div className="tweetContentWrapper">
-            {tooltipNode && <TweetContent tweet={tooltipNode} />}
-            {tooltipNode && (
+            {selectedNode && <TweetContent tweet={selectedNode} />}
+            {selectedNode && (
               <Tweet
-                tweetId={tooltipNode.id_str}
+                tweetId={selectedNode.id_str}
                 options={{ dnt: true, theme: "dark" }}
               />
             )}

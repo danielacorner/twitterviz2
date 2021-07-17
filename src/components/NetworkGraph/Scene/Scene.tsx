@@ -52,11 +52,17 @@ const Node = ({ node }) => {
   );
   const [nodeMouseCoords, setNodeMouseCoords] = useAtom(nodeMouseCoordsAtom);
   const setTooltipNode = useStore((state) => state.setTooltipNode);
+  const setSelectedNode = useStore((state) => state.setSelectedNode);
+
   const { mouse } = useThree();
   const onPointerEnter = () => {
     console.log("🌟🚨 ~ Node ~ nodeMouseCoords", nodeMouseCoords);
     console.log("🌟🚨 ~ Node ~ mouse", mouse);
     setTooltipNode(node);
+    setNodeMouseCoords(mouse);
+  };
+  const onClick = () => {
+    setSelectedNode(node);
     setNodeMouseCoords(mouse);
   };
 
@@ -88,7 +94,7 @@ const Node = ({ node }) => {
   // });
 
   return (
-    <mesh ref={ref} onPointerEnter={onPointerEnter}>
+    <mesh ref={ref} {...{ onPointerEnter, onClick }}>
       <sphereBufferGeometry />
       <meshBasicMaterial />
     </mesh>
