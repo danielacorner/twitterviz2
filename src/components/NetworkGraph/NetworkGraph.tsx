@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { ForceGraph2D, ForceGraph3D } from "react-force-graph";
+import { useState } from "react";
+import { ForceGraph3D } from "react-force-graph";
 import NodeTooltip from "./NodeTooltip";
 // https://www.npmjs.com/package/react-force-graph
 import styled from "styled-components/macro";
@@ -14,7 +14,6 @@ import { useConfig } from "../../providers/store/useConfig";
 import { Link, Tweet } from "../../types";
 import GraphRightClickMenu from "./GraphRightClickMenu";
 import { useTheForce } from "./useTheForce";
-import { useGenerateBotScoresOnNewTweets } from "./useGenerateBotScoresOnNewTweets";
 
 export const GraphStyles = styled.div`
   width: 100%;
@@ -34,7 +33,6 @@ const NetworkGraph = () => {
 // tslint:disable-next-line: cognitive-complexity
 function Graph() {
   const { fgRef, forceGraphProps } = useForceGraphProps();
-  const { is3d } = useConfig();
 
   //
   // use the force (d3 force simulation controls)
@@ -64,20 +62,12 @@ function Graph() {
 
   return (
     <div>
-      {is3d ? (
-        // https://www.npmjs.com/package/react-force-graph
-        <ForceGraph3D
-          ref={fgRef}
-          graphData={graphWithUsers}
-          {...forceGraphProps}
-        />
-      ) : (
-        <ForceGraph2D
-          ref={fgRef}
-          graphData={graphWithUsers}
-          {...forceGraphProps}
-        />
-      )}
+      {/* // https://www.npmjs.com/package/react-force-graph */}
+      <ForceGraph3D
+        ref={fgRef}
+        graphData={graphWithUsers}
+        {...forceGraphProps}
+      />
     </div>
   );
 }

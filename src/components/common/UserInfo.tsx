@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styled from "styled-components/macro";
 import { useSelectedNode } from "../../providers/store/useSelectors";
 import { Tweet, User } from "../../types";

@@ -1,4 +1,3 @@
-import React from "react";
 import { useTheme, Checkbox } from "@material-ui/core";
 import { useSearchObj } from "../../providers/store/store";
 import {

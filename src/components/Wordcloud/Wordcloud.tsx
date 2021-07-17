@@ -1,4 +1,3 @@
-import React from "react";
 import ReactWordcloud from "react-wordcloud";
 import styled from "styled-components/macro";
 import {

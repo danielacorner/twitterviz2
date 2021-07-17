@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import { MediaItem } from "../../../utils/utils";
 import VideoWithControls from "./VideoWithControls";
 import styled from "styled-components/macro";

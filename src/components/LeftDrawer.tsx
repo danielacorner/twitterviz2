@@ -1,4 +1,3 @@
-import React from "react";
 import IconButton from "@material-ui/core/IconButton";
 import Controls from "./Controls/Controls";
 import styled from "styled-components/macro";

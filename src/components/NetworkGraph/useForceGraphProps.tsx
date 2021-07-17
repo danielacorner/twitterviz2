@@ -414,33 +414,33 @@ function drawBotScore(node: Tweet | any, ctx: any) {
   // ctx.fill();
 }
 
-function drawSmallCircle(
-  node: Tweet | any,
-  ctx: CanvasRenderingContext2D,
-  colorByBotScore: Function,
-  score: number,
-  rotateClockwiseDeg: number
-) {
-  const radians = (rotateClockwiseDeg / 360) * Math.PI * 2;
+// function drawSmallCircle(
+//   node: Tweet | any,
+//   ctx: CanvasRenderingContext2D,
+//   colorByBotScore: Function,
+//   score: number,
+//   rotateClockwiseDeg: number
+// ) {
+//   const radians = (rotateClockwiseDeg / 360) * Math.PI * 2;
 
-  // X goes from 0 -> diameter -> 0 -> -diameter
-  const offsetX = Math.sin(radians) * AVATAR_DIAMETER;
-  // Y goes from -diameter -> 0 -> diamgeter -> 0
-  const offsetY = Math.cos(radians) * AVATAR_DIAMETER;
+//   // X goes from 0 -> diameter -> 0 -> -diameter
+//   const offsetX = Math.sin(radians) * AVATAR_DIAMETER;
+//   // Y goes from -diameter -> 0 -> diamgeter -> 0
+//   const offsetY = Math.cos(radians) * AVATAR_DIAMETER;
 
-  const color = colorByBotScore(score);
-  ctx.beginPath();
-  ctx.arc(
-    node.x + offsetX, // x: The horizontal coordinate of the arc's center.
-    node.y + offsetY, // y: The vertical coordinate of the arc's center.
-    AVATAR_DIAMETER / 4, // radius
-    0, // startAngle
-    Math.PI * 2 * (score / 5) // endAngle
-  );
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 2;
-  ctx.stroke();
-}
+//   const color = colorByBotScore(score);
+//   ctx.beginPath();
+//   ctx.arc(
+//     node.x + offsetX, // x: The horizontal coordinate of the arc's center.
+//     node.y + offsetY, // y: The vertical coordinate of the arc's center.
+//     AVATAR_DIAMETER / 4, // radius
+//     0, // startAngle
+//     Math.PI * 2 * (score / 5) // endAngle
+//   );
+//   ctx.strokeStyle = color;
+//   ctx.lineWidth = 2;
+//   ctx.stroke();
+// }
 
 // https://codesandbox.io/s/distracted-nash-4251j?file=/src/index.js
 function drawProfilePhoto(node: any, ctx: any) {

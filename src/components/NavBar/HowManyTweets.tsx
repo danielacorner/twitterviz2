@@ -1,4 +1,3 @@
-import React from "react";
 import { TextField } from "@material-ui/core";
 import { useConfig } from "../../providers/store/useConfig";
 import { Body1 } from "../common/styledComponents";

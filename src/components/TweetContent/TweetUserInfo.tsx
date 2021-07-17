@@ -1,4 +1,3 @@
-import React from "react";
 import RetweetedIcon from "@material-ui/icons/CachedRounded";
 import ReplyIcon from "@material-ui/icons/Reply";
 import { Body2, Body1 } from "../common/styledComponents";

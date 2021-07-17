@@ -1,4 +1,3 @@
-import React from "react";
 import { MenuItem, Select } from "@material-ui/core";
 import countryCodes from "../../utils/countryCodes";
 import languages from "../../utils/languages";

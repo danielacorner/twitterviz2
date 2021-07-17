@@ -1,4 +1,3 @@
-import React from "react";
 import { useLoading } from "../../../providers/store/useSelectors";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import { getFavorites } from "../../common/BtnFavorite";

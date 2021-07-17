@@ -2,11 +2,7 @@
   "compilerOptions": {
     "baseUrl": "src",
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -17,16 +13,13 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
     "noUnusedLocals": true,
     "strictNullChecks": true,
     "noImplicitAny": false,
     "pretty": true,
-    "noEmit": true
+    "noEmit": true,
+    "noFallthroughCasesInSwitch": true
   },
-  "include": [
-    "src",
-    "types/types-cogeden.ts",
-    "types/operations-types.ts"
-  ]
+  "include": ["src", "types/types-cogeden.ts", "types/operations-types.ts"]
 }

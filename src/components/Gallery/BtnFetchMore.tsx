@@ -1,4 +1,3 @@
-import React from "react";
 import { Button } from "@material-ui/core";
 import { useFetchTimeline } from "../../utils/hooks";
 import { User } from "../../types";

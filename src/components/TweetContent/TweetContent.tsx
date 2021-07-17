@@ -1,4 +1,3 @@
-import React from "react";
 import { getMediaArr } from "../../utils/utils";
 import { TAB_INDICES } from "../../utils/constants";
 import countryCodes from "../../utils/countryCodes";

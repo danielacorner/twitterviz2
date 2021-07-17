@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import styled from "styled-components/macro";
 import { Menu, IconButton, MenuItem } from "@material-ui/core";
 import HighQualityIcon from "@material-ui/icons/HighQuality";

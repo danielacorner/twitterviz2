@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 // https://www.npmjs.com/package/react-force-graph
 import { useTooltipNode } from "../../providers/store/useSelectors";
 import { useConfig } from "../../providers/store/useConfig";

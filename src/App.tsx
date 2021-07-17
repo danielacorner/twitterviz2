@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import "./App.css";
 import styled from "styled-components/macro";
 import { useLoading } from "./providers/store/useSelectors";

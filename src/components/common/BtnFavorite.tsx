@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Tweet, User } from "../../types";
 
 import { IconButton, Tooltip } from "@material-ui/core";

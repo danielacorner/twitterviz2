@@ -1,4 +1,3 @@
-import React from "react";
 import { Tabs, Tab, Typography } from "@material-ui/core";
 import NetworkGraph from "./NetworkGraph/NetworkGraph";
 import Wordcloud from "./Wordcloud/Wordcloud";

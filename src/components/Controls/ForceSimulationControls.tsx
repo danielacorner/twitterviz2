@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FormControl, Grid, Input, Slider, Switch } from "@material-ui/core";
 import { useConfig } from "../../providers/store/useConfig";
 import {

@@ -1,4 +1,4 @@
-export default {
+const countryCodes = {
   AF: "Afghanistan",
   AL: "Albania",
   DZ: "Algeria",
@@ -249,3 +249,4 @@ export default {
   ZW: "Zimbabwe",
   AX: "Åland Islands",
 };
+export default countryCodes;

@@ -1,4 +1,4 @@
-export default [
+const languages = [
   {
     code: "aa",
     name: "Afar",
@@ -935,3 +935,5 @@ export default [
     native: "isiZulu",
   },
 ];
+
+export default languages;

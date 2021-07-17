@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, forwardRef } from "react";
 import { useSpring, animated } from "react-spring";
 import styled from "styled-components/macro";
 import TweetContent, { getRetweetedUser } from "../TweetContent/TweetContent";
@@ -75,7 +75,7 @@ const NodeTooltip = () => {
       const y = Math.max(Math.min(event.y, minYPosition), WINDOW_PADDING_VERT);
       setPosition({ x, y });
     },
-    [maxXPosition, minYPosition]
+    [maxXPosition, minYPosition, minXPosition]
   );
 
   // on mount, start listening to mouse position
@@ -123,7 +123,7 @@ export type NodeTooltipContentProps = {
   tweet: Tweet | null;
   tooltipStyles?: any;
 };
-export const NodeTooltipContent = React.forwardRef(
+export const NodeTooltipContent = forwardRef(
   (
     {
       springToMousePosition,
