@@ -17,7 +17,7 @@ export const MOUSE_WIDTH = 12;
 const WINDOW_PADDING_HZ = 12;
 const WINDOW_PADDING_VERT = 100;
 
-const TooltipStyles = styled.div`
+export const TooltipStyles = styled.div`
   pointer-events: none;
   border-radius: 16px;
   background: ${(props) =>
@@ -40,6 +40,7 @@ const TooltipStyles = styled.div`
     color: ${(props) =>
       props.isLight ? "hsla(0,0%,13%,0.9)" : "hsla(0,0%,95%,0.9)"};
   }
+  ${(props) => props.css}
 `;
 
 const AvatarStyles = styled.div`
@@ -87,7 +88,7 @@ const NodeTooltip = () => {
   }, [minYPosition, maxXPosition, minXPosition, handleMouseMove]);
 
   const { springToMousePosition, isLight, originalPoster, tweet } =
-    useNodeTooltipContentProps(tooltipNode, position);
+    useNodeTooltipContentProps(position);
   return (
     <animated.div style={springToMousePosition as any}>
       <NodeTooltipContent
@@ -113,20 +114,31 @@ export const NodeTooltipContent = forwardRef(
   ) => {
     return (
       <TooltipStyles ref={ref} isLight={isLight} style={tooltipStyles}>
-        <div className="profileAndContent">
-          <RowDiv style={{ alignItems: "start" }}>
-            <AvatarStyles>
-              <img src={originalPoster?.profile_image_url_https} alt="" />
-            </AvatarStyles>
-          </RowDiv>
-          {tweet && (
-            <>
-              <div className="id_str">{tweet.id_str}</div>
-              <TweetContent {...{ tweet, isTooltip: true }} />
-            </>
-          )}
-        </div>
+        <TooltipContent {...{ originalPoster, tweet }} />
       </TooltipStyles>
     );
   }
 );
+export function TooltipContent({
+  originalPoster,
+  tweet,
+}: {
+  originalPoster: any;
+  tweet: Tweet | null;
+}) {
+  return (
+    <div className="profileAndContent">
+      <RowDiv style={{ alignItems: "start" }}>
+        <AvatarStyles>
+          <img src={originalPoster?.profile_image_url_https} alt="" />
+        </AvatarStyles>
+      </RowDiv>
+      {tweet && (
+        <>
+          <div className="id_str">{tweet.id_str}</div>
+          <TweetContent {...{ tweet, isTooltip: true }} />
+        </>
+      )}
+    </div>
+  );
+}

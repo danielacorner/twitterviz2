@@ -4,7 +4,6 @@ import countryCodes from "../../utils/countryCodes";
 import LocationIcon from "@material-ui/icons/LocationOnRounded";
 import { TweetStyles } from "./TweetStyles";
 import { Body2 } from "../common/styledComponents";
-import { useSearchObj } from "../../providers/store/store";
 import useContainerDimensions from "../../utils/useContainerDimensions";
 import MediaContent from "./Media/MediaContent";
 import { Place, Tweet, User } from "types";
@@ -50,7 +49,7 @@ export default function TweetContent({
   const textWithLinks = addLinksToText(fullText);
 
   const [ref, dimensions] = useContainerDimensions();
-  const searchObj = useSearchObj();
+  // const searchObj = useSearchObj();
   const { firstItemWidth, totalHeight } = mediaArr.reduce(
     (acc, media, idx) => ({
       totalHeight: media.sizes.large.h + acc.totalHeight,
@@ -64,7 +63,7 @@ export default function TweetContent({
     <TweetStyles
       className={isBottomDrawer ? "bottomDrawerTweetStyles" : ""}
       ref={ref}
-      isGallery={`${TAB_INDICES.GALLERY}` in searchObj}
+      // isGallery={`${TAB_INDICES.GALLERY}` in searchObj}
       isRetweet={Boolean(retweetedUser)}
       isTooltip={isTooltip}
       isBottomDrawer={isBottomDrawer}
@@ -81,7 +80,7 @@ export default function TweetContent({
           in_reply_to_screen_name,
         }}
       />
-      {(user.location || place?.country_code) && (
+      {(user?.location || place?.country_code) && (
         <LocationInfo {...{ user, place }} />
       )}
       <Body2 className="text">{textWithLinks}</Body2>

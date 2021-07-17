@@ -12,7 +12,7 @@ export const tooltipHistoryAtom = atom<Tweet[]>([]);
 
 export const nodeMouseCoordsAtom = atom({ x: 0, y: 0 });
 
-export const useSearchObj = () => qs.parse(useLocation().search);
+export const useSearchObj = () => qs.parse(useLocation()?.search);
 
 export type GlobalStateType = {
   tweetsFromServer: Tweet[];

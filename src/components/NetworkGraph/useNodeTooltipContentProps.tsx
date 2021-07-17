@@ -5,18 +5,18 @@ import { Tweet, User } from "types";
 import { MOUSE_WIDTH } from "./NodeTooltip";
 import { useAtom } from "jotai";
 import { tooltipHistoryAtom } from "providers/store/store";
+import { useTooltipNode } from "providers/store/useSelectors";
 
-export function useNodeTooltipContentProps(
-  tooltipNode: Tweet | null,
-  position: { x: number; y: number }
-): {
+export function useNodeTooltipContentProps(position: {
+  x: number;
+  y: number;
+}): {
   springToMousePosition;
   isLight: boolean;
   originalPoster: User;
   tweet: Tweet;
 } {
-  const [tooltipHistory] = useAtom(tooltipHistoryAtom);
-  const lastTooltipNode = tooltipHistory[tooltipHistory.length - 2];
+  const tooltipNode = useTooltipNode();
 
   const springToMousePosition = useSpring({
     pointerEvents: "none",
@@ -38,15 +38,15 @@ export function useNodeTooltipContentProps(
     originalPoster,
     tweet,
   }: { isLight: boolean; originalPoster: User; tweet: Tweet } =
-    useNodeTooltipContentPropsLite(tooltipNode, lastTooltipNode);
+    useNodeTooltipContentPropsLite();
   return { springToMousePosition, isLight, originalPoster, tweet };
 }
 
-export function useNodeTooltipContentPropsLite(
-  tooltipNode: Tweet | null,
-  lastTooltipNode: any
-) {
-  const tweet: Tweet = tooltipNode || (lastTooltipNode.current as Tweet);
+export function useNodeTooltipContentPropsLite() {
+  const tooltipNode = useTooltipNode();
+  const [tooltipHistory] = useAtom(tooltipHistoryAtom);
+  const lastTooltipNode = tooltipHistory[tooltipHistory.length - 2];
+  const tweet: Tweet = tooltipNode || (lastTooltipNode as Tweet);
   const isLight = useIsLight();
 
   const retweetedUser = getRetweetedUser(tweet);

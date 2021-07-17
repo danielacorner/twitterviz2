@@ -29,3 +29,11 @@ export const TAB_INDICES = {
 };
 
 export const BREAKPOINTS = { TABLET: 768 };
+
+export const DISABLE_SELECTION_OF_TEXT_CSS = `
+/* Disable selection of text */
+  -webkit-user-select: none; /* Chrome all / Safari all */
+  -moz-user-select: none; /* Firefox all */
+  -ms-user-select: none; /* IE 10+ */
+  user-select: none;
+`;
