@@ -6,11 +6,16 @@ import { useLocation } from "react-router";
 import qs from "query-string";
 import { WordcloudConfig } from "./useSelectors";
 import { atom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
 
 export const selectedNodeHistoryAtom = atom<Tweet[]>([]);
 export const tooltipHistoryAtom = atom<Tweet[]>([]);
 
 export const nodeMouseCoordsAtom = atom({ x: 0, y: 0 });
+export const isDarkModeAtom = atomWithStorage<boolean>(
+  "theme:isDarkMode",
+  true
+);
 
 export const useSearchObj = () => qs.parse(useLocation()?.search);
 
@@ -71,7 +76,6 @@ export type AppConfig = {
   filterLevel: keyof typeof FILTER_LEVELS;
   searchTerm: string;
   numTweets: number;
-  isDarkTheme: boolean;
 };
 
 // use to turn off mock tweets in dev mode
@@ -117,9 +121,6 @@ const [useStore] = create<GlobalStateType>(
     // setRepliesByUserId: (repliesByUserId) => set(() => ({ repliesByUserId })),
     setLoading: (loading) => set(() => ({ loading })),
     config: {
-      isDarkTheme: JSON.parse(
-        window.localStorage.getItem("theme:isDark") || "true" // default to true
-      ),
       isGridMode: false,
       showUserNodes: false,
       is3d: false,

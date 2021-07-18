@@ -1,11 +1,8 @@
 import { useSphere } from "@react-three/cannon";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import useStore, {
-  nodeMouseCoordsAtom,
-  selectedNodeHistoryAtom,
-} from "providers/store/store";
-import { useFrame, useThree } from "@react-three/fiber";
+import useStore, { selectedNodeHistoryAtom } from "providers/store/store";
+import { useFrame } from "@react-three/fiber";
 import { useAtom } from "jotai";
 import { getRandPosition } from "./Scene";
 import { Billboard, Html } from "@react-three/drei";
@@ -13,29 +10,27 @@ import { TooltipContent, TooltipStyles } from "../NodeTooltip";
 import { Tweet as TweetWidget } from "react-twitter-widgets";
 import styled from "styled-components/macro";
 import { getRetweetedUser } from "components/TweetContent/TweetContent";
+import { useIsLight } from "providers/ThemeManager";
 
 const nodeMaterial = new THREE.MeshLambertMaterial({
-  color: "#a0a090",
-  emissive: "red",
+  color: "#316c83",
+  emissive: "blue",
 });
-const RADIUS = 5;
-const nodeGeometry = new THREE.SphereGeometry(RADIUS, 28, 28);
+const RADIUS = 10;
+const nodeGeometry = new THREE.SphereGeometry(RADIUS / 3, 28, 28);
 
 export const Node = ({ vec = new THREE.Vector3(), node }) => {
-  const [nodeMouseCoords, setNodeMouseCoords] = useAtom(nodeMouseCoordsAtom);
   const setTooltipNode = useStore((state) => state.setTooltipNode);
   const setSelectedNode = useStore((state) => state.setSelectedNode);
 
-  const { mouse } = useThree();
   const onPointerEnter = () => {
-    console.log("🌟🚨 ~ Node ~ nodeMouseCoords", nodeMouseCoords);
-    console.log("🌟🚨 ~ Node ~ mouse", mouse);
     setTooltipNode(node);
-    setNodeMouseCoords(mouse);
+  };
+  const onPointerLeave = () => {
+    setTooltipNode(null);
   };
   const onClick = () => {
     setSelectedNode(node);
-    setNodeMouseCoords(mouse);
   };
 
   const [ref, api] = useSphere(() => ({
@@ -62,23 +57,26 @@ export const Node = ({ vec = new THREE.Vector3(), node }) => {
   );
 
   return (
-    <mesh
-      ref={ref}
-      {...{ onPointerEnter, onClick }}
-      material={nodeMaterial}
-      geometry={nodeGeometry}
-    >
+    <mesh ref={ref} material={nodeMaterial} geometry={nodeGeometry}>
       <Billboard {...({} as any)}>
         <Html
           transform={true}
           sprite={false}
-          style={{ width: 50, height: 50, pointerEvents: "none" }}
+          // style={{ width: 50, height: 50, pointerEvents: "none" }}
         >
-          <NodeBillboardContent
-            {...{
-              tweet: node,
-            }}
-          />
+          <div
+            onMouseEnter={onPointerEnter}
+            onMouseLeave={onPointerLeave}
+            onClick={onClick}
+          >
+            <div>
+              <NodeBillboardContent
+                {...{
+                  tweet: node,
+                }}
+              />
+            </div>
+          </div>
         </Html>
       </Billboard>
     </mesh>
@@ -96,14 +94,16 @@ function NodeBillboardContent({ tweet }) {
   const retweetedUser = getRetweetedUser(tweet);
   const originalPoster = retweetedUser ? retweetedUser : tweet?.user;
 
+  const isLight = useIsLight();
+  console.log("🌟🚨 ~ NodeBillboardContent ~ isLight", isLight);
   return (
     <StyledDiv>
       <TooltipStyles
         {...{
-          isLight: false,
+          isLight,
           width: 200,
           css: `
-          font-size: 12px;
+          font-size: 12px; color: "hsla(0,0%,95%,0.9)";
       `,
         }}
       >

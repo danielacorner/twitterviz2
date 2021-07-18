@@ -1,6 +1,5 @@
 import { OrbitControls } from "@react-three/drei";
 import { useGraphWithUsersAndLinks } from "../useGraphWithUsersAndLinks";
-// import ThreeForceGraph from "three-forcegraph";
 import { Physics } from "@react-three/cannon";
 import { Node } from "./Node";
 
@@ -13,9 +12,14 @@ export function Scene() {
   return (
     <>
       <ambientLight intensity={0.75} />
-      <spotLight position={[20, 20, 25]} penumbra={1} angle={0.2} color="red" />
+      <spotLight
+        position={[20, 20, 25]}
+        penumbra={1}
+        angle={0.2}
+        color="blue"
+      />
       <directionalLight position={[0, 5, -4]} intensity={4} />
-      <directionalLight position={[0, -15, -0]} intensity={4} color="red" />
+      <directionalLight position={[0, -15, -0]} intensity={4} color="blue" />
       <OrbitControls {...({} as any)} />
       <Physics {...{ gravity: [0, 0, 0] }}>
         <Collisions />

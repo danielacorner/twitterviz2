@@ -7,25 +7,23 @@ import { NightsStayOutlined, WbSunny } from "@material-ui/icons";
 import { IconButton } from "@material-ui/core";
 
 import styled from "styled-components/macro";
-import { useLocalStorageState } from "utils/useLocalStorageState";
-import useStore from "./store/store";
+import { useAtom } from "jotai";
+import { isDarkModeAtom } from "./store/store";
+import { useMount } from "utils/utils";
 
 export default function ThemeManager({ children }: { children: any }) {
-  const isDarkTheme = useStore((s) => s.config.isDarkTheme);
-  const [darkState, setDarkState] = useLocalStorageState(
-    "theme:isDark",
-    isDarkTheme
-  );
+  const [isDarkMode, setIsDarkMode] = useAtom(isDarkModeAtom);
+  console.log("🌟🚨 ~ ThemeManager ~ isDarkMode", isDarkMode);
 
-  const palletType = darkState ? "dark" : "light";
-  const mainPrimaryColor = darkState ? `hsl(200,70%,40%)` : `hsl(200,70%,50%)`;
-  const mainSecondaryColor = darkState
+  const palletType = isDarkMode ? "dark" : "light";
+  const mainPrimaryColor = isDarkMode ? `hsl(200,70%,40%)` : `hsl(200,70%,50%)`;
+  const mainSecondaryColor = isDarkMode
     ? `hsl(270,50%,45%)`
     : `hsl(270,50%,60%)`;
   // ? `hsl(270,50%,45%)`
   // : `hsl(270,50%,60%)`;
-  const textPrimaryColor = darkState ? `hsl(0,0%,100%)` : `hsl(0,0%,0%)`;
-  const textSecondaryColor = darkState ? `hsl(0,0%,60%)` : `hsl(0,0%,40%)`;
+  const textPrimaryColor = isDarkMode ? `hsl(0,0%,100%)` : `hsl(0,0%,0%)`;
+  const textSecondaryColor = isDarkMode ? `hsl(0,0%,60%)` : `hsl(0,0%,40%)`;
   const darkTheme = createMuiTheme({
     palette: {
       type: palletType,
@@ -42,15 +40,23 @@ export default function ThemeManager({ children }: { children: any }) {
     },
   });
   const handleThemeChange = () => {
-    setDarkState(!darkState);
+    setIsDarkMode(!isDarkMode);
   };
 
+  // ? not sure why this reset is needed to get it working?
+  useMount(() => {
+    setIsDarkMode(!isDarkMode);
+    setTimeout(() => {
+      setIsDarkMode(isDarkMode);
+    }, 500);
+  });
+
   return (
-    <ThemeManagerStyles darkState={darkState}>
+    <ThemeManagerStyles isDarkMode={isDarkMode}>
       <ThemeProvider theme={darkTheme}>
         {children}
         <SwitchStyles className="switchWrapper" onClick={handleThemeChange}>
-          {darkState ? <WbSunny /> : <NightsStayOutlined />}
+          {isDarkMode ? <WbSunny /> : <NightsStayOutlined />}
         </SwitchStyles>
       </ThemeProvider>
     </ThemeManagerStyles>
@@ -58,12 +64,12 @@ export default function ThemeManager({ children }: { children: any }) {
 }
 
 export const useIsLight = () => {
-  const theme = useTheme();
-  return theme.palette.type === "light";
+  const [isDarkMode] = useAtom(isDarkModeAtom);
+  return !isDarkMode;
 };
 
 const ThemeManagerStyles = styled.div`
-  color: ${(props) => (props.darkState ? "white" : "black")};
+  color: ${(props) => (props.isDarkMode ? "white" : "black")};
 `;
 const SwitchStyles = styled(IconButton)`
   border: none;

@@ -37,8 +37,7 @@ export const TooltipStyles = styled.div`
     position: absolute;
     top: -16px;
     right: 0;
-    color: ${(props) =>
-      props.isLight ? "hsla(0,0%,13%,0.9)" : "hsla(0,0%,95%,0.9)"};
+    color: "hsla(0,0%,95%,0.9)";
   }
   ${(props) => props.css}
 `;
