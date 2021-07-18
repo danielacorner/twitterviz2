@@ -27,7 +27,7 @@ function Graph3D() {
   return (
     <Graph3DStyles>
       <Canvas
-        gl={{ alpha: true, stencil: false, depth: false, antialias: false }}
+        gl={{ alpha: true, stencil: false, depth: true, antialias: false }}
         camera={{ position: [0, 0, 100], fov: 35, near: 10, far: 500 }}
       >
         <Scene />

@@ -1,5 +1,4 @@
 import { getMediaArr } from "../../utils/utils";
-import { TAB_INDICES } from "../../utils/constants";
 import countryCodes from "../../utils/countryCodes";
 import LocationIcon from "@material-ui/icons/LocationOnRounded";
 import { TweetStyles } from "./TweetStyles";
@@ -9,6 +8,7 @@ import MediaContent from "./Media/MediaContent";
 import { Place, Tweet, User } from "types";
 import { useWindowSize } from "../../utils/hooks";
 import TweetUserInfo from "./TweetUserInfo";
+import { getRetweetedUser } from "providers/store/useSelectors";
 
 type TweetContentProps = {
   tweet: Tweet;
@@ -122,10 +122,6 @@ function LocationInfo({ user, place }: { user: User; place: Place | null }) {
       )}
     </Body2>
   );
-}
-
-export function getRetweetedUser(tweet: Tweet): User | null {
-  return tweet?.retweeted_status?.user || null;
 }
 
 // tslint:disable-next-line

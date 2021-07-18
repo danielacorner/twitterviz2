@@ -1,18 +1,11 @@
 import { useSphere } from "@react-three/cannon";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import useStore, { selectedNodeHistoryAtom } from "providers/store/store";
+import useStore from "providers/store/store";
 import { useFrame } from "@react-three/fiber";
-import { useAtom } from "jotai";
 import { getRandPosition } from "./Scene";
-import { Billboard, Html } from "@react-three/drei";
-import { TooltipContent, TooltipStyles } from "../NodeTooltip";
-import { Tweet as TweetWidget } from "react-twitter-widgets";
-import styled from "styled-components/macro";
-import { getRetweetedUser } from "components/TweetContent/TweetContent";
-import { useIsLight } from "providers/ThemeManager";
-import { DISABLE_SELECTION_OF_TEXT_CSS } from "utils/constants";
-import { RowDiv } from "components/common/styledComponents";
+import { Billboard } from "@react-three/drei";
+import { NodeBillboardContent } from "./NodeBillboardContent";
 
 const nodeMaterial = new THREE.MeshLambertMaterial({
   color: "#316c83",
@@ -57,93 +50,19 @@ export const Node = ({ vec = new THREE.Vector3(), node }) => {
       [0, 0, 0]
     )
   );
-  const originalPoster = getOriginalPoster(node);
-  console.log("🌟🚨 ~ Node ~ originalPoster", originalPoster);
 
   return (
     <mesh ref={ref} material={nodeMaterial} geometry={nodeGeometry}>
       <Billboard {...({} as any)}>
-        <Html
-          transform={true}
-          sprite={false}
-          // style={{ width: 50, height: 50, pointerEvents: "none" }}
-        >
-          <AvatarStyles>
-            <img src={originalPoster?.profile_image_url_https} alt="" />
-          </AvatarStyles>
-          <div
-            onMouseEnter={onPointerEnter}
-            onMouseLeave={onPointerLeave}
-            onClick={onClick}
-          >
-            <div>
-              <NodeBillboardContent
-                {...{
-                  tweet: node,
-                }}
-              />
-            </div>
-          </div>
-        </Html>
+        <NodeBillboardContent
+          {...{
+            tweet: node,
+            onPointerEnter,
+            onPointerLeave,
+            onClick,
+          }}
+        />
       </Billboard>
     </mesh>
   );
 };
-
-const AvatarStyles = styled.div`
-  width: 100%;
-  height: 100%;
-  transform: translateY(100px) scale(0.5);
-  border-radius: 50%;
-  overflow: hidden;
-  img {
-    width: 100%;
-    height: auto;
-  }
-`;
-
-function NodeBillboardContent({ tweet }) {
-  console.log("🌟🚨 ~ NodeBillboardContent ~ tweet", tweet);
-  const [selectedNodeHistory] = useAtom(selectedNodeHistoryAtom);
-
-  // show tweets of selected nodes only
-  const showTweet = selectedNodeHistory
-    .map((n) => n.id_str)
-    .includes(tweet.id_str);
-  const originalPoster = getOriginalPoster(tweet);
-
-  const isLight = useIsLight();
-  console.log("🌟🚨 ~ NodeBillboardContent ~ isLight", isLight);
-  return (
-    <StyledDiv>
-      <TooltipStyles
-        {...{
-          isLight,
-          width: 200,
-          css: `
-          font-size: 12px; color: "hsla(0,0%,95%,0.9)";
-          transform: translateY(300px);
-          ${DISABLE_SELECTION_OF_TEXT_CSS}
-      `,
-        }}
-      >
-        <TooltipContent {...{ originalPoster, tweet }} />
-      </TooltipStyles>
-      {showTweet && (
-        <TweetWidget
-          tweetId={tweet.id_str}
-          options={{ dnt: true, theme: "dark" }}
-        />
-      )}
-    </StyledDiv>
-  );
-}
-const StyledDiv = styled.div`
-  width: 200px;
-  height: 200px;
-`;
-export function getOriginalPoster(tweet: any) {
-  const retweetedUser = getRetweetedUser(tweet);
-  const originalPoster = retweetedUser ? retweetedUser : tweet?.user;
-  return originalPoster;
-}

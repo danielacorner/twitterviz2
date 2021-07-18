@@ -1,11 +1,10 @@
 import { useSpring } from "react-spring";
-import { getRetweetedUser } from "../TweetContent/TweetContent";
 import { useIsLight } from "../../providers/ThemeManager";
 import { Tweet, User } from "types";
 import { MOUSE_WIDTH } from "./NodeTooltip";
 import { useAtom } from "jotai";
 import { tooltipHistoryAtom } from "providers/store/store";
-import { useTooltipNode } from "providers/store/useSelectors";
+import { getRetweetedUser, useTooltipNode } from "providers/store/useSelectors";
 
 export function useNodeTooltipContentProps(position: {
   x: number;

@@ -1,6 +1,6 @@
 import shallow from "zustand/shallow";
 import { uniqBy } from "lodash";
-import { Tweet } from "../../types";
+import { Tweet, User } from "../../types";
 import { useCallback, useEffect, useRef } from "react";
 import { useConfig } from "./useConfig";
 import useStore from "./store";
@@ -212,4 +212,14 @@ export function usePrevious(value: any): typeof value {
 
   // Return previous value (happens before update in useEffect above)
   return ref.current;
+}
+
+export function getRetweetedUser(tweet: Tweet): User | null {
+  return tweet?.retweeted_status?.user || null;
+}
+
+export function getOriginalPoster(tweet: any) {
+  const retweetedUser = getRetweetedUser(tweet);
+  const originalPoster = retweetedUser ? retweetedUser : tweet?.user;
+  return originalPoster;
 }
