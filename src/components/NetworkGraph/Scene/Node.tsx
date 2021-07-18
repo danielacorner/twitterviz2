@@ -11,13 +11,15 @@ import { Tweet as TweetWidget } from "react-twitter-widgets";
 import styled from "styled-components/macro";
 import { getRetweetedUser } from "components/TweetContent/TweetContent";
 import { useIsLight } from "providers/ThemeManager";
+import { DISABLE_SELECTION_OF_TEXT_CSS } from "utils/constants";
+import { RowDiv } from "components/common/styledComponents";
 
 const nodeMaterial = new THREE.MeshLambertMaterial({
   color: "#316c83",
   emissive: "blue",
 });
 const RADIUS = 10;
-const nodeGeometry = new THREE.SphereGeometry(RADIUS / 3, 28, 28);
+const nodeGeometry = new THREE.SphereGeometry(RADIUS / 5, 28, 28);
 
 export const Node = ({ vec = new THREE.Vector3(), node }) => {
   const setTooltipNode = useStore((state) => state.setTooltipNode);
@@ -55,6 +57,8 @@ export const Node = ({ vec = new THREE.Vector3(), node }) => {
       [0, 0, 0]
     )
   );
+  const originalPoster = getOriginalPoster(node);
+  console.log("🌟🚨 ~ Node ~ originalPoster", originalPoster);
 
   return (
     <mesh ref={ref} material={nodeMaterial} geometry={nodeGeometry}>
@@ -64,6 +68,9 @@ export const Node = ({ vec = new THREE.Vector3(), node }) => {
           sprite={false}
           // style={{ width: 50, height: 50, pointerEvents: "none" }}
         >
+          <AvatarStyles>
+            <img src={originalPoster?.profile_image_url_https} alt="" />
+          </AvatarStyles>
           <div
             onMouseEnter={onPointerEnter}
             onMouseLeave={onPointerLeave}
@@ -83,6 +90,18 @@ export const Node = ({ vec = new THREE.Vector3(), node }) => {
   );
 };
 
+const AvatarStyles = styled.div`
+  width: 100%;
+  height: 100%;
+  transform: translateY(100px) scale(0.5);
+  border-radius: 50%;
+  overflow: hidden;
+  img {
+    width: 100%;
+    height: auto;
+  }
+`;
+
 function NodeBillboardContent({ tweet }) {
   console.log("🌟🚨 ~ NodeBillboardContent ~ tweet", tweet);
   const [selectedNodeHistory] = useAtom(selectedNodeHistoryAtom);
@@ -91,8 +110,7 @@ function NodeBillboardContent({ tweet }) {
   const showTweet = selectedNodeHistory
     .map((n) => n.id_str)
     .includes(tweet.id_str);
-  const retweetedUser = getRetweetedUser(tweet);
-  const originalPoster = retweetedUser ? retweetedUser : tweet?.user;
+  const originalPoster = getOriginalPoster(tweet);
 
   const isLight = useIsLight();
   console.log("🌟🚨 ~ NodeBillboardContent ~ isLight", isLight);
@@ -104,6 +122,8 @@ function NodeBillboardContent({ tweet }) {
           width: 200,
           css: `
           font-size: 12px; color: "hsla(0,0%,95%,0.9)";
+          transform: translateY(300px);
+          ${DISABLE_SELECTION_OF_TEXT_CSS}
       `,
         }}
       >
@@ -122,3 +142,8 @@ const StyledDiv = styled.div`
   width: 200px;
   height: 200px;
 `;
+export function getOriginalPoster(tweet: any) {
+  const retweetedUser = getRetweetedUser(tweet);
+  const originalPoster = retweetedUser ? retweetedUser : tweet?.user;
+  return originalPoster;
+}
