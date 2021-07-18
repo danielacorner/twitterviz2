@@ -46,7 +46,7 @@ export const Node = ({ vec = new THREE.Vector3(), node }) => {
       vec
         .set(...position.current)
         .normalize()
-        .multiplyScalar(-10)
+        .multiplyScalar(-3)
         .toArray(),
       [0, 0, 0]
     )
