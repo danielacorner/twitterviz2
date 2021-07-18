@@ -1,12 +1,11 @@
-import { useConvexPolyhedron } from "@react-three/cannon";
-import { Suspense, useMemo } from "react";
-import { toConvexProps } from "./toConvexProps";
+import { useSphere } from "@react-three/cannon";
+import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import useStore, {
   nodeMouseCoordsAtom,
   selectedNodeHistoryAtom,
 } from "providers/store/store";
-import { useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { useAtom } from "jotai";
 import { getRandPosition } from "./Scene";
 import { Billboard, Html } from "@react-three/drei";
@@ -14,15 +13,15 @@ import { TooltipContent, TooltipStyles } from "../NodeTooltip";
 import { Tweet as TweetWidget } from "react-twitter-widgets";
 import styled from "styled-components/macro";
 import { getRetweetedUser } from "components/TweetContent/TweetContent";
-import { DISABLE_SELECTION_OF_TEXT_CSS } from "utils/constants";
 
-export const Node = ({ node }) => {
-  const radius = 1;
-  const detail = 1;
-  const geo = useMemo(
-    () => toConvexProps(new THREE.IcosahedronBufferGeometry(radius, detail)),
-    [radius, detail]
-  );
+const nodeMaterial = new THREE.MeshLambertMaterial({
+  color: "#a0a090",
+  emissive: "red",
+});
+const RADIUS = 5;
+const nodeGeometry = new THREE.SphereGeometry(RADIUS, 28, 28);
+
+export const Node = ({ vec = new THREE.Vector3(), node }) => {
   const [nodeMouseCoords, setNodeMouseCoords] = useAtom(nodeMouseCoordsAtom);
   const setTooltipNode = useStore((state) => state.setTooltipNode);
   const setSelectedNode = useStore((state) => state.setSelectedNode);
@@ -39,46 +38,41 @@ export const Node = ({ node }) => {
     setNodeMouseCoords(mouse);
   };
 
-  const [ref, api] = useConvexPolyhedron(() => ({
+  const [ref, api] = useSphere(() => ({
     mass: 1,
-    position: getRandPosition(-10, 10),
+    position: getRandPosition(-10 * RADIUS, 10 * RADIUS),
     // type: !paused ? "Dynamic" : "Static",
     // https://threejs.org/docs/scenes/geometry-browser.html#IcosahedronBufferGeometry
-    args: geo as any,
+    args: RADIUS,
   }));
 
-  // const position = useRef([0, 0, 0]);
-  // useMount(() => {
-  //   const unsubscribe = api.position.subscribe(
-  //     (v) => (position.current = v)
-  //   ) as any;
-  //   return () => unsubscribe();
-  // });
-  // useFrame(({ clock }) => {
-  //   console.log("🌟🚨 ~ useFrame ~ clock", clock);
-  //   const shouldTick = Math.round(clock.elapsedTime * 100) % 10 === 0;
-  //   console.log("🌟🚨 ~ useFrame ~ shouldTick", shouldTick);
-  //   if (shouldTick) {
-  //     const [x, y, z] = position.current.map((xyz) => -xyz / 1);
-  //     // api.position.set(x, y, z);
-  //     return;
-  //   }
-  // });
+  // apply force toward center
+  // copied from https://codesandbox.io/s/zxpv7?file=/src/App.js:1195-1404
+  const position = useRef([0, 0, 0]);
+  useEffect(() => api.position.subscribe((v) => (position.current = v)), [api]);
+  useFrame(() =>
+    api.applyForce(
+      vec
+        .set(...position.current)
+        .normalize()
+        .multiplyScalar(-10)
+        .toArray(),
+      [0, 0, 0]
+    )
+  );
 
   return (
-    <mesh ref={ref} {...{ onPointerEnter, onClick }}>
-      <sphereBufferGeometry />
-      <meshBasicMaterial />
+    <mesh
+      ref={ref}
+      {...{ onPointerEnter, onClick }}
+      material={nodeMaterial}
+      geometry={nodeGeometry}
+    >
       <Billboard {...({} as any)}>
         <Html
-          className="react-player-wrapper"
           transform={true}
           sprite={false}
           style={{ width: 50, height: 50, pointerEvents: "none" }}
-          // style={{
-          //   width: 530 * PLAYER_SCALE,
-          //   height: 300 * PLAYER_SCALE,
-          // }}
         >
           <NodeBillboardContent
             {...{
@@ -107,8 +101,9 @@ function NodeBillboardContent({ tweet }) {
       <TooltipStyles
         {...{
           isLight: false,
+          width: 200,
           css: `
-transform: scale(0.2);
+          font-size: 12px;
       `,
         }}
       >

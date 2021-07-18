@@ -26,7 +26,10 @@ const NetworkGraph = () => {
 function Graph3D() {
   return (
     <Graph3DStyles>
-      <Canvas>
+      <Canvas
+        gl={{ alpha: true, stencil: false, depth: false, antialias: false }}
+        camera={{ position: [0, 0, 100], fov: 35, near: 10, far: 200 }}
+      >
         <Scene />
       </Canvas>
     </Graph3DStyles>

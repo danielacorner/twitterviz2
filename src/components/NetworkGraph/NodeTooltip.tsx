@@ -22,7 +22,7 @@ export const TooltipStyles = styled.div`
   border-radius: 16px;
   background: ${(props) =>
     props.isLight ? "hsla(0,0%,100%,0.9)" : "hsla(0,0%,13%,0.9)"};
-  width: ${TOOLTIP_WIDTH}px;
+  width: ${(p) => p.width || TOOLTIP_WIDTH}px;
   height: fit-content;
   box-shadow: 1px 1px 8px hsla(0, 0%, 0%, 0.5);
   padding: 12px 18px 18px 12px;
