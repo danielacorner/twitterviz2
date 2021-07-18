@@ -1,12 +1,15 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 // https://www.npmjs.com/package/react-force-graph
 import { useTooltipNode } from "../../providers/store/useSelectors";
 import { useConfig } from "../../providers/store/useConfig";
-import { useMount } from "../../utils/utils";
 import RightClickMenu from "../common/RightClickMenu";
+import { rightClickMenuAtom } from "providers/store/store";
+import { useAtom } from "jotai";
 // https://www.npmjs.com/package/d3-force-cluster
 
 export default function GraphRightClickMenu() {
+  const [rightClickMenu] = useAtom(rightClickMenuAtom);
+
   const tooltipNode = useTooltipNode();
   const { cooldownTime, setConfig } = useConfig();
   const prevCooldownTime = useRef(cooldownTime);
@@ -14,60 +17,24 @@ export default function GraphRightClickMenu() {
     prevCooldownTime.current = cooldownTime;
   }, [cooldownTime]);
 
-  const [mousePosition, setMousePosition] = useState({
-    mouseX: null as number | null,
-    mouseY: null as number | null,
-  });
-
   // when we right-click, pause, when we clickaway, unpause
 
   // unpause on clickaway
-  const handleCloseMenu = useCallback(() => {
-    setConfig({ isPaused: false });
-    setMousePosition({
-      mouseX: null,
-      mouseY: null,
-    });
-    // return cooldownTime to its previous value
-  }, [setConfig]);
+  const handleCloseMenu = useHandleCloseMenu();
 
-  // close the menu when ?
-  useEffect(() => {
-    if (!tooltipNode && mousePosition.mouseY) {
-      handleCloseMenu();
-    }
-  }, [tooltipNode, handleCloseMenu, mousePosition.mouseY]);
-
-  function handleRightClick(event: MouseEvent) {
-    // prevent default right-click menu
-    event.preventDefault();
-    // pause the simulation
-    setConfig({ isPaused: true });
-
-    // set the mouse position, triggering the menu to open
-    setMousePosition({
-      mouseX: event.clientX - 2,
-      mouseY: event.clientY - 4,
-    });
-  }
-  useMount(() => {
-    const canvas = document.querySelector("canvas");
-    if (!canvas) {
-      return;
-    }
-
-    canvas.addEventListener("contextmenu", handleRightClick);
-    return () => {
-      canvas.removeEventListener("contextmenu", handleRightClick);
-    };
-  });
+  // // close the menu when ?
+  // useEffect(() => {
+  //   if (!tooltipNode && rightClickMenu.mouseY) {
+  //     handleCloseMenu();
+  //   }
+  // }, [tooltipNode, handleCloseMenu, rightClickMenu.mouseY]);
 
   return (
     <RightClickMenu
       {...{
         anchorEl: null,
         handleClose: handleCloseMenu,
-        isMenuOpen: Boolean(tooltipNode && mousePosition.mouseY !== null),
+        isMenuOpen: Boolean(rightClickMenu.node !== null),
         user: tooltipNode?.user,
         MenuProps: {
           onClick: () => {
@@ -77,11 +44,48 @@ export default function GraphRightClickMenu() {
           keepMounted: true,
           anchorReference: "anchorPosition",
           anchorPosition:
-            mousePosition.mouseY !== null && mousePosition.mouseX !== null
-              ? { top: mousePosition.mouseY, left: mousePosition.mouseX }
+            rightClickMenu.mouseY !== null && rightClickMenu.mouseX !== null
+              ? {
+                  top: rightClickMenu.mouseY,
+                  left: rightClickMenu.mouseX,
+                }
               : undefined,
         },
       }}
     />
   );
+}
+
+export function useHandleCloseMenu() {
+  const [, setRightClickMenu] = useAtom(rightClickMenuAtom);
+  const { setConfig } = useConfig();
+  return useCallback(() => {
+    setConfig({ isPaused: false });
+    setRightClickMenu({
+      mouseX: null,
+      mouseY: null,
+      node: null,
+    });
+    // return cooldownTime to its previous value
+  }, [setConfig, setRightClickMenu]);
+}
+
+export function useHandleOpenRightClickMenu(tweet) {
+  const { setConfig } = useConfig();
+  const [, setRightClickMenu] = useAtom(rightClickMenuAtom);
+
+  function handleRightClick(event: MouseEvent) {
+    // prevent default right-click menu
+    event.preventDefault();
+    // pause the simulation
+    setConfig({ isPaused: true });
+
+    // set the mouse position, triggering the menu to open
+    setRightClickMenu({
+      mouseX: event.clientX - 2,
+      mouseY: event.clientY - 4,
+      node: tweet,
+    });
+  }
+  return handleRightClick;
 }

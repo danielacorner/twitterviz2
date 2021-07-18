@@ -4,6 +4,7 @@ import { useIsLight } from "providers/ThemeManager";
 import { getOriginalPoster } from "providers/store/useSelectors";
 import { Html } from "@react-three/drei";
 import { DISABLE_SELECTION_OF_TEXT_CSS } from "utils/constants";
+import { useHandleOpenRightClickMenu } from "../GraphRightClickMenu";
 
 export function NodeBillboardContent({
   tweet,
@@ -12,8 +13,8 @@ export function NodeBillboardContent({
   onClick,
 }) {
   const originalPoster = getOriginalPoster(tweet);
-
   const isLight = useIsLight();
+  const openRightClickMenu = useHandleOpenRightClickMenu(tweet);
   return (
     <Html
       transform={true}
@@ -21,7 +22,7 @@ export function NodeBillboardContent({
       // style={{ width: 50, height: 50, pointerEvents: "none" }}
     >
       <HtmlStyles>
-        <AvatarStyles>
+        <AvatarStyles onContextMenu={openRightClickMenu}>
           <img src={originalPoster?.profile_image_url_https} alt="" />
         </AvatarStyles>
         <div
@@ -35,6 +36,7 @@ export function NodeBillboardContent({
                 isLight,
                 width: 200,
                 css: `
+                .id_str {display:none;}
       `,
               }}
             >

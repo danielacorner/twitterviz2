@@ -1,11 +1,12 @@
 import { useSphere } from "@react-three/cannon";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import useStore from "providers/store/store";
+import useStore, { rightClickMenuAtom } from "providers/store/store";
 import { useFrame } from "@react-three/fiber";
 import { getRandPosition } from "./Scene";
 import { Billboard } from "@react-three/drei";
 import { NodeBillboardContent } from "./NodeBillboardContent";
+import { useAtom } from "jotai";
 
 const nodeMaterial = new THREE.MeshLambertMaterial({
   color: "#316c83",
@@ -50,6 +51,8 @@ export const Node = ({ vec = new THREE.Vector3(), node }) => {
       [0, 0, 0]
     )
   );
+  const [rightClickMenu] = useAtom(rightClickMenuAtom);
+  const isRightClicking = rightClickMenu.node?.id_str === node.id_str;
 
   return (
     <mesh ref={ref} material={nodeMaterial} geometry={nodeGeometry}>

@@ -10,6 +10,15 @@ import { atomWithStorage } from "jotai/utils";
 
 export const selectedNodeHistoryAtom = atom<Tweet[]>([]);
 export const tooltipHistoryAtom = atom<Tweet[]>([]);
+export const rightClickMenuAtom = atom<{
+  mouseX: number | null;
+  mouseY: number | null;
+  node: Tweet | null;
+}>({
+  mouseX: null,
+  mouseY: null,
+  node: null,
+});
 
 export const nodeMouseCoordsAtom = atom({ x: 0, y: 0 });
 export const isDarkModeAtom = atomWithStorage<boolean>(
