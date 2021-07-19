@@ -1,8 +1,7 @@
 # Setup
 
 1. run `npm install`
-1. clone (this twit repo)[https://github.com/danielacorner/twit] into ./twit, then cd into it and run `npm install`
-1. run `npm run scrape -- 100` to generate 100 tweets in ./tweets.json, this will be visualized in the graph
+1. clone [this twit repo](https://github.com/danielacorner/twit) into ./twit, then cd into it and run `npm install`
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
