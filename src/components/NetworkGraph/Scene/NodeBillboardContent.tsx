@@ -28,6 +28,7 @@ export function NodeBillboardContent({
         <div
           onMouseEnter={onPointerEnter}
           onMouseLeave={onPointerLeave}
+          style={{ padding: 100, margin: -100 }}
           onClick={onClick}
         >
           <StyledDiv>

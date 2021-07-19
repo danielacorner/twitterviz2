@@ -1,5 +1,5 @@
 import {
-  useSetTweets,
+  useAddTweets,
   useLoading,
   useAllowedMediaTypes,
   useSetLoading,
@@ -15,7 +15,7 @@ export function BtnStreamNewTweets() {
   const allowedMediaTypesStrings = useAllowedMediaTypes();
   const loading = useLoading();
   const setLoading = useSetLoading();
-  const setTweets = useSetTweets();
+  const addTweets = useAddTweets();
 
   // TODO: when we fetch tweets, for each user, fetch 3 more tweets from them??
   const fetchNewTweets = async () => {
@@ -41,7 +41,7 @@ export function BtnStreamNewTweets() {
 
     const data = await resp.json();
 
-    setTweets(data);
+    addTweets(data);
   };
 
   return (

@@ -3,7 +3,7 @@ import { useIsLight } from "../../providers/ThemeManager";
 import { Tweet, User } from "types";
 import { MOUSE_WIDTH } from "./NodeTooltip";
 import { useAtom } from "jotai";
-import { tooltipHistoryAtom } from "providers/store/store";
+import { isPointerOverAtom, tooltipHistoryAtom } from "providers/store/store";
 import { getRetweetedUser, useTooltipNode } from "providers/store/useSelectors";
 
 export function useNodeTooltipContentProps(position: {
@@ -16,11 +16,12 @@ export function useNodeTooltipContentProps(position: {
   tweet: Tweet;
 } {
   const tooltipNode = useTooltipNode();
+  const [isPointerOver] = useAtom(isPointerOverAtom);
 
   const springToMousePosition = useSpring({
     pointerEvents: "none",
     position: "fixed",
-    opacity: tooltipNode ? 1 : 0,
+    opacity: tooltipNode ? (isPointerOver ? 1 : 0.2) : 0,
     top: 16,
     left: MOUSE_WIDTH,
     transform: `translate(${position.x}px,${position.y}px)`,

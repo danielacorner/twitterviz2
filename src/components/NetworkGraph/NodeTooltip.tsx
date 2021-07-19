@@ -60,7 +60,6 @@ const NodeTooltip = () => {
   const isLeftDrawerOpen = useStore((s) => s.isDrawerOpen);
   const maxXPosition =
     windowWidth - TOOLTIP_WIDTH - MOUSE_WIDTH - WINDOW_PADDING_HZ;
-
   const minXPosition = isLeftDrawerOpen ? LEFT_DRAWER_WIDTH : 0;
 
   useEffect(() => {

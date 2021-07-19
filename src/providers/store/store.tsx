@@ -8,6 +8,7 @@ import { WordcloudConfig } from "./useSelectors";
 import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 
+export const isPointerOverAtom = atom<boolean>(false);
 export const selectedNodeHistoryAtom = atom<Tweet[]>([]);
 export const tooltipHistoryAtom = atom<Tweet[]>([]);
 export const rightClickMenuAtom = atom<{

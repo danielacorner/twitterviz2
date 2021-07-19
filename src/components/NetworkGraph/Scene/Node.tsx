@@ -1,29 +1,48 @@
 import { useSphere } from "@react-three/cannon";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import useStore, { rightClickMenuAtom } from "providers/store/store";
+import useStore, {
+  isPointerOverAtom,
+  rightClickMenuAtom,
+} from "providers/store/store";
 import { useFrame } from "@react-three/fiber";
 import { getRandPosition } from "./Scene";
 import { Billboard } from "@react-three/drei";
 import { NodeBillboardContent } from "./NodeBillboardContent";
 import { useAtom } from "jotai";
+import { useTooltipNode } from "providers/store/useSelectors";
 
 const nodeMaterial = new THREE.MeshLambertMaterial({
-  color: "#316c83",
   emissive: "blue",
+  metalness: 1,
+  color: "#316c83",
+});
+const rightClickNodeMaterial = new THREE.MeshLambertMaterial({
+  emissive: "orange",
+  metalness: 1,
+  color: "#be9729",
+});
+const tooltipNodeMaterial = new THREE.MeshLambertMaterial({
+  emissive: "yellow",
+  metalness: 1,
+  color: "#ecf021",
 });
 const RADIUS = 10;
 const nodeGeometry = new THREE.SphereGeometry(RADIUS / 5, 28, 28);
 
 export const Node = ({ vec = new THREE.Vector3(), node }) => {
+  const tooltipNode = useTooltipNode();
   const setTooltipNode = useStore((state) => state.setTooltipNode);
   const setSelectedNode = useStore((state) => state.setSelectedNode);
-
+  const [isPointerOver, setIsPointerOver] = useAtom(isPointerOverAtom);
   const onPointerEnter = () => {
+    setIsPointerOver(true);
+    console.log("🌟🚨 ~ Node ~ onPointerEnter", isPointerOver);
     setTooltipNode(node);
   };
   const onPointerLeave = () => {
-    setTooltipNode(null);
+    setIsPointerOver(false);
+    console.log("🌟🚨 ~ Node ~ onPointerLeave", isPointerOver);
   };
   const onClick = () => {
     setSelectedNode(node);
@@ -52,10 +71,24 @@ export const Node = ({ vec = new THREE.Vector3(), node }) => {
     )
   );
   const [rightClickMenu] = useAtom(rightClickMenuAtom);
-  const isRightClicking = rightClickMenu.node?.id_str === node.id_str;
-
+  const isRightClickingThisNode = rightClickMenu.node?.id_str === node.id_str;
+  console.log("🌟🚨 ~ Node ~ node.id_str", node.id_str);
+  const isTooltipNode = tooltipNode?.id_str === node.id_str;
+  console.log("🌟🚨 ~ Node ~ tooltipNode?.id_str", tooltipNode?.id_str);
+  console.log("🌟🚨 ~ Node ~ isTooltipNode", isTooltipNode);
   return (
-    <mesh ref={ref} material={nodeMaterial} geometry={nodeGeometry}>
+    <mesh
+      ref={ref}
+      material={
+        isRightClickingThisNode
+          ? rightClickNodeMaterial
+          : isTooltipNode
+          ? tooltipNodeMaterial
+          : nodeMaterial
+      }
+      geometry={nodeGeometry}
+      scale={isTooltipNode ? [2, 2, 2] : [1, 1, 1]}
+    >
       <Billboard {...({} as any)}>
         <NodeBillboardContent
           {...{

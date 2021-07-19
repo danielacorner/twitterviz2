@@ -43,13 +43,12 @@ export const useStoredSaves = () =>
     saves: state.savedDatasets,
     setSaves: state.setSavedDatasets,
   }));
-/** transform and save tweets to store */
 
+/** transform and save tweets to store */
 export const useSetTweets = () => {
   const { replace } = useConfig();
   const setRetweets = useSetRetweetsByTweetId();
   const setLikes = useSetLikesByUserId();
-  const tweetsFromServer = useStore((state) => state.tweetsFromServer);
   const [, setTweetsFromServer] = useAtom(tweetsFromServerAtom);
 
   return (tweetsArg: Tweet[], forceReplace: boolean = false) => {
@@ -61,10 +60,8 @@ export const useSetTweets = () => {
       setLikes({});
     }
 
-    const newTweets =
-      replace || forceReplace
-        ? tweets
-        : uniqBy([...tweetsFromServer, ...tweets], (t) => t.id_str);
+    const newTweets = tweets;
+    // : uniqBy([...tweetsFromServer, ...tweets], (t) => t.id_str);
 
     // * whenever we change the tweets,
     // * scan all the tweets once to create
@@ -128,8 +125,7 @@ export const useSetTweets = () => {
 /** transform and add tweets to store */
 
 export const useAddTweets = () => {
-  const tweetsFromServer = useStore((state) => state.tweetsFromServer);
-  const setTweetsFromServer = useStore((state) => state.setTweetsFromServer);
+  const [tweetsFromServer, setTweetsFromServer] = useAtom(tweetsFromServerAtom);
 
   return (tweets: Tweet[]) => {
     const newTweets = uniqBy([...tweetsFromServer, ...tweets], (t) => t.id_str);
@@ -139,8 +135,7 @@ export const useAddTweets = () => {
 /** delete a tweet from store */
 
 export const useDeleteTweet = () => {
-  const tweetsFromServer = useStore((state) => state.tweetsFromServer, shallow);
-  const setTweetsFromServer = useStore((state) => state.setTweetsFromServer);
+  const [tweetsFromServer, setTweetsFromServer] = useAtom(tweetsFromServerAtom);
   return useCallback(
     (tweetId: string) => {
       const newTweets = tweetsFromServer.filter((t) => t.id_str !== tweetId);
