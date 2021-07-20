@@ -27,10 +27,11 @@ export function NodeBillboardContent({
           <img src={originalPoster?.profile_image_url_https} alt="" />
         </AvatarStyles>
         <div
+          className="mouseArea"
           onMouseEnter={onPointerEnter}
           onMouseLeave={onPointerLeave}
           onWheel={onScroll}
-          style={{ padding: 100, margin: -100 }}
+          style={{ padding: "200px 100px", margin: "-200px -100px" }}
           onClick={onClick}
         >
           <TweetsColumnStyles>
@@ -54,27 +55,30 @@ export function NodeBillboardContent({
     </Html>
   );
 }
-const TweetsColumnStyles = styled.div`
-  font-size: 12px;
-  color: hsla(0, 0%, 95%, 0.9);
-  transform: translateY(120px);
-  width: 200px;
-  height: 200px;
-  display: grid;
-  gap: 12px;
-`;
 
 const HtmlStyles = styled.div`
   ${DISABLE_SELECTION_OF_TEXT_CSS}
+  position: relative;
+  width: 200px;
 `;
 const AvatarStyles = styled.div`
   width: 100%;
   height: 100%;
-  transform: translateY(100px) scale(0.5);
+  transform: scale(0.5);
   border-radius: 50%;
   overflow: hidden;
   img {
     width: 100%;
     height: auto;
   }
+`;
+const TweetsColumnStyles = styled.div`
+  position: absolute;
+  top: 96px;
+  font-size: 12px;
+  color: hsla(0, 0%, 95%, 0.9);
+  transform: translateY(120px);
+  min-height: 200px;
+  display: grid;
+  gap: 12px;
 `;
