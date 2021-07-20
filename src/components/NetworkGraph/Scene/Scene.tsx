@@ -48,7 +48,7 @@ function Collisions() {
   return null;
 }
 
-export function getRandPosition(min, max): [x: number, y: number, z: number] {
+export function getRandomPosition(min, max): [x: number, y: number, z: number] {
   return [
     Math.random() * (max - min) + min,
     Math.random() * (max - min) + min,

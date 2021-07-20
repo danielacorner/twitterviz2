@@ -22,8 +22,8 @@ export function NodeBillboardContent({
       sprite={false}
       // style={{ width: 50, height: 50, pointerEvents: "none" }}
     >
-      <HtmlStyles>
-        <AvatarStyles onContextMenu={openRightClickMenu}>
+      <HtmlStyles onContextMenu={openRightClickMenu}>
+        <AvatarStyles>
           <img src={originalPoster?.profile_image_url_https} alt="" />
         </AvatarStyles>
         <div
@@ -67,6 +67,7 @@ const AvatarStyles = styled.div`
   transform: scale(0.5);
   border-radius: 50%;
   overflow: hidden;
+  pointer-events: none;
   img {
     width: 100%;
     height: auto;

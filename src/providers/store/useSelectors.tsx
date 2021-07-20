@@ -217,3 +217,10 @@ export function getOriginalPoster(tweet: any) {
   const originalPoster = retweetedUser ? retweetedUser : tweet?.user;
   return originalPoster;
 }
+
+export function getUsersInTweet(tweet: Tweet) {
+  const retweetedUser = getRetweetedUser(tweet);
+  const originalPoster = retweetedUser ? retweetedUser : tweet?.user;
+  const retweetingUser = retweetedUser ? tweet.user : null;
+  return { retweetingUser, originalPoster };
+}

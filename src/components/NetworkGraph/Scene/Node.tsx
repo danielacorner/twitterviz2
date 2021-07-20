@@ -8,7 +8,7 @@ import useStore, {
   tooltipTweetIndexAtom,
 } from "providers/store/store";
 import { useFrame } from "@react-three/fiber";
-import { getRandPosition } from "./Scene";
+import { getRandomPosition } from "./Scene";
 import { Billboard } from "@react-three/drei";
 import { NodeBillboardContent } from "./NodeBillboardContent";
 import { useAtom } from "jotai";
@@ -76,7 +76,7 @@ export const Node = ({
 
   const [ref, api] = useSphere(() => ({
     mass: 1,
-    position: getRandPosition(-10 * RADIUS, 10 * RADIUS),
+    position: getRandomPosition(-5 * RADIUS, 5 * RADIUS),
     // type: !paused ? "Dynamic" : "Static",
     // https://threejs.org/docs/scenes/geometry-browser.html#IcosahedronBufferGeometry
     args: RADIUS,

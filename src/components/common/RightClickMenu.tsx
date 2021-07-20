@@ -5,6 +5,7 @@ import {
   useFetchRetweets,
 } from "../../utils/hooks";
 import {
+  getUsersInTweet,
   useSetTweets,
   useTooltipNode,
   useTweets,
@@ -30,28 +31,101 @@ export default function RightClickMenu({
   MenuProps = {},
 }: RightClickMenuProps) {
   const deleteAllTweets = useDeleteAllTweets();
-  const { fetchTimeline } = useFetchTimeline();
-  const { setConfig, replace, numTweets } = useConfig();
-  const fetchLikes = useFetchLikes();
+  const { numTweets } = useConfig();
   const fetchRetweets = useFetchRetweets();
   // TODO: fetch retweeters of a tweet GET statuses/retweeters/ids https://developer.twitter.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/get-statuses-retweets-id
   // TODO: fetch users who liked a tweet
   const tooltipNode = useTooltipNode();
-  const isUserNode = tooltipNode?.isUserNode;
-  const isTweetNode = !isUserNode;
-  const hasRetweet = isTweetNode && tooltipNode?.retweeted_status?.user;
+
+  const { originalPoster, retweetingUser } = tooltipNode
+    ? getUsersInTweet(tooltipNode)
+    : { originalPoster: null, retweetingUser: null };
+
+  const originalPosterDisplay =
+    originalPoster &&
+    `${originalPoster.name} (@
+    ${originalPoster.screen_name})`;
+  const retweetingUserDisplay = retweetingUser && (
+    <>
+      {" "}
+      <RetweetedIcon style={{ transform: "scale(0.8)" }} />{" "}
+      {retweetingUser.name} (@
+      {retweetingUser.screen_name})
+    </>
+  );
+
+  return (
+    <Menu
+      {...(anchorEl ? { anchorEl } : {})}
+      onBackdropClick={handleClose}
+      open={isMenuOpen}
+      {...MenuProps}
+    >
+      {originalPoster && (
+        <MenuItemsForUser
+          user={originalPoster}
+          userDisplay={originalPosterDisplay}
+          {...{ handleClose }}
+        />
+      )}
+      {retweetingUser && (
+        <MenuItemsForUser
+          user={retweetingUser}
+          userDisplay={retweetingUserDisplay}
+          {...{ handleClose }}
+        />
+      )}
+      {tooltipNode && (
+        <MenuItem
+          onClick={() => {
+            if (tooltipNode.id_str) {
+              fetchRetweets(tooltipNode.id_str);
+            }
+            handleClose();
+          }}
+        >
+          ♻ Fetch {numTweets} retweets of this tweet (if any)
+        </MenuItem>
+      )}
+
+      <MenuItem
+        onClick={() => {
+          deleteAllTweets();
+          handleClose();
+        }}
+      >
+        ❌ Delete all tweets
+      </MenuItem>
+    </Menu>
+  );
+}
+
+function MenuItemsForUser({
+  user,
+  userDisplay,
+  handleClose,
+}: {
+  user: User;
+  userDisplay: string | React.ReactNode | null;
+  handleClose: Function;
+}) {
+  const { fetchTimeline } = useFetchTimeline();
+  const fetchLikes = useFetchLikes();
+  const tooltipNode = useTooltipNode();
+  const { setConfig, replace, numTweets } = useConfig();
 
   // send the user's tweets to the Botometer API https://rapidapi.com/OSoMe/api/botometer-pro/endpoints
   const tweets = useTweets();
 
   const setTweets = useSetTweets();
-  const deleteTweetsByUser = () => {
+
+  const deleteTweetsByUser = (user: User) => {
     if (!tooltipNode) {
       return;
     }
 
     const tweetsWithoutThisUser = tweets.filter(
-      (t) => t.user.id_str !== tooltipNode.user.id_str
+      (t) => t.user.id_str !== user.id_str
     );
 
     const prevReplace = replace;
@@ -65,97 +139,39 @@ export default function RightClickMenu({
     // });
   };
   return (
-    <Menu
-      {...(anchorEl ? { anchorEl } : {})}
-      onBackdropClick={handleClose}
-      open={isMenuOpen}
-      {...MenuProps}
-    >
+    <>
       <MenuItem
         onClick={() => {
-          if (user) {
-            fetchTimeline(user.id_str);
-          }
+          fetchTimeline(user.id_str);
           handleClose();
         }}
       >
-        Fetch {numTweets} tweets by {tooltipNode?.user.name} (@
-        {tooltipNode?.user.screen_name})
+        🐦 Fetch {numTweets} tweets by {userDisplay}
       </MenuItem>
-      {/* <MenuItem onClick={handleFetchMedia}>Media</MenuItem> */}
-      {/* <MenuItem onClick={handleFetchFollowing}>Following</MenuItem> */}
-      {/* <MenuItem onClick={handleFetchFollowers}>Followers</MenuItem> */}
-
-      {isUserNode ? (
-        <MenuItem
-          onClick={() => {
-            if (user) {
-              fetchLikes(user.id_str);
-            }
-            handleClose();
-          }}
-        >
-          Fetch {numTweets} tweets liked by {tooltipNode?.user.name} (@
-          {tooltipNode?.user.screen_name})
-        </MenuItem>
-      ) : null}
-      {isTweetNode ? (
-        <MenuItem
-          onClick={() => {
-            if (tooltipNode?.id_str) {
-              fetchRetweets(tooltipNode?.id_str);
-            }
-            handleClose();
-          }}
-        >
-          Fetch {numTweets} retweets of this tweet (if any)
-        </MenuItem>
-      ) : null}
-      {hasRetweet ? (
-        <MenuItem
-          onClick={() => {
-            if (tooltipNode?.retweeted_status?.user.id_str) {
-              fetchTimeline(tooltipNode?.retweeted_status?.user.id_str);
-            }
-            handleClose();
-          }}
-        >
-          Fetch {numTweets} tweets by{" "}
-          <RetweetedIcon style={{ transform: "scale(0.8)" }} />{" "}
-          {tooltipNode?.retweeted_status?.user.name} (@
-          {tooltipNode?.retweeted_status?.user.screen_name})
-        </MenuItem>
-      ) : null}
-      {isUserNode ? (
-        <MenuItem
-          onClick={() => {
-            handleClose();
-          }}
-        >
-          Generate Bot Score for {tooltipNode?.user.name} (@
-          {tooltipNode?.user.screen_name})
-        </MenuItem>
-      ) : null}
-      {isUserNode ? (
-        <MenuItem
-          onClick={() => {
-            deleteTweetsByUser();
-            handleClose();
-          }}
-        >
-          Delete all tweets by {tooltipNode?.user.name} (@
-          {tooltipNode?.user.screen_name})
-        </MenuItem>
-      ) : null}
       <MenuItem
         onClick={() => {
-          deleteAllTweets();
+          fetchLikes(user.id_str);
           handleClose();
         }}
       >
-        Delete all tweets
+        🐦 Fetch {numTweets} tweets liked by {userDisplay}
       </MenuItem>
-    </Menu>
+      <MenuItem
+        onClick={() => {
+          handleClose();
+        }}
+      >
+        🤖 Generate Bot Score for {userDisplay}
+      </MenuItem>
+      <MenuItem
+        onClick={() => {
+          deleteTweetsByUser(user);
+          handleClose();
+        }}
+      >
+        ❌ Delete all tweets by {userDisplay}
+      </MenuItem>
+    </>
   );
 }
 
