@@ -14,6 +14,7 @@ import { NodeBillboardContent } from "./NodeBillboardContent";
 import { useAtom } from "jotai";
 import { useTooltipNode } from "providers/store/useSelectors";
 import { UserNode } from "../useGraphWithUsersAndLinks";
+import { useConfig } from "providers/store/useConfig";
 
 const nodeMaterial = new THREE.MeshLambertMaterial({
   emissive: "blue",
@@ -84,17 +85,22 @@ export const Node = ({
   // apply force toward center
   // copied from https://codesandbox.io/s/zxpv7?file=/src/App.js:1195-1404
   const position = useRef([0, 0, 0]);
+  const { isPaused } = useConfig();
   useEffect(() => api.position.subscribe((v) => (position.current = v)), [api]);
-  useFrame(() =>
-    api.applyForce(
-      vec
-        .set(...position.current)
-        .normalize()
-        .multiplyScalar(-3)
-        .toArray(),
-      [0, 0, 0]
-    )
-  );
+  useFrame(() => {
+    if (isPaused) {
+      api.velocity.set(0, 0, 0);
+    } else {
+      api.applyForce(
+        vec
+          .set(...position.current)
+          .normalize()
+          .multiplyScalar(-3)
+          .toArray(),
+        [0, 0, 0]
+      );
+    }
+  });
   const [rightClickMenu] = useAtom(rightClickMenuAtom);
   const isRightClickingThisNode = rightClickMenu.node?.id_str === node.id_str;
   const isTooltipNode = tooltipNode?.id_str === node.id_str;

@@ -8,7 +8,6 @@ export function Scene() {
   console.log("🌟🚨 ~ Scene ~ graphWithUsers", graphWithUsers);
   // const graphData: GraphData = { nodes: [], links: [] };
   // const myGraph = new ThreeForceGraph().graphData(graphData);
-
   return (
     <>
       <ambientLight intensity={0.75} />
