@@ -3,51 +3,23 @@ import { animated } from "react-spring";
 import styled from "styled-components/macro";
 import TweetContent from "../TweetContent/TweetContent";
 import { PADDING } from "../../utils/utils";
-import useStore from "../../providers/store/store";
+import useStore, {
+  numTooltipTweetsAtom,
+  tooltipTweetIndexAtom,
+} from "../../providers/store/store";
 import useContainerDimensions from "../../utils/useContainerDimensions";
 import { useWindowSize } from "../../utils/hooks";
 import { Tweet } from "types";
 import { RowDiv } from "../common/styledComponents";
 import { LEFT_DRAWER_WIDTH } from "components/LEFT_DRAWER_WIDTH";
 import { useNodeTooltipContentProps } from "./useNodeTooltipContentProps";
+import { useAtom } from "jotai";
 
 const AVATAR_WIDTH = 46;
 export const TOOLTIP_WIDTH = 380;
 export const MOUSE_WIDTH = 12;
 const WINDOW_PADDING_HZ = 12;
 const WINDOW_PADDING_VERT = 100;
-
-export const TooltipStyles = styled.div`
-  pointer-events: none;
-  border-radius: 16px;
-  background: ${(props) =>
-    props.isLight ? "hsla(0,0%,100%,0.9)" : "hsla(0,0%,13%,0.9)"};
-  width: ${(p) => p.width || TOOLTIP_WIDTH}px;
-  height: fit-content;
-  box-shadow: 1px 1px 8px hsla(0, 0%, 0%, 0.5);
-  padding: 12px 18px 18px 12px;
-  .profileAndContent {
-    display: grid;
-    grid-gap: ${PADDING}px;
-    grid-template-columns: ${AVATAR_WIDTH}px 1fr;
-  }
-  position: relative;
-  .id_str {
-    font-size: 0.7em;
-    position: absolute;
-    top: -16px;
-    right: 0;
-    color: "hsla(0,0%,95%,0.9)";
-  }
-  ${(props) => props.css}
-`;
-
-const AvatarStyles = styled.div`
-  width: ${AVATAR_WIDTH}px;
-  height: ${AVATAR_WIDTH}px;
-  border-radius: 50%;
-  overflow: hidden;
-`;
 
 const NodeTooltip = () => {
   const tooltipNode = useStore((state) => state.tooltipNode);
@@ -112,11 +84,12 @@ export const NodeTooltipContent = forwardRef(
   ) => {
     return (
       <TooltipStyles ref={ref} isLight={isLight} style={tooltipStyles}>
-        <TooltipContent {...{ originalPoster, tweet }} />
+        <TooltipContentWithIndex {...{ originalPoster, tweet }} />
       </TooltipStyles>
     );
   }
 );
+
 export function TooltipContent({
   originalPoster,
   tweet,
@@ -133,10 +106,73 @@ export function TooltipContent({
       </RowDiv>
       {tweet && (
         <>
-          <div className="id_str">{tweet.id_str}</div>
+          {/* <div className="id_str">{tweet.id_str}</div> */}
           <TweetContent {...{ tweet, isTooltip: true }} />
         </>
       )}
     </div>
   );
 }
+
+/** this one shows the index e.g. "1 / 5" -- TooltipContent is used in NodeBillboardContent so we don't want it to re-render */
+export function TooltipContentWithIndex({
+  originalPoster,
+  tweet,
+}: {
+  originalPoster: any;
+  tweet: Tweet | null;
+}) {
+  const [tooltipTweetIndex] = useAtom(tooltipTweetIndexAtom);
+  const [numTooltipTweets] = useAtom(numTooltipTweetsAtom);
+  return (
+    <div className="profileAndContent">
+      <RowDiv style={{ alignItems: "start" }}>
+        <AvatarStyles>
+          <img src={originalPoster?.profile_image_url_https} alt="" />
+        </AvatarStyles>
+      </RowDiv>
+      {tweet && (
+        <>
+          <div className="tweetIndex">
+            {tooltipTweetIndex + 1} {"/"} {numTooltipTweets}
+          </div>
+          {/* <div className="id_str">{tweet.id_str}</div> */}
+          <TweetContent {...{ tweet, isTooltip: true }} />
+        </>
+      )}
+    </div>
+  );
+}
+
+export const TooltipStyles = styled.div`
+  pointer-events: none;
+  border-radius: 16px;
+  background: ${(props) =>
+    props.isLight ? "hsla(0,0%,100%,0.9)" : "hsla(0,0%,13%,0.9)"};
+  width: ${(p) => p.width || TOOLTIP_WIDTH}px;
+  height: fit-content;
+  box-shadow: 1px 1px 8px hsla(0, 0%, 0%, 0.5);
+  padding: 12px 18px 18px 12px;
+  .profileAndContent {
+    display: grid;
+    grid-gap: ${PADDING}px;
+    grid-template-columns: ${AVATAR_WIDTH}px 1fr;
+  }
+  position: relative;
+  .id_str,
+  .tweetIndex {
+    font-size: 0.7em;
+    position: absolute;
+    top: -16px;
+    right: 0;
+    color: "hsla(0,0%,95%,0.9)";
+  }
+  ${(props) => props.css}
+`;
+
+const AvatarStyles = styled.div`
+  width: ${AVATAR_WIDTH}px;
+  height: ${AVATAR_WIDTH}px;
+  border-radius: 50%;
+  overflow: hidden;
+`;

@@ -1,8 +1,4 @@
-import {
-  createMuiTheme,
-  ThemeProvider,
-  useTheme,
-} from "@material-ui/core/styles";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { NightsStayOutlined, WbSunny } from "@material-ui/icons";
 import { IconButton } from "@material-ui/core";
 

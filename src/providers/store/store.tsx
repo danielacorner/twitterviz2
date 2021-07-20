@@ -8,6 +8,8 @@ import { WordcloudConfig } from "./useSelectors";
 import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 
+export const numTooltipTweetsAtom = atom<number>(1);
+export const tooltipTweetIndexAtom = atom<number>(0);
 export const isPointerOverAtom = atom<boolean>(false);
 export const selectedNodeHistoryAtom = atom<Tweet[]>([]);
 export const tooltipHistoryAtom = atom<Tweet[]>([]);

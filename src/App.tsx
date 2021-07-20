@@ -5,7 +5,6 @@ import { useLoading } from "./providers/store/useSelectors";
 import { useIsLight } from "./providers/ThemeManager";
 import "./video-react.css"; // import video-react css
 import AppFunctionalHooks from "./AppFunctionalHooks";
-import SelectedTweetModal from "components/SelectedTweetModal/SelectedTweetModal";
 import LeftDrawerCollapsible from "components/LeftDrawer";
 import { RowDiv } from "components/common/styledComponents";
 import { NavBar } from "components/NavBar/NavBar";

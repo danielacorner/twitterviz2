@@ -1,4 +1,3 @@
-import shallow from "zustand/shallow";
 import { uniqBy } from "lodash";
 import { Tweet, User } from "../../types";
 import { useCallback, useEffect, useRef } from "react";

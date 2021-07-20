@@ -7,14 +7,15 @@ import { DISABLE_SELECTION_OF_TEXT_CSS } from "utils/constants";
 import { useHandleOpenRightClickMenu } from "../GraphRightClickMenu";
 
 export function NodeBillboardContent({
-  tweet,
+  tweets,
   onPointerEnter,
   onPointerLeave,
+  onScroll,
   onClick,
 }) {
-  const originalPoster = getOriginalPoster(tweet);
   const isLight = useIsLight();
-  const openRightClickMenu = useHandleOpenRightClickMenu(tweet);
+  const originalPoster = getOriginalPoster(tweets[0]);
+  const openRightClickMenu = useHandleOpenRightClickMenu(tweets[0]);
   return (
     <Html
       transform={true}
@@ -28,34 +29,39 @@ export function NodeBillboardContent({
         <div
           onMouseEnter={onPointerEnter}
           onMouseLeave={onPointerLeave}
+          onWheel={onScroll}
           style={{ padding: 100, margin: -100 }}
           onClick={onClick}
         >
-          <StyledDiv>
-            <TooltipStyles
-              {...{
-                isLight,
-                width: 200,
-                css: `
+          <TweetsColumnStyles>
+            {tweets.map((tweet) => (
+              <TooltipStyles
+                {...{
+                  isLight,
+                  width: 200,
+                  css: `
                 .id_str {display:none;}
       `,
-              }}
-            >
-              <TooltipContent {...{ originalPoster, tweet }} />
-            </TooltipStyles>
-          </StyledDiv>
+                }}
+              >
+                <TooltipContent {...{ originalPoster, tweet }} />
+              </TooltipStyles>
+            ))}
+          </TweetsColumnStyles>
           <div></div>
         </div>
       </HtmlStyles>
     </Html>
   );
 }
-const StyledDiv = styled.div`
+const TweetsColumnStyles = styled.div`
   font-size: 12px;
   color: hsla(0, 0%, 95%, 0.9);
   transform: translateY(120px);
   width: 200px;
   height: 200px;
+  display: grid;
+  gap: 12px;
 `;
 
 const HtmlStyles = styled.div`

@@ -19,7 +19,6 @@ const NetworkGraphControls = () => {
   return (
     <div className="networkGraphControls controlsContainer">
       <TitleRow title={"Graph"}>
-        <Switch3D />
         <SwitchGridMode />
       </TitleRow>
       <TitleRow title={"Nodes"}>
@@ -34,18 +33,6 @@ const NetworkGraphControls = () => {
 };
 
 export default NetworkGraphControls;
-
-function Switch3D() {
-  const { is3d, setConfig } = useConfig();
-  return (
-    <CollapsibleSwitchWithLabels
-      labelLeft="2D"
-      labelRight="3D"
-      onChange={() => setConfig({ is3d: !is3d })}
-      checked={is3d}
-    />
-  );
-}
 
 function SwitchGridMode() {
   const { isGridMode, setConfig } = useConfig();
