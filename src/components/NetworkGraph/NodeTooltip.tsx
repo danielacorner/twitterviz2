@@ -81,7 +81,11 @@ export const NodeTooltipContent = forwardRef(
 	) => {
 		return (
 			<TooltipStyles ref={ref} isLight={isLight} style={tooltipStyles}>
-				{originalPoster && <UserProfile {...{ user: originalPoster }} />}
+				{originalPoster && (
+					<div className="userProfile">
+						<UserProfile {...{ user: originalPoster }} />
+					</div>
+				)}
 				<TooltipContentWithIndex {...{ originalPoster, tweet }} />
 			</TooltipStyles>
 		);
@@ -165,6 +169,20 @@ export const TooltipStyles = styled.div`
 		color: "hsla(0,0%,95%,0.9)";
 	}
 	${(props) => props.css}
+	.userProfile {
+		padding-bottom: 12px;
+		margin-bottom: 12px;
+		position: relative;
+		&:after {
+			content: "";
+			position: absolute;
+			left: -12px;
+			right: -18px;
+			background: #444;
+			height: 1px;
+			bottom: 0;
+		}
+	}
 `;
 
 const AvatarStyles = styled.div`
