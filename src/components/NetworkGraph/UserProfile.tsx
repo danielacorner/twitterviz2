@@ -4,10 +4,6 @@ import { darkBackground } from "utils/colors";
 import { AVATAR_WIDTH, TOOLTIP_WIDTH } from "utils/constants";
 
 export function UserProfile({ user }: { user: User }) {
-	console.log(
-		"🌟🚨 ~ file: UserProfile.tsx ~ line 6 ~ UserProfile ~ user",
-		user
-	);
 	return (
 		<UserProfileStyles>
 			{user.profile_background_image_url_https ? (

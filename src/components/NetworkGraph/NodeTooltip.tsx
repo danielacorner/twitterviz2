@@ -3,17 +3,13 @@ import { animated } from "react-spring";
 import styled from "styled-components/macro";
 import TweetContent from "../TweetContent/TweetContent";
 import { PADDING } from "../../utils/utils";
-import useStore, {
-	numTooltipTweetsAtom,
-	tooltipTweetIndexAtom,
-} from "../../providers/store/store";
+import useStore from "../../providers/store/store";
 import useContainerDimensions from "../../utils/useContainerDimensions";
 import { useWindowSize } from "../../utils/hooks";
 import { Tweet, User } from "types";
 import { RowDiv } from "../common/styledComponents";
 import { LEFT_DRAWER_WIDTH } from "components/LEFT_DRAWER_WIDTH";
 import { useNodeTooltipContentProps } from "./useNodeTooltipContentProps";
-import { useAtom } from "jotai";
 import { UserProfile } from "./UserProfile";
 import { AVATAR_WIDTH, TOOLTIP_WIDTH } from "utils/constants";
 import { darkBackground, lightBackground } from "utils/colors";
@@ -124,8 +120,8 @@ export function TooltipContentWithIndex({
 	originalPoster: any;
 	tweet: Tweet | null;
 }) {
-	const [tooltipTweetIndex] = useAtom(tooltipTweetIndexAtom);
-	const [numTooltipTweets] = useAtom(numTooltipTweetsAtom);
+	// const [tooltipTweetIndex] = useAtom(tooltipTweetIndexAtom);
+	// const [numTooltipTweets] = useAtom(numTooltipTweetsAtom);
 	return (
 		<div className="profileAndContent">
 			<RowDiv style={{ alignItems: "start" }}>
@@ -135,9 +131,9 @@ export function TooltipContentWithIndex({
 			</RowDiv>
 			{tweet && (
 				<>
-					<div className="tweetIndex">
+					{/* <div className="tweetIndex">
 						{tooltipTweetIndex + 1} {"/"} {numTooltipTweets}
-					</div>
+					</div> */}
 					{/* <div className="id_str">{tweet.id_str}</div> */}
 					<TweetContent {...{ tweet, isTooltip: true }} />
 				</>
