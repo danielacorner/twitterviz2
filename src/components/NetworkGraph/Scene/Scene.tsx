@@ -2,7 +2,6 @@ import { OrbitControls } from "@react-three/drei";
 import { useGraphWithUsersAndLinks } from "../useGraphWithUsersAndLinks";
 import { Physics } from "@react-three/cannon";
 import { Node } from "./Node";
-import { useMemo } from "react";
 import * as THREE from "three";
 import { uniqBy } from "lodash";
 
@@ -11,22 +10,7 @@ export function Scene() {
 	console.log("🌟🚨 ~ Scene ~ graphWithUsers", graphWithUsers);
 	// const graphData: GraphData = { nodes: [], links: [] };
 	// const myGraph = new ThreeForceGraph().graphData(graphData);
-	const vertices = useMemo(() => {
-		const y = new THREE.IcosahedronGeometry(60, 3);
-		// Get float array of all coordinates of vertices
-		const float32array = y.attributes.position.array;
-		// run loop,  each step of loop need increment by 3, because each vertex has 3 coordinates, X, Y and Z
-		let vertices: [number, number, number][] = [];
-		for (let i = 0; i < float32array.length; i += 3) {
-			// inside the loop you can get coordinates
-			const x = float32array[i];
-			const y = float32array[i + 1];
-			const z = float32array[i + 2];
-			vertices.push([x, y, z]);
-		}
-		console.log("🌟🚨 ~ file: Scene.tsx ~ line 15 ~ vertices ~ y", y);
-		return uniqBy(vertices, JSON.stringify);
-	}, []);
+	const vertices = getVertices(graphWithUsers.nodes.length);
 	console.log(
 		"🌟🚨 ~ file: Scene.tsx ~ line 17 ~ vertices ~ vertices",
 		vertices
@@ -58,3 +42,20 @@ export function Scene() {
 		</>
 	);
 }
+
+const getVertices = (numNodes) => {
+	const tooBig = numNodes > 92;
+	const y = new THREE.IcosahedronGeometry(tooBig ? 65 : 60, tooBig ? 3 : 2);
+	// Get float array of all coordinates of vertices
+	const float32array = y.attributes.position.array;
+	// run loop,  each step of loop need increment by 3, because each vertex has 3 coordinates, X, Y and Z
+	let vertices: [number, number, number][] = [];
+	for (let i = 0; i < float32array.length; i += 3) {
+		// inside the loop you can get coordinates
+		const x = float32array[i];
+		const y = float32array[i + 1];
+		const z = float32array[i + 2];
+		vertices.push([x, y, z]);
+	}
+	return uniqBy(vertices, JSON.stringify);
+};
