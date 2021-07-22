@@ -2,56 +2,59 @@ import { OrbitControls } from "@react-three/drei";
 import { useGraphWithUsersAndLinks } from "../useGraphWithUsersAndLinks";
 import { Physics } from "@react-three/cannon";
 import { Node } from "./Node";
+import { useMemo } from "react";
+import * as THREE from "three";
+import { uniqBy } from "lodash";
 
 export function Scene() {
-  const graphWithUsers = useGraphWithUsersAndLinks();
-  console.log("🌟🚨 ~ Scene ~ graphWithUsers", graphWithUsers);
-  // const graphData: GraphData = { nodes: [], links: [] };
-  // const myGraph = new ThreeForceGraph().graphData(graphData);
-  return (
-    <>
-      <ambientLight intensity={0.75} />
-      <spotLight
-        position={[20, 20, 25]}
-        penumbra={1}
-        angle={0.2}
-        color="blue"
-      />
-      <directionalLight position={[0, 5, -4]} intensity={4} />
-      <directionalLight position={[0, -15, -0]} intensity={4} color="blue" />
-      <OrbitControls {...({} as any)} />
-      <Physics {...{ gravity: [0, 0, 0] }}>
-        <Collisions />
-        {graphWithUsers.nodes.map((node) => (
-          <Node key={node.id_str} node={node} />
-        ))}
-      </Physics>
-    </>
-  );
-}
-
-// copied from https://codesandbox.io/s/zxpv7?file=/src/App.js:1710-2277
-function Collisions() {
-  // usePlane(() => ({ position: [0, 0, 0], rotation: [0, 0, 0] }));
-  // usePlane(() => ({ position: [0, 0, 8], rotation: [0, -Math.PI, 0] }));
-  // usePlane(() => ({ position: [0, -4, 0], rotation: [-Math.PI / 2, 0, 0] }));
-  // usePlane(() => ({ position: [0, 4, 0], rotation: [Math.PI / 2, 0, 0] }));
-  // const viewport = useThree((state) => state.viewport);
-  // const [, api] = useSphere(() => ({ type: "Kinematic", args: 2 }));
-  // useFrame((state) =>
-  //   api.position.set(
-  //     (state.mouse.x * viewport.width) / 2,
-  //     (state.mouse.y * viewport.height) / 2,
-  //     2.5
-  //   )
-  // );
-  return null;
-}
-
-export function getRandomPosition(min, max): [x: number, y: number, z: number] {
-  return [
-    Math.random() * (max - min) + min,
-    Math.random() * (max - min) + min,
-    Math.random() * (max - min) + min,
-  ];
+	const graphWithUsers = useGraphWithUsersAndLinks();
+	console.log("🌟🚨 ~ Scene ~ graphWithUsers", graphWithUsers);
+	// const graphData: GraphData = { nodes: [], links: [] };
+	// const myGraph = new ThreeForceGraph().graphData(graphData);
+	const vertices = useMemo(() => {
+		const y = new THREE.IcosahedronGeometry(60, 3);
+		// Get float array of all coordinates of vertices
+		const float32array = y.attributes.position.array;
+		// run loop,  each step of loop need increment by 3, because each vertex has 3 coordinates, X, Y and Z
+		let vertices: [number, number, number][] = [];
+		for (let i = 0; i < float32array.length; i += 3) {
+			// inside the loop you can get coordinates
+			const x = float32array[i];
+			const y = float32array[i + 1];
+			const z = float32array[i + 2];
+			vertices.push([x, y, z]);
+		}
+		console.log("🌟🚨 ~ file: Scene.tsx ~ line 15 ~ vertices ~ y", y);
+		return uniqBy(vertices, JSON.stringify);
+	}, []);
+	console.log(
+		"🌟🚨 ~ file: Scene.tsx ~ line 17 ~ vertices ~ vertices",
+		vertices
+	);
+	return (
+		<>
+			<ambientLight intensity={0.75} />
+			<spotLight
+				position={[20, 20, 25]}
+				penumbra={1}
+				angle={0.2}
+				color="blue"
+			/>
+			<directionalLight position={[0, 5, -4]} intensity={4} />
+			<directionalLight position={[0, -15, -0]} intensity={4} color="blue" />
+			<OrbitControls {...({} as any)} />
+			<Physics {...{ gravity: [0, 0, 0] }}>
+				{graphWithUsers.nodes.map((node, idx) => {
+					const isEven = idx % 2 === 0;
+					return (
+						<Node
+							key={node.id_str}
+							node={node}
+							startPosition={vertices[isEven ? idx : vertices.length - idx - 1]}
+						/>
+					);
+				})}
+			</Physics>
+		</>
+	);
 }

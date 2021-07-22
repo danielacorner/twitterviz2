@@ -28,6 +28,7 @@ export default function NodeBillboard({ tweets }) {
 					<TweetsColumnStyles>
 						{tweets.map((tweet) => (
 							<TooltipStyles
+								key={tweet.id_str}
 								{...{
 									isLight,
 									width: 200,

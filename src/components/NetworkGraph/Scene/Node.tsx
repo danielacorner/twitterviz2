@@ -1,5 +1,4 @@
 import { useSphere } from "@react-three/cannon";
-import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import useStore, {
 	isPointerOverAtom,
@@ -7,14 +6,15 @@ import useStore, {
 	rightClickMenuAtom,
 	tooltipTweetIndexAtom,
 } from "providers/store/store";
-import { useFrame } from "@react-three/fiber";
-import { getRandomPosition } from "./Scene";
 import { useAtom } from "jotai";
-import { useTooltipNode } from "providers/store/useSelectors";
+import {
+	getOriginalPoster,
+	useTooltipNode,
+} from "providers/store/useSelectors";
 import { UserNode } from "../useGraphWithUsersAndLinks";
-import { useConfig } from "providers/store/useConfig";
 import { useHandleOpenRightClickMenu } from "../GraphRightClickMenu";
 import NodeBillboard from "./NodeBillboard";
+import { useGravity } from "./useGravity";
 
 const nodeMaterial = new THREE.MeshLambertMaterial({
 	emissive: "blue",
@@ -37,14 +37,17 @@ const nodeGeometry = new THREE.SphereGeometry(RADIUS / 5, 28, 28);
 export const Node = ({
 	vec = new THREE.Vector3(),
 	node,
+	startPosition,
 }: {
 	vec?: any;
 	node: UserNode;
+	startPosition: [number, number, number];
 }) => {
 	const tooltipNode = useTooltipNode();
 	const [rightClickMenu] = useAtom(rightClickMenuAtom);
 	const isRightClickingThisNode = rightClickMenu.node?.id_str === node.id_str;
-	const isTooltipNode = tooltipNode?.user.id_str === node.id_str;
+	const isTooltipNode =
+		tooltipNode && getOriginalPoster(tooltipNode)?.id_str === node.id_str;
 	const setTooltipNode = useStore((state) => state.setTooltipNode);
 	const setSelectedNode = useStore((state) => state.setSelectedNode);
 	const [isPointerOver, setIsPointerOver] = useAtom(isPointerOverAtom);
@@ -84,31 +87,14 @@ export const Node = ({
 
 	const [ref, api] = useSphere(() => ({
 		mass: 1,
-		position: getRandomPosition(-5 * RADIUS, 5 * RADIUS),
+		position: startPosition,
+		// position: getRandomPosition(-5 * RADIUS, 5 * RADIUS),
 		// type: !paused ? "Dynamic" : "Static",
 		// https://threejs.org/docs/scenes/geometry-browser.html#IcosahedronBufferGeometry
 		args: RADIUS,
 	}));
 
-	// apply force toward center
-	// copied from https://codesandbox.io/s/zxpv7?file=/src/App.js:1195-1404
-	const position = useRef([0, 0, 0]);
-	const { isPaused } = useConfig();
-	useEffect(() => api.position.subscribe((v) => (position.current = v)), [api]);
-	useFrame(() => {
-		if (isPaused) {
-			api.velocity.set(0, 0, 0);
-		} else {
-			api.applyForce(
-				vec
-					.set(...position.current)
-					.normalize()
-					.multiplyScalar(-3)
-					.toArray(),
-				[0, 0, 0]
-			);
-		}
-	});
+	useGravity(api, vec);
 
 	return (
 		<mesh
@@ -138,3 +124,11 @@ export const Node = ({
 		</mesh>
 	);
 };
+
+function getRandomPosition(min, max): [x: number, y: number, z: number] {
+	return [
+		Math.random() * (max - min) + min,
+		Math.random() * (max - min) + min,
+		Math.random() * (max - min) + min,
+	];
+}
