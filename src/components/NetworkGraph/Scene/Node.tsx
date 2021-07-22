@@ -15,6 +15,7 @@ import { UserNode } from "../useGraphWithUsersAndLinks";
 import { useHandleOpenRightClickMenu } from "../GraphRightClickMenu";
 import NodeBillboard from "./NodeBillboard";
 import { useGravity } from "./useGravity";
+import { useSpring, animated } from "@react-spring/three";
 
 const nodeMaterial = new THREE.MeshLambertMaterial({
 	emissive: "blue",
@@ -96,8 +97,11 @@ export const Node = ({
 
 	useGravity(api, vec);
 
+	const springProps = useSpring({
+		scale: isTooltipNode ? [2, 2, 2] : [1, 1, 1],
+	});
 	return (
-		<mesh
+		<animated.mesh
 			ref={ref}
 			material={
 				isRightClickingThisNode
@@ -107,7 +111,7 @@ export const Node = ({
 					: nodeMaterial
 			}
 			geometry={nodeGeometry}
-			scale={isTooltipNode ? [2, 2, 2] : [1, 1, 1]}
+			scale={springProps.scale}
 			{...{
 				onPointerEnter,
 				onPointerLeave,
@@ -121,7 +125,7 @@ export const Node = ({
 					tweets: node.tweets,
 				}}
 			/>
-		</mesh>
+		</animated.mesh>
 	);
 };
 
