@@ -3,7 +3,10 @@ import { animated } from "react-spring";
 import styled from "styled-components/macro";
 import TweetContent from "../TweetContent/TweetContent";
 import { PADDING } from "../../utils/utils";
-import useStore from "../../providers/store/store";
+import useStore, {
+	numTooltipTweetsAtom,
+	tooltipTweetIndexAtom,
+} from "../../providers/store/store";
 import useContainerDimensions from "../../utils/useContainerDimensions";
 import { useWindowSize } from "../../utils/hooks";
 import { Tweet, User } from "types";
@@ -13,6 +16,7 @@ import { useNodeTooltipContentProps } from "./useNodeTooltipContentProps";
 import { UserProfile } from "./UserProfile";
 import { AVATAR_WIDTH, TOOLTIP_WIDTH } from "utils/constants";
 import { darkBackground, lightBackground } from "utils/colors";
+import { useAtom } from "jotai";
 
 export const MOUSE_WIDTH = 12;
 const WINDOW_PADDING_HZ = 12;
@@ -124,8 +128,8 @@ export function TooltipContentWithIndex({
 	originalPoster: any;
 	tweet: Tweet | null;
 }) {
-	// const [tooltipTweetIndex] = useAtom(tooltipTweetIndexAtom);
-	// const [numTooltipTweets] = useAtom(numTooltipTweetsAtom);
+	const [tooltipTweetIndex] = useAtom(tooltipTweetIndexAtom);
+	const [numTooltipTweets] = useAtom(numTooltipTweetsAtom);
 	return (
 		<div className="profileAndContent">
 			<RowDiv style={{ alignItems: "start" }}>
@@ -135,11 +139,13 @@ export function TooltipContentWithIndex({
 			</RowDiv>
 			{tweet && (
 				<>
-					{/* <div className="tweetIndex">
-						{tooltipTweetIndex + 1} {"/"} {numTooltipTweets}
-					</div> */}
 					{/* <div className="id_str">{tweet.id_str}</div> */}
 					<TweetContent {...{ tweet, isTooltip: true }} />
+					{numTooltipTweets > 1 && (
+						<div className="tweetIndex">
+							{tooltipTweetIndex + 1} {"/"} {numTooltipTweets}
+						</div>
+					)}
 				</>
 			)}
 		</div>
@@ -164,7 +170,7 @@ export const TooltipStyles = styled.div`
 	.tweetIndex {
 		font-size: 0.7em;
 		position: absolute;
-		top: -16px;
+		bottom: -16px;
 		right: 0;
 		color: "hsla(0,0%,95%,0.9)";
 	}

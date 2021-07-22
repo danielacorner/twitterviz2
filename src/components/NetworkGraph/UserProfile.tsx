@@ -4,10 +4,6 @@ import { darkBackground, paleBlue } from "utils/colors";
 import { AVATAR_WIDTH, TOOLTIP_WIDTH } from "utils/constants";
 
 export function UserProfile({ user }: { user: User }) {
-	console.log(
-		"🌟🚨 ~ file: UserProfile.tsx ~ line 22 ~ UserProfile ~ user.profile_background_color",
-		user
-	);
 	const joinedDate = new Date(user.created_at);
 	const backgroundUrl =
 		user.profile_banner_url || user.profile_background_image_url_https;
