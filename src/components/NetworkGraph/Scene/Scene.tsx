@@ -8,13 +8,8 @@ import { uniqBy } from "lodash";
 export function Scene() {
 	const graphWithUsers = useGraphWithUsersAndLinks();
 	console.log("🌟🚨 ~ Scene ~ graphWithUsers", graphWithUsers);
-	// const graphData: GraphData = { nodes: [], links: [] };
-	// const myGraph = new ThreeForceGraph().graphData(graphData);
 	const vertices = getVertices(graphWithUsers.nodes.length);
-	console.log(
-		"🌟🚨 ~ file: Scene.tsx ~ line 17 ~ vertices ~ vertices",
-		vertices
-	);
+
 	return (
 		<>
 			<ambientLight intensity={0.75} />

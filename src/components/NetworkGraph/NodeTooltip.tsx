@@ -1,9 +1,10 @@
 import { useEffect, useState, useRef, useCallback, forwardRef } from "react";
-import { animated } from "react-spring";
+import { animated, useSpring } from "react-spring";
 import styled from "styled-components/macro";
 import TweetContent from "../TweetContent/TweetContent";
 import { PADDING } from "../../utils/utils";
 import useStore, {
+	isPointerOverAtom,
 	numTooltipTweetsAtom,
 	tooltipTweetIndexAtom,
 } from "../../providers/store/store";
@@ -12,7 +13,7 @@ import { useWindowSize } from "../../utils/hooks";
 import { Tweet, User } from "types";
 import { RowDiv } from "../common/styledComponents";
 import { LEFT_DRAWER_WIDTH } from "components/LEFT_DRAWER_WIDTH";
-import { useNodeTooltipContentProps } from "./useNodeTooltipContentProps";
+import { useNodeTooltipContentPropsLite } from "./useNodeTooltipContentProps";
 import { UserProfile } from "./UserProfile";
 import { AVATAR_WIDTH, TOOLTIP_WIDTH } from "utils/constants";
 import { darkBackground, lightBackground } from "utils/colors";
@@ -57,9 +58,29 @@ const NodeTooltip = () => {
 			window.removeEventListener("mousemove", handleMouseMove);
 		};
 	}, [minYPosition, maxXPosition, minXPosition, handleMouseMove]);
+	const [isPointerOver] = useAtom(isPointerOverAtom);
 
-	const { springToMousePosition, isLight, originalPoster, tweet } =
-		useNodeTooltipContentProps(position);
+	const springToMousePosition = useSpring({
+		pointerEvents: "none",
+		position: "fixed",
+		opacity: tooltipNode ? (isPointerOver ? 1 : 0.2) : 0,
+		top: 16,
+		left: MOUSE_WIDTH,
+		transform: `translate(${position.x}px,${position.y}px)`,
+		config: { tension: 170, mass: 0.1 },
+		onRest: () => {
+			// if (!tooltipNode) {
+			//   lastTooltipNode.current = null;
+			// }
+		},
+	});
+
+	const {
+		isLight,
+		originalPoster,
+		tweet,
+	}: { isLight: boolean; originalPoster: User; tweet: Tweet } =
+		useNodeTooltipContentPropsLite();
 	return (
 		<animated.div style={springToMousePosition as any}>
 			<NodeTooltipContent
@@ -99,9 +120,11 @@ export const NodeTooltipContent = forwardRef(
 export function TooltipContent({
 	originalPoster,
 	tweet,
+	autoPlay = true,
 }: {
 	originalPoster: any;
 	tweet: Tweet | null;
+	autoPlay?: boolean;
 }) {
 	return (
 		<div className="profileAndContent">
@@ -113,7 +136,7 @@ export function TooltipContent({
 			{tweet && (
 				<>
 					{/* <div className="id_str">{tweet.id_str}</div> */}
-					<TweetContent {...{ tweet, isTooltip: true }} />
+					<TweetContent {...{ tweet, isTooltip: true, autoPlay }} />
 				</>
 			)}
 		</div>

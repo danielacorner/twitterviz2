@@ -37,7 +37,9 @@ export default function NodeBillboard({ tweets }) {
       `,
 								}}
 							>
-								<TooltipContent {...{ originalPoster, tweet }} />
+								<TooltipContent
+									{...{ originalPoster, tweet, autoPlay: false }}
+								/>
 							</TooltipStyles>
 						))}
 					</TweetsColumnStyles>

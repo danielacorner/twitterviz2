@@ -1,12 +1,7 @@
 import { useEffect } from "react";
 import "./App.css";
 import styled from "styled-components/macro";
-import {
-	getOriginalPoster,
-	useLoading,
-	useSelectedNode,
-	useSetSelectedNode,
-} from "./providers/store/useSelectors";
+import { useLoading } from "./providers/store/useSelectors";
 import { useIsLight } from "./providers/ThemeManager";
 import "./video-react.css"; // import video-react css
 import AppFunctionalHooks from "./AppFunctionalHooks";
@@ -15,9 +10,7 @@ import { RowDiv } from "components/common/styledComponents";
 import { NavBar } from "components/NavBar/NavBar";
 import NetworkGraph from "components/NetworkGraph/NetworkGraph";
 import { useRecordSelectedNodeHistory } from "./components/useRecordSelectedNodeHistory";
-import { Drawer } from "@material-ui/core";
-import { SelectedTweetHistory } from "./components/SelectedTweetHistory";
-import { Timeline } from "react-twitter-widgets";
+import { SelectedTweetDrawer } from "./components/SelectedTweetDrawer";
 
 const AppStyles = styled.div`
 	transition: background 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
@@ -52,34 +45,6 @@ function App() {
 		</AppStyles>
 	);
 }
-
-function SelectedTweetDrawer() {
-	const selectedNode = useSelectedNode();
-	const setSelectedNode = useSetSelectedNode();
-	const originalPoster = selectedNode && getOriginalPoster(selectedNode);
-	return (
-		<Drawer
-			anchor="right"
-			open={Boolean(originalPoster)}
-			onClose={() => setSelectedNode(null)}
-		>
-			{originalPoster && (
-				<DrawerContentStyles>
-					<Timeline
-						dataSource={{
-							sourceType: "profile",
-							screenName: originalPoster.screen_name,
-						}}
-						options={{
-							theme: "dark",
-						}}
-					/>
-				</DrawerContentStyles>
-			)}
-		</Drawer>
-	);
-}
-const DrawerContentStyles = styled.div``;
 
 function AppStylesHooks() {
 	const loading = useLoading();

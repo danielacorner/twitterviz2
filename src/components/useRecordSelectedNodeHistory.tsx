@@ -11,7 +11,6 @@ export const useRecordSelectedNodeHistory = () => {
 	// when selectedNode changes, record it
 	useEffect(() => {
 		setSelectedNodeHistory((p) => {
-			console.log("🌟🚨 ~ useEffect ~ p", p);
 			return selectedNode ? uniqBy([...p, selectedNode], (t) => t.id_str) : p;
 		});
 	}, [selectedNode, setSelectedNodeHistory]);
