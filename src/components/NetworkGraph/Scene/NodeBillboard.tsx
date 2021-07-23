@@ -38,7 +38,12 @@ export default function NodeBillboard({ tweets }) {
 								}}
 							>
 								<TooltipContent
-									{...{ originalPoster, tweet, autoPlay: false }}
+									{...{
+										originalPoster,
+										tweet,
+										autoPlay: false,
+										compact: false,
+									}}
 								/>
 							</TooltipStyles>
 						))}

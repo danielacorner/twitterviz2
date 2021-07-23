@@ -23,14 +23,14 @@ const nodeMaterial = new THREE.MeshLambertMaterial({
 	color: "#316c83",
 });
 const rightClickNodeMaterial = new THREE.MeshLambertMaterial({
-	emissive: "orange",
+	emissive: "green",
 	metalness: 1,
-	color: "#be9729",
+	color: "#26be3a",
 });
 const tooltipNodeMaterial = new THREE.MeshLambertMaterial({
-	emissive: "yellow",
+	emissive: "blue",
 	metalness: 1,
-	color: "#ecf021",
+	color: "#26be3a",
 });
 const RADIUS = 10;
 const nodeGeometry = new THREE.SphereGeometry(RADIUS / 5, 28, 28);
@@ -46,12 +46,14 @@ export const Node = ({
 }) => {
 	const tooltipNode = useTooltipNode();
 	const [rightClickMenu] = useAtom(rightClickMenuAtom);
-	const isRightClickingThisNode = rightClickMenu.node?.id_str === node.id_str;
+	const isRightClickingThisNode =
+		rightClickMenu.node &&
+		getOriginalPoster(rightClickMenu.node)?.id_str === node.id_str;
 	const isTooltipNode =
 		tooltipNode && getOriginalPoster(tooltipNode)?.id_str === node.id_str;
 	const setTooltipNode = useStore((state) => state.setTooltipNode);
 	const setSelectedNode = useStore((state) => state.setSelectedNode);
-	const [isPointerOver, setIsPointerOver] = useAtom(isPointerOverAtom);
+	const [, setIsPointerOver] = useAtom(isPointerOverAtom);
 	const [tooltipTweetIndex, setTooltipTweetIndex] = useAtom(
 		tooltipTweetIndexAtom
 	);
@@ -129,10 +131,10 @@ export const Node = ({
 	);
 };
 
-function getRandomPosition(min, max): [x: number, y: number, z: number] {
-	return [
-		Math.random() * (max - min) + min,
-		Math.random() * (max - min) + min,
-		Math.random() * (max - min) + min,
-	];
-}
+// function getRandomPosition(min, max): [x: number, y: number, z: number] {
+// 	return [
+// 		Math.random() * (max - min) + min,
+// 		Math.random() * (max - min) + min,
+// 		Math.random() * (max - min) + min,
+// 	];
+// }

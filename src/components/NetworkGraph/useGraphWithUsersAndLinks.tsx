@@ -1,10 +1,7 @@
 import {
 	getOriginalPoster,
-	useLikesByUserId,
-	useRetweetsByTweetId,
 	useTweets,
 } from "../../providers/store/useSelectors";
-import { useConfig } from "../../providers/store/useConfig";
 import { Tweet, User } from "../../types";
 import { groupBy } from "lodash";
 
@@ -20,11 +17,10 @@ export function useGraphWithUsersAndLinks() {
 	//   nodes: [] as Tweet[],
 	//   links: [] as Link[],
 	// });
-	const tweets = useTweets();
+	// const tweets = useTweets();
 	const userNodes = useUserNodes();
-	const { showUserNodes } = useConfig();
-	const likesByUserId = useLikesByUserId();
-	const retweetsByTweetId = useRetweetsByTweetId();
+	// const likesByUserId = useLikesByUserId();
+	// const retweetsByTweetId = useRetweetsByTweetId();
 
 	// uncomment to grab the current state and copy-paste into mockTweetsData.json
 	// console.log("🚨🚨: Graph -> mockTweetsData", {

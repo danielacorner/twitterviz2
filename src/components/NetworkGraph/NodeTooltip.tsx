@@ -84,7 +84,14 @@ const NodeTooltip = () => {
 	return (
 		<animated.div style={springToMousePosition as any}>
 			<NodeTooltipContent
-				{...{ springToMousePosition, ref, isLight, originalPoster, tweet }}
+				{...{
+					springToMousePosition,
+					ref,
+					isLight,
+					originalPoster,
+					tweet,
+					compact: true,
+				}}
 			/>
 		</animated.div>
 	);
@@ -95,13 +102,20 @@ export default NodeTooltip;
 export type NodeTooltipContentProps = {
 	ref: React.MutableRefObject<any>;
 	isLight: boolean;
+	compact: boolean;
 	originalPoster: User;
 	tweet: Tweet | null;
 	tooltipStyles?: any;
 };
 export const NodeTooltipContent = forwardRef(
 	(
-		{ isLight, originalPoster, tweet, tooltipStyles }: NodeTooltipContentProps,
+		{
+			isLight,
+			originalPoster,
+			tweet,
+			tooltipStyles,
+			compact,
+		}: NodeTooltipContentProps,
 		ref
 	) => {
 		return (
@@ -111,7 +125,7 @@ export const NodeTooltipContent = forwardRef(
 						<UserProfile {...{ user: originalPoster }} />
 					</div>
 				)}
-				<TooltipContentWithIndex {...{ originalPoster, tweet }} />
+				<TooltipContentWithIndex {...{ originalPoster, tweet, compact }} />
 			</TooltipStyles>
 		);
 	}
@@ -121,10 +135,12 @@ export function TooltipContent({
 	originalPoster,
 	tweet,
 	autoPlay = true,
+	compact,
 }: {
 	originalPoster: any;
 	tweet: Tweet | null;
 	autoPlay?: boolean;
+	compact: boolean;
 }) {
 	return (
 		<div className="profileAndContent">
@@ -134,10 +150,7 @@ export function TooltipContent({
 				</AvatarStyles>
 			</RowDiv>
 			{tweet && (
-				<>
-					{/* <div className="id_str">{tweet.id_str}</div> */}
-					<TweetContent {...{ tweet, isTooltip: true, autoPlay }} />
-				</>
+				<TweetContent {...{ tweet, isTooltip: true, autoPlay, compact }} />
 			)}
 		</div>
 	);
@@ -163,7 +176,7 @@ export function TooltipContentWithIndex({
 			{tweet && (
 				<>
 					{/* <div className="id_str">{tweet.id_str}</div> */}
-					<TweetContent {...{ tweet, isTooltip: true }} />
+					<TweetContent {...{ tweet, isTooltip: true, compact: true }} />
 					{numTooltipTweets > 1 && (
 						<div className="tweetIndex">
 							{tooltipTweetIndex + 1} {"/"} {numTooltipTweets}

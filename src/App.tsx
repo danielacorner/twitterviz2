@@ -12,22 +12,6 @@ import NetworkGraph from "components/NetworkGraph/NetworkGraph";
 import { useRecordSelectedNodeHistory } from "./components/useRecordSelectedNodeHistory";
 import { SelectedTweetDrawer } from "./components/SelectedTweetDrawer";
 
-const AppStyles = styled.div`
-	transition: background 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
-	min-height: 100vh;
-
-	* {
-		margin: 0;
-		box-sizing: border-box;
-	}
-	a {
-		color: cornflowerblue;
-		&:visited {
-			color: hsl(250, 50%, 60%);
-		}
-	}
-`;
-
 function App() {
 	useRecordSelectedNodeHistory();
 	return (
@@ -45,6 +29,22 @@ function App() {
 		</AppStyles>
 	);
 }
+
+const AppStyles = styled.div`
+	transition: background 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+	min-height: 100vh;
+
+	* {
+		margin: 0;
+		box-sizing: border-box;
+	}
+	a {
+		color: cornflowerblue;
+		&:visited {
+			color: hsl(250, 50%, 60%);
+		}
+	}
+`;
 
 function AppStylesHooks() {
 	const loading = useLoading();

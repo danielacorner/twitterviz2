@@ -76,10 +76,6 @@ export function useHandleOpenRightClickMenu(tweet: Tweet | null) {
 	const [, setRightClickMenu] = useAtom(rightClickMenuAtom);
 
 	function handleRightClick(event: MouseEvent) {
-		console.log(
-			"🌟🚨 ~ file: GraphRightClickMenu.tsx ~ line 79 ~ handleRightClick ~ event",
-			event
-		);
 		// prevent default right-click menu
 		event.preventDefault();
 		// pause the simulation

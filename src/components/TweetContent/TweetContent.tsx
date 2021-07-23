@@ -1,4 +1,4 @@
-import { getMediaArr } from "../../utils/utils";
+import { getMediaArr, PADDING } from "../../utils/utils";
 import countryCodes from "../../utils/countryCodes";
 import LocationIcon from "@material-ui/icons/LocationOnRounded";
 import { TweetStyles } from "./TweetStyles";
@@ -16,6 +16,7 @@ type TweetContentProps = {
 	autoPlay?: boolean;
 	isTooltip?: boolean;
 	isBottomDrawer?: boolean;
+	compact: boolean;
 };
 
 // tslint:disable-next-line: cognitive-complexity
@@ -25,6 +26,7 @@ export default function TweetContent({
 	autoPlay = true,
 	isTooltip = false,
 	isBottomDrawer = false,
+	compact,
 }: TweetContentProps) {
 	const {
 		user,
@@ -59,10 +61,13 @@ export default function TweetContent({
 		{ firstItemWidth: 0, totalHeight: 0 }
 	);
 
+	const isCompactGrid = compact && mediaArr.length > 1;
+
 	return (
 		<TweetStyles
 			className={isBottomDrawer ? "bottomDrawerTweetStyles" : ""}
 			ref={ref}
+			compact={isCompactGrid}
 			// isGallery={`${TAB_INDICES.GALLERY}` in searchObj}
 			isRetweet={Boolean(retweetedUser)}
 			isTooltip={isTooltip}
@@ -96,8 +101,20 @@ export default function TweetContent({
 									isTooltip,
 									isBottomDrawer,
 									numImages: mediaArr.length,
-									containerWidth: dimensions?.width || 0,
-									containerHeight: dimensions?.height || 0,
+									...(isCompactGrid
+										? {
+												containerWidth:
+													(dimensions?.width || 0) * 0.5 - PADDING / 2,
+												containerHeight:
+													(dimensions?.height || 0) * 0.5 - PADDING / 2,
+										  }
+										: {
+												containerWidth: dimensions?.width || 0,
+												containerHeight: dimensions?.height || 0,
+										  }),
+									...(isCompactGrid && mediaArr.length > 2
+										? { maxHeight: dimensions?.width * 0.5 }
+										: {}),
 								}}
 							/>
 						);
