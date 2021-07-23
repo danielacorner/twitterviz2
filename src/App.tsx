@@ -20,7 +20,7 @@ function App() {
 			<RowDiv>
 				<NetworkGraph />
 			</RowDiv>
-			<LeftDrawerCollapsible />
+			{process.env.NODE_ENV !== "production" && <LeftDrawerCollapsible />}
 			{/* <SelectedTweetModal /> */}
 			<AppStylesHooks />
 			<AppFunctionalHooks />
