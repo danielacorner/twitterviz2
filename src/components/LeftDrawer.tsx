@@ -4,13 +4,13 @@ import styled from "styled-components/macro";
 import { Pause, PlayArrow, Tune } from "@material-ui/icons";
 import { animated, useSpring } from "react-spring";
 import { NAV_HEIGHT } from "utils/constants";
-import useStore from "providers/store/store";
+import { isLeftDrawerOpenAtom } from "providers/store/store";
 import { LEFT_DRAWER_WIDTH } from "./LEFT_DRAWER_WIDTH";
 import { useConfig } from "providers/store/useConfig";
+import { useAtom } from "jotai";
 
 export default function LeftDrawerCollapsible() {
-  const open = useStore((s) => s.isDrawerOpen);
-  const setOpen = useStore((s) => s.setIsDrawerOpen);
+  const [open, setOpen] = useAtom(isLeftDrawerOpenAtom);
   const springRightOnOpen = useSpring({
     transform: `translate(${open ? 0 : -LEFT_DRAWER_WIDTH}px)`,
   });
@@ -18,14 +18,18 @@ export default function LeftDrawerCollapsible() {
   return (
     <AnimatedLeftDrawerStyles style={springRightOnOpen}>
       <div className="contents">
-        <Controls />
-        <IconButton
-          className="btnOpenDrawer"
-          onClick={() => setOpen(!open)}
-          style={{ opacity: open ? 0.5 : 1 }}
-        >
-          <Tune />
-        </IconButton>
+        {process.env.NODE_ENV !== "production" && (
+          <>
+            <Controls />
+            <IconButton
+              className="btnOpenDrawer"
+              onClick={() => setOpen(!open)}
+              style={{ opacity: open ? 0.5 : 1 }}
+            >
+              <Tune />
+            </IconButton>
+          </>
+        )}
         <IconButton
           className="btnPauseSimulation"
           onClick={() => setConfig({ isPaused: !isPaused })}

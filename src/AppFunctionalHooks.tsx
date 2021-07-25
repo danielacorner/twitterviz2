@@ -1,4 +1,3 @@
-import { useSetTweets } from "providers/store/useSelectors";
 import { useMount } from "utils/utils";
 
 import { useEffect, useRef } from "react";
@@ -10,8 +9,7 @@ import {
   useSetLoading,
 } from "./providers/store/useSelectors";
 import { useConfig } from "./providers/store/useConfig";
-import { query as q } from "faunadb";
-import { faunaClient } from "./providers/faunaProvider";
+import { useFetchTweetsOnMount } from "./providers/faunaProvider";
 import "./video-react.css"; // import video-react css
 import qs from "query-string";
 import { useLocation } from "react-router";
@@ -31,38 +29,6 @@ function useDetectOffline() {
     window.addEventListener("offline", () => {
       setConfig({ isOffline: true });
     });
-  });
-}
-
-/** retrieve posts from faunadb
- *
- * [docs](https://docs.fauna.com/fauna/current/tutorials/crud?lang=javascript#retrieve)
- */
-function useFetchTweetsOnMount() {
-  const setTweets = useSetTweets();
-
-  // fetch tweets from DB on mount
-  useMount(() => {
-    if (process.env.NODE_ENV === "development") {
-      return;
-    }
-
-    faunaClient
-      .query(
-        q.Map(
-          q.Paginate(q.Documents(q.Collection("Tweet"))),
-          q.Lambda((x) => q.Get(x))
-        )
-      )
-      .then((ret: { data: any[] } | any) => {
-        if (ret.data) {
-          setTweets(ret.data.map((d) => d.data));
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        setTweets([]);
-      });
   });
 }
 

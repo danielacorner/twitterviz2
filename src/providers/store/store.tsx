@@ -8,9 +8,19 @@ import { WordcloudConfig } from "./useSelectors";
 import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 
+export enum GameStepsEnum {
+  welcome = "welcome",
+  lookingAtTweetsWithBotScores = "lookingAtTweetsWithBotScores",
+}
+export const gameStepAtom = atom<GameStepsEnum>(GameStepsEnum.welcome);
+
 export const numTooltipTweetsAtom = atom<number>(1);
 export const tooltipTweetIndexAtom = atom<number>(0);
 export const isPointerOverAtom = atom<boolean>(false);
+export const isLeftDrawerOpenAtom = atomWithStorage<boolean>(
+  "drawer:isLeftDrawerOpen",
+  false
+);
 export const selectedNodeHistoryAtom = atom<Tweet[]>([]);
 export const tooltipHistoryAtom = atom<Tweet[]>([]);
 export const rightClickMenuAtom = atom<{
@@ -56,9 +66,8 @@ export type GlobalStateType = {
   setWordcloudConfig: (newConfig: Partial<WordcloudConfig>) => void;
   savedDatasets: { saveName: string; ids: string[] }[];
   setSavedDatasets: (newSaves: { saveName: string; ids: string[] }[]) => void;
-  isDrawerOpen: boolean;
-  setIsDrawerOpen: (next: boolean) => void;
 };
+
 export type AppConfig = {
   is3d: boolean;
   gravity: number;
@@ -161,8 +170,7 @@ const [useStore] = create<GlobalStateType>(
       // numTweets: 50,
       isOffline: false,
     },
-    isDrawerOpen: process.env.NODE_ENV === "development",
-    setIsDrawerOpen: (next) => set((state) => ({ isDrawerOpen: next })),
+
     /** overwrite any values passed in */
     setConfig: (newConfig) =>
       set((state) => ({ config: { ...state.config, ...newConfig } })),

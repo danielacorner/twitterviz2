@@ -9,7 +9,6 @@ import { useMount } from "utils/utils";
 
 export default function ThemeManager({ children }: { children: any }) {
   const [isDarkMode, setIsDarkMode] = useAtom(isDarkModeAtom);
-  console.log("🌟🚨 ~ ThemeManager ~ isDarkMode", isDarkMode);
 
   const palletType = isDarkMode ? "dark" : "light";
   const mainPrimaryColor = isDarkMode ? `hsl(200,70%,40%)` : `hsl(200,70%,50%)`;
