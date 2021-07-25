@@ -23,9 +23,9 @@ const nodeMaterial = new THREE.MeshLambertMaterial({
   color: "#316c83",
 });
 const rightClickNodeMaterial = new THREE.MeshLambertMaterial({
-  emissive: "green",
-  metalness: 1,
-  color: "#26be3a",
+  emissive: "#be2626",
+  metalness: -1,
+  color: "#be5626",
 });
 const pointerOverMaterial = new THREE.MeshLambertMaterial({
   emissive: "blue",

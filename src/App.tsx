@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import styled from "styled-components/macro";
 import { useLoading } from "./providers/store/useSelectors";
@@ -13,7 +13,8 @@ import { useRecordSelectedNodeHistory } from "./components/useRecordSelectedNode
 import { SelectedTweetDrawer } from "./components/SelectedTweetDrawer";
 import { Button } from "@material-ui/core";
 import { useAtom } from "jotai";
-import { gameStepAtom, GameStepsEnum } from "providers/store/store";
+import { gameStateAtom, GameStepsEnum } from "providers/store/store";
+import { useInterval } from "utils/useInterval";
 // import { useDeleteAllTweets } from "components/common/useDeleteAllTweets";
 // import { useMount } from "utils/utils";
 
@@ -48,18 +49,28 @@ function App() {
 //     },
 //   },
 // });
-
 /** renders controls and instructions to play the game */
 function Game() {
-  const [gameStep, setGameStep] = useAtom(gameStepAtom);
-  console.log("🌟🚨 ~ Game ~ gameStep", gameStep);
+  const [gameState, setGameState] = useAtom(gameStateAtom);
+  const [timeRemainingS, setTimeRemainingS] = useState(Infinity);
+  const [running, setRunning] = useState(false);
+
+  useInterval({
+    callback: () => {
+      if (running) {
+        setTimeRemainingS((p) => Math.max(0, p - 1));
+      }
+    },
+    delay: 1000,
+    immediate: false,
+  });
   // const [state, send] = useMachine(gameMachine);
   // const deleteAllTweets = useDeleteAllTweets();
   // useMount(() => {
   // 	deleteAllTweets()
   // });
-  return gameStep === GameStepsEnum.welcome ? (
-    <GameStyles>
+  return gameState.step === GameStepsEnum.welcome ? (
+    <Step1Styles>
       <h3>Twitter Botsketball 🤖🏀</h3>
       <p>
         1. look at 10 twitter accounts and their bot scores from Botometer API
@@ -71,15 +82,40 @@ function Game() {
       <Button
         variant="contained"
         color="primary"
-        onClick={() => setGameStep(GameStepsEnum.lookingAtTweetsWithBotScores)}
+        onClick={() => {
+          setRunning(true);
+          setTimeRemainingS(100);
+          setGameState((p) => ({
+            step: GameStepsEnum.lookingAtTweetsWithBotScores,
+            startTime: Date.now(),
+          }));
+        }}
       >
         Go
       </Button>
-    </GameStyles>
-  ) : gameStep === GameStepsEnum.lookingAtTweetsWithBotScores ? null : null;
+    </Step1Styles>
+  ) : gameState.step === GameStepsEnum.lookingAtTweetsWithBotScores ? (
+    <Step2Styles>
+      <h3>You have {timeRemainingS} seconds left to find a bot</h3>
+      <h4>botsketball score = bot score / num tweets viewed</h4>
+    </Step2Styles>
+  ) : null;
 }
 
-const GameStyles = styled.div`
+const Step2Styles = styled.div`
+  position: fixed;
+  inset: 80px calc(50vw - 200px);
+  height: fit-content;
+  color: white;
+  opacity: 0.7;
+  background: hsla(0, 0%, 100%, 0.05);
+  border-radius: 16px;
+  padding: 16px;
+  h4 {
+    font-size: 0.8em;
+  }
+`;
+const Step1Styles = styled.div`
   position: fixed;
   inset: calc(50vh - 200px) calc(50vw - 200px);
   height: fit-content;
@@ -93,9 +129,6 @@ const GameStyles = styled.div`
   }
   h3 {
     margin-bottom: 1em;
-  }
-  .stuff {
-    font-size: 0.8em;
   }
   button {
     margin-top: 1em;

@@ -7,14 +7,14 @@ import * as serviceWorker from "./serviceWorker";
 import ThemeManager from "./providers/ThemeManager";
 import { BrowserRouter as Router } from "react-router-dom";
 
+// <React.StrictMode>
+// </React.StrictMode>,
 ReactDOM.render(
-  <React.StrictMode>
-    <ThemeManager>
-      <Router>
-        <App />
-      </Router>
-    </ThemeManager>
-  </React.StrictMode>,
+  <ThemeManager>
+    <Router>
+      <App />
+    </Router>
+  </ThemeManager>,
   document.getElementById("root")
 );
 

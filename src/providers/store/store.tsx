@@ -14,7 +14,9 @@ export enum GameStepsEnum {
   welcome = "welcome",
   lookingAtTweetsWithBotScores = "lookingAtTweetsWithBotScores",
 }
-export const gameStepAtom = atom<GameStepsEnum>(GameStepsEnum.welcome);
+export const gameStateAtom = atom<{ step: GameStepsEnum; startTime?: number }>({
+  step: GameStepsEnum.welcome,
+});
 
 export const numTooltipTweetsAtom = atom<number>(1);
 export const tooltipTweetIndexAtom = atom<number>(0);

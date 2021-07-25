@@ -23,11 +23,13 @@ export function SearchForm() {
   const setLoading = useSetLoading();
   const setTweets = useSetTweets();
   const { fetchTimelineByHandle } = useFetchTimeline();
-
   const { langParam, allowedMediaTypesParam, countryParam, geocodeParam } =
     useParamsForFetch();
 
   const fetchSearchResults = async () => {
+    if (disabled) {
+      return;
+    }
     setLoading(true);
 
     if (searchTerm[0] === "@") {
@@ -43,12 +45,12 @@ export function SearchForm() {
       setTweets(data);
     }
   };
-  const disabled = loading || process.env.NODE_ENV !== "development";
+  const disabled = true || loading || process.env.NODE_ENV !== "development";
   const isTabletOrLarger = useMediaQuery(
     `(min-width: ${BREAKPOINTS.TABLET}px)`
   );
   return (
-    <Tooltip title={disabled ? "Premium only" : ""}>
+    <Tooltip title={disabled ? "🚧 under construction 🏗👷‍♀️" : ""}>
       <StyledForm
         onSubmit={(e) => {
           e.preventDefault();
