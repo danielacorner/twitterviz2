@@ -49,10 +49,12 @@ function App() {
 //     },
 //   },
 // });
+const COUNTDOWN_TIME_S = 5;
 /** renders controls and instructions to play the game */
 function Game() {
   const [gameState, setGameState] = useAtom(gameStateAtom);
   const [timeRemainingS, setTimeRemainingS] = useState(Infinity);
+  const isGameOver = timeRemainingS <= 0;
   const [running, setRunning] = useState(false);
 
   useInterval({
@@ -64,6 +66,7 @@ function Game() {
     delay: 1000,
     immediate: false,
   });
+
   // const [state, send] = useMachine(gameMachine);
   // const deleteAllTweets = useDeleteAllTweets();
   // useMount(() => {
@@ -84,7 +87,7 @@ function Game() {
         color="primary"
         onClick={() => {
           setRunning(true);
-          setTimeRemainingS(100);
+          setTimeRemainingS(COUNTDOWN_TIME_S);
           setGameState((p) => ({
             step: GameStepsEnum.lookingAtTweetsWithBotScores,
             startTime: Date.now(),
@@ -94,6 +97,8 @@ function Game() {
         Go
       </Button>
     </Step1Styles>
+  ) : isGameOver ? (
+    <Step2Styles>whoopesie</Step2Styles>
   ) : gameState.step === GameStepsEnum.lookingAtTweetsWithBotScores ? (
     <Step2Styles>
       <h3>You have {timeRemainingS} seconds left to find a bot</h3>
