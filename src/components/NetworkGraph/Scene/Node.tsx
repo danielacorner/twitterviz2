@@ -27,6 +27,11 @@ const rightClickNodeMaterial = new THREE.MeshLambertMaterial({
   metalness: 1,
   color: "#26be3a",
 });
+const pointerOverMaterial = new THREE.MeshLambertMaterial({
+  emissive: "blue",
+  metalness: 1,
+  color: "#3ad64f",
+});
 const tooltipNodeMaterial = new THREE.MeshLambertMaterial({
   emissive: "blue",
   metalness: 1,
@@ -104,7 +109,7 @@ export const Node = ({
       isPointerOver && isTooltipNode
         ? [2.2, 2.2, 2.2]
         : isTooltipNode
-        ? [2, 2, 2]
+        ? [1.8, 1.8, 1.8]
         : [1, 1, 1],
   });
   return (
@@ -113,6 +118,8 @@ export const Node = ({
       material={
         isRightClickingThisNode
           ? rightClickNodeMaterial
+          : isPointerOver && isTooltipNode
+          ? pointerOverMaterial
           : isTooltipNode
           ? tooltipNodeMaterial
           : nodeMaterial

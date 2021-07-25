@@ -8,7 +8,7 @@ import { userIdAtom } from "./store/store";
 import { useEffect, useRef } from "react";
 import { isEqual } from "lodash";
 import { atomWithStorage } from "jotai/utils";
-const dbRefIdAtom = atomWithStorage("atoms:dbRefId", "");
+const dbRefAtom = atomWithStorage("dbRefId", {});
 export const faunaClient = new faunadb.Client({
   secret: process.env.REACT_APP_FAUNA_KEY || "",
 });
@@ -58,7 +58,7 @@ export function useFetchTweetsOnMount() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tweets]);
 
-  const [, setDbRefId] = useAtom(dbRefIdAtom);
+  const [, setDbRef] = useAtom(dbRefAtom);
   const setTweets = useSetTweets();
   const [userId, setUserId] = useAtom(userIdAtom);
   // fetch tweets from DB on mount
@@ -75,7 +75,7 @@ export function useFetchTweetsOnMount() {
           newTweets
         );
         setTweets(newTweets);
-        setDbRefId((ret as any)?.value?.id);
+        setDbRef((ret as any)?.ref);
       });
     } else {
       getTweetsFromDb().then((newTweets) => {
@@ -94,6 +94,7 @@ function useGetTweetsFromDb() {
     new Promise((resolve, reject) => {
       faunaClient
         .query(q.Get(q.Match(q.Index("nodes_by_userid"), userId)))
+        // .query(q.Get(q.Match(q.Index("nodes_by_userid"), userId)))
         .then((ret: { data: any[] } | any) => {
           console.log("🌟🚨 ~ useGetTweetsFromDb ~ userId", userId);
           console.log("🌟🚨 ~ .then ~ ret", ret);
@@ -101,11 +102,9 @@ function useGetTweetsFromDb() {
           if (ret.data) {
             // then find the user's nodes
             console.log("🌟🚨 ~ .then ~ ret.data", ret.data);
-            const nodesInDb = ret.data[userId] || [];
+            const nodesInDb = ret.data.nodes || [];
             console.log("🌟🚨 ~ .then ~ nodesInDb", nodesInDb);
-            const newTweets = nodesInDb.map((d) => d.data);
-            console.log("🌟🚨 ~ .then ~ newTweets", newTweets);
-            resolve(newTweets as Tweet[]);
+            resolve(nodesInDb as Tweet[]);
           }
         })
         .catch((err) => {
@@ -146,12 +145,17 @@ function initEmptyNodesForUser(userId: string) {
 function useReplaceNodesInDbForUser() {
   const [userId] = useAtom(userIdAtom);
   console.log("🌟🚨 ~ useReplaceNodesInDbForUser ~ userId", userId);
-  const [dbRefId] = useAtom(dbRefIdAtom);
+  const [dbRef] = useAtom(dbRefAtom);
 
   return (nodes: Tweet[]) => {
+    if (!dbRef) {
+      console.log("🌟🚨🚨 ~ return ~ dbRef", dbRef);
+      return;
+    }
     faunaClient
       .query(
-        q.Replace(q.Ref(q.Collection("Nodes"), dbRefId), {
+        q.Replace(q.Ref(q.Collection("Nodes"), (dbRef as any)?.id), {
+          // q.Replace(q.Match(q.Index("nodes_by_userid"), userId), {
           data: { userId, nodes },
         })
       )
