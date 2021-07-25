@@ -1,6 +1,6 @@
 import { useTheme } from "@material-ui/core";
 import { useLoading } from "../../providers/store/useSelectors";
-import SelectGeolocation from "./SelectGeolocation";
+// import SelectGeolocation from "./SelectGeolocation";
 import { SelectCountry, SelectLanguage } from "./Dropdowns";
 import {
   FilterLevelCheckboxes,
@@ -37,7 +37,7 @@ export default function Controls() {
       <div className="section" style={{ display: "grid", gridGap: 16 }}>
         <SelectLanguage />
         <SelectCountry />
-        <SelectGeolocation />
+        {/* <SelectGeolocation /> */}
       </div>
     </ControlsStyles>
   );
