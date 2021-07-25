@@ -8,6 +8,8 @@ import { WordcloudConfig } from "./useSelectors";
 import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 
+export const userIdAtom = atomWithStorage<string>("atoms:userId", "");
+
 export enum GameStepsEnum {
   welcome = "welcome",
   lookingAtTweetsWithBotScores = "lookingAtTweetsWithBotScores",
@@ -18,7 +20,7 @@ export const numTooltipTweetsAtom = atom<number>(1);
 export const tooltipTweetIndexAtom = atom<number>(0);
 export const isPointerOverAtom = atom<boolean>(false);
 export const isLeftDrawerOpenAtom = atomWithStorage<boolean>(
-  "drawer:isLeftDrawerOpen",
+  "atoms:isLeftDrawerOpen",
   false
 );
 export const selectedNodeHistoryAtom = atom<Tweet[]>([]);
@@ -35,7 +37,7 @@ export const rightClickMenuAtom = atom<{
 
 export const nodeMouseCoordsAtom = atom({ x: 0, y: 0 });
 export const isDarkModeAtom = atomWithStorage<boolean>(
-  "theme:isDarkMode",
+  "atoms:isDarkMode",
   true
 );
 
