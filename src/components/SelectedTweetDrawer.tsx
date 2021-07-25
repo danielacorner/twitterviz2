@@ -4,7 +4,7 @@ import {
   useSelectedNode,
   useSetSelectedNode,
 } from "../providers/store/useSelectors";
-import { Drawer, Button } from "@material-ui/core";
+import { Drawer } from "@material-ui/core";
 import { Timeline, Tweet as TweetWidget } from "react-twitter-widgets";
 
 /** RightDrawer */
@@ -19,45 +19,31 @@ export function SelectedTweetDrawer() {
         open={Boolean(originalPoster)}
         onClose={() => setSelectedNode(null)}
       >
-        {originalPoster && (
-          <DrawerContentStyles>
-            {selectedNode && (
-              <TweetWidget
-                tweetId={selectedNode.id_str}
-                options={{ theme: "dark" }}
+        <DrawerContentStyles>
+          {originalPoster && (
+            <>
+              {selectedNode && (
+                <TweetWidget
+                  tweetId={selectedNode.id_str}
+                  options={{ theme: "dark" }}
+                />
+              )}
+              <Timeline
+                dataSource={{
+                  sourceType: "profile",
+                  screenName: originalPoster.screen_name,
+                }}
+                options={{
+                  theme: "dark",
+                }}
               />
-            )}
-            <Timeline
-              dataSource={{
-                sourceType: "profile",
-                screenName: originalPoster.screen_name,
-              }}
-              options={{
-                theme: "dark",
-              }}
-            />
-          </DrawerContentStyles>
-        )}
+            </>
+          )}
+        </DrawerContentStyles>
       </Drawer>
-      <TagTheBotButton
-        variant="contained"
-        color="secondary"
-        onClick={() => {
-          // TODO: get bot score
-        }}
-      >
-        It's the bot! 🎯
-      </TagTheBotButton>
     </>
   );
 }
-const DrawerContentStyles = styled.div``;
-const TagTheBotButton = styled(Button)`
-  &&&&&&&&& {
-    position: fixed;
-    z-index: 9999999;
-    bottom: 50px;
-    margin: auto;
-    text-transform: none;
-  }
+const DrawerContentStyles = styled.div`
+  width: 300px;
 `;

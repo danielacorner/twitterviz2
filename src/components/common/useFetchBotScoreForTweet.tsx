@@ -1,7 +1,10 @@
 import { useSetTweets, useTweets } from "providers/store/useSelectors";
 import { BotScore, Tweet } from "types";
 
-// https://rapidapi.com/OSoMe/api/botometer-pro/pricing 500 per day
+/** fetch one bot score and send to store>tweets
+ *
+ * 500 per day https://rapidapi.com/OSoMe/api/botometer-pro/pricing
+ */
 export function useFetchBotScoreForTweet() {
   const tweets = useTweets();
   const setTweets = useSetTweets();
