@@ -50,7 +50,7 @@ export default function RightClickMenu({
       {retweetingUser.screen_name})
     </>
   );
-
+  const getMenuItemsForUser = useGetMenuItemsForUser();
   return (
     <Menu
       {...(anchorEl ? { anchorEl } : {})}
@@ -58,20 +58,18 @@ export default function RightClickMenu({
       open={isMenuOpen}
       {...MenuProps}
     >
-      {originalPoster && (
-        <MenuItemsForUser
-          user={originalPoster}
-          userDisplay={originalPosterDisplay}
-          {...{ handleClose }}
-        />
-      )}
-      {retweetingUser && (
-        <MenuItemsForUser
-          user={retweetingUser}
-          userDisplay={retweetingUserDisplay}
-          {...{ handleClose }}
-        />
-      )}
+      {originalPoster &&
+        getMenuItemsForUser({
+          user: originalPoster,
+          userDisplay: originalPosterDisplay,
+          handleClose,
+        })}
+      {retweetingUser &&
+        getMenuItemsForUser({
+          user: retweetingUser,
+          userDisplay: retweetingUserDisplay,
+          handleClose,
+        })}
       {tooltipNode && (
         <MenuItem
           onClick={() => {
@@ -97,15 +95,7 @@ export default function RightClickMenu({
   );
 }
 
-function MenuItemsForUser({
-  user,
-  userDisplay,
-  handleClose,
-}: {
-  user: User;
-  userDisplay: string | React.ReactNode | null;
-  handleClose: Function;
-}) {
+function useGetMenuItemsForUser() {
   // const { fetchTimeline } = useFetchTimeline();
   const fetchLikes = useFetchLikes();
   const tooltipNode = useTooltipNode();
@@ -135,39 +125,48 @@ function MenuItemsForUser({
     //   setConfig({ replace: false });
     // });
   };
-  return (
-    <>
-      {/* <MenuItem
+  return ({
+    user,
+    userDisplay,
+    handleClose,
+  }: {
+    user: User;
+    userDisplay: string | React.ReactNode | null;
+    handleClose: Function;
+  }) => [
+    /* <MenuItem
         onClick={() => {
           fetchTimeline(user.id_str);
           handleClose();
         }}
       >
         🐦 Fetch {numTweets} tweets by {userDisplay}
-      </MenuItem> */}
-      <MenuItem
-        onClick={() => {
-          fetchLikes(user.id_str);
-          handleClose();
-        }}
-      >
-        🐦 Fetch {numTweets} tweets liked by {userDisplay}
-      </MenuItem>
-      <MenuItem
-        onClick={() => {
-          handleClose();
-        }}
-      >
-        🤖 Generate Bot Score for {userDisplay}
-      </MenuItem>
-      <MenuItem
-        onClick={() => {
-          deleteTweetsByUser(user);
-          handleClose();
-        }}
-      >
-        ❌ Delete all tweets by {userDisplay}
-      </MenuItem>
-    </>
-  );
+      </MenuItem> */
+    <MenuItem
+      key={`${user.id_str}-1`}
+      onClick={() => {
+        fetchLikes(user.id_str);
+        handleClose();
+      }}
+    >
+      🐦 Fetch {numTweets} tweets liked by {userDisplay}
+    </MenuItem>,
+    <MenuItem
+      key={`${user.id_str}-2`}
+      onClick={() => {
+        handleClose();
+      }}
+    >
+      🤖 Generate Bot Score for {userDisplay}
+    </MenuItem>,
+    <MenuItem
+      key={`${user.id_str}-3`}
+      onClick={() => {
+        deleteTweetsByUser(user);
+        handleClose();
+      }}
+    >
+      ❌ Delete all tweets by {userDisplay}
+    </MenuItem>,
+  ];
 }
