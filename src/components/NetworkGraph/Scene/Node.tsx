@@ -16,7 +16,6 @@ import { useHandleOpenRightClickMenu } from "../GraphRightClickMenu";
 import NodeBillboard from "./NodeBillboard";
 import { useGravity } from "./useGravity";
 import { useSpring, animated } from "@react-spring/three";
-import { useState } from "react";
 
 const nodeMaterial = new THREE.MeshLambertMaterial({
   emissive: "blue",
