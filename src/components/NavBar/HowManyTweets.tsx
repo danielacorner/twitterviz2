@@ -4,43 +4,6 @@ import { Body1 } from "../common/styledComponents";
 import styled from "styled-components/macro";
 import { BREAKPOINTS } from "utils/constants";
 
-// export function FetchUserTweetsForm() {
-//   const [userHandle, setUserHandle] = useState("");
-//   const { fetchTimelineByHandle, loading } = useFetchTimeline();
-//   return (
-//     <TwoColFormStyles
-//       onSubmit={(e) => {
-//         e.preventDefault();
-//         fetchTimelineByHandle(userHandle);
-//       }}
-//     >
-//       <InputStyles>
-//         <Body1
-//           style={{ color: "hsl(0,0%,50%)", marginBottom: 6, marginRight: 4 }}
-//         >
-//           @
-//         </Body1>
-//         <TextField
-//           variant="outlined"
-//           style={{ textAlign: "left", height: 36, marginTop: -32 }}
-//           InputProps={{ style: { height: 36 } }}
-//           label={"Fetch user..."}
-//           value={userHandle}
-//           onChange={(e) => setUserHandle(e.target.value)}
-//           type="text"
-//         />
-//       </InputStyles>
-//       <Button
-//         variant="contained"
-//         color="primary"
-//         disabled={loading || !userHandle}
-//         type="submit"
-//       >
-//         <SearchIcon />
-//       </Button>
-//     </TwoColFormStyles>
-//   );
-// }
 export default function HowManyTweets() {
   const { numTweets, setConfig } = useConfig();
 
@@ -60,10 +23,9 @@ export default function HowManyTweets() {
           }}
         />
         <Body1 className="tweetOrTweets">
-          tweet{numTweets === 1 ? "" : "s"}
+          tweet{numTweets === 1 ? "" : "s"} from
         </Body1>
       </div>
-      <Body1 className="from">from...</Body1>
     </HowManyTweetsStyles>
   );
 }
