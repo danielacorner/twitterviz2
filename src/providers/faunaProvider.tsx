@@ -73,18 +73,12 @@ export function useFetchTweetsOnMount() {
 			const newUserId = (Math.random() * 10 ** 16).toFixed();
 			setUserId(newUserId);
 			initEmptyNodesForUser(newUserId).then((ret) => {
-				console.log("🌟🚨 ~ initEmptyNodesForUser ~ ret", ret);
 				const newTweets = (ret as any).data.nodes as Tweet[];
-				console.log(
-					"🌟🚨🚨🚨🚨 ~ initEmptyNodesForUser ~ newTweets",
-					newTweets
-				);
 				setTweets(newTweets);
 				setDbRef((ret as any)?.ref);
 			});
 		} else {
 			getTweetsFromDb().then((newTweets) => {
-				console.log("🌟🚨 ~ getTweetsFromDb ~ newTweets", newTweets);
 				setTweets(newTweets as Tweet[]);
 				lastTweetsFromDb.current = newTweets as Tweet[];
 			});
@@ -104,12 +98,9 @@ function useGetTweetsFromDb() {
 				.query(q.Get(q.Match(q.Index("nodes_by_userid"), userId)))
 				// .query(q.Get(q.Match(q.Index("nodes_by_userid"), userId)))
 				.then((ret: { data: any[] } | any) => {
-					console.log("🌟🚨 ~ useGetTweetsFromDb ~ userId", userId);
-					console.log("🌟🚨 ~ .then ~ ret", ret);
 					// just grab the whole db ok
 					if (ret.data) {
 						// then find the user's nodes
-						console.log("🌟🚨 ~ .then ~ ret.data", ret.data);
 						const nodesInDb = ret.data.nodes || [];
 						console.log("🌟🚨 ~ .then ~ nodesInDb", nodesInDb);
 						resolve(nodesInDb as Tweet[]);
@@ -139,24 +130,19 @@ function initEmptyNodesForUser(userId: string) {
 			)
 			.then((ret) => {
 				console.log("🌟🌟 Created empty nodes for user", userId);
-				console.log("🌟🚨 ~ .then ~ ret", ret);
-				console.log(ret);
 				resolve(ret);
 			})
 			.catch((err) => {
 				console.log("🌟🚨 ~ returnnewPromise ~ err", err);
-				console.error("Error: %s", err);
 			});
 	});
 }
 
 function useReplaceNodesInDbForUser() {
 	const [userId] = useAtom(userIdAtom);
-	console.log("🌟🚨 ~ useReplaceNodesInDbForUser ~ userId", userId);
 	const [dbRef] = useAtom(dbRefAtom);
 
 	return (nodes: Tweet[]) => {
-		console.log("🌟🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨 ~ return ~ dbRef", dbRef);
 		if (!dbRef["@ref"]) {
 			return;
 		}
@@ -170,7 +156,6 @@ function useReplaceNodesInDbForUser() {
 			.then((ret) => console.log(ret))
 			.catch((err) => {
 				console.log("🌟🚨 ~ return ~ err", err);
-				console.error("Error: %s", err);
 			});
 	};
 }

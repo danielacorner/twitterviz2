@@ -7,81 +7,80 @@ import { DISABLE_SELECTION_OF_TEXT_CSS } from "utils/constants";
 import { Tweet } from "types";
 
 export default function NodeBillboard({ tweets }: { tweets: Tweet[] }) {
-  const isLight = useIsLight();
-  const originalPoster = getOriginalPoster(tweets[0]);
-  const botScore = tweets.find((t) => Boolean(t.botScore));
-  console.log("🌟🚨 ~ NodeBillboard ~ botScore", botScore);
-  return (
-    <Billboard {...({} as any)}>
-      <Html
-        transform={true}
-        sprite={false}
-        style={{
-          width: 0,
-          height: 0,
-          marginLeft: -100,
-          marginTop: -100,
-          // pointerEvents: "none",
-        }}
-      >
-        <HtmlStyles>
-          <AvatarStyles>
-            <img src={originalPoster?.profile_image_url_https} alt="" />
-          </AvatarStyles>
-          <TweetsColumnStyles>
-            {tweets.map((tweet) => (
-              <TooltipStyles
-                key={tweet.id_str}
-                {...{
-                  isLight,
-                  width: 200,
-                  css: `
+	const isLight = useIsLight();
+	const originalPoster = getOriginalPoster(tweets[0]);
+	const botScore = tweets.find((t) => Boolean(t.botScore));
+	return (
+		<Billboard {...({} as any)}>
+			<Html
+				transform={true}
+				sprite={false}
+				style={{
+					width: 0,
+					height: 0,
+					marginLeft: -100,
+					marginTop: -100,
+					// pointerEvents: "none",
+				}}
+			>
+				<HtmlStyles>
+					<AvatarStyles>
+						<img src={originalPoster?.profile_image_url_https} alt="" />
+					</AvatarStyles>
+					<TweetsColumnStyles>
+						{tweets.map((tweet) => (
+							<TooltipStyles
+								key={tweet.id_str}
+								{...{
+									isLight,
+									width: 200,
+									css: `
                 .id_str {display:none;}
       `,
-                }}
-              >
-                <TooltipContent
-                  {...{
-                    originalPoster,
-                    tweet,
-                    autoPlay: false,
-                    compact: false,
-                  }}
-                />
-              </TooltipStyles>
-            ))}
-          </TweetsColumnStyles>
-        </HtmlStyles>
-      </Html>
-    </Billboard>
-  );
+								}}
+							>
+								<TooltipContent
+									{...{
+										originalPoster,
+										tweet,
+										autoPlay: false,
+										compact: false,
+									}}
+								/>
+							</TooltipStyles>
+						))}
+					</TweetsColumnStyles>
+				</HtmlStyles>
+			</Html>
+		</Billboard>
+	);
 }
 
 const HtmlStyles = styled.div`
-  pointer-events: none;
-  ${DISABLE_SELECTION_OF_TEXT_CSS}
-  position: relative;
-  width: 200px;
+	pointer-events: none;
+	${DISABLE_SELECTION_OF_TEXT_CSS}
+	position: relative;
+	width: 200px;
 `;
 const AvatarStyles = styled.div`
-  width: 100%;
-  height: 100%;
-  transform: scale(0.5);
-  border-radius: 50%;
-  overflow: hidden;
-  pointer-events: none;
-  img {
-    width: 100%;
-    height: auto;
-  }
+	width: 100%;
+	height: 100%;
+	transform: scale(0.5);
+	border-radius: 50%;
+	overflow: hidden;
+	pointer-events: none;
+	img {
+		width: 100%;
+		height: auto;
+	}
 `;
 const TweetsColumnStyles = styled.div`
-  position: absolute;
-  top: 96px;
-  font-size: 12px;
-  color: hsla(0, 0%, 95%, 0.9);
-  transform: translateY(120px);
-  min-height: 200px;
-  display: grid;
-  gap: 12px;
+	position: absolute;
+	top: 96px;
+	font-size: 12px;
+	color: hsla(0, 0%, 95%, 0.9);
+	transform: translateY(120px);
+	min-height: 200px;
+	display: grid;
+	gap: 12px;
 `;
