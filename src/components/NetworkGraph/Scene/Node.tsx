@@ -16,6 +16,7 @@ import { useHandleOpenRightClickMenu } from "../GraphRightClickMenu";
 import NodeBillboard from "./NodeBillboard";
 import { useGravity } from "./useGravity";
 import { useSpring, animated } from "@react-spring/three";
+import { Text, Billboard } from "@react-three/drei";
 
 const nodeMaterial = new THREE.MeshLambertMaterial({
 	emissive: "blue",
@@ -143,12 +144,24 @@ export const Node = ({
 		>
 			{node.user.botScore ? (
 				<mesh
+					transparent={true}
+					opacity={node.user.botScore.overall}
 					scale={[
 						node.user.botScore.overall,
 						node.user.botScore.overall,
 						node.user.botScore.overall,
 					]}
 				>
+					<Billboard {...({} as any)}>
+						<Text
+							{...({} as any)}
+							color="white"
+							position={[0.3, 6, 0]}
+							fontSize={1}
+						>
+							{(node.user.botScore.overall * 100).toFixed(0)}%
+						</Text>
+					</Billboard>
 					<mesh position={[0, 2, 0]} scale={[0.7, 0.7, 0.7]}>
 						<meshLambertMaterial
 							metalness={0.8}
