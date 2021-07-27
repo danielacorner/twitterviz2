@@ -6,10 +6,15 @@ import { Html, Billboard } from "@react-three/drei";
 import { DISABLE_SELECTION_OF_TEXT_CSS } from "utils/constants";
 import { Tweet } from "types";
 
-export default function NodeBillboard({ tweets }: { tweets: Tweet[] }) {
+export default function NodeBillboard({
+	tweets,
+	hasBotScore,
+}: {
+	tweets: Tweet[];
+	hasBotScore: boolean;
+}) {
 	const isLight = useIsLight();
 	const originalPoster = getOriginalPoster(tweets[0]);
-	const botScore = tweets.find((t) => Boolean(t.botScore));
 	return (
 		<Billboard {...({} as any)}>
 			<Html
@@ -20,14 +25,13 @@ export default function NodeBillboard({ tweets }: { tweets: Tweet[] }) {
 					height: 0,
 					marginLeft: -100,
 					marginTop: -100,
-					// pointerEvents: "none",
 				}}
 			>
 				<HtmlStyles>
 					<AvatarStyles>
 						<img src={originalPoster?.profile_image_url_https} alt="" />
 					</AvatarStyles>
-					<TweetsColumnStyles>
+					<TweetsColumnStyles {...{ hasBotScore }}>
 						{tweets.map((tweet) => (
 							<TooltipStyles
 								key={tweet.id_str}
@@ -75,11 +79,17 @@ const AvatarStyles = styled.div`
 	}
 `;
 const TweetsColumnStyles = styled.div`
+	opacity: 0.7;
 	position: absolute;
-	top: 96px;
+	transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	transform: translate3d(
+		0,
+		${({ hasBotScore }) => (hasBotScore ? 100 : 0)}px,
+		0
+	);
+	top: 216px;
 	font-size: 12px;
 	color: hsla(0, 0%, 95%, 0.9);
-	transform: translateY(120px);
 	min-height: 200px;
 	display: grid;
 	gap: 12px;

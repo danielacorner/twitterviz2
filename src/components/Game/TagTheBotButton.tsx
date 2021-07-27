@@ -4,6 +4,7 @@ import {
 	useSelectedNode,
 	useSetLoading,
 	useSetSelectedNode,
+	useSetTooltipNode,
 } from "../../providers/store/useSelectors";
 import { Button, Tooltip } from "@material-ui/core";
 import { useFetchBotScoreForTweet } from "components/common/useFetchBotScoreForTweet";
@@ -11,6 +12,7 @@ import { useFetchBotScoreForTweet } from "components/common/useFetchBotScoreForT
 export default function TagTheBotButton() {
 	const selectedNode = useSelectedNode();
 	const setSelectedNode = useSetSelectedNode();
+	const setTooltipNode = useSetTooltipNode();
 	// const originalPoster = selectedNode && getOriginalPoster(selectedNode);
 	const fetchBotScoreForTweet = useFetchBotScoreForTweet();
 	const setLoading = useSetLoading();
@@ -34,6 +36,7 @@ export default function TagTheBotButton() {
 						setLoading(false);
 					});
 					setSelectedNode(null);
+					setTooltipNode(null);
 				}}
 			>
 				It's a bot! 🎯

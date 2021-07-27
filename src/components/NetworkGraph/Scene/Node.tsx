@@ -16,7 +16,7 @@ import { useHandleOpenRightClickMenu } from "../GraphRightClickMenu";
 import NodeBillboard from "./NodeBillboard";
 import { useGravity } from "./useGravity";
 import { useSpring, animated } from "@react-spring/three";
-import { Text, Billboard } from "@react-three/drei";
+import { NodeBotScoreAntenna } from "./NodeBotScoreAntenna";
 
 const nodeMaterial = new THREE.MeshLambertMaterial({
 	emissive: "blue",
@@ -113,12 +113,6 @@ export const Node = ({
 				? [1.8, 1.8, 1.8]
 				: [1, 1, 1],
 	});
-	if (node.user.botScore) {
-		console.log(
-			"🌟🚨 ~ file: Node.tsx ~ line 138 ~ node.user.botScore",
-			node.user.botScore
-		);
-	}
 
 	return (
 		<animated.mesh
@@ -143,52 +137,14 @@ export const Node = ({
 			}}
 		>
 			{node.user.botScore ? (
-				<mesh
-					transparent={true}
-					opacity={node.user.botScore.overall}
-					scale={[
-						node.user.botScore.overall,
-						node.user.botScore.overall,
-						node.user.botScore.overall,
-					]}
-				>
-					<Billboard {...({} as any)}>
-						<Text
-							{...({} as any)}
-							color="white"
-							position={[0.3, 6, 0]}
-							fontSize={1}
-						>
-							{(node.user.botScore.overall * 100).toFixed(0)}%
-						</Text>
-					</Billboard>
-					<mesh position={[0, 2, 0]} scale={[0.7, 0.7, 0.7]}>
-						<meshLambertMaterial
-							metalness={0.8}
-							roughness={0.1}
-							color="#a3a3a3"
-						/>
-						<cylinderBufferGeometry args={[0.2, 0.2, 8, 26, 1]} />
-					</mesh>
-					<mesh position={[0, 5, 0]}>
-						<meshLambertMaterial metalness={0.8} roughness={0.1} color="red" />
-						<sphereBufferGeometry args={[0.5, 26, 26]} />
-					</mesh>
-				</mesh>
+				<NodeBotScoreAntenna {...{ botScore: node.user.botScore }} />
 			) : null}
 			<NodeBillboard
 				{...{
 					tweets: node.tweets,
+					hasBotScore: Boolean(node.user.botScore),
 				}}
 			/>
 		</animated.mesh>
 	);
 };
-
-// function getRandomPosition(min, max): [x: number, y: number, z: number] {
-// 	return [
-// 		Math.random() * (max - min) + min,
-// 		Math.random() * (max - min) + min,
-// 		Math.random() * (max - min) + min,
-// 	];
-// }
