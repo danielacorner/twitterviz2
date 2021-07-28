@@ -3,6 +3,7 @@ import {
   Checkbox,
   Radio,
   RadioGroup,
+  Tooltip,
 } from "@material-ui/core";
 import { FILTER_LEVELS } from "../../utils/constants";
 import { useConfig } from "../../providers/store/useConfig";
@@ -53,32 +54,36 @@ export function FilterLevelCheckboxes() {
       filterLevel: event.target.value as keyof typeof FILTER_LEVELS,
     });
   };
+  const disabled = process.env.NODE_ENV === "production";
 
   return (
     <RadioBtnsStyles>
-      <RadioGroup
-        aria-label="filter level"
-        name="filterLevel"
-        value={filterLevel}
-        onChange={handleChange}
-        row={true}
-      >
-        <FormControlLabel
-          value={FILTER_LEVELS.medium}
-          control={<Radio />}
-          label={<Body1>Medium</Body1>}
-        />
-        <FormControlLabel
-          value={FILTER_LEVELS.low}
-          control={<Radio />}
-          label={<Body1>Low</Body1>}
-        />
-        <FormControlLabel
-          value={FILTER_LEVELS.none}
-          control={<Radio />}
-          label={<Body1>None</Body1>}
-        />
-      </RadioGroup>
+      <Tooltip title={disabled ? "disabled" : ""}>
+        <RadioGroup
+          aria-label="filter level"
+          name="filterLevel"
+          value={filterLevel}
+          onChange={handleChange}
+          row={true}
+          style={disabled ? { pointerEvents: "none" } : undefined}
+        >
+          <FormControlLabel
+            value={FILTER_LEVELS.medium}
+            control={<Radio />}
+            label={<Body1>Medium</Body1>}
+          />
+          <FormControlLabel
+            value={FILTER_LEVELS.low}
+            control={<Radio />}
+            label={<Body1>Low</Body1>}
+          />
+          <FormControlLabel
+            value={FILTER_LEVELS.none}
+            control={<Radio />}
+            label={<Body1>None</Body1>}
+          />
+        </RadioGroup>
+      </Tooltip>
     </RadioBtnsStyles>
   );
 }
