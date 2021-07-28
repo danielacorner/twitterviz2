@@ -28,9 +28,9 @@ export function useFetchBotScoreForTweet() {
     ]);
   }
 
-  return async (tweet: Tweet) => {
+  return async (tweet: Tweet): Promise<BotScore | null> => {
     if (!tweet) {
-      return;
+      return null;
     }
     const tweetsByUser = tweets.filter(
       (t) => t.user.id_str === tweet.user.id_str
@@ -42,5 +42,6 @@ export function useFetchBotScoreForTweet() {
     });
     const botScore = await resp.json();
     setBotScoreForTweet(botScore, tweet);
+    return botScore;
   };
 }
