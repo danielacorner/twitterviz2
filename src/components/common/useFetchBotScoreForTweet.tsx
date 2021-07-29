@@ -1,3 +1,6 @@
+import { useAtom } from "jotai";
+import { dbRefAtom } from "providers/faunaProvider";
+import { appUserIdAtom } from "providers/store/store";
 import { useSetTweets, useTweets } from "providers/store/useSelectors";
 import { BotScore, Tweet } from "types";
 
@@ -8,21 +11,8 @@ import { BotScore, Tweet } from "types";
 export function useFetchBotScoreForTweet() {
   const tweets = useTweets();
   const setTweets = useSetTweets();
-
-  function setBotScoreForTweet(botScore: BotScore, tweet: Tweet) {
-    const tweetWithBotScore = {
-      ...tweet,
-      botScore,
-      user: { ...tweet.user, botScore },
-    };
-    const tweetIndex = tweets.findIndex((t) => t.id_str === tweet.id_str);
-
-    setTweets([
-      ...tweets.slice(0, tweetIndex),
-      tweetWithBotScore,
-      ...tweets.slice(tweetIndex + 1),
-    ]);
-  }
+  const [appUserId] = useAtom(appUserIdAtom);
+  const [dbRef] = useAtom(dbRefAtom);
 
   return async (tweet: Tweet): Promise<BotScore | null> => {
     if (!tweet) {
@@ -34,10 +24,35 @@ export function useFetchBotScoreForTweet() {
     const resp = await fetch("/api/generate_bot_score", {
       headers: { "content-type": "application/json" },
       method: "POST",
-      body: JSON.stringify(tweetsByUser.slice(0, 10)),
+      body: JSON.stringify(tweetsByUser),
     });
     const botScore = await resp.json();
-    setBotScoreForTweet(botScore, tweet);
+
+    const tweetWithBotScore = {
+      ...tweet,
+      botScore,
+      user: { ...tweet.user, botScore },
+    };
+    const tweetIndex = tweets.findIndex((t) => t.id_str === tweet.id_str);
+
+    const allTweetsWithBotScore = [
+      ...tweets.slice(0, tweetIndex),
+      tweetWithBotScore,
+      ...tweets.slice(tweetIndex + 1),
+    ];
+
+    fetch("/api/save_bot_score_for_current_app_user", {
+      headers: { "content-type": "application/json" },
+      method: "POST",
+      body: JSON.stringify({
+        appUserId,
+        allTweetsWithBotScore,
+        refId: dbRef["@ref"]?.id,
+      }),
+    });
+
+    setTweets(allTweetsWithBotScore);
+
     return botScore;
   };
 }

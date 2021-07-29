@@ -4,11 +4,11 @@ import { useSetTweets, useTweets } from "./store/useSelectors";
 import { query as q } from "faunadb";
 import { useAtom } from "jotai";
 import { Tweet } from "types";
-import { userIdAtom } from "./store/store";
+import { appUserIdAtom } from "./store/store";
 import { useEffect, useRef } from "react";
 import { isEqual } from "lodash";
 import { atomWithStorage } from "jotai/utils";
-const dbRefAtom = atomWithStorage("dbRefId", {} as any);
+export const dbRefAtom = atomWithStorage("dbRefId", {} as any);
 export const faunaClient = new faunadb.Client({
   secret: process.env.REACT_APP_FAUNA_KEY || "",
 });
@@ -54,7 +54,7 @@ export function useFetchTweetsOnMount() {
 
   const setTweets = useSetTweets();
   const setEmptyNodesForUser = useSetEmptyNodesForUser();
-  const [userId, setUserId] = useAtom(userIdAtom);
+  const [userId, setUserId] = useAtom(appUserIdAtom);
   // fetch tweets from DB on mount
   useMount(() => {
     if (userId === "") {
@@ -75,16 +75,17 @@ export function useFetchTweetsOnMount() {
 }
 
 function useGetTweetsFromDb() {
-  const [userId] = useAtom(userIdAtom);
+  const [userId] = useAtom(appUserIdAtom);
+  const [dbRef] = useAtom(dbRefAtom);
   const setEmptyNodesForUser = useSetEmptyNodesForUser();
 
   return () =>
     new Promise((resolve, reject) => {
-      if (!userId) {
-        reject("no userId");
+      if (!dbRef) {
+        reject("no dbRef");
       }
       faunaClient
-        .query(q.Get(q.Match(q.Index("nodes_by_userid"), userId)))
+        .query(q.Get(q.Ref(q.Collection("Nodes"), dbRef["@ref"]?.id)))
         // .query(q.Get(q.Match(q.Index("nodes_by_userid"), userId)))
         .then((ret: { data: any[] } | any) => {
           // just grab the whole db ok
@@ -110,7 +111,7 @@ function useGetTweetsFromDb() {
 }
 
 export function useDeleteUser() {
-  const [userId] = useAtom(userIdAtom);
+  const [userId] = useAtom(appUserIdAtom);
 
   return () =>
     new Promise((resolve, reject) => {
@@ -132,7 +133,7 @@ export function useDeleteUser() {
 
 export function useSetEmptyNodesForUser() {
   const [, setDbRef] = useAtom(dbRefAtom);
-  const [userId] = useAtom(userIdAtom);
+  const [userId] = useAtom(appUserIdAtom);
 
   return () =>
     new Promise((resolve, reject) => {
@@ -155,7 +156,7 @@ export function useSetEmptyNodesForUser() {
 }
 
 export function useReplaceNodesInDbForUser() {
-  const [userId] = useAtom(userIdAtom);
+  const [userId] = useAtom(appUserIdAtom);
   const [dbRef, setDbRef] = useAtom(dbRefAtom);
 
   return (nodes: Tweet[]) => {

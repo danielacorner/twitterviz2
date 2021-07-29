@@ -122,6 +122,7 @@ function Antenna({ color, score, label, showLabels, isBottom }) {
               0,
             ]}
             fontSize={1}
+            fillOpacity={score}
           >
             {showLabels ? label : (score * 100).toFixed(0) + "%"}
           </Text>
@@ -132,7 +133,7 @@ function Antenna({ color, score, label, showLabels, isBottom }) {
           roughness={0.1}
           color={color}
           transparent={true}
-          opacity={showLabels ? 0.5 : score}
+          opacity={showLabels ? 0.5 : score ** 0.4}
         />
       </animated.mesh>
     </>
