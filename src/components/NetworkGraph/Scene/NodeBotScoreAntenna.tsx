@@ -4,6 +4,9 @@ import { useState } from "react";
 import { useMount } from "utils/utils";
 
 export function NodeBotScoreAntenna({ showLabels = false, botScore }) {
+  useMount(() => {
+    console.log("🌟🚨 ~ NodeBotScoreAntenna ~ botScore", botScore);
+  });
   const antennae = [
     // top
     {

@@ -20,24 +20,24 @@ export const faunaClient = new faunadb.Client({
 export function useFetchTweetsOnMount() {
   // * one-time op
   // ? create an index to be able to easily find nodes by userid
-  useMount(() => {
-    faunaClient
-      .query(
-        q.CreateIndex({
-          name: "nodes_by_userid",
-          source: q.Collection("Nodes"),
-          terms: [{ field: ["data", "userId"] }],
-        })
-      )
-      .then((ret) => console.log(ret))
-      .catch((err) => {
-        if (err.message === "instance already exists") {
-          console.log("🌟🌟 ~ ", err.message);
-          return;
-        }
-        console.log("🌟🚨 ~ createIndex ~ err", err);
-      });
-  });
+  // useMount(() => {
+  //   faunaClient
+  //     .query(
+  //       q.CreateIndex({
+  //         name: "nodes_by_userid",
+  //         source: q.Collection("Nodes"),
+  //         terms: [{ field: ["data", "userId"] }],
+  //       })
+  //     )
+  //     .then((ret) => console.log(ret))
+  //     .catch((err) => {
+  //       if (err.message === "instance already exists") {
+  //         console.log("🌟🌟 ~ ", err.message);
+  //         return;
+  //       }
+  //       console.log("🌟🚨 ~ createIndex ~ err", err);
+  //     });
+  // });
 
   const getTweetsFromDb = useGetTweetsFromDb();
 
@@ -76,6 +76,7 @@ export function useFetchTweetsOnMount() {
 
 function useGetTweetsFromDb() {
   const [userId] = useAtom(userIdAtom);
+  const setEmptyNodesForUser = useSetEmptyNodesForUser();
 
   return () =>
     new Promise((resolve, reject) => {
@@ -98,6 +99,7 @@ function useGetTweetsFromDb() {
           if (err.name === "NotFound") {
             console.log("🌟🌟 no nodes for this user yet");
             // initialize the user's nodes as empty array to avoid this error next time
+            setEmptyNodesForUser();
             resolve([]);
             return;
           }

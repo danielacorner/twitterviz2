@@ -7,8 +7,8 @@ import {
 import { Drawer } from "@material-ui/core";
 import { Timeline, Tweet as TweetWidget } from "react-twitter-widgets";
 
-/** RightDrawer */
-export function SelectedTweetDrawer() {
+/** Selected Tweet drawer */
+export function RightDrawer() {
   const selectedNode = useSelectedNode();
   const setSelectedNode = useSetSelectedNode();
   const originalPoster = selectedNode && getOriginalPoster(selectedNode);
