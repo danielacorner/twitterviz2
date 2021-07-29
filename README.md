@@ -1,3 +1,5 @@
+# Twitter Botsketball 🤖🏀
+
 # Setup
 
 1. run `npm install`

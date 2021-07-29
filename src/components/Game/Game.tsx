@@ -1,48 +1,39 @@
-import { useState } from "react";
 import { Button } from "@material-ui/core";
 import { useAtom } from "jotai";
 import { gameStateAtom, GameStepsEnum } from "providers/store/store";
-import { useInterval } from "utils/useInterval";
 import TagTheBotButton from "./TagTheBotButton";
 import { useStreamNewTweets } from "components/NavBar/useStreamNewTweets";
 import { useDeleteAllTweets } from "components/common/useDeleteAllTweets";
-import { useLoading } from "providers/store/useSelectors";
+import { useLoading, useTweets } from "providers/store/useSelectors";
 import styled from "styled-components/macro";
+import { useReplaceNodesInDbForUser } from "providers/faunaProvider";
 
-const COUNTDOWN_TIME_S = 5 * 60;
 /** renders controls and instructions to play the game */
 export function Game() {
   const [gameState, setGameState] = useAtom(gameStateAtom);
-  const [, setTimeRemainingS] = useState(Infinity);
-  // const minutes = Math.floor(timeRemainingS / 60);
-  // const seconds = timeRemainingS % 60;
-  // const formattedTime = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  const tweets = useTweets();
   const isGameOver = false;
-  const [running, setRunning] = useState(false);
   const loading = useLoading();
 
-  useInterval({
-    callback: () => {
-      if (running) {
-        setTimeRemainingS((p) => Math.max(0, p - 1));
-      }
-    },
-    delay: 1000,
-    immediate: false,
-  });
   const { fetchNewTweets } = useStreamNewTweets();
   const deleteAllTweets = useDeleteAllTweets();
+  const replaceNodesInDbForUser = useReplaceNodesInDbForUser();
   function startGame() {
-    setRunning(true);
-    setTimeRemainingS(COUNTDOWN_TIME_S);
     setGameState((p) => ({
       step: GameStepsEnum.lookingAtTweetsWithBotScores,
       startTime: Date.now(),
     }));
-    deleteAllTweets();
-    setTimeout(() => {
-      fetchNewTweets();
+    deleteAllTweets().then(() => {
+      fetchNewTweets().then((newTweets) => {
+        replaceNodesInDbForUser(newTweets);
+      });
     });
+  }
+  function continueGame() {
+    setGameState((p) => ({
+      step: GameStepsEnum.lookingAtTweetsWithBotScores,
+      startTime: Date.now(),
+    }));
   }
   return gameState.step === GameStepsEnum.welcome ? (
     <Step1Styles>
@@ -55,8 +46,13 @@ export function Game() {
         compete with others to get the highest bot score!
       </p>
       <Button variant="contained" color="primary" onClick={startGame}>
-        Go
+        {tweets.length > 0 ? "Restart" : "Start"}
       </Button>
+      {tweets.length > 0 && (
+        <Button variant="contained" color="primary" onClick={continueGame}>
+          Continue
+        </Button>
+      )}
     </Step1Styles>
   ) : gameState.step === GameStepsEnum.lookingAtTweetsWithBotScores ? (
     <>

@@ -20,24 +20,24 @@ export const faunaClient = new faunadb.Client({
 export function useFetchTweetsOnMount() {
   // * one-time op
   // ? create an index to be able to easily find nodes by userid
-  // useMount(() => {
-  //   faunaClient
-  //     .query(
-  //       q.CreateIndex({
-  //         name: "nodes_by_userid",
-  //         source: q.Collection("Nodes"),
-  //         terms: [{ field: ["data", "userId"] }],
-  //       })
-  //     )
-  //     .then((ret) => console.log(ret))
-  //     .catch((err) => {
-  //       if (err.message === "instance already exists") {
-  //         console.log("🌟🌟 ~ ", err.message);
-  //         return;
-  //       }
-  //       console.log("🌟🚨 ~ createIndex ~ err", err);
-  //     });
-  // });
+  useMount(() => {
+    faunaClient
+      .query(
+        q.CreateIndex({
+          name: "nodes_by_userid",
+          source: q.Collection("Nodes"),
+          terms: [{ field: ["data", "userId"] }],
+        })
+      )
+      .then((ret) => console.log(ret))
+      .catch((err) => {
+        if (err.message === "instance already exists") {
+          console.log("🌟🌟 ~ ", err.message);
+          return;
+        }
+        console.log("🌟🚨 ~ createIndex ~ err", err);
+      });
+  });
 
   const getTweetsFromDb = useGetTweetsFromDb();
 
@@ -149,14 +149,14 @@ export function useSetEmptyNodesForUser() {
           resolve(ret);
         })
         .catch((err) => {
-          console.log("🌟🚨 ~ returnnewPromise ~ err", err);
+          console.log("🌟🚨 ~ faunaProvider ~ err", err);
         });
     });
 }
 
-function useReplaceNodesInDbForUser() {
+export function useReplaceNodesInDbForUser() {
   const [userId] = useAtom(userIdAtom);
-  const [dbRef] = useAtom(dbRefAtom);
+  const [dbRef, setDbRef] = useAtom(dbRefAtom);
 
   return (nodes: Tweet[]) => {
     if (!dbRef["@ref"]) {
@@ -171,7 +171,24 @@ function useReplaceNodesInDbForUser() {
       )
       .then((ret) => console.log(ret))
       .catch((err) => {
-        console.log("🌟🚨 ~ return ~ err", err);
+        if (err.name === "NotFound") {
+          faunaClient
+            .query(
+              q.Create(q.Collection("Nodes"), {
+                title: userId,
+                data: { userId, nodes },
+              })
+            )
+            .then((ret) => {
+              console.log("🌟🌟 Added nodes for user", userId);
+              setDbRef((ret as any)?.ref);
+            })
+            .catch((err) => {
+              console.log("🌟🚨 ~ faunaProvider ~ err", err);
+            });
+        } else {
+          console.log("🌟🚨 ~ return ~ err", err);
+        }
       });
   };
 }

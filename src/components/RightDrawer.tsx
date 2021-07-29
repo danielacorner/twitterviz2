@@ -46,4 +46,6 @@ export function RightDrawer() {
 }
 const DrawerContentStyles = styled.div`
   width: 300px;
+  padding: 0 12px;
+  box-sizing: content-box;
 `;
