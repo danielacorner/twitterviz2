@@ -1,8 +1,4 @@
-import {
-  getOriginalPoster,
-  useSetTweets,
-  useTweets,
-} from "providers/store/useSelectors";
+import { useSetTweets, useTweets } from "providers/store/useSelectors";
 import { BotScore, Tweet } from "types";
 
 /** fetch one bot score and send to store>tweets

@@ -13,7 +13,7 @@ const COUNTDOWN_TIME_S = 5 * 60;
 /** renders controls and instructions to play the game */
 export function Game() {
   const [gameState, setGameState] = useAtom(gameStateAtom);
-  const [timeRemainingS, setTimeRemainingS] = useState(Infinity);
+  const [, setTimeRemainingS] = useState(Infinity);
   // const minutes = Math.floor(timeRemainingS / 60);
   // const seconds = timeRemainingS % 60;
   // const formattedTime = `${minutes}:${seconds.toString().padStart(2, "0")}`;
@@ -40,7 +40,9 @@ export function Game() {
       startTime: Date.now(),
     }));
     deleteAllTweets();
-    fetchNewTweets();
+    setTimeout(() => {
+      fetchNewTweets();
+    });
   }
   return gameState.step === GameStepsEnum.welcome ? (
     <Step1Styles>

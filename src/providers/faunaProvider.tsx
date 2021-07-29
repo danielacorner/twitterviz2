@@ -52,8 +52,8 @@ export function useFetchTweetsOnMount() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tweets]);
 
-  const [, setDbRef] = useAtom(dbRefAtom);
   const setTweets = useSetTweets();
+  const setEmptyNodesForUser = useSetEmptyNodesForUser();
   const [userId, setUserId] = useAtom(userIdAtom);
   // fetch tweets from DB on mount
   useMount(() => {
@@ -61,10 +61,9 @@ export function useFetchTweetsOnMount() {
       // create userid and empty nodes in db
       const newUserId = (Math.random() * 10 ** 16).toFixed();
       setUserId(newUserId);
-      initEmptyNodesForUser(newUserId).then((ret) => {
+      setEmptyNodesForUser().then((ret) => {
         const newTweets = (ret as any).data.nodes as Tweet[];
         setTweets(newTweets);
-        setDbRef((ret as any)?.ref);
       });
     } else {
       getTweetsFromDb().then((newTweets) => {
@@ -108,23 +107,49 @@ function useGetTweetsFromDb() {
     });
 }
 
-function initEmptyNodesForUser(userId: string) {
-  return new Promise((resolve, reject) => {
-    faunaClient
-      .query(
-        q.Create(q.Collection("Nodes"), {
-          title: userId,
-          data: { userId, nodes: [] },
+export function useDeleteUser() {
+  const [userId] = useAtom(userIdAtom);
+
+  return () =>
+    new Promise((resolve, reject) => {
+      faunaClient
+        .query(q.Get(q.Match(q.Index("nodes_by_userid"), userId)))
+        // .query(q.Get(q.Match(q.Index("nodes_by_userid"), userId)))
+        .then((ret: { data: any[] } | any) => {
+          faunaClient.query(q.Delete(ret.ref)).then((r) => {
+            console.log("🌟🌟 ~ deleted user", r);
+            resolve(r);
+          });
         })
-      )
-      .then((ret) => {
-        console.log("🌟🌟 Created empty nodes for user", userId);
-        resolve(ret);
-      })
-      .catch((err) => {
-        console.log("🌟🚨 ~ returnnewPromise ~ err", err);
-      });
-  });
+        .catch((err) => {
+          console.log("🌟🚨 ~ newPromise ~ err", err);
+          reject(err);
+        });
+    });
+}
+
+export function useSetEmptyNodesForUser() {
+  const [, setDbRef] = useAtom(dbRefAtom);
+  const [userId] = useAtom(userIdAtom);
+
+  return () =>
+    new Promise((resolve, reject) => {
+      faunaClient
+        .query(
+          q.Create(q.Collection("Nodes"), {
+            title: userId,
+            data: { userId, nodes: [] },
+          })
+        )
+        .then((ret) => {
+          console.log("🌟🌟 Created empty nodes for user", userId);
+          setDbRef((ret as any)?.ref);
+          resolve(ret);
+        })
+        .catch((err) => {
+          console.log("🌟🚨 ~ returnnewPromise ~ err", err);
+        });
+    });
 }
 
 function useReplaceNodesInDbForUser() {

@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import { NODE_DIAMETER, AVATAR_DIAMETER } from "./useForceGraphProps";
 import { useTweets } from "../../providers/store/useSelectors";
 import { useConfig } from "../../providers/store/useConfig";
 import * as d3 from "d3";
@@ -10,6 +9,9 @@ import {
 } from "utils/hooks";
 import { SimulationNodeDatum } from "d3";
 import { Tweet } from "types";
+
+const NODE_DIAMETER = 25;
+const AVATAR_DIAMETER = NODE_DIAMETER * 4;
 
 // tslint:disable-next-line
 export function useTheForce(fg: any, graph: { nodes: any[]; links: any[] }) {

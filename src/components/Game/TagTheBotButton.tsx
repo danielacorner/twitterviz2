@@ -1,6 +1,5 @@
 import styled from "styled-components/macro";
 import {
-  getOriginalPoster,
   useSelectedNode,
   useSetLoading,
   useSetSelectedNode,
@@ -21,9 +20,7 @@ export default function TagTheBotButton() {
   // const originalPoster = selectedNode && getOriginalPoster(selectedNode);
   const fetchBotScoreForTweet = useFetchBotScoreForTweet();
   const setLoading = useSetLoading();
-  const [latestNodeWithBotScore, setLatestNodeWithBotScore] = useAtom(
-    latestNodeWithBotScoreAtom
-  );
+  const [, setLatestNodeWithBotScore] = useAtom(latestNodeWithBotScoreAtom);
   return selectedNode ? (
     <Tooltip title={"fetch bot score"}>
       <TagTheBotStyledButton

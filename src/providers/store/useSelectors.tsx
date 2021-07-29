@@ -54,9 +54,10 @@ export const useSetTweets = () => {
     const tweets = handleTweetsErrors(tweetsArg);
 
     if (replace || forceReplace) {
-      // delete all likes, retweets
+      // delete all likes, retweets, tweets
       setRetweets({});
       setLikes({});
+      setTweetsFromServer([]);
     }
 
     const newTweets = tweets;

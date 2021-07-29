@@ -1,15 +1,19 @@
+import {
+  useDeleteUser,
+  useSetEmptyNodesForUser,
+} from "providers/faunaProvider";
 import { useSetTweets } from "providers/store/useSelectors";
-import { useConfig } from "providers/store/useConfig";
 
 export function useDeleteAllTweets() {
   const setTweets = useSetTweets();
-  const { setConfig } = useConfig();
-
+  const setEmptyNodesForUser = useSetEmptyNodesForUser();
+  const deleteUser = useDeleteUser();
   return () => {
-    setConfig({ replace: true });
+    // delete all tweets from the store
     setTweets([], true);
-    setTimeout(() => {
-      setConfig({ replace: false });
+    // delete all tweets for this user in the db
+    deleteUser().then(() => {
+      setEmptyNodesForUser();
     });
   };
 }
