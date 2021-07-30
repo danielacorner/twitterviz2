@@ -45,11 +45,16 @@ export function Game() {
       <p style={{ textAlign: "center" }}>
         compete with others to get the highest bot score!
       </p>
-      <Button variant="contained" color="primary" onClick={startGame}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={startGame}
+        style={{ marginRight: 12 }}
+      >
         {tweets.length > 0 ? "Restart" : "Start"}
       </Button>
       {tweets.length > 0 && (
-        <Button variant="contained" color="primary" onClick={continueGame}>
+        <Button variant="contained" color="secondary" onClick={continueGame}>
           Continue
         </Button>
       )}
