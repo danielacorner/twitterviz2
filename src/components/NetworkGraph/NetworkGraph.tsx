@@ -8,6 +8,7 @@ import GraphRightClickMenu, {
 import { Canvas } from "@react-three/fiber";
 import { Scene } from "./Scene/Scene";
 import { useSetTooltipNode } from "providers/store/useSelectors";
+import { CAMERA_POSITION } from "utils/constants";
 
 export const GraphStyles = styled.div`
   width: 100%;
@@ -34,7 +35,12 @@ function Graph3D() {
     <Graph3DStyles>
       <Canvas
         gl={{ alpha: true, stencil: false, depth: true, antialias: false }}
-        camera={{ position: [0, 0, 100], fov: 35, near: 10, far: 500 }}
+        camera={{
+          position: CAMERA_POSITION.initial,
+          fov: 35,
+          near: 10,
+          far: 500,
+        }}
         onPointerMissed={(event) => {
           if (event.type === "contextmenu") {
             handleRightClick(event);
