@@ -8,6 +8,7 @@ import { WordcloudConfig } from "./useSelectors";
 import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 
+export const areBotsLinedUpAtom = atom<boolean>(false);
 export const appUserIdAtom = atomWithStorage<string>("atoms:userId", "");
 
 export enum GameStepsEnum {

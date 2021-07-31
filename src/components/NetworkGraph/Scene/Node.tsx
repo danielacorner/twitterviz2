@@ -1,6 +1,7 @@
 import { useSphere } from "@react-three/cannon";
 import * as THREE from "three";
 import useStore, {
+  areBotsLinedUpAtom,
   isPointerOverAtom,
   numTooltipTweetsAtom,
   rightClickMenuAtom,
@@ -51,6 +52,7 @@ export const Node = ({
   startPosition: [number, number, number];
 }) => {
   const tooltipNode = useTooltipNode();
+
   const [rightClickMenu] = useAtom(rightClickMenuAtom);
   const isRightClickingThisNode =
     rightClickMenu.node &&

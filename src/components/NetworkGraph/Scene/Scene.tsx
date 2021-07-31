@@ -10,6 +10,8 @@ import { CAMERA_POSITION } from "utils/constants";
 import { useSpring } from "react-spring";
 import { useState } from "react";
 import { useMount } from "utils/utils";
+import { useAtom } from "jotai";
+import { areBotsLinedUpAtom } from "providers/store/store";
 
 export function Scene() {
   const graphWithUsers = useGraphWithUsersAndLinks();
@@ -26,6 +28,8 @@ export function Scene() {
     config: { tension: 50, mass: 12, friction: 60 },
   });
 
+  // lined up: hide if they don't have a bot score
+  const [areBotsLinedUp, setAreBotsLinedUp] = useAtom(areBotsLinedUpAtom);
   return (
     <>
       <ambientLight intensity={0.75} />
@@ -39,16 +43,24 @@ export function Scene() {
       <directionalLight position={[0, -15, -0]} intensity={4} color="blue" />
       <OrbitControls {...({} as any)} />
       <Physics {...{ gravity: [0, 0, 0] }}>
-        {graphWithUsers.nodes.map((node, idx) => {
-          const isEven = idx % 2 === 0;
-          return (
-            <Node
-              key={node.id_str}
-              node={node}
-              startPosition={vertices[isEven ? idx : vertices.length - idx - 1]}
-            />
-          );
-        })}
+        {graphWithUsers.nodes
+          .filter((node) => {
+            const hide = areBotsLinedUp && !node.user.botScore;
+            return !hide;
+          })
+          .map((node, idx) => {
+            const isEven = idx % 2 === 0;
+
+            return (
+              <Node
+                key={node.id_str}
+                node={node}
+                startPosition={
+                  vertices[isEven ? idx : vertices.length - idx - 1]
+                }
+              />
+            );
+          })}
       </Physics>
       <BotScoreLegend />
     </>

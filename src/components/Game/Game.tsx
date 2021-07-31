@@ -73,6 +73,7 @@ function GameContent() {
   }, [shotsRemaining, setGameState]);
   const scale = 1.6;
   const canContinue = tweets.length > 0 && shotsRemaining > 0;
+
   switch (gameState.step) {
     case GameStepsEnum.welcome:
       return (
