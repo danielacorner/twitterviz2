@@ -2,19 +2,14 @@ import { WorkerApi } from "@react-three/cannon";
 import { useEffect, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useConfig } from "providers/store/useConfig";
-import {
-  areBotsLinedUpAtom,
-  gameStateAtom,
-  GameStepsEnum,
-} from "providers/store/store";
-import { atom, useAtom } from "jotai";
+import { useAreBotsLinedUp } from "providers/store/store";
 
 /** within this distance, nodes slow down to 0 */
 const MAX_DISTANCE_FROM_CENTER = 30;
 /** apply force toward center
     copied from https://codesandbox.io/s/zxpv7?file=/src/App.js:1195-1404 */
 export function useGravity(api: PublicApi, vec: any) {
-  const [areBotsLinedUp, setAreBotsLinedUp] = useAtom(areBotsLinedUpAtom);
+  const areBotsLinedUp = useAreBotsLinedUp();
   const position = useRef([0, 0, 0]);
   const velocity = useRef([0, 0, 0]);
   const { isPaused } = useConfig();
@@ -50,16 +45,6 @@ export function useGravity(api: PublicApi, vec: any) {
       }
     }
   });
-
-  // when the game ends, line up the bots
-  const [gameState] = useAtom(gameStateAtom);
-  useEffect(() => {
-    if (gameState.step === GameStepsEnum.gameOver) {
-      setAreBotsLinedUp(true);
-    } else {
-      setAreBotsLinedUp(false);
-    }
-  }, [gameState.step]);
 }
 interface PublicApi extends WorkerApi {
   at: (index: number) => WorkerApi;

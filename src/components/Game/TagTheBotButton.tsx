@@ -35,6 +35,7 @@ export default function TagTheBotButton() {
           onClick={() => {
             setLoading(true);
             fetchBotScoreForTweet(selectedNode).then((botScore) => {
+              setShotsRemaining((p) => Math.max(0, p - 1));
               if (botScore) {
                 setLatestNodeWithBotScore({ ...selectedNode, botScore });
               }
@@ -42,7 +43,6 @@ export default function TagTheBotButton() {
             });
             setSelectedNode(null);
             setTooltipNode(null);
-            setShotsRemaining((p) => Math.max(0, p - 1));
           }}
         >
           It's a bot! 🎯

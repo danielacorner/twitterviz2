@@ -5,16 +5,19 @@ import mockTweetsData from "../../assets/mockTweetsData.json";
 import { useLocation } from "react-router";
 import qs from "query-string";
 import { WordcloudConfig } from "./useSelectors";
-import { atom } from "jotai";
+import { atom, useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
-
-export const areBotsLinedUpAtom = atom<boolean>(false);
 export const appUserIdAtom = atomWithStorage<string>("atoms:userId", "");
 
 export enum GameStepsEnum {
   welcome = "welcome",
   lookingAtTweetsWithBotScores = "lookingAtTweetsWithBotScores",
   gameOver = "gameOver",
+}
+export function useAreBotsLinedUp() {
+  // when the game ends, line up the bots
+  const [gameState] = useAtom(gameStateAtom);
+  return gameState.step === GameStepsEnum.gameOver;
 }
 export const gameStateAtom = atom<{ step: GameStepsEnum; startTime?: number }>({
   step: GameStepsEnum.welcome,

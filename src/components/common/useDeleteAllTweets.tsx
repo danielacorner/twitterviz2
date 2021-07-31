@@ -17,7 +17,7 @@ export function useDeleteAllTweets() {
     new Promise((resolve, reject) => {
       // delete all tweets from the store
       setTweetsFromServer([]);
-      setTweets([], true);
+      setTweets([]);
       // delete all tweets for this user in the db
       deleteUser().then(() => {
         setEmptyNodesForUser().then(() => {

@@ -11,7 +11,10 @@ import { useStreamNewTweets } from "components/NavBar/useStreamNewTweets";
 import { useDeleteAllTweets } from "components/common/useDeleteAllTweets";
 import { useLoading, useTweets } from "providers/store/useSelectors";
 import styled from "styled-components/macro";
-import { useReplaceNodesInDbForUser } from "providers/faunaProvider";
+import {
+  useReplaceNodesInDbForUser,
+  useSetNodesInDbForUser,
+} from "providers/faunaProvider";
 import { Canvas } from "@react-three/fiber";
 import { BotScoreLegend } from "components/NetworkGraph/Scene/BotScoreLegend";
 import { IconButton, Tooltip } from "@material-ui/core";
@@ -22,11 +25,12 @@ import { useEffect } from "react";
 /** renders controls and instructions to play the game */
 export function Game() {
   const [shotsRemaining] = useAtom(shotsRemainingAtom);
-
+  const [gameState] = useAtom(gameStateAtom);
   return (
     <GameStyles>
       <div className="shotsRemaining">
         {shotsRemaining} shot{shotsRemaining === 1 ? "" : "s"} left
+        {gameState.step === GameStepsEnum.gameOver ? " - game over" : ""}
       </div>
       <GameContent />
     </GameStyles>
@@ -62,15 +66,19 @@ function GameContent() {
       startTime: Date.now(),
     }));
   }
-
+  const setNodesInDb = useSetNodesInDbForUser();
   // game over when no shots remain
   useEffect(() => {
     if (shotsRemaining === 0) {
       setGameState((p) => ({
         step: GameStepsEnum.gameOver,
       }));
+      const botTweets = tweets.filter((t) => Boolean(t.botScore));
+      console.log("🌟🚨 ~ useEffect ~ botTweets", botTweets);
+      setNodesInDb(botTweets);
     }
-  }, [shotsRemaining, setGameState]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shotsRemaining]);
   const scale = 1.6;
   const canContinue = tweets.length > 0 && shotsRemaining > 0;
 

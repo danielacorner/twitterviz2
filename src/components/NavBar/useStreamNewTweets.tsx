@@ -1,8 +1,8 @@
 import {
-  useAddTweets,
   useLoading,
   useAllowedMediaTypes,
   useSetLoading,
+  useSetTweets,
 } from "../../providers/store/useSelectors";
 import { useConfig } from "../../providers/store/useConfig";
 import { SERVER_URL } from "../../utils/constants";
@@ -13,7 +13,8 @@ export function useStreamNewTweets() {
   const allowedMediaTypesStrings = useAllowedMediaTypes();
   const loading = useLoading();
   const setLoading = useSetLoading();
-  const addTweets = useAddTweets();
+  const setTweets = useSetTweets();
+  // const addTweets = useAddTweets();
 
   const fetchNewTweets = async () => {
     setLoading(true);
@@ -38,7 +39,7 @@ export function useStreamNewTweets() {
 
     const data = await resp.json();
 
-    addTweets(data);
+    setTweets(data);
 
     setLoading(false);
 

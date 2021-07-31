@@ -118,7 +118,7 @@ function useGetMenuItemsForUser() {
     const prevReplace = replace;
     setConfig({ replace: true });
     setTimeout(() => {
-      setTweets(tweetsWithoutThisUser, true);
+      setTweets(tweetsWithoutThisUser);
       setConfig({ replace: prevReplace });
     });
     // setTimeout(() => {

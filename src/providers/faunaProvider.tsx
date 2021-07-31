@@ -63,10 +63,12 @@ export function useFetchTweetsOnMount() {
       setUserId(newUserId);
       setEmptyNodesForUser().then((ret) => {
         const newTweets = (ret as any).data.nodes as Tweet[];
+        console.log("🌟🚨 ~ setEmptyNodesForUser ~ newTweets", newTweets);
         setTweets(newTweets);
       });
     } else {
       getTweetsFromDb().then((newTweets) => {
+        console.log("🌟🚨 ~ setEmptyNodesForUser ~ newTweets", newTweets);
         setTweets(newTweets as Tweet[]);
         lastTweetsFromDb.current = newTweets as Tweet[];
       });
@@ -129,20 +131,26 @@ export function useDeleteUser() {
 }
 
 export function useSetEmptyNodesForUser() {
+  const setNodesForUser = useSetNodesInDbForUser();
+  return () => setNodesForUser([]);
+}
+
+export function useSetNodesInDbForUser() {
   const [, setDbRef] = useAtom(dbRefAtom);
   const [userId] = useAtom(appUserIdAtom);
 
-  return () =>
+  return (nodes: Tweet[]) =>
     new Promise((resolve, reject) => {
       faunaClient
         .query(
           q.Create(q.Collection("Nodes"), {
             title: userId,
-            data: { userId, nodes: [] },
+            data: { userId, nodes },
           })
         )
         .then((ret) => {
           console.log("🌟🌟 Created empty nodes for user", userId);
+          console.log("🌟🚨 ~ .then ~ ret", ret);
           setDbRef((ret as any)?.ref);
           resolve(ret);
         })

@@ -1,11 +1,11 @@
 import { useSphere } from "@react-three/cannon";
 import * as THREE from "three";
 import useStore, {
-  areBotsLinedUpAtom,
   isPointerOverAtom,
   numTooltipTweetsAtom,
   rightClickMenuAtom,
   tooltipTweetIndexAtom,
+  useAreBotsLinedUp,
 } from "providers/store/store";
 import { useAtom } from "jotai";
 import {
@@ -19,6 +19,7 @@ import { useGravity } from "./useGravity";
 import { useSpring, animated } from "@react-spring/three";
 import { NodeBotScoreAntenna } from "./NodeBotScoreAntenna";
 import { NODE_RADIUS } from "utils/constants";
+import { useEffect } from "react";
 
 const nodeMaterial = new THREE.MeshLambertMaterial({
   emissive: "blue",
@@ -105,15 +106,21 @@ export const Node = ({
     args: NODE_RADIUS * 5,
   }));
 
+  // hide nodes when the game ends
+  useEffect(() => {}, []);
+
   useGravity(api, vec);
 
+  const hide = useAreBotsLinedUp() && !node.user.botScore;
+
   const springProps = useSpring({
-    scale:
-      isPointerOver && isTooltipNode
-        ? [2.2, 2.2, 2.2]
-        : isTooltipNode
-        ? [1.8, 1.8, 1.8]
-        : [1, 1, 1],
+    scale: hide
+      ? [0, 0, 0]
+      : isPointerOver && isTooltipNode
+      ? [2.2, 2.2, 2.2]
+      : isTooltipNode
+      ? [1.8, 1.8, 1.8]
+      : [1, 1, 1],
   });
 
   return (
