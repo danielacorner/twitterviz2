@@ -52,12 +52,10 @@ export const isDarkModeAtom = atomWithStorage<boolean>(
 export const useSearchObj = () => qs.parse(useLocation()?.search);
 
 export type GlobalStateType = {
-  tweetsFromServer: Tweet[];
   selectedNode: Tweet | null;
   setSelectedNode: (node: Tweet | null) => void;
   tooltipNode: Tweet | null;
   setTooltipNode: (node: Tweet | null) => void;
-  setTweetsFromServer: (tweets: Tweet[]) => void;
   config: AppConfig;
   setConfig: (newConfig: Partial<AppConfig>) => void;
   likesByUserId: { [userId: string]: string[] };
@@ -109,20 +107,8 @@ export type AppConfig = {
   numTweets: number;
 };
 
-// use to turn off mock tweets in dev mode
-// const SHOULD_MOCK_TWEETS = true;
-
-function getInitialTweets() {
-  const tweetsLS = localStorage.getItem("tweets");
-  return tweetsLS && JSON.parse(tweetsLS)?.[0]?.id_str
-    ? JSON.parse(tweetsLS)
-    : [];
-}
-
 const [useStore] = create<GlobalStateType>(
   (set): GlobalStateType => ({
-    /** tweets are saved to LS */
-    tweetsFromServer: getInitialTweets(),
     // map between tweet.user.id_str and the liked tweet.id_str
     // likesByUserId is populated when we "fetch tweets liked by a user"
     likesByUserId:
@@ -144,7 +130,6 @@ const [useStore] = create<GlobalStateType>(
 
     tooltipNode: null as Tweet | null,
     setTooltipNode: (node: Tweet | null) => set(() => ({ tooltipNode: node })),
-    setTweetsFromServer: (tweets) => set(() => ({ tweetsFromServer: tweets })),
     loading: false,
     // * only works for authenticated user (me)
     // repliesByUserId: {},

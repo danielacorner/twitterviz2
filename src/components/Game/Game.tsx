@@ -18,6 +18,7 @@ import { IconButton, Tooltip } from "@material-ui/core";
 import { Replay } from "@material-ui/icons";
 import { DeviceOrientationOrbitControls } from "./DeviceOrientationOrbitControls";
 import { OrbitControls } from "@react-three/drei";
+import { useEffect } from "react";
 /** renders controls and instructions to play the game */
 export function Game() {
   const [shotsRemaining] = useAtom(shotsRemainingAtom);
@@ -37,6 +38,9 @@ function GameContent() {
   const tweets = useTweets();
   const loading = useLoading();
 
+  // this one saves in local storage
+  const [shotsRemaining, setShotsRemaining] = useAtom(shotsRemainingAtom);
+
   const { fetchNewTweets } = useStreamNewTweets();
   const deleteAllTweets = useDeleteAllTweets();
   const replaceNodesInDbForUser = useReplaceNodesInDbForUser();
@@ -45,6 +49,7 @@ function GameContent() {
       step: GameStepsEnum.lookingAtTweetsWithBotScores,
       startTime: Date.now(),
     }));
+    setShotsRemaining(SHOTS_REMAINING);
     deleteAllTweets().then(() => {
       fetchNewTweets().then((newTweets) => {
         replaceNodesInDbForUser(newTweets);
@@ -58,9 +63,16 @@ function GameContent() {
     }));
   }
 
-  const [shotsRemaining, setShotsRemaining] = useAtom(shotsRemainingAtom);
+  // game over when no shots remain
+  useEffect(() => {
+    if (shotsRemaining === 0) {
+      setGameState((p) => ({
+        step: GameStepsEnum.gameOver,
+      }));
+    }
+  }, [shotsRemaining, setGameState]);
   const scale = 1.6;
-
+  const canContinue = tweets.length > 0 && shotsRemaining > 0;
   switch (gameState.step) {
     case GameStepsEnum.welcome:
       return (
@@ -102,23 +114,23 @@ function GameContent() {
             <p style={{ textAlign: "center" }}>
               TODO: compete with others to get the highest bot score!
             </p> */}
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={startGame}
-              style={{ marginRight: 12 }}
-            >
-              {tweets.length > 0 ? "Play Again" : "Play"}
-            </Button>
-            {tweets.length > 0 && (
+            {canContinue && (
               <Button
                 variant="contained"
-                color="secondary"
+                color="primary"
                 onClick={continueGame}
+                style={{ marginRight: 12 }}
               >
                 Continue
               </Button>
             )}
+            <Button
+              variant="contained"
+              color={canContinue ? "secondary" : "primary"}
+              onClick={startGame}
+            >
+              {canContinue ? "Play Again" : "Play"}
+            </Button>
           </div>
         </Step1Styles>
       );
@@ -126,13 +138,7 @@ function GameContent() {
       return (
         <Step2Styles>
           <Tooltip title="Start Over">
-            <IconButton
-              className="btnStartOver"
-              onClick={() => {
-                fetchNewTweets();
-                setShotsRemaining(SHOTS_REMAINING);
-              }}
-            >
+            <IconButton className="btnStartOver" onClick={startGame}>
               <Replay />
             </IconButton>
           </Tooltip>
@@ -146,9 +152,7 @@ function GameContent() {
             color="secondary"
             disabled={loading}
             variant="contained"
-            onClick={() => {
-              fetchNewTweets();
-            }}
+            onClick={startGame}
             style={{ top: "20px", textTransform: "none" }}
           >
             Play again
