@@ -6,7 +6,7 @@ import useStore from "./store";
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 
-const tweetsFromServerAtom = atomWithStorage<Tweet[]>(
+export const tweetsFromServerAtom = atomWithStorage<Tweet[]>(
   "atoms:tweetsFromServerAtom",
   []
 );

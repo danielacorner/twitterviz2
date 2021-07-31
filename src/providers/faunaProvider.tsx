@@ -85,7 +85,6 @@ function useGetTweetsFromDb() {
       }
       faunaClient
         .query(q.Get(q.Ref(q.Collection("Nodes"), dbRef["@ref"]?.id)))
-        // .query(q.Get(q.Match(q.Index("nodes_by_userid"), userId)))
         .then((ret: { data: any[] } | any) => {
           // just grab the whole db ok
           if (ret.data) {
@@ -110,13 +109,12 @@ function useGetTweetsFromDb() {
 }
 
 export function useDeleteUser() {
-  const [userId] = useAtom(appUserIdAtom);
+  const [dbRef] = useAtom(dbRefAtom);
 
   return () =>
     new Promise((resolve, reject) => {
       faunaClient
-        .query(q.Get(q.Match(q.Index("nodes_by_userid"), userId)))
-        // .query(q.Get(q.Match(q.Index("nodes_by_userid"), userId)))
+        .query(q.Get(q.Ref(q.Collection("Nodes"), dbRef["@ref"]?.id)))
         .then((ret: { data: any[] } | any) => {
           faunaClient.query(q.Delete(ret.ref)).then((r) => {
             console.log("🌟🌟 ~ deleted user", r);
@@ -165,7 +163,6 @@ export function useReplaceNodesInDbForUser() {
     faunaClient
       .query(
         q.Replace(q.Ref(q.Collection("Nodes"), dbRef["@ref"]?.id), {
-          // q.Replace(q.Match(q.Index("nodes_by_userid"), userId), {
           data: { userId, nodes },
         })
       )
