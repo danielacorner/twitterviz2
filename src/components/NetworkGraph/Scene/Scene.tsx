@@ -6,11 +6,12 @@ import * as THREE from "three";
 import { uniqBy } from "lodash";
 import { BotScoreLegend } from "./BotScoreLegend";
 import { useThree } from "@react-three/fiber";
+import { Environment } from "@react-three/drei";
 import { CAMERA_POSITION } from "utils/constants";
 import { useSpring } from "react-spring";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useMount } from "utils/utils";
-import { useAreBotsLinedUp } from "providers/store/store";
+import { useControls } from "leva";
 
 export function Scene() {
   const graphWithUsers = useGraphWithUsersAndLinks();
@@ -26,11 +27,9 @@ export function Scene() {
     },
     config: { tension: 50, mass: 12, friction: 60 },
   });
-
   // lined up: hide if they don't have a bot score
-  const areBotsLinedUp = useAreBotsLinedUp();
   return (
-    <>
+    <Suspense fallback={null}>
       <ambientLight intensity={0.75} />
       <spotLight
         position={[20, 20, 25]}
@@ -38,31 +37,29 @@ export function Scene() {
         angle={0.2}
         color="blue"
       />
+      <Environment background={false} preset={"night"} />
       <directionalLight position={[0, 5, -4]} intensity={4} />
-      <directionalLight position={[0, -15, -0]} intensity={4} color="blue" />
+      <directionalLight
+        position={[0.2, 0.5, -1]}
+        intensity={1}
+        color="cornflowerblue"
+      />
       <OrbitControls {...({} as any)} />
       <Physics {...{ gravity: [0, 0, 0] }}>
-        {graphWithUsers.nodes
-          // .filter((node) => {
-          //   const hide = areBotsLinedUp && !node.user.botScore;
-          //   return !hide;
-          // })
-          .map((node, idx) => {
-            const isEven = idx % 2 === 0;
+        {graphWithUsers.nodes.map((node, idx) => {
+          const isEven = idx % 2 === 0;
 
-            return (
-              <Node
-                key={node.id_str}
-                node={node}
-                startPosition={
-                  vertices[isEven ? idx : vertices.length - idx - 1]
-                }
-              />
-            );
-          })}
+          return (
+            <Node
+              key={node.id_str}
+              node={node}
+              startPosition={vertices[isEven ? idx : vertices.length - idx - 1]}
+            />
+          );
+        })}
       </Physics>
       <BotScoreLegend />
-    </>
+    </Suspense>
   );
 }
 

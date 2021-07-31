@@ -31,7 +31,7 @@ export function BotScoreLegend({
     >
       <animated.mesh scale={springProps.scale} position={position}>
         <mesh>
-          <meshLambertMaterial
+          <meshPhysicalMaterial
             {...{ metalness: 1, color: "#316c83", emissive: "cornflowerblue" }}
           />
           <sphereBufferGeometry args={[RADIUS * 0.007, 26, 26]} />

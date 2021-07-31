@@ -34,6 +34,7 @@ function Graph3D() {
   return (
     <Graph3DStyles>
       <Canvas
+        style={{ background: "none" }}
         gl={{ alpha: true, stencil: false, depth: true, antialias: false }}
         camera={{
           position: CAMERA_POSITION.initial,

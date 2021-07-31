@@ -99,7 +99,7 @@ function Antenna({ color, score, label, showLabels, isBottom }) {
         scale={springProps.stickScale}
       >
         <cylinderBufferGeometry args={[0.2, 0.2, STICK_HEIGHT, 26, 1]} />
-        <meshLambertMaterial
+        <meshPhysicalMaterial
           metalness={0.8}
           roughness={0.1}
           color="#a3a3a3"
@@ -128,7 +128,7 @@ function Antenna({ color, score, label, showLabels, isBottom }) {
           </Text>
         </Billboard>
         <sphereBufferGeometry args={[SPHERE_RADIUS, 26, 26]} />
-        <meshLambertMaterial
+        <meshPhysicalMaterial
           metalness={0.8}
           roughness={0.1}
           color={color}

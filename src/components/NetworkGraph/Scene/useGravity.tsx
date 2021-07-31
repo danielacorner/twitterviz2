@@ -2,14 +2,12 @@ import { WorkerApi } from "@react-three/cannon";
 import { useEffect, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useConfig } from "providers/store/useConfig";
-import { useAreBotsLinedUp } from "providers/store/store";
 
 /** within this distance, nodes slow down to 0 */
 const MAX_DISTANCE_FROM_CENTER = 30;
 /** apply force toward center
     copied from https://codesandbox.io/s/zxpv7?file=/src/App.js:1195-1404 */
 export function useGravity(api: PublicApi, vec: any) {
-  const areBotsLinedUp = useAreBotsLinedUp();
   const position = useRef([0, 0, 0]);
   const velocity = useRef([0, 0, 0]);
   const { isPaused } = useConfig();

@@ -21,25 +21,29 @@ import { NodeBotScoreAntenna } from "./NodeBotScoreAntenna";
 import { NODE_RADIUS } from "utils/constants";
 import { useEffect } from "react";
 
-const nodeMaterial = new THREE.MeshLambertMaterial({
-  emissive: "blue",
-  metalness: 1,
-  color: "#316c83",
+const nodeMaterial = new THREE.MeshPhysicalMaterial({
+  // emissive: "blue",
+  metalness: 0.97,
+  roughness: 0.25,
+  // color: "#316c83",
 });
-const rightClickNodeMaterial = new THREE.MeshLambertMaterial({
-  emissive: "#be2626",
+const rightClickNodeMaterial = new THREE.MeshPhysicalMaterial({
+  // emissive: "#be2626",
   metalness: -1,
-  color: "#be5626",
+  roughness: 0.2,
+  // color: "#be5626",
 });
-const pointerOverMaterial = new THREE.MeshLambertMaterial({
-  emissive: "blue",
-  metalness: 1,
-  color: "#3ad64f",
+const pointerOverMaterial = new THREE.MeshPhysicalMaterial({
+  // emissive: "blue",
+  metalness: 0.8,
+  roughness: 0.2,
+  // color: "#3ad64f",
 });
-const tooltipNodeMaterial = new THREE.MeshLambertMaterial({
-  emissive: "blue",
+const tooltipNodeMaterial = new THREE.MeshPhysicalMaterial({
+  // emissive: "blue",
   metalness: 1,
-  color: "#26be3a",
+  roughness: 0.2,
+  // color: "#26be3a",
 });
 const nodeGeometry = new THREE.SphereGeometry(NODE_RADIUS, 28, 28);
 
