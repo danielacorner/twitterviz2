@@ -24,6 +24,7 @@ export default function TagTheBotButton() {
   const setLoading = useSetLoading();
   const [, setLatestNodeWithBotScore] = useAtom(latestNodeWithBotScoreAtom);
   const [shotsRemaining, setShotsRemaining] = useAtom(shotsRemainingAtom);
+  console.log("🌟🚨 ~ TagTheBotButton ~ shotsRemaining", shotsRemaining);
 
   return selectedNode && shotsRemaining > 0 ? (
     <BottomButtonsStyles>
@@ -34,10 +35,10 @@ export default function TagTheBotButton() {
           onClick={() => {
             setLoading(true);
             fetchBotScoreForTweet(selectedNode).then((botScore) => {
-              setLoading(false);
               if (botScore) {
                 setLatestNodeWithBotScore({ ...selectedNode, botScore });
               }
+              setLoading(false);
             });
             setSelectedNode(null);
             setTooltipNode(null);

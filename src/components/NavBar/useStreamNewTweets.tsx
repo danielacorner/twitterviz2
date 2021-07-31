@@ -40,6 +40,8 @@ export function useStreamNewTweets() {
 
     addTweets(data);
 
+    setLoading(false);
+
     return data;
   };
   return { loading, fetchNewTweets };

@@ -136,6 +136,7 @@ function GameContent() {
               <Replay />
             </IconButton>
           </Tooltip>
+          <TagTheBotButton />
         </Step2Styles>
       );
     case GameStepsEnum.gameOver:
@@ -152,7 +153,6 @@ function GameContent() {
           >
             Play again
           </Button>
-          <TagTheBotButton />
         </>
       );
     default:

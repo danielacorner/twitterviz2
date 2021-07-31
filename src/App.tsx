@@ -61,6 +61,8 @@ function AppStylesHooks() {
     }
     if (loading) {
       (app as HTMLElement).style.cursor = "wait";
+    } else {
+      (app as HTMLElement).style.cursor = "unset";
     }
     (app as HTMLElement).style.background = isLight ? "white" : "hsl(0,0%,10%)";
   }, [loading, isLight]);
