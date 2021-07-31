@@ -15,11 +15,24 @@ import { useReplaceNodesInDbForUser } from "providers/faunaProvider";
 import { Canvas } from "@react-three/fiber";
 import { BotScoreLegend } from "components/NetworkGraph/Scene/BotScoreLegend";
 import { IconButton, Tooltip } from "@material-ui/core";
-import { Repeat } from "@material-ui/icons";
+import { Replay } from "@material-ui/icons";
 import { DeviceOrientationOrbitControls } from "./DeviceOrientationOrbitControls";
 import { OrbitControls } from "@react-three/drei";
 /** renders controls and instructions to play the game */
 export function Game() {
+  const [shotsRemaining] = useAtom(shotsRemainingAtom);
+
+  return (
+    <GameStyles>
+      <div className="shotsRemaining">
+        {shotsRemaining} shot{shotsRemaining === 1 ? "" : "s"} left
+      </div>
+      <GameContent />
+    </GameStyles>
+  );
+}
+const GameStyles = styled.div``;
+function GameContent() {
   const [gameState, setGameState] = useAtom(gameStateAtom);
   const tweets = useTweets();
   const loading = useLoading();
@@ -44,9 +57,9 @@ export function Game() {
       startTime: Date.now(),
     }));
   }
-  const scale = 1.6;
 
   const [shotsRemaining, setShotsRemaining] = useAtom(shotsRemainingAtom);
+  const scale = 1.6;
 
   switch (gameState.step) {
     case GameStepsEnum.welcome:
@@ -67,6 +80,7 @@ export function Game() {
                   <OrbitControls {...({} as any)} />
                 )}
                 <BotScoreLegend
+                  isInStartMenu={true}
                   position={[0, 0.2, 0]}
                   scale={[scale, scale, scale]}
                 />
@@ -119,12 +133,9 @@ export function Game() {
                 setShotsRemaining(SHOTS_REMAINING);
               }}
             >
-              <Repeat />
+              <Replay />
             </IconButton>
           </Tooltip>
-          <div className="shotsRemaining">
-            {shotsRemaining} shot{shotsRemaining === 1 ? "" : "s"} left
-          </div>
         </Step2Styles>
       );
     case GameStepsEnum.gameOver:
@@ -159,8 +170,6 @@ const Step2Styles = styled.div`
     position: fixed;
     top: 0;
     right: 0;
-  }
-  .shotsRemaining {
   }
 `;
 const Step1Styles = styled.div`

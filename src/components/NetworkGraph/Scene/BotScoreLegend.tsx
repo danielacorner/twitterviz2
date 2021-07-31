@@ -10,9 +10,11 @@ const RADIUS = 40;
 export function BotScoreLegend({
   position = undefined as number[] | undefined,
   scale = undefined as number[] | undefined,
+  isInStartMenu = false,
 }) {
   const tweets = useTweets();
-  const showBotScore = Boolean(tweets.find((t) => t.user.botScore));
+  const showBotScore =
+    isInStartMenu || Boolean(tweets.find((t) => t.user.botScore));
   const {
     size: { width, height },
   } = useThree();
