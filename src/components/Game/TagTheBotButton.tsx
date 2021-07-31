@@ -10,6 +10,7 @@ import { useFetchBotScoreForTweet } from "components/common/useFetchBotScoreForT
 import { atom, useAtom } from "jotai";
 import { Tweet } from "types";
 import { OpenInNew } from "@material-ui/icons";
+import { shotsRemainingAtom } from "providers/store/store";
 // * animate a HUD-contained bot score display ?
 // * animate the selected node to the front and then back?
 const latestNodeWithBotScoreAtom = atom<Tweet | null>(null);
@@ -22,7 +23,9 @@ export default function TagTheBotButton() {
   const fetchBotScoreForTweet = useFetchBotScoreForTweet();
   const setLoading = useSetLoading();
   const [, setLatestNodeWithBotScore] = useAtom(latestNodeWithBotScoreAtom);
-  return selectedNode ? (
+  const [shotsRemaining, setShotsRemaining] = useAtom(shotsRemainingAtom);
+
+  return selectedNode && shotsRemaining > 0 ? (
     <BottomButtonsStyles>
       <Tooltip title={"fetch user bot score!"}>
         <Button
@@ -38,6 +41,7 @@ export default function TagTheBotButton() {
             });
             setSelectedNode(null);
             setTooltipNode(null);
+            setShotsRemaining((p) => Math.max(0, p - 1));
           }}
         >
           It's a bot! 🎯

@@ -75,7 +75,6 @@ export function useFetchTweetsOnMount() {
 }
 
 function useGetTweetsFromDb() {
-  const [userId] = useAtom(appUserIdAtom);
   const [dbRef] = useAtom(dbRefAtom);
   const setEmptyNodesForUser = useSetEmptyNodesForUser();
 

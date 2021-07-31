@@ -13,10 +13,16 @@ export const appUserIdAtom = atomWithStorage<string>("atoms:userId", "");
 export enum GameStepsEnum {
   welcome = "welcome",
   lookingAtTweetsWithBotScores = "lookingAtTweetsWithBotScores",
+  gameOver = "gameOver",
 }
 export const gameStateAtom = atom<{ step: GameStepsEnum; startTime?: number }>({
   step: GameStepsEnum.welcome,
 });
+export const SHOTS_REMAINING = 5;
+export const shotsRemainingAtom = atomWithStorage(
+  "atoms:shotsRemaining",
+  SHOTS_REMAINING
+);
 
 export const numTooltipTweetsAtom = atom<number>(1);
 export const tooltipTweetIndexAtom = atom<number>(0);
