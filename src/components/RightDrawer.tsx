@@ -6,6 +6,7 @@ import {
 } from "../providers/store/useSelectors";
 import { Drawer } from "@material-ui/core";
 import { Timeline, Tweet as TweetWidget } from "react-twitter-widgets";
+import { NodeTooltipContent } from "./NetworkGraph/NodeTooltip";
 
 /** Selected Tweet drawer */
 export function RightDrawer() {
@@ -22,6 +23,16 @@ export function RightDrawer() {
         <DrawerContentStyles>
           {originalPoster && (
             <>
+              <NodeTooltipContent
+                {...{
+                  isLight: false,
+                  originalPoster,
+                  tweet: selectedNode,
+                  tooltipCss: `.allMedia{max-height:unset}`,
+                  compact: false,
+                  tooltipStyles: { pointerEvents: "auto" },
+                }}
+              />
               {selectedNode && (
                 <TweetWidget
                   tweetId={selectedNode.id_str}
@@ -45,7 +56,7 @@ export function RightDrawer() {
   );
 }
 const DrawerContentStyles = styled.div`
-  width: 300px;
-  padding: 0 12px;
+  width: 378px;
+  padding: 5px;
   box-sizing: content-box;
 `;
