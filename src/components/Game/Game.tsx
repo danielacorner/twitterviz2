@@ -25,6 +25,7 @@ import { OrbitControls } from "@react-three/drei";
 import { useEffect } from "react";
 import Score from "./Score";
 import { ShotsRemaining } from "./ShotsRemaining";
+import { popupBaseCss } from "./popupBaseCss";
 /** renders controls and instructions to play the game */
 export function Game() {
   return (
@@ -198,11 +199,7 @@ const Step1Styles = styled.div`
   place-items: center;
   box-shadow: 0px 2px 30px 8px hsla(0, 0%, 0%, 0.3);
   .content {
-    height: fit-content;
-    width: fit-content;
-    background: hsla(0, 0%, 0%, 0.92);
-    padding: 32px;
-    border-radius: 16px;
+    ${popupBaseCss}
   }
   p {
     text-align: center;

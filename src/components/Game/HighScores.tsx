@@ -66,7 +66,9 @@ export function HighScores() {
         </animated.div>
       </div>
       {isSubmitFormOpen && (
-        <SubmitHighScoreForm {...{ highScores, setHighScores }} />
+        <SubmitHighScoreForm
+          {...{ highScores, setHighScores, setIsSubmitFormOpen }}
+        />
       )}
     </ScoreStyles>
   );
@@ -78,7 +80,11 @@ type HighScore = {
 };
 
 const NUM_SCORES = 12;
-function SubmitHighScoreForm({ highScores, setHighScores }) {
+function SubmitHighScoreForm({
+  highScores,
+  setHighScores,
+  setIsSubmitFormOpen,
+}) {
   const [name, setName] = useState("");
   const [userId] = useAtom(appUserIdAtom);
   const [score] = useAtom(scoreAtom);
@@ -107,6 +113,7 @@ function SubmitHighScoreForm({ highScores, setHighScores }) {
                   .sort((a, b) => a.score - b.score)
                   .slice(0, NUM_SCORES)
               );
+              setIsSubmitFormOpen(false);
             });
           }}
         >

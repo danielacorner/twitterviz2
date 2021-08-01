@@ -1,4 +1,5 @@
 import styled from "styled-components/macro";
+import { popupBaseCss } from "./popupBaseCss";
 
 export const ScoreStyles = styled.div`
   .score {
@@ -19,7 +20,9 @@ export const ScoreStyles = styled.div`
     position: fixed;
     inset: 0;
     .content {
-      margin-top: 198px;
+      ${popupBaseCss}
+      margin: auto;
+      margin-top: 360px;
     }
   }
 `;
