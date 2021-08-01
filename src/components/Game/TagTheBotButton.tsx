@@ -91,9 +91,8 @@ const BottomButtonsStyles = styled.div`
 `;
 
 function getScoreFromBotScore(botScore: BotScore) {
-  console.log("🌟🚨 ~ getScoreFromBotScore ~ botScore", botScore);
   return (
-    1000 *
+    100 *
     Object.entries(botScore).reduce(
       (acc, [key, val]) => (key === "overall" ? acc : acc + val),
       0

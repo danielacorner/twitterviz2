@@ -3,6 +3,7 @@ import { useAtom } from "jotai";
 import {
   gameStateAtom,
   GameStepsEnum,
+  scoreAtom,
   shotsRemainingAtom,
   SHOTS_REMAINING,
 } from "providers/store/store";
@@ -38,6 +39,7 @@ export function Game() {
 }
 const GameStyles = styled.div``;
 function GameContent() {
+  const [, setScore] = useAtom(scoreAtom);
   const [gameState, setGameState] = useAtom(gameStateAtom);
   const tweets = useTweets();
   const loading = useLoading();
@@ -49,6 +51,7 @@ function GameContent() {
   const deleteAllTweets = useDeleteAllTweets();
   const replaceNodesInDbForUser = useReplaceNodesInDbForUser();
   function startGame() {
+    setScore(0);
     setGameState((p) => ({
       ...p,
       step: GameStepsEnum.lookingAtTweetsWithBotScores,
@@ -163,7 +166,7 @@ function GameContent() {
             disabled={loading}
             variant="contained"
             onClick={startGame}
-            style={{ top: "20px", textTransform: "none" }}
+            style={{ top: "64px", textTransform: "none" }}
           >
             Play again
           </Button>

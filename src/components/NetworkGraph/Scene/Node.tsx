@@ -19,6 +19,7 @@ import { useGravity } from "./useGravity";
 import { useSpring, animated } from "@react-spring/three";
 import { NodeBotScoreAntenna } from "./NodeBotScoreAntenna";
 import { NODE_RADIUS } from "utils/constants";
+import { useEffect, useState } from "react";
 
 const nodeMaterial = new THREE.MeshPhysicalMaterial({
   emissive: "#0b152f",
@@ -124,6 +125,13 @@ export const Node = ({
       : [1, 1, 1],
   });
 
+  const [hasBotScore, setHasBotScore] = useState(false);
+  useEffect(() => {
+    if (node.user.botScore && !hasBotScore) {
+      setHasBotScore(true);
+    }
+  }, [node.user.botScore, hasBotScore]);
+
   return (
     <animated.mesh
       ref={ref}
@@ -147,7 +155,10 @@ export const Node = ({
       }}
     >
       {node.user.botScore ? (
-        <NodeBotScoreAntenna {...{ botScore: node.user.botScore }} />
+        <>
+          <NodeBotScoreAntenna {...{ botScore: node.user.botScore }} />
+          <BotScorePopup isMounted={hasBotScore} />
+        </>
       ) : null}
       <NodeBillboard
         {...{
@@ -158,3 +169,8 @@ export const Node = ({
     </animated.mesh>
   );
 };
+
+function BotScorePopup({ isMounted }) {
+  // TODO:
+  return null;
+}
