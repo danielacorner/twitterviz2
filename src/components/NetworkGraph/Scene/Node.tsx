@@ -19,24 +19,23 @@ import { useGravity } from "./useGravity";
 import { useSpring, animated } from "@react-spring/three";
 import { NodeBotScoreAntenna } from "./NodeBotScoreAntenna";
 import { NODE_RADIUS } from "utils/constants";
-import { useEffect } from "react";
 
 const nodeMaterial = new THREE.MeshPhysicalMaterial({
-  // emissive: "blue",
+  emissive: "#0b152f",
   metalness: 0.97,
-  roughness: 0.25,
+  roughness: 0.15,
   // color: "#316c83",
 });
 const rightClickNodeMaterial = new THREE.MeshPhysicalMaterial({
-  // emissive: "#be2626",
+  emissive: "#471111",
   metalness: -1,
-  roughness: 0.2,
+  roughness: 0.18,
   // color: "#be5626",
 });
 const pointerOverMaterial = new THREE.MeshPhysicalMaterial({
-  // emissive: "blue",
-  metalness: 0.8,
-  roughness: 0.2,
+  emissive: "#001d13",
+  metalness: 0.99,
+  roughness: 0.01,
   // color: "#3ad64f",
 });
 const tooltipNodeMaterial = new THREE.MeshPhysicalMaterial({
@@ -110,11 +109,9 @@ export const Node = ({
     args: NODE_RADIUS * 5,
   }));
 
-  // hide nodes when the game ends
-  useEffect(() => {}, []);
-
   useGravity(api, vec);
 
+  // hide nodes when the game ends
   const hide = useAreBotsLinedUp() && !node.user.botScore;
 
   const springProps = useSpring({

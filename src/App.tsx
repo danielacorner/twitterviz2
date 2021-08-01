@@ -10,7 +10,7 @@ import { RowDiv } from "components/common/styledComponents";
 // import { NavBar } from "components/NavBar/NavBar";
 import NetworkGraph from "components/NetworkGraph/NetworkGraph";
 import { useRecordSelectedNodeHistory } from "./components/useRecordSelectedNodeHistory";
-import { RightDrawer } from "./components/RightDrawer";
+import { RightDrawer } from "./components/RightDrawer/RightDrawer";
 import { Game } from "./components/Game/Game";
 // import { useDeleteAllTweets } from "components/common/useDeleteAllTweets";
 // import { useMount } from "utils/utils";

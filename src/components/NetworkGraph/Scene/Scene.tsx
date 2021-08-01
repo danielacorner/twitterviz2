@@ -42,13 +42,15 @@ export function Scene() {
         color="blue"
       />
       <Stars count={2000} />
-      <Environment background={true} path={"/"} preset={"lobby"} />
-      <Sky
-        rayleigh={7}
-        mieCoefficient={0.1}
-        mieDirectionalG={1}
-        turbidity={turbidity}
-      />
+      <Environment background={true} path={"/"} preset={"forest"} />
+      <mesh scale={[20, 20, 20]}>
+        <Sky
+          rayleigh={7}
+          mieCoefficient={0.1}
+          mieDirectionalG={1}
+          turbidity={turbidity}
+        />
+      </mesh>
       <directionalLight position={[0, 5, -4]} intensity={4} />
       <directionalLight
         position={[0.2, 0.5, -1]}

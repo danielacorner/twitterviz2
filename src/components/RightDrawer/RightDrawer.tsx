@@ -3,10 +3,11 @@ import {
   getOriginalPoster,
   useSelectedNode,
   useSetSelectedNode,
-} from "../providers/store/useSelectors";
+} from "../../providers/store/useSelectors";
 import { Drawer } from "@material-ui/core";
 import { Timeline, Tweet as TweetWidget } from "react-twitter-widgets";
-import { NodeTooltipContent } from "./NetworkGraph/NodeTooltip";
+import { NodeTooltipContent } from "../NetworkGraph/NodeTooltip";
+import { CUSTOM_SCROLLBAR_CSS } from "components/common/styledComponents";
 
 /** Selected Tweet drawer */
 export function RightDrawer() {
@@ -59,4 +60,5 @@ const DrawerContentStyles = styled.div`
   width: 378px;
   padding: 5px;
   box-sizing: content-box;
+  ${CUSTOM_SCROLLBAR_CSS}
 `;

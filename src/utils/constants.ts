@@ -1,4 +1,4 @@
-export const CAMERA_POSITION = { initial: [0, 0, 2000], final: [0, 0, 100] };
+export const CAMERA_POSITION = { initial: [0, 0, 500], final: [0, 0, 100] };
 export const AVATAR_WIDTH = 46;
 export const TOOLTIP_WIDTH = 380;
 
