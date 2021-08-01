@@ -5,7 +5,7 @@ import {
   GameStepsEnum,
   scoreAtom,
 } from "providers/store/store";
-import { animated } from "react-spring";
+import { a, animated } from "react-spring";
 import { useEffect, useState } from "react";
 import { ScoreStyles } from "./ScoreStyles";
 import { faunaClient } from "providers/faunaProvider";
@@ -39,7 +39,10 @@ export function HighScores() {
         (acc, cur) => Math.min(acc, cur.score),
         Infinity
       );
-      const isNewHighScore = score > lowestHighScore;
+      console.log("🌟🚨 ~ useEffect ~ lowestHighScore", lowestHighScore);
+      const isNewHighScore =
+        score > (lowestHighScore === Infinity ? 0 : lowestHighScore);
+      console.log("🌟🚨 ~ useEffect ~ isNewHighScore", isNewHighScore);
 
       if (isNewHighScore) {
         setIsSubmitFormOpen(true);
@@ -62,7 +65,9 @@ export function HighScores() {
           </h2>
         </animated.div>
       </div>
-      {isSubmitFormOpen && <SubmitHighScoreForm />}
+      {isSubmitFormOpen && (
+        <SubmitHighScoreForm {...{ highScores, setHighScores }} />
+      )}
     </ScoreStyles>
   );
 }
@@ -72,36 +77,42 @@ type HighScore = {
   score: number;
 };
 
-function SubmitHighScoreForm() {
+const NUM_SCORES = 12;
+function SubmitHighScoreForm({ highScores, setHighScores }) {
   const [name, setName] = useState("");
   const [userId] = useAtom(appUserIdAtom);
   const [score] = useAtom(scoreAtom);
   return (
     <div className="submit-high-score">
-      <form action="" className="content">
+      <div className="content">
+        <h4>New High Score! 🎉</h4>
         <TextField
           onChange={(e) => {
-            setName(e.target.value);
+            setName(e.target.value.substring(0, NUM_SCORES));
           }}
           value={name}
           label="name"
         />
         <IconButton
           disabled={name === ""}
-          type="submit"
           onClick={() => {
-            saveHighScore({
+            const newHighScore = {
               userId,
-              name: "test",
+              name,
               score,
-            }).then((data) => {
-              console.log("🌟🚨 ~ saveHighScore ~ data", data);
+            };
+            saveHighScore(newHighScore).then(() => {
+              setHighScores(
+                [...highScores, newHighScore]
+                  .sort((a, b) => a.score - b.score)
+                  .slice(0, NUM_SCORES)
+              );
             });
           }}
         >
           <Check />
         </IconButton>
-      </form>
+      </div>
     </div>
   );
 }
@@ -119,7 +130,9 @@ function fetchHighScores(): Promise<HighScore[]> {
       console.log("🌟🚨 ~ .then ~ ret", ret);
       const scores = (ret as any).data?.map((d) => d.data) || [];
       console.log("🌟🚨 ~ .then ~ scores", scores);
-      const highScores = scores.sort((a, b) => a.score - b.score).slice(0, 10);
+      const highScores = scores
+        .sort((a, b) => a.score - b.score)
+        .slice(0, NUM_SCORES);
       console.log("🌟🚨 ~ .then ~ highScores", highScores);
       return scores as HighScore[];
     })
@@ -128,17 +141,17 @@ function fetchHighScores(): Promise<HighScore[]> {
       return [];
     });
 }
-function saveHighScore(highScore: HighScore): Promise<any> {
-  console.log("🌟🚨 ~ saveHighScore ~ highScore", highScore);
+function saveHighScore(highScore: HighScore): Promise<HighScore[]> {
   return fetch("/api/save_highscore", {
     headers: { "content-type": "application/json" },
     method: "POST",
     body: JSON.stringify(highScore),
   })
     .then((response) => response.json())
-    .then((json) =>
-      json.map(({ userId, name, score }) => ({ userId, name, score }))
-    )
+    .then((ret) => {
+      console.log("🌟🚨 ~ saveHighScore ~ ret", ret);
+      return ret;
+    })
     .catch((err) => {
       console.error(err);
       return [];

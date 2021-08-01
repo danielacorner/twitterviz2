@@ -19,7 +19,7 @@ export const ScoreStyles = styled.div`
     position: fixed;
     inset: 0;
     .content {
-      margin-top: 128px;
+      margin-top: 198px;
     }
   }
 `;
