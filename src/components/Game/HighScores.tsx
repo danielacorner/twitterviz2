@@ -11,7 +11,7 @@ import { ScoreStyles } from "./ScoreStyles";
 import { faunaClient } from "providers/faunaProvider";
 import { query as q } from "faunadb";
 import { Button, IconButton, TextField } from "@material-ui/core";
-import { Check } from "@material-ui/icons";
+import { Check, Restore } from "@material-ui/icons";
 
 export function HighScores() {
   const [gameState] = useAtom(gameStateAtom);
@@ -51,6 +51,8 @@ export function HighScores() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isGameOver]);
 
+  const deleteAllHighScores = useDeleteAllHighScores();
+
   return !isGameOver ? null : (
     <ScoreStyles>
       <div className="high-scores">
@@ -70,9 +72,27 @@ export function HighScores() {
           {...{ highScores, setHighScores, setIsSubmitFormOpen }}
         />
       )}
+      {process.env.NODE_ENV !== "production" && (
+        <IconButton
+          style={{ position: "fixed", bottom: 0, right: 0 }}
+          onClick={deleteAllHighScores}
+        >
+          <Restore />
+        </IconButton>
+      )}
     </ScoreStyles>
   );
 }
+function useDeleteAllHighScores() {
+  return () =>
+    faunaClient.query(
+      q.Map(
+        q.Paginate(q.Documents(q.Collection("player_scores"))),
+        q.Lambda((x) => q.Delete(x))
+      )
+    );
+}
+
 type HighScore = {
   userId: string;
   name: string;
