@@ -20,10 +20,10 @@ export function useAreBotsLinedUp() {
   return gameState.step === GameStepsEnum.gameOver;
 }
 export const scoreAtom = atomWithStorage<number>("atoms:score", 0);
-export const gameStateAtom = atom<{
+export const gameStateAtom = atomWithStorage<{
   step: GameStepsEnum;
   startTime?: number;
-}>({
+}>("atoms:gameState", {
   step: GameStepsEnum.welcome,
 });
 export const SHOTS_REMAINING = 5;
