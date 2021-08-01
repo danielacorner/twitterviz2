@@ -7,9 +7,11 @@ import {
 } from "providers/store/store";
 import { animated } from "react-spring";
 import { useEffect, useState } from "react";
-import { ScoreStyles } from "./Score";
+import { ScoreStyles } from "./ScoreStyles";
 import { faunaClient } from "providers/faunaProvider";
 import { query as q } from "faunadb";
+import { Button, IconButton, TextField } from "@material-ui/core";
+import { Check } from "@material-ui/icons";
 
 export function HighScores() {
   const [gameState] = useAtom(gameStateAtom);
@@ -23,21 +25,25 @@ export function HighScores() {
   //   });
   // });
   const [userId] = useAtom(appUserIdAtom);
+  const [isSubmitFormOpen, setIsSubmitFormOpen] = useState(false);
 
   // save high score on gameover, then display high scores
   useEffect(() => {
     if (isGameOver) {
-      console.log("🌟🚨 ~ useEffect ~ isGameOver", isGameOver);
-      saveHighScore({
-        userId,
-        name: "test",
-        score,
-      }).then((data) => {
-        console.log("🌟🚨 ~ saveHighScore ~ data", data);
-        fetchHighScores().then((data) => {
-          setHighScores(data);
-        });
+      fetchHighScores().then((data) => {
+        setHighScores(data);
       });
+      console.log("🌟🚨 ~ useEffect ~ isGameOver", isGameOver);
+      // it's a high score if it's > than the smallest high
+      const lowestHighScore = highScores.reduce(
+        (acc, cur) => Math.min(acc, cur.score),
+        Infinity
+      );
+      const isNewHighScore = score > lowestHighScore;
+
+      if (isNewHighScore) {
+        setIsSubmitFormOpen(true);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isGameOver]);
@@ -56,6 +62,7 @@ export function HighScores() {
           </h2>
         </animated.div>
       </div>
+      {isSubmitFormOpen && <SubmitHighScoreForm />}
     </ScoreStyles>
   );
 }
@@ -64,6 +71,41 @@ type HighScore = {
   name: string;
   score: number;
 };
+
+function SubmitHighScoreForm() {
+  const [name, setName] = useState("");
+  const [userId] = useAtom(appUserIdAtom);
+  const [score] = useAtom(scoreAtom);
+  return (
+    <div className="submit-high-score">
+      <form action="" className="content">
+        <TextField
+          onChange={(e) => {
+            setName(e.target.value);
+          }}
+          value={name}
+          label="name"
+        />
+        <IconButton
+          disabled={name === ""}
+          type="submit"
+          onClick={() => {
+            saveHighScore({
+              userId,
+              name: "test",
+              score,
+            }).then((data) => {
+              console.log("🌟🚨 ~ saveHighScore ~ data", data);
+            });
+          }}
+        >
+          <Check />
+        </IconButton>
+      </form>
+    </div>
+  );
+}
+
 function fetchHighScores(): Promise<HighScore[]> {
   // get all documents https://stackoverflow.com/questions/61488323/how-to-get-all-documents-from-a-collection-in-faunadb
   return faunaClient
