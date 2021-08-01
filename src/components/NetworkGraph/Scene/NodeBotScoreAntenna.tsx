@@ -5,9 +5,6 @@ import { NODE_RADIUS } from "utils/constants";
 import { useMount } from "utils/utils";
 
 export function NodeBotScoreAntenna({ showLabels = false, botScore }) {
-  useMount(() => {
-    console.log("🌟🚨 ~ NodeBotScoreAntenna ~ botScore", botScore);
-  });
   const antennae = [
     // top
     {

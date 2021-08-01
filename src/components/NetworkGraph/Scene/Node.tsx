@@ -177,7 +177,6 @@ export const Node = ({
 
 function BotScorePopup({ isMounted, botScore }) {
   const { scoreIncrease, scorePercent } = getScoreFromBotScore(botScore);
-  console.log("🌟🚨 ~ BotScorePopup ~ scoreIncrease", scoreIncrease);
   const maxHue = 120;
   const minHue = 30;
   const [isAnimationComplete, setIsAnimationComplete] = useState(false);

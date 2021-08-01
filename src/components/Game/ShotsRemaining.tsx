@@ -11,7 +11,8 @@ export function ShotsRemaining() {
   const [gameState] = useAtom(gameStateAtom);
   return (
     <ShotsRemainingStyles>
-      {shotsRemaining} shot{shotsRemaining === 1 ? "" : "s"} left
+      {"🏀".repeat(shotsRemaining)} {shotsRemaining} shot
+      {shotsRemaining === 1 ? "" : "s"} left
       {gameState.step === GameStepsEnum.gameOver ? " - game over" : ""}
     </ShotsRemainingStyles>
   );

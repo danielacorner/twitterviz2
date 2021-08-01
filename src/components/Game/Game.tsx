@@ -51,16 +51,18 @@ function GameContent() {
   const deleteAllTweets = useDeleteAllTweets();
   const replaceNodesInDbForUser = useReplaceNodesInDbForUser();
   function startGame() {
-    setScore(0);
-    setGameState((p) => ({
-      ...p,
-      step: GameStepsEnum.lookingAtTweetsWithBotScores,
-      startTime: Date.now(),
-    }));
-    setShotsRemaining(SHOTS_REMAINING);
     deleteAllTweets().then(() => {
+      console.log("🌟🚨 ~ deleteAllTweets ");
       fetchNewTweets().then((newTweets) => {
+        console.log("🌟🚨 ~ newTweets ", newTweets);
         replaceNodesInDbForUser(newTweets);
+        setScore(0);
+        setGameState((p) => ({
+          ...p,
+          step: GameStepsEnum.lookingAtTweetsWithBotScores,
+          startTime: Date.now(),
+        }));
+        setShotsRemaining(SHOTS_REMAINING);
       });
     });
   }
@@ -77,7 +79,6 @@ function GameContent() {
     if (shotsRemaining === 0) {
       setGameState((p) => ({ ...p, step: GameStepsEnum.gameOver }));
       const botTweets = tweets.filter((t) => Boolean(t.botScore));
-      console.log("🌟🚨 ~ useEffect ~ botTweets", botTweets);
       setNodesInDb(botTweets);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -224,6 +225,5 @@ function getIsMobileDevice() {
     /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
       navigator.userAgent
     );
-  console.log("🌟🚨 ~ getIsMobileDevice ~ isMobile", isMobile);
   return isMobile;
 }

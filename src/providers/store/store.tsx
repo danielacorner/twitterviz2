@@ -7,8 +7,10 @@ import qs from "query-string";
 import { WordcloudConfig } from "./useSelectors";
 import { atom, useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
-export const appUserIdAtom = atomWithStorage<string>("atoms:userId", "");
+export const SHOTS_REMAINING = process.env.NODE_ENV === "development" ? 2 : 5;
 const INITIAL_NUM_TWEETS = 12;
+
+export const appUserIdAtom = atomWithStorage<string>("atoms:userId", "");
 export enum GameStepsEnum {
   welcome = "welcome",
   lookingAtTweetsWithBotScores = "lookingAtTweetsWithBotScores",
@@ -26,7 +28,6 @@ export const gameStateAtom = atomWithStorage<{
 }>("atoms:gameState", {
   step: GameStepsEnum.welcome,
 });
-export const SHOTS_REMAINING = 5;
 export const shotsRemainingAtom = atomWithStorage(
   "atoms:shotsRemaining",
   SHOTS_REMAINING

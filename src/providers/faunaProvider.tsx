@@ -35,7 +35,7 @@ export function useFetchTweetsOnMount() {
           console.log("🌟🌟 ~ ", err.message);
           return;
         }
-        console.log("🌟🚨 ~ createIndex ~ err", err);
+        console.log("🚨🚨 ~ createIndex ~ err", err);
       });
   });
 
@@ -63,12 +63,10 @@ export function useFetchTweetsOnMount() {
       setUserId(newUserId);
       setEmptyNodesForUser().then((ret) => {
         const newTweets = (ret as any).data.nodes as Tweet[];
-        console.log("🌟🚨 ~ setEmptyNodesForUser ~ newTweets", newTweets);
         setTweets(newTweets);
       });
     } else {
       getTweetsFromDb().then((newTweets) => {
-        console.log("🌟🚨 ~ setEmptyNodesForUser ~ newTweets", newTweets);
         setTweets(newTweets as Tweet[]);
         lastTweetsFromDb.current = newTweets as Tweet[];
       });
@@ -92,7 +90,6 @@ function useGetTweetsFromDb() {
           if (ret.data) {
             // then find the user's nodes
             const nodesInDb = ret.data.nodes || [];
-            console.log("🌟🚨 ~ .then ~ nodesInDb", nodesInDb);
             resolve(nodesInDb as Tweet[]);
           }
         })
@@ -103,32 +100,37 @@ function useGetTweetsFromDb() {
             setEmptyNodesForUser();
             resolve([]);
             return;
+          } else if (err.name === "BadRequest") {
+            console.log("🚨🚨 bad request", err);
+            setEmptyNodesForUser();
+            resolve([]);
+            return;
           }
-          console.log("🌟🚨 ~ newPromise ~ err", err);
+          console.log("🚨🚨 ~ newPromise ~ err", err);
           reject(err);
         });
     });
 }
 
-export function useDeleteUser() {
-  const [dbRef] = useAtom(dbRefAtom);
+// export function useDeleteUser() {
+//   const [dbRef] = useAtom(dbRefAtom);
 
-  return () =>
-    new Promise((resolve, reject) => {
-      faunaClient
-        .query(q.Get(q.Ref(q.Collection("Nodes"), dbRef["@ref"]?.id)))
-        .then((ret: { data: any[] } | any) => {
-          faunaClient.query(q.Delete(ret.ref)).then((r) => {
-            console.log("🌟🌟 ~ deleted user", r);
-            resolve(r);
-          });
-        })
-        .catch((err) => {
-          console.log("🌟🚨 ~ newPromise ~ err", err);
-          reject(err);
-        });
-    });
-}
+//   return () =>
+//     new Promise((resolve, reject) => {
+//       faunaClient
+//         .query(q.Get(q.Ref(q.Collection("Nodes"), dbRef["@ref"]?.id)))
+//         .then((ret: { data: any[] } | any) => {
+//           faunaClient.query(q.Delete(ret.ref)).then((r) => {
+//             console.log("🌟🌟 ~ deleted user", r);
+//             resolve(r);
+//           });
+//         })
+//         .catch((err) => {
+//           console.log("🚨🚨 ~ newPromise ~ err", err);
+//           reject(err);
+//         });
+//     });
+// }
 
 export function useSetEmptyNodesForUser() {
   const setNodesForUser = useSetNodesInDbForUser();
@@ -150,12 +152,11 @@ export function useSetNodesInDbForUser() {
         )
         .then((ret) => {
           console.log("🌟🌟 Created empty nodes for user", userId);
-          console.log("🌟🚨 ~ .then ~ ret", ret);
           setDbRef((ret as any)?.ref);
           resolve(ret);
         })
         .catch((err) => {
-          console.log("🌟🚨 ~ faunaProvider ~ err", err);
+          console.log("🚨🚨 ~ faunaProvider ~ err", err);
         });
     });
 }
@@ -189,10 +190,10 @@ export function useReplaceNodesInDbForUser() {
               setDbRef((ret as any)?.ref);
             })
             .catch((err) => {
-              console.log("🌟🚨 ~ faunaProvider ~ err", err);
+              console.log("🚨🚨 ~ faunaProvider ~ err", err);
             });
         } else {
-          console.log("🌟🚨 ~ return ~ err", err);
+          console.log("🚨🚨 ~ return ~ err", err);
         }
       });
   };
