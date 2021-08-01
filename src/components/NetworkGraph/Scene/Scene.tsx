@@ -28,7 +28,7 @@ export function Scene() {
     onChange(state) {
       camera.position.set(0, 0, state.value.z);
     },
-    config: { tension: 50, mass: 12, friction: 60 },
+    config: { tension: 20, mass: 6, friction: 20 },
   });
   // lined up: hide if they don't have a bot score
   const turbidity = useTurbidityByTimeOfDay();
@@ -41,8 +41,8 @@ export function Scene() {
         angle={0.2}
         color="blue"
       />
-      <Stars count={1000} />
-      <Environment background={true} path={"/"} preset={"night"} />
+      <Stars count={2000} />
+      <Environment background={true} path={"/"} preset={"lobby"} />
       <Sky
         rayleigh={7}
         mieCoefficient={0.1}
