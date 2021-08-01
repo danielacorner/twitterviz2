@@ -123,7 +123,7 @@ function GameContent() {
             <p style={{ textAlign: "center" }}>
               TODO: compete with others to get the highest bot score!
             </p> */}
-            {canContinue && (
+            {canContinue ? (
               <Button
                 variant="contained"
                 color="primary"
@@ -132,14 +132,15 @@ function GameContent() {
               >
                 Continue
               </Button>
+            ) : (
+              <Button
+                variant="contained"
+                color={canContinue ? "secondary" : "primary"}
+                onClick={startGame}
+              >
+                {canContinue ? "Play Again" : "Play"}
+              </Button>
             )}
-            <Button
-              variant="contained"
-              color={canContinue ? "secondary" : "primary"}
-              onClick={startGame}
-            >
-              {canContinue ? "Play Again" : "Play"}
-            </Button>
           </div>
         </Step1Styles>
       );

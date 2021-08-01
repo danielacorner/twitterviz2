@@ -11,7 +11,10 @@ import { CAMERA_POSITION } from "utils/constants";
 import { useSpring } from "react-spring";
 import { Suspense, useState } from "react";
 import { useMount } from "utils/utils";
-import { useControls } from "leva";
+import { Sky /* Stars */ } from "@react-three/drei";
+import { useMemo, useRef } from "react";
+import { useFrame } from "@react-three/fiber";
+import { useTurbidityByTimeOfDay } from "./useTurbidityByTimeOfDay";
 
 export function Scene() {
   const graphWithUsers = useGraphWithUsersAndLinks();
@@ -28,6 +31,7 @@ export function Scene() {
     config: { tension: 50, mass: 12, friction: 60 },
   });
   // lined up: hide if they don't have a bot score
+  const turbidity = useTurbidityByTimeOfDay();
   return (
     <Suspense fallback={null}>
       <ambientLight intensity={0.75} />
@@ -37,7 +41,14 @@ export function Scene() {
         angle={0.2}
         color="blue"
       />
-      <Environment background={false} preset={"night"} />
+      <Stars count={1000} />
+      <Environment background={true} path={"/"} preset={"night"} />
+      <Sky
+        rayleigh={7}
+        mieCoefficient={0.1}
+        mieDirectionalG={1}
+        turbidity={turbidity}
+      />
       <directionalLight position={[0, 5, -4]} intensity={4} />
       <directionalLight
         position={[0.2, 0.5, -1]}
@@ -86,4 +97,51 @@ function useIsMounted() {
     setIsMounted(true);
   });
   return isMounted;
+}
+
+// https://codesandbox.io/s/9y8vkjykyy?file=/src/index.js
+export function Stars({ count = 2000 }) {
+  let group = useRef(null as any);
+  let spin = 0.1;
+  const speed = 0.0001;
+  let scale = 1;
+  useFrame(() => {
+    // Some things maybe shouldn't be declarative, we're in the render-loop here with full access to the instance
+    // const r = 5 * Math.sin(degToRad((speed += 0.1)));
+    // const s = Math.cos(degToRad(speed * 2));
+    group.current.rotation.set(spin, spin, (spin += speed));
+    group.current.scale.set(scale, scale, scale);
+  });
+  const [geo, mat, coords] = useMemo(() => {
+    const nGeo = new THREE.SphereBufferGeometry(1, 10, 10);
+    const nMat = new THREE.MeshPhysicalMaterial({
+      color: new THREE.Color("cornflowerblue"),
+      metalness: 0.9,
+      roughness: 0.2,
+    });
+    // const nMat = new THREE.MeshBasicMaterial({
+    //   color: new THREE.Color("cornflowerblue"),
+    // });
+    const nCoords = new Array(count)
+      .fill(null)
+      .map((i) => [
+        Math.random() * 800 - 400,
+        Math.random() * 800 - 400,
+        Math.random() * 800 - 400,
+      ]);
+    return [nGeo, nMat, nCoords];
+  }, [count]);
+
+  return (
+    <group ref={group}>
+      {coords.map(([p1, p2, p3], i) => (
+        <mesh key={i} geometry={geo} material={mat} position={[p1, p2, p3]} />
+      ))}
+    </group>
+  );
+}
+
+function degToRad(degrees) {
+  var pi = Math.PI;
+  return degrees * (pi / 180);
 }
