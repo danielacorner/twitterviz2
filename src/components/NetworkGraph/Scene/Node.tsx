@@ -20,6 +20,8 @@ import { useSpring, animated } from "@react-spring/three";
 import { NodeBotScoreAntenna } from "./NodeBotScoreAntenna";
 import { NODE_RADIUS } from "utils/constants";
 import { useEffect, useState } from "react";
+import { Text } from "@react-three/drei";
+import { getScoreFromBotScore } from "components/Game/getScoreFromBotScore";
 
 const nodeMaterial = new THREE.MeshPhysicalMaterial({
   emissive: "#0b152f",
@@ -157,7 +159,10 @@ export const Node = ({
       {node.user.botScore ? (
         <>
           <NodeBotScoreAntenna {...{ botScore: node.user.botScore }} />
-          <BotScorePopup isMounted={hasBotScore} />
+          <BotScorePopup
+            isMounted={hasBotScore}
+            {...{ botScore: node.user.botScore }}
+          />
         </>
       ) : null}
       <NodeBillboard
@@ -170,7 +175,37 @@ export const Node = ({
   );
 };
 
-function BotScorePopup({ isMounted }) {
-  // TODO:
-  return null;
+function BotScorePopup({ isMounted, botScore }) {
+  const { scoreIncrease, scorePercent } = getScoreFromBotScore(botScore);
+  console.log("🌟🚨 ~ BotScorePopup ~ scoreIncrease", scoreIncrease);
+  const maxHue = 120;
+  const minHue = 30;
+  const [isAnimationComplete, setIsAnimationComplete] = useState(false);
+  const springProps = useSpring({
+    color: `hsl(${(maxHue - minHue) * scorePercent},80%,60%)`,
+    position: [0, isMounted ? 11 : 0, 0],
+    opacity: isAnimationComplete ? 0 : isMounted ? 1 : 0,
+    delay: 200,
+    onRest: () => {
+      if (!isAnimationComplete) {
+        setIsAnimationComplete(true);
+      }
+    },
+  });
+  return (
+    <animated.mesh position={springProps.position} transparent={true}>
+      <AnimatedText
+        {...({} as any)}
+        color={springProps.color}
+        textAlign={"center"}
+        anchorY={"top"}
+        maxWidth={0.5}
+        fontSize={2}
+        fillOpacity={springProps.opacity}
+      >
+        +{scoreIncrease.toFixed(0)}
+      </AnimatedText>
+    </animated.mesh>
+  );
 }
+const AnimatedText = animated(Text);

@@ -8,9 +8,10 @@ import {
 import { Button, Tooltip } from "@material-ui/core";
 import { useFetchBotScoreForTweet } from "components/common/useFetchBotScoreForTweet";
 import { atom, useAtom } from "jotai";
-import { BotScore, Tweet } from "types";
+import { Tweet } from "types";
 import { OpenInNew } from "@material-ui/icons";
 import { scoreAtom, shotsRemainingAtom } from "providers/store/store";
+import { getScoreFromBotScore } from "./getScoreFromBotScore";
 // * animate a HUD-contained bot score display ?
 // * animate the selected node to the front and then back?
 const latestNodeWithBotScoreAtom = atom<Tweet | null>(null);
@@ -39,7 +40,9 @@ export default function TagTheBotButton() {
                 setShotsRemaining((p) => Math.max(0, p - 1));
                 if (botScore) {
                   setLatestNodeWithBotScore({ ...selectedNode, botScore });
-                  setScore((p) => p + getScoreFromBotScore(botScore));
+                  setScore(
+                    (p) => p + getScoreFromBotScore(botScore).scoreIncrease
+                  );
                 }
                 setLoading(false);
               });
@@ -89,13 +92,3 @@ const BottomButtonsStyles = styled.div`
     text-decoration: none;
   }
 `;
-
-function getScoreFromBotScore(botScore: BotScore) {
-  return (
-    100 *
-    Object.entries(botScore).reduce(
-      (acc, [key, val]) => (key === "overall" ? acc : acc + val),
-      0
-    )
-  );
-}
