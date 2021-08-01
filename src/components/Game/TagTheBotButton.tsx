@@ -8,9 +8,9 @@ import {
 import { Button, Tooltip } from "@material-ui/core";
 import { useFetchBotScoreForTweet } from "components/common/useFetchBotScoreForTweet";
 import { atom, useAtom } from "jotai";
-import { Tweet } from "types";
+import { BotScore, Tweet } from "types";
 import { OpenInNew } from "@material-ui/icons";
-import { shotsRemainingAtom } from "providers/store/store";
+import { scoreAtom, shotsRemainingAtom } from "providers/store/store";
 // * animate a HUD-contained bot score display ?
 // * animate the selected node to the front and then back?
 const latestNodeWithBotScoreAtom = atom<Tweet | null>(null);
@@ -24,30 +24,33 @@ export default function TagTheBotButton() {
   const setLoading = useSetLoading();
   const [, setLatestNodeWithBotScore] = useAtom(latestNodeWithBotScoreAtom);
   const [shotsRemaining, setShotsRemaining] = useAtom(shotsRemainingAtom);
-  console.log("🌟🚨 ~ TagTheBotButton ~ shotsRemaining", shotsRemaining);
+  const [, setScore] = useAtom(scoreAtom);
 
   return selectedNode && shotsRemaining > 0 ? (
     <BottomButtonsStyles>
-      <Tooltip title={"fetch user bot score!"}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => {
-            setLoading(true);
-            fetchBotScoreForTweet(selectedNode).then((botScore) => {
-              setShotsRemaining((p) => Math.max(0, p - 1));
-              if (botScore) {
-                setLatestNodeWithBotScore({ ...selectedNode, botScore });
-              }
-              setLoading(false);
-            });
-            setSelectedNode(null);
-            setTooltipNode(null);
-          }}
-        >
-          It's a bot! 🎯
-        </Button>
-      </Tooltip>
+      {Boolean(selectedNode.botScore) ? null : (
+        <Tooltip title={"Take your shot! Higher bot scores = more points"}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              setLoading(true);
+              fetchBotScoreForTweet(selectedNode).then((botScore) => {
+                setShotsRemaining((p) => Math.max(0, p - 1));
+                if (botScore) {
+                  setLatestNodeWithBotScore({ ...selectedNode, botScore });
+                  setScore((p) => p + getScoreFromBotScore(botScore));
+                }
+                setLoading(false);
+              });
+              setSelectedNode(null);
+              setTooltipNode(null);
+            }}
+          >
+            It's a bot! 🎯
+          </Button>
+        </Tooltip>
+      )}
       <Tooltip title={"check out user stats on Botometer"}>
         <a
           href={`https://botometer.osome.iu.edu/userDetail/${selectedNode.user.screen_name}`}
@@ -86,3 +89,14 @@ const BottomButtonsStyles = styled.div`
     text-decoration: none;
   }
 `;
+
+function getScoreFromBotScore(botScore: BotScore) {
+  console.log("🌟🚨 ~ getScoreFromBotScore ~ botScore", botScore);
+  return (
+    1000 *
+    Object.entries(botScore).reduce(
+      (acc, [key, val]) => (key === "overall" ? acc : acc + val),
+      0
+    )
+  );
+}

@@ -33,13 +33,13 @@ const rightClickNodeMaterial = new THREE.MeshPhysicalMaterial({
   // color: "#be5626",
 });
 const pointerOverMaterial = new THREE.MeshPhysicalMaterial({
-  emissive: "#001d13",
-  metalness: 0.99,
-  roughness: 0.01,
+  emissive: "#002741",
+  metalness: 0.94,
+  roughness: 0.1,
   // color: "#3ad64f",
 });
 const tooltipNodeMaterial = new THREE.MeshPhysicalMaterial({
-  // emissive: "blue",
+  emissive: "#002741",
   metalness: 1,
   roughness: 0.2,
   // color: "#26be3a",

@@ -142,8 +142,3 @@ export function Stars({ count = 2000 }) {
     </group>
   );
 }
-
-function degToRad(degrees) {
-  var pi = Math.PI;
-  return degrees * (pi / 180);
-}

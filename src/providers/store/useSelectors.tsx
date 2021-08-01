@@ -84,7 +84,7 @@ export const useWordcloudConfig = () => {
     numAngles: useStore((state) => state.wordcloudConfig.numAngles),
     setWordcloudConfig: useStore((state) => state.setWordcloudConfig),
   };
-};
+}; /*
 function handleTweetsErrors(tweetsArg: Tweet[]) {
   const isError = !Array.isArray(tweetsArg);
   if (isError) {
@@ -93,7 +93,7 @@ function handleTweetsErrors(tweetsArg: Tweet[]) {
   const tweets = isError ? [] : tweetsArg;
   return tweets;
 }
-
+ */
 /** returns some of ["all","video","photo","text"] */
 
 export function useAllowedMediaTypes(): string[] {

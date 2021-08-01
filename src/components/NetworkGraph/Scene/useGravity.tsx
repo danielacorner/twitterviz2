@@ -1,5 +1,5 @@
 import { WorkerApi } from "@react-three/cannon";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useConfig } from "providers/store/useConfig";
 

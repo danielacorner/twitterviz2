@@ -8,7 +8,7 @@ import { WordcloudConfig } from "./useSelectors";
 import { atom, useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 export const appUserIdAtom = atomWithStorage<string>("atoms:userId", "");
-
+const INITIAL_NUM_TWEETS = 12;
 export enum GameStepsEnum {
   welcome = "welcome",
   lookingAtTweetsWithBotScores = "lookingAtTweetsWithBotScores",
@@ -19,7 +19,11 @@ export function useAreBotsLinedUp() {
   const [gameState] = useAtom(gameStateAtom);
   return gameState.step === GameStepsEnum.gameOver;
 }
-export const gameStateAtom = atom<{ step: GameStepsEnum; startTime?: number }>({
+export const scoreAtom = atomWithStorage<number>("atoms:score", 0);
+export const gameStateAtom = atom<{
+  step: GameStepsEnum;
+  startTime?: number;
+}>({
   step: GameStepsEnum.welcome,
 });
 export const SHOTS_REMAINING = 5;
@@ -166,7 +170,7 @@ const [useStore] = create<GlobalStateType>(
         process.env.NODE_ENV === "production" ? "low" : "none"
       ] as keyof typeof FILTER_LEVELS,
       searchTerm: "",
-      numTweets: 10,
+      numTweets: INITIAL_NUM_TWEETS,
       // numTweets: 50,
       isOffline: false,
     },

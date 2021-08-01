@@ -22,16 +22,16 @@ import { Replay } from "@material-ui/icons";
 import { DeviceOrientationOrbitControls } from "./DeviceOrientationOrbitControls";
 import { OrbitControls } from "@react-three/drei";
 import { useEffect } from "react";
+import Score from "./Score";
+import { ShotsRemaining } from "./ShotsRemaining";
 /** renders controls and instructions to play the game */
 export function Game() {
-  const [shotsRemaining] = useAtom(shotsRemainingAtom);
-  const [gameState] = useAtom(gameStateAtom);
   return (
     <GameStyles>
-      <div className="shotsRemaining">
-        {shotsRemaining} shot{shotsRemaining === 1 ? "" : "s"} left
-        {gameState.step === GameStepsEnum.gameOver ? " - game over" : ""}
-      </div>
+      {/* always visible */}
+      <Score />
+      <ShotsRemaining />
+      {/* switches for each step */}
       <GameContent />
     </GameStyles>
   );
@@ -50,6 +50,7 @@ function GameContent() {
   const replaceNodesInDbForUser = useReplaceNodesInDbForUser();
   function startGame() {
     setGameState((p) => ({
+      ...p,
       step: GameStepsEnum.lookingAtTweetsWithBotScores,
       startTime: Date.now(),
     }));
@@ -62,6 +63,7 @@ function GameContent() {
   }
   function continueGame() {
     setGameState((p) => ({
+      ...p,
       step: GameStepsEnum.lookingAtTweetsWithBotScores,
       startTime: Date.now(),
     }));
@@ -70,9 +72,7 @@ function GameContent() {
   // game over when no shots remain
   useEffect(() => {
     if (shotsRemaining === 0) {
-      setGameState((p) => ({
-        step: GameStepsEnum.gameOver,
-      }));
+      setGameState((p) => ({ ...p, step: GameStepsEnum.gameOver }));
       const botTweets = tweets.filter((t) => Boolean(t.botScore));
       console.log("🌟🚨 ~ useEffect ~ botTweets", botTweets);
       setNodesInDb(botTweets);
