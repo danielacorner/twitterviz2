@@ -3,6 +3,7 @@ import { IconButton, TextField } from "@material-ui/core";
 import { Check } from "@material-ui/icons";
 import { saveHighScore } from "./highScoresUtils";
 import styled from "styled-components/macro";
+import { useLoading, useSetLoading } from "providers/store/useSelectors";
 
 export const NUM_SCORES = 12;
 export const MAX_CHARACTERS_IN_NAME = 20;
@@ -13,6 +14,25 @@ export function SubmitHighScoreForm({
   newHighScore,
 }) {
   const [name, setName] = useState("");
+  const isLoading = useLoading();
+  const setLoading = useSetLoading();
+  function saveHighScoreAndUpdate() {
+    setLoading(true);
+    saveHighScore(newHighScore).then(() => {
+      const newHighScoreWithName = { ...newHighScore, name };
+      console.log(
+        "🌟🚨 ~ saveHighScore ~ newHighScoreWithName",
+        newHighScoreWithName
+      );
+      const newHighScores = [...highScores, newHighScoreWithName]
+        .sort((a, b) => a.score - b.score)
+        .slice(0, NUM_SCORES);
+      console.log("🌟🚨 ~ saveHighScore ~ newHighScores", newHighScores);
+      setHighScores(newHighScores);
+      setLoading(false);
+      setIsSubmitFormOpen(false);
+    });
+  }
 
   return (
     <SubmitHighScoreFormStyles>
@@ -27,17 +47,8 @@ export function SubmitHighScoreForm({
             label="name"
           />
           <IconButton
-            disabled={name === ""}
-            onClick={() => {
-              saveHighScore(newHighScore).then(() => {
-                setHighScores(
-                  [...highScores, { ...newHighScore, name }]
-                    .sort((a, b) => a.score - b.score)
-                    .slice(0, NUM_SCORES)
-                );
-                setIsSubmitFormOpen(false);
-              });
-            }}
+            disabled={name === "" || isLoading}
+            onClick={saveHighScoreAndUpdate}
           >
             <Check />
           </IconButton>

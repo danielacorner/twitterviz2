@@ -1,5 +1,6 @@
 import styled from "styled-components/macro";
 import {
+  useLoading,
   useSelectedNode,
   useSetLoading,
   useSetSelectedNode,
@@ -22,6 +23,7 @@ export default function TagTheBotButton() {
   const setTooltipNode = useSetTooltipNode();
   // const originalPoster = selectedNode && getOriginalPoster(selectedNode);
   const fetchBotScoreForTweet = useFetchBotScoreForTweet();
+  const isLoading = useLoading();
   const setLoading = useSetLoading();
   const [, setLatestNodeWithBotScore] = useAtom(latestNodeWithBotScoreAtom);
   const [shotsRemaining, setShotsRemaining] = useAtom(shotsRemainingAtom);
@@ -32,6 +34,7 @@ export default function TagTheBotButton() {
       {Boolean(selectedNode.botScore) ? null : (
         <Tooltip title={"Take your shot! Higher bot scores = more points"}>
           <Button
+            disabled={isLoading}
             variant="contained"
             color="primary"
             onClick={() => {
