@@ -26,10 +26,11 @@ export function Scene() {
   const isMounted = useIsMounted();
   // zoom in camera on mount
   useSpring({
-    z:
-      isMounted && !isGameOver
-        ? CAMERA_POSITION.final[2]
-        : CAMERA_POSITION.initial[2],
+    z: isGameOver
+      ? CAMERA_POSITION.gameOver[2]
+      : isMounted
+      ? CAMERA_POSITION.final[2]
+      : CAMERA_POSITION.initial[2],
     onChange(state) {
       camera.position.set(0, 0, state.value.z);
     },

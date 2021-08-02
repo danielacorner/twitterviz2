@@ -17,7 +17,7 @@ import { useLocation } from "react-router";
 export default function AppFunctionalHooks() {
   useFetchTweetsOnMount();
   useFetchQueryTweetsOnMount();
-  useStopLoadingEventually();
+  // useStopLoadingEventually();
   useDetectOffline();
 
   return null;

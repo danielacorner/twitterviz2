@@ -4,6 +4,8 @@ import { Check } from "@material-ui/icons";
 import { saveHighScore } from "./highScoresUtils";
 import styled from "styled-components/macro";
 import { useLoading, useSetLoading } from "providers/store/useSelectors";
+import { useAtom } from "jotai";
+import { appUserIdAtom, scoreAtom } from "providers/store/store";
 
 export const NUM_SCORES = 12;
 export const MAX_CHARACTERS_IN_NAME = 20;
@@ -11,11 +13,13 @@ export function SubmitHighScoreForm({
   highScores,
   setHighScores,
   setIsSubmitFormOpen,
-  newHighScore,
 }) {
   const [name, setName] = useState("");
   const isLoading = useLoading();
+  const [score] = useAtom(scoreAtom);
+  const [userId] = useAtom(appUserIdAtom);
   const setLoading = useSetLoading();
+  const newHighScore = { isNewHighScore: true, score, name, userId };
   function saveHighScoreAndUpdate() {
     setLoading(true);
     saveHighScore(newHighScore).then(() => {
@@ -24,7 +28,9 @@ export function SubmitHighScoreForm({
         "🌟🚨 ~ saveHighScore ~ newHighScoreWithName",
         newHighScoreWithName
       );
-      const newHighScores = [...highScores, newHighScoreWithName]
+      console.log("🌟🚨 ~ saveHighScore ~ highScores", highScores);
+      const newHighScores = highScores
+        .map((d) => (d.isNewHighScore ? newHighScoreWithName : d))
         .sort((a, b) => a.score - b.score)
         .slice(0, NUM_SCORES);
       console.log("🌟🚨 ~ saveHighScore ~ newHighScores", newHighScores);

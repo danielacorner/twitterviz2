@@ -9,13 +9,15 @@ import { animated } from "react-spring";
 import { useEffect, useState } from "react";
 import { IconButton } from "@material-ui/core";
 import { Restore } from "@material-ui/icons";
-import { SubmitHighScoreForm } from "./SubmitHighScoreForm";
+import { NUM_SCORES, SubmitHighScoreForm } from "./SubmitHighScoreForm";
 import {
   HighScore,
-  fetchHighScores,
+  fetchAllHighScoresSorted,
   useDeleteAllHighScores,
 } from "./highScoresUtils";
 import styled from "styled-components/macro";
+import { uniqBy } from "lodash";
+import { useMount } from "utils/utils";
 
 export function HighScores() {
   const [gameState] = useAtom(gameStateAtom);
@@ -27,8 +29,8 @@ export function HighScores() {
   // save high score on gameover, then display high scores
   useEffect(() => {
     if (isGameOver) {
-      fetchHighScores().then((data) => {
-        setHighScores(data);
+      fetchAllHighScoresSorted().then((data) => {
+        setHighScores(data.slice(0, NUM_SCORES));
       });
       console.log("🌟🚨 ~ useEffect ~ isGameOver", isGameOver);
       // it's a high score if it's > than the smallest high
@@ -49,29 +51,38 @@ export function HighScores() {
   }, [isGameOver]);
 
   const deleteAllHighScores = useDeleteAllHighScores();
-  const topNminus1HighScores = highScores.slice(0, highScores.length - 2);
+  const highScoresDeduped = uniqBy(
+    highScores.sort((a, b) => a.score - b.score),
+    (d) => d.name
+  );
+  const topNminus1HighScores = highScoresDeduped.slice(
+    0,
+    highScoresDeduped.length - 2
+  );
 
   const [userId] = useAtom(appUserIdAtom);
-  const newHighScore = {
-    userId,
-    name: "",
-    score: userScore,
-    isNewHighScore: true,
-  };
-  const highScoresWithNewHighScore: {
-    isNewHighScore?: boolean;
-    userId: string;
-    name: string;
-    score: number;
-  }[] = [...topNminus1HighScores, newHighScore].sort(
-    (a, b) => a.score - b.score
-  );
+  useMount(() => {
+    const newHighScore = {
+      userId,
+      name: "",
+      score: userScore,
+      isNewHighScore: true,
+    };
+
+    const highScoresWithNewHighScore = [
+      ...topNminus1HighScores,
+      newHighScore,
+    ].sort((a, b) => a.score - b.score);
+
+    setHighScores(highScoresWithNewHighScore);
+  });
+
   return !isGameOver ? null : (
     <HighScoresStyles>
       <animated.div className="content">
         <h1>High Scores</h1>
         <h2>
-          {highScoresWithNewHighScore.map(({ name, score, isNewHighScore }) => {
+          {highScores.map(({ name, score, isNewHighScore }) => {
             return (
               <p key={name}>
                 {isNewHighScore && (
@@ -82,7 +93,6 @@ export function HighScores() {
                           highScores,
                           setHighScores,
                           setIsSubmitFormOpen,
-                          newHighScore,
                         }}
                       />
                     ) : null}

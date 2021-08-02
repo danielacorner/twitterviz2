@@ -1,6 +1,5 @@
 import { faunaClient } from "providers/faunaProvider";
 import { query as q } from "faunadb";
-import { NUM_SCORES } from "./SubmitHighScoreForm";
 
 export function useDeleteAllHighScores() {
   return () =>
@@ -14,9 +13,10 @@ export function useDeleteAllHighScores() {
 export type HighScore = {
   userId: string;
   name: string;
+  isNewHighScore?: boolean;
   score: number;
 };
-export function fetchHighScores(): Promise<HighScore[]> {
+export function fetchAllHighScoresSorted(): Promise<HighScore[]> {
   // get all documents https://stackoverflow.com/questions/61488323/how-to-get-all-documents-from-a-collection-in-faunadb
   return faunaClient
     .query(
@@ -29,11 +29,9 @@ export function fetchHighScores(): Promise<HighScore[]> {
       console.log("🌟🚨 ~ .then ~ ret", ret);
       const scores = (ret as any).data?.map((d) => d.data) || [];
       console.log("🌟🚨 ~ .then ~ scores", scores);
-      const highScores = scores
-        .sort((a, b) => a.score - b.score)
-        .slice(0, NUM_SCORES);
-      console.log("🌟🚨 ~ .then ~ highScores", highScores);
-      return scores as HighScore[];
+      const highScoresSorted = [...scores].sort((a, b) => a.score - b.score);
+      console.log("🌟🚨 ~ .then ~ highScoresSorted", highScoresSorted);
+      return highScoresSorted as HighScore[];
     })
     .catch((err) => {
       console.error(err);
