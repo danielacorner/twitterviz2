@@ -4,7 +4,11 @@ import { useState } from "react";
 import { NODE_RADIUS } from "utils/constants";
 import { useMount } from "utils/utils";
 
-export function NodeBotScoreAntenna({ showLabels = false, botScore }) {
+export function NodeBotScoreAntenna({
+  showLabels = false,
+  botScore,
+  forceOpaque = false,
+}) {
   const antennae = [
     // top
     {
@@ -56,6 +60,7 @@ export function NodeBotScoreAntenna({ showLabels = false, botScore }) {
           <Antenna
             {...{
               color,
+              forceOpaque,
               score,
               label,
               showLabels,
@@ -72,7 +77,7 @@ const STICK_HEIGHT = 3.6;
 const STICK_SCALE = 0.7;
 const SPHERE_RADIUS = 0.5;
 
-function Antenna({ color, score, label, showLabels, isBottom }) {
+function Antenna({ color, score, label, showLabels, isBottom, forceOpaque }) {
   const [mounted, setMounted] = useState(false);
   useMount(() => {
     setMounted(true);
@@ -101,7 +106,7 @@ function Antenna({ color, score, label, showLabels, isBottom }) {
           roughness={0.1}
           color="#a3a3a3"
           transparent={true}
-          opacity={showLabels ? 0.5 : score ** 0.7}
+          opacity={forceOpaque ? 1 : showLabels ? 0.5 : score ** 0.7}
         />
       </animated.mesh>
       {/* ball */}

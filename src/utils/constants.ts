@@ -5,6 +5,7 @@ export const CAMERA_POSITION = {
   gameOver: [0, 0, 200],
 };
 export const AVATAR_WIDTH = 46;
+export const BOT_SCORE_POPUP_TIMEOUT = 3500;
 export const TOOLTIP_WIDTH = 380;
 
 export const COLOR_BY = {

@@ -17,6 +17,7 @@ import {
   shotsRemainingAtom,
 } from "providers/store/store";
 import { getScoreFromBotScore } from "./getScoreFromBotScore";
+import { BOT_SCORE_POPUP_TIMEOUT } from "utils/constants";
 // * animate a HUD-contained bot score display ?
 // * animate the selected node to the front and then back?
 const latestNodeWithBotScoreAtom = atom<Tweet | null>(null);
@@ -43,17 +44,12 @@ export default function TagTheBotButton() {
             color="primary"
             onClick={() => {
               setLoading(true);
+              setBotScorePopupNode({
+                user: selectedNode.user,
+                tweets: [selectedNode],
+                id_str: selectedNode.user.id_str,
+              });
               fetchBotScoreForTweet(selectedNode).then((botScore) => {
-                // show and then hide the bot score popup
-                setBotScorePopupNode({
-                  user: selectedNode.user,
-                  tweets: [selectedNode],
-                  id_str: selectedNode.user.id_str,
-                });
-                setTimeout(() => {
-                  setBotScorePopupNode(null);
-                }, 1500);
-
                 setSelectedNode(null);
                 // setTooltipNode(null);
                 setShotsRemaining((p) => Math.max(0, p - 1));
@@ -62,6 +58,15 @@ export default function TagTheBotButton() {
                   setScore(
                     (p) => p + getScoreFromBotScore(botScore).scoreIncrease
                   );
+                  // show and then hide the bot score popup
+                  setBotScorePopupNode({
+                    user: { ...selectedNode.user, botScore },
+                    tweets: [{ ...selectedNode, botScore }],
+                    id_str: selectedNode.user.id_str,
+                  });
+                  setTimeout(() => {
+                    setBotScorePopupNode(null);
+                  }, BOT_SCORE_POPUP_TIMEOUT);
                 }
                 setLoading(false);
               });

@@ -47,7 +47,7 @@ export function Scene() {
         angle={0.2}
         color="blue"
       />
-      <Stars count={2000} />
+      <Stars count={1000} />
       <Environment background={true} path={"/"} preset={"forest"} />
       <mesh scale={[20, 20, 20]}>
         <Sky
@@ -58,11 +58,6 @@ export function Scene() {
         />
       </mesh>
       <directionalLight position={[0, 5, -4]} intensity={4} />
-      <directionalLight
-        position={[0.2, 0.5, -1]}
-        intensity={1}
-        color="cornflowerblue"
-      />
       <OrbitControls {...({} as any)} />
       <Physics {...{ gravity: [0, 0, 0] }}>
         {graphWithUsers.nodes.map((node, idx) => {

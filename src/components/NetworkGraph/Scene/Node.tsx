@@ -158,11 +158,13 @@ export function NodeContent({
   isTooltipNode,
   isPointerOver,
   isRightClickingThisNode,
+  forceOpaque = false,
 }: {
   node: UserNode;
   isTooltipNode: boolean;
   isPointerOver: boolean;
   isRightClickingThisNode: boolean;
+  forceOpaque?: boolean;
 }) {
   const tweets = useTweets();
   const allTweetsByUser = tweets.filter((t) => t.user.id === node.user.id);
@@ -181,7 +183,9 @@ export function NodeContent({
 
       {node.user.botScore ? (
         <>
-          <NodeBotScoreAntenna {...{ botScore: node.user.botScore }} />
+          <NodeBotScoreAntenna
+            {...{ botScore: node.user.botScore, forceOpaque }}
+          />
           <ScoreIncreasedPopupText
             isMounted={hasBotScore}
             {...{ botScore: node.user.botScore }}

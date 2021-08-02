@@ -1,49 +1,79 @@
-import { useLoading } from "../providers/store/useSelectors";
 import { animated, useSpring } from "@react-spring/three";
 import { NodeContent } from "components/NetworkGraph/Scene/Node";
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import styled from "styled-components/macro";
 import { Modal } from "@material-ui/core";
 import { useAtom } from "jotai";
 import { botScorePopupNodeAtom } from "providers/store/store";
+import { useEffect, useRef, useState } from "react";
 
 /** pops up and animates when you get a new bot score */
 export function BotScorePopupNode() {
-  const isLoading = useLoading();
-
   const [node] = useAtom(botScorePopupNodeAtom);
   const springProps = useSpring({
-    opacity: node ? 1 : 0,
     scale: node ? [1, 1, 1] : [0, 0, 0],
   });
   console.log("🌟🚨 ~ BotScorePopupNode ~ node", node);
   return (
     <PopupStyles>
-      <Modal open={Boolean(node)}>
-        <ContentStyles>
-          <Canvas style={{ width: 200, height: 200, zIndex: 999999999999999 }}>
-            <animated.mesh
-              // transparent={true}
-              // opacity={springProps.opacity}
-              // scale={[1, 1, 1]}
-              scale={springProps.scale}
-            >
-              {node ? (
+      <ContentStyles>
+        <Canvas style={{ width: 200, height: 200, zIndex: 999999999999999 }}>
+          <animated.mesh scale={springProps.scale} position={[0, 0, -2]}>
+            {node ? (
+              <>
                 <NodeContent
                   {...{
                     node,
                     isTooltipNode: false,
                     isPointerOver: false,
                     isRightClickingThisNode: false,
+                    forceOpaque: true,
                   }}
                 />
-              ) : null}
-            </animated.mesh>
-            <directionalLight intensity={2} />
-          </Canvas>
-        </ContentStyles>
-      </Modal>
+                <ambientLight intensity={2} />
+                <directionalLight position={[0, 5, -4]} intensity={4} />
+                {node.user.botScore ? null : <ScanningAnimation />}
+              </>
+            ) : null}
+          </animated.mesh>
+        </Canvas>
+      </ContentStyles>
     </PopupStyles>
+  );
+}
+const WIDTH = 4;
+function ScanningAnimation() {
+  const ref = useRef<any>(null);
+  const ref2 = useRef<any>(null);
+
+  useFrame(({ clock }) => {
+    const seconds = clock.getElapsedTime();
+    if (ref.current && ref2.current) {
+      const progress = seconds % (Math.PI * 2);
+      const y = Math.sin(progress) * WIDTH * 0.5;
+      console.log("🌟🚨 ~ useFrame ~ y", y);
+      ref.current.position.set(0, y, 0);
+
+      ref2.current.rotation.y += 0.01;
+      ref2.current.rotation.z += 0.01;
+    }
+  });
+  return (
+    <mesh>
+      <mesh ref={ref}>
+        <boxBufferGeometry args={[WIDTH, 0.02 * WIDTH, WIDTH]} />
+        <meshBasicMaterial color={"#3ac7ff"} transparent={true} opacity={0.5} />
+      </mesh>
+      <mesh ref={ref2}>
+        <icosahedronBufferGeometry args={[2.5, 1]} />
+        <meshBasicMaterial
+          wireframe={true}
+          transparent={true}
+          opacity={0.15}
+          color={"#3ac7ff"}
+        />
+      </mesh>
+    </mesh>
   );
 }
 
