@@ -2,10 +2,10 @@ import { animated, useSpring } from "@react-spring/three";
 import { NodeContent } from "components/NetworkGraph/Scene/Node";
 import { Canvas, useFrame } from "@react-three/fiber";
 import styled from "styled-components/macro";
-import { Modal } from "@material-ui/core";
 import { useAtom } from "jotai";
 import { botScorePopupNodeAtom } from "providers/store/store";
 import { useEffect, useRef, useState } from "react";
+import { UserNode } from "./NetworkGraph/useGraphWithUsersAndLinks";
 
 /** pops up and animates when you get a new bot score */
 export function BotScorePopupNode() {
@@ -13,17 +13,24 @@ export function BotScorePopupNode() {
   const springProps = useSpring({
     scale: node ? [1, 1, 1] : [0, 0, 0],
   });
-  console.log("🌟🚨 ~ BotScorePopupNode ~ node", node);
+  const [lastNode, setLastNode] = useState<UserNode | null>(null);
+  // const lastNode = useRef<UserNode | null>(null);
+  useEffect(() => {
+    if (node) {
+      setLastNode(node);
+    }
+  }, [node]);
+  const nodeDisplay = node || lastNode;
   return (
     <PopupStyles>
       <ContentStyles>
         <Canvas style={{ width: 200, height: 200, zIndex: 999999999999999 }}>
           <animated.mesh scale={springProps.scale} position={[0, 0, -2]}>
-            {node ? (
+            {nodeDisplay ? (
               <>
                 <NodeContent
                   {...{
-                    node,
+                    node: nodeDisplay,
                     isTooltipNode: false,
                     isPointerOver: false,
                     isRightClickingThisNode: false,
@@ -32,7 +39,7 @@ export function BotScorePopupNode() {
                 />
                 <ambientLight intensity={2} />
                 <directionalLight position={[0, 5, -4]} intensity={4} />
-                {node.user.botScore ? null : <ScanningAnimation />}
+                {nodeDisplay.user.botScore ? null : <ScanningAnimation />}
               </>
             ) : null}
           </animated.mesh>

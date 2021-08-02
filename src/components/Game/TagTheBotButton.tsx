@@ -4,23 +4,21 @@ import {
   useSelectedNode,
   useSetLoading,
   useSetSelectedNode,
-  useSetTooltipNode,
 } from "../../providers/store/useSelectors";
 import { Button, Tooltip } from "@material-ui/core";
 import { useFetchBotScoreForTweet } from "components/common/useFetchBotScoreForTweet";
 import { atom, useAtom } from "jotai";
 import { Tweet } from "types";
-import { OpenInNew } from "@material-ui/icons";
 import {
   botScorePopupNodeAtom,
   scoreAtom,
   shotsRemainingAtom,
 } from "providers/store/store";
 import { getScoreFromBotScore } from "./getScoreFromBotScore";
-import { BOT_SCORE_POPUP_TIMEOUT } from "utils/constants";
 // * animate a HUD-contained bot score display ?
 // * animate the selected node to the front and then back?
 const latestNodeWithBotScoreAtom = atom<Tweet | null>(null);
+const BOT_SCORE_POPUP_TIMEOUT = 3500;
 
 export default function TagTheBotButton() {
   const selectedNode = useSelectedNode();
