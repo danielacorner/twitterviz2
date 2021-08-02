@@ -10,9 +10,6 @@ import { UserNode } from "./NetworkGraph/useGraphWithUsersAndLinks";
 /** pops up and animates when you get a new bot score */
 export function BotScorePopupNode() {
   const [node] = useAtom(botScorePopupNodeAtom);
-  const springProps = useSpring({
-    scale: node ? [1, 1, 1] : [0, 0, 0],
-  });
   const [lastNode, setLastNode] = useState<UserNode | null>(null);
   // const lastNode = useRef<UserNode | null>(null);
   useEffect(() => {
@@ -21,10 +18,17 @@ export function BotScorePopupNode() {
     }
   }, [node]);
   const nodeDisplay = node || lastNode;
+  const springProps = useSpring({
+    scale: node
+      ? nodeDisplay?.user.botScore
+        ? [0.6, 0.6, 0.6]
+        : [1, 1, 1]
+      : [0, 0, 0],
+  });
   return (
     <PopupStyles>
       <ContentStyles>
-        <Canvas style={{ width: 200, height: 200, zIndex: 999999999999999 }}>
+        <Canvas style={{ width: 300, height: 500, zIndex: 999999999999999 }}>
           <animated.mesh scale={springProps.scale} position={[0, 0, -2]}>
             {nodeDisplay ? (
               <>
@@ -37,8 +41,8 @@ export function BotScorePopupNode() {
                     forceOpaque: true,
                   }}
                 />
-                <ambientLight intensity={2} />
-                <directionalLight position={[0, 5, -4]} intensity={4} />
+                <ambientLight intensity={4} />
+                <directionalLight position={[0, 5, -4]} intensity={6} />
                 {nodeDisplay.user.botScore ? null : <ScanningAnimation />}
               </>
             ) : null}
