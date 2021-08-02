@@ -11,17 +11,24 @@ export function ShotsRemaining() {
   const [gameState] = useAtom(gameStateAtom);
   return (
     <ShotsRemainingStyles>
-      {"🏀".repeat(shotsRemaining)} {shotsRemaining} shot
-      {shotsRemaining === 1 ? "" : "s"} left
-      {gameState.step === GameStepsEnum.gameOver ? " - game over" : ""}
+      <div className="shots">{"🏀".repeat(shotsRemaining)}</div>
+      <div className="shotsLeft">
+        {shotsRemaining} shot
+        {shotsRemaining === 1 ? "" : "s"} left
+        {gameState.step === GameStepsEnum.gameOver ? " - game over" : ""}
+      </div>
     </ShotsRemainingStyles>
   );
 }
 const ShotsRemainingStyles = styled.div`
   position: fixed;
+  text-align: left;
+  .shotsLeft {
+    margin-left: 4px;
+  }
+  gap: 12px;
+  display: grid;
   top: 13px;
-  left: 0;
-  right: 0;
+  left: 13px;
   pointer-events: none;
-  text-align: center;
 `;

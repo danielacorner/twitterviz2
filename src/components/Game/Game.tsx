@@ -156,15 +156,7 @@ function GameContent() {
         </Step1Styles>
       );
     case GameStepsEnum.lookingAtTweetsWithBotScores:
-      return (
-        <Step2Styles>
-          <Tooltip title="Start Over">
-            <IconButton className="btnStartOver" onClick={startGame}>
-              <Replay />
-            </IconButton>
-          </Tooltip>
-        </Step2Styles>
-      );
+      return <BtnStartOver {...{ startGame }} />;
     case GameStepsEnum.gameOver:
       return (
         <>
@@ -184,16 +176,28 @@ function GameContent() {
   }
 }
 
-/*<Step2Styles>
+function BtnStartOver({ startGame }) {
+  return (
+    <BtnStartOverStyles>
+      <Tooltip title="Start Over">
+        <IconButton className="btnStartOver" onClick={startGame}>
+          <Replay />
+        </IconButton>
+      </Tooltip>
+    </BtnStartOverStyles>
+  );
+}
+
+/*<BtnStartOverStyles>
 Sorry, out of time!
 <Button onClick={startGame}>Try again?</Button>
-</Step2Styles> */
+</BtnStartOverStyles> */
 
-const Step2Styles = styled.div`
+const BtnStartOverStyles = styled.div`
   .btnStartOver {
     position: fixed;
-    top: 0;
-    right: 0;
+    bottom: 0;
+    left: 0;
   }
 `;
 const Step1Styles = styled.div`

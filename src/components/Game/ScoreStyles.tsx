@@ -1,14 +1,6 @@
 import styled from "styled-components/macro";
-import { popupBaseCss } from "./popupBaseCss";
 
 export const ScoreStyles = styled.div`
-  .score {
-    position: fixed;
-    top: 13px;
-    right: 56px;
-    width: 100px;
-    pointer-events: none;
-  }
   .high-scores {
     position: fixed;
     inset: 0;
@@ -17,12 +9,14 @@ export const ScoreStyles = styled.div`
     }
   }
   .submit-high-score {
-    position: fixed;
-    inset: 0;
     .content {
-      ${popupBaseCss}
+      font-size: 16px;
+      display: flex;
+      gap: 10px;
       margin: auto;
       margin-top: 360px;
+      place-items: center;
+      place-content: center;
     }
   }
 `;
