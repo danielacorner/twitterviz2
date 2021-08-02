@@ -11,7 +11,11 @@ import { useFetchBotScoreForTweet } from "components/common/useFetchBotScoreForT
 import { atom, useAtom } from "jotai";
 import { Tweet } from "types";
 import { OpenInNew } from "@material-ui/icons";
-import { scoreAtom, shotsRemainingAtom } from "providers/store/store";
+import {
+  botScorePopupNodeAtom,
+  scoreAtom,
+  shotsRemainingAtom,
+} from "providers/store/store";
 import { getScoreFromBotScore } from "./getScoreFromBotScore";
 // * animate a HUD-contained bot score display ?
 // * animate the selected node to the front and then back?
@@ -20,7 +24,6 @@ const latestNodeWithBotScoreAtom = atom<Tweet | null>(null);
 export default function TagTheBotButton() {
   const selectedNode = useSelectedNode();
   const setSelectedNode = useSetSelectedNode();
-  const setTooltipNode = useSetTooltipNode();
   // const originalPoster = selectedNode && getOriginalPoster(selectedNode);
   const fetchBotScoreForTweet = useFetchBotScoreForTweet();
   const isLoading = useLoading();
@@ -28,6 +31,7 @@ export default function TagTheBotButton() {
   const [, setLatestNodeWithBotScore] = useAtom(latestNodeWithBotScoreAtom);
   const [shotsRemaining, setShotsRemaining] = useAtom(shotsRemainingAtom);
   const [, setScore] = useAtom(scoreAtom);
+  const [, setBotScorePopupNode] = useAtom(botScorePopupNodeAtom);
 
   return selectedNode && shotsRemaining > 0 ? (
     <BottomButtonsStyles>
@@ -40,6 +44,16 @@ export default function TagTheBotButton() {
             onClick={() => {
               setLoading(true);
               fetchBotScoreForTweet(selectedNode).then((botScore) => {
+                // show and then hide the bot score popup
+                setBotScorePopupNode({
+                  user: selectedNode.user,
+                  tweets: [selectedNode],
+                  id_str: selectedNode.user.id_str,
+                });
+                setTimeout(() => {
+                  setBotScorePopupNode(null);
+                }, 1500);
+
                 setSelectedNode(null);
                 // setTooltipNode(null);
                 setShotsRemaining((p) => Math.max(0, p - 1));

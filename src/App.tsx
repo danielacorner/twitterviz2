@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import "./App.css";
 import styled from "styled-components/macro";
-import { useLoading, usePrevious } from "./providers/store/useSelectors";
+import { useLoading } from "./providers/store/useSelectors";
 import { useIsLight } from "./providers/ThemeManager";
 import "./video-react.css"; // import video-react css
 import AppFunctionalHooks from "./AppFunctionalHooks";

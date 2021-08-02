@@ -7,6 +7,7 @@ import { useLoading, useSetLoading } from "providers/store/useSelectors";
 import { useAtom } from "jotai";
 import { appUserIdAtom, scoreAtom } from "providers/store/store";
 import { sortDescendingByScore } from "./sortDescendingByScore";
+import { useMount } from "utils/utils";
 
 export const NUM_SCORES = 12;
 export const MAX_CHARACTERS_IN_NAME = 20;
@@ -52,6 +53,11 @@ export function SubmitHighScoreForm({
             }}
             value={name}
             label="name"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                saveHighScoreAndUpdate();
+              }
+            }}
           />
           <IconButton
             className="btnSubmit"
@@ -81,8 +87,12 @@ const SubmitHighScoreFormStyles = styled.div`
     h4 {
       font-size: 14px;
       text-align: left;
-      margin-left: 38px;
       line-height: 0;
+      width: 86px;
+      line-height: 1.3em;
+      letter-spacing: 1.6px;
+      text-align: center;
+      transform: translate(-100px, 56px) rotate(-45deg);
     }
     .formRow {
       display: flex;

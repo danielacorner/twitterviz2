@@ -7,9 +7,11 @@ import qs from "query-string";
 import { WordcloudConfig } from "./useSelectors";
 import { atom, useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
+import { UserNode } from "components/NetworkGraph/useGraphWithUsersAndLinks";
 export const SHOTS_REMAINING = process.env.NODE_ENV === "development" ? 2 : 6;
 const INITIAL_NUM_TWEETS = 16;
 
+export const botScorePopupNodeAtom = atom<UserNode | null>(null);
 export const appUserIdAtom = atomWithStorage<string>("atoms:userId", "");
 export enum GameStepsEnum {
   welcome = "welcome",

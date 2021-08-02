@@ -63,11 +63,12 @@ export const Node = ({
   const tooltipNode = useTooltipNode();
 
   const [rightClickMenu] = useAtom(rightClickMenuAtom);
-  const isRightClickingThisNode =
-    rightClickMenu.node &&
-    getOriginalPoster(rightClickMenu.node)?.id_str === node.id_str;
-  const isTooltipNode =
-    tooltipNode && getOriginalPoster(tooltipNode)?.id_str === node.id_str;
+  const isRightClickingThisNode = rightClickMenu.node
+    ? getOriginalPoster(rightClickMenu.node)?.id_str === node.id_str
+    : false;
+  const isTooltipNode = tooltipNode
+    ? getOriginalPoster(tooltipNode)?.id_str === node.id_str
+    : false;
   const setTooltipNode = useStore((state) => state.setTooltipNode);
   const setSelectedNode = useStore((state) => state.setSelectedNode);
   const [isPointerOver, setIsPointerOver] = useAtom(isPointerOverAtom);
@@ -131,16 +132,6 @@ export const Node = ({
   return (
     <animated.mesh
       ref={ref}
-      material={
-        isRightClickingThisNode
-          ? rightClickNodeMaterial
-          : isPointerOver && isTooltipNode
-          ? pointerOverMaterial
-          : isTooltipNode
-          ? tooltipNodeMaterial
-          : nodeMaterial
-      }
-      geometry={nodeGeometry}
       scale={springProps.scale}
       {...{
         onPointerEnter,
@@ -150,21 +141,48 @@ export const Node = ({
         onClick,
       }}
     >
-      <NodeContent {...{ node }} />
+      <NodeContent
+        {...{
+          node,
+          isTooltipNode,
+          isPointerOver,
+          isRightClickingThisNode,
+        }}
+      />
     </animated.mesh>
   );
 };
 
-export function NodeContent({ node }: { node: UserNode }) {
+export function NodeContent({
+  node,
+  isTooltipNode,
+  isPointerOver,
+  isRightClickingThisNode,
+}: {
+  node: UserNode;
+  isTooltipNode: boolean;
+  isPointerOver: boolean;
+  isRightClickingThisNode: boolean;
+}) {
   const tweets = useTweets();
   const allTweetsByUser = tweets.filter((t) => t.user.id === node.user.id);
   const hasBotScore = Boolean(node.user.botScore);
+  const material = isRightClickingThisNode
+    ? rightClickNodeMaterial
+    : isPointerOver && isTooltipNode
+    ? pointerOverMaterial
+    : isTooltipNode
+    ? tooltipNodeMaterial
+    : nodeMaterial;
+
   return (
     <>
+      <mesh material={material} geometry={nodeGeometry}></mesh>
+
       {node.user.botScore ? (
         <>
           <NodeBotScoreAntenna {...{ botScore: node.user.botScore }} />
-          <BotScorePopup
+          <ScoreIncreasedPopupText
             isMounted={hasBotScore}
             {...{ botScore: node.user.botScore }}
           />
@@ -182,7 +200,7 @@ export function NodeContent({ node }: { node: UserNode }) {
   );
 }
 
-function BotScorePopup({ isMounted, botScore }) {
+function ScoreIncreasedPopupText({ isMounted, botScore }) {
   const { scoreIncrease, scorePercent } = getScoreFromBotScore(botScore);
   const maxHue = 120;
   const minHue = 30;
