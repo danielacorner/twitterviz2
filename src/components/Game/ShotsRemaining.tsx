@@ -23,7 +23,9 @@ export function ShotsRemaining() {
 const ShotsRemainingStyles = styled.div`
   position: fixed;
   text-align: left;
+  font-size: 24px;
   .shotsLeft {
+    font-size: 14px;
     margin-left: 4px;
   }
   gap: 12px;

@@ -1,4 +1,5 @@
-export const CAMERA_POSITION = { initial: [0, 0, 500], final: [0, 0, 100] };
+const finalZ = window.innerWidth < 768 ? 130 : 100; // zoom out for smaller screen widths
+export const CAMERA_POSITION = { initial: [0, 0, 500], final: [0, 0, finalZ] };
 export const AVATAR_WIDTH = 46;
 export const TOOLTIP_WIDTH = 380;
 

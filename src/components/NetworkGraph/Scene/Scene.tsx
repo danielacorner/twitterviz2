@@ -14,16 +14,22 @@ import { useMount } from "utils/utils";
 import { Sky /* Stars */ } from "@react-three/drei";
 import { useTurbidityByTimeOfDay } from "./useTurbidityByTimeOfDay";
 import { Stars } from "./Stars";
+import { gameStateAtom, GameStepsEnum } from "providers/store/store";
+import { useAtom } from "jotai";
 
 export function Scene() {
   const graphWithUsers = useGraphWithUsersAndLinks();
   const vertices = getVertices(graphWithUsers.nodes.length);
   const { camera } = useThree();
-
+  const [gameState] = useAtom(gameStateAtom);
+  const isGameOver = gameState.step === GameStepsEnum.gameOver;
   const isMounted = useIsMounted();
   // zoom in camera on mount
   useSpring({
-    z: isMounted ? CAMERA_POSITION.final[2] : CAMERA_POSITION.initial[2],
+    z:
+      isMounted && !isGameOver
+        ? CAMERA_POSITION.final[2]
+        : CAMERA_POSITION.initial[2],
     onChange(state) {
       camera.position.set(0, 0, state.value.z);
     },
