@@ -17,7 +17,6 @@ import {
 } from "./highScoresUtils";
 import styled from "styled-components/macro";
 import { uniqBy } from "lodash";
-import { useMount } from "utils/utils";
 
 export function HighScores() {
   const [gameState] = useAtom(gameStateAtom);
@@ -25,57 +24,57 @@ export function HighScores() {
   const isGameOver = gameState.step === GameStepsEnum.gameOver;
   const [highScores, setHighScores] = useState<HighScore[]>([]);
   const [isSubmitFormOpen, setIsSubmitFormOpen] = useState(false);
+  const [userId] = useAtom(appUserIdAtom);
 
   // save high score on gameover, then display high scores
   useEffect(() => {
     if (isGameOver) {
       fetchAllHighScoresSorted().then((data) => {
-        setHighScores(data.slice(0, NUM_SCORES));
-      });
-      console.log("🌟🚨 ~ useEffect ~ isGameOver", isGameOver);
-      // it's a high score if it's > than the smallest high
-      const lowestHighScore = highScores.reduce(
-        (acc, cur) => Math.min(acc, cur.score),
-        Infinity
-      );
-      console.log("🌟🚨 ~ useEffect ~ lowestHighScore", lowestHighScore);
-      const isNewHighScore =
-        userScore > (lowestHighScore === Infinity ? 0 : lowestHighScore);
-      console.log("🌟🚨 ~ useEffect ~ isNewHighScore", isNewHighScore);
+        const highScoresSliced = data.slice(0, NUM_SCORES);
+        console.log("🌟🚨 ~ fetchAllHighScoresSorted ~ data", data);
+        console.log(
+          "🌟🚨 ~ fetchAllHighScoresSorted ~ highScoresSliced",
+          highScoresSliced
+        );
+        // it's a high score if it's > than the smallest high
+        const lowestHighScore = highScores.reduce(
+          (acc, cur) => Math.min(acc, cur.score),
+          Infinity
+        );
+        const isNewHighScore =
+          userScore > (lowestHighScore === Infinity ? 0 : lowestHighScore);
+        console.log("🌟🚨 ~ useEffect ~ isNewHighScore", isNewHighScore);
 
-      if (isNewHighScore) {
-        setIsSubmitFormOpen(true);
-      }
+        if (isNewHighScore) {
+          setIsSubmitFormOpen(true);
+          const newHighScore = {
+            userId,
+            name: "",
+            score: userScore,
+            isNewHighScore: true,
+          };
+          const highScoresDeduped = uniqBy(
+            highScoresSliced.sort((a, b) => a.score - b.score),
+            (d) => d.name
+          );
+          const topNminus1HighScores = highScoresDeduped.slice(
+            0,
+            highScoresDeduped.length - 2
+          );
+
+          const highScoresWithNewHighScore = [
+            ...topNminus1HighScores,
+            newHighScore,
+          ].sort((a, b) => a.score - b.score);
+
+          setHighScores(highScoresWithNewHighScore);
+        }
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isGameOver]);
 
   const deleteAllHighScores = useDeleteAllHighScores();
-  const highScoresDeduped = uniqBy(
-    highScores.sort((a, b) => a.score - b.score),
-    (d) => d.name
-  );
-  const topNminus1HighScores = highScoresDeduped.slice(
-    0,
-    highScoresDeduped.length - 2
-  );
-
-  const [userId] = useAtom(appUserIdAtom);
-  useMount(() => {
-    const newHighScore = {
-      userId,
-      name: "",
-      score: userScore,
-      isNewHighScore: true,
-    };
-
-    const highScoresWithNewHighScore = [
-      ...topNminus1HighScores,
-      newHighScore,
-    ].sort((a, b) => a.score - b.score);
-
-    setHighScores(highScoresWithNewHighScore);
-  });
 
   return !isGameOver ? null : (
     <HighScoresStyles>
