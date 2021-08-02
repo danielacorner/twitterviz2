@@ -129,7 +129,7 @@ function BitrateControls({
         onChange={(event) => {
           setBitrate((event.target as any).value);
         }}
-        onBackdropClick={() => setIsMenuOpen(false)}
+        onClose={() => setIsMenuOpen(false)}
       >
         {variants
           .sort((a, b) =>

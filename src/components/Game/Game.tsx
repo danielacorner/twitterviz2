@@ -52,8 +52,8 @@ function GameContent() {
   const deleteAllTweets = useDeleteAllTweets();
   const replaceNodesInDbForUser = useReplaceNodesInDbForUser();
   function startGame() {
-    deleteAllTweets().then(() => {
-      console.log("🌟🚨 ~ deleteAllTweets ");
+    deleteAllTweets().then((ret) => {
+      console.log("🌟🚨 ~ deleteAllTweets ", ret);
       fetchNewTweets().then((newTweets) => {
         console.log("🌟🚨 ~ newTweets ", newTweets);
         replaceNodesInDbForUser(newTweets);

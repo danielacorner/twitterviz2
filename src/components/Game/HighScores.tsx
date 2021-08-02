@@ -100,6 +100,7 @@ type HighScore = {
 };
 
 const NUM_SCORES = 12;
+const MAX_CHARACTERS_IN_NAME = 20;
 function SubmitHighScoreForm({
   highScores,
   setHighScores,
@@ -114,7 +115,7 @@ function SubmitHighScoreForm({
         <h4>New High Score! 🎉</h4>
         <TextField
           onChange={(e) => {
-            setName(e.target.value.substring(0, NUM_SCORES));
+            setName(e.target.value.substring(0, MAX_CHARACTERS_IN_NAME));
           }}
           value={name}
           label="name"

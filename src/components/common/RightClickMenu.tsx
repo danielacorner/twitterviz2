@@ -54,7 +54,7 @@ export default function RightClickMenu({
   return (
     <Menu
       {...(anchorEl ? { anchorEl } : {})}
-      onBackdropClick={handleClose}
+      onClose={handleClose}
       open={isMenuOpen}
       {...MenuProps}
     >
