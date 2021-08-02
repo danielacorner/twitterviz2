@@ -4,11 +4,12 @@ import {
 	useSelectedNode,
 	useSetSelectedNode,
 } from "../../providers/store/useSelectors";
-import { Drawer } from "@material-ui/core";
+import { Drawer, IconButton } from "@material-ui/core";
 import { Timeline, Tweet as TweetWidget } from "react-twitter-widgets";
 import { NodeTooltipContent } from "../NetworkGraph/NodeTooltip";
 import { CUSTOM_SCROLLBAR_CSS } from "components/common/styledComponents";
 import TagTheBotButton from "components/Game/TagTheBotButton";
+import { Close } from "@material-ui/icons";
 
 /** Selected Tweet drawer */
 export function RightDrawer() {
@@ -25,6 +26,12 @@ export function RightDrawer() {
 				<DrawerStyles>
 					{originalPoster && (
 						<div className="content">
+							<IconButton
+								className="btnClose"
+								onClick={() => setSelectedNode(null)}
+							>
+								<Close />
+							</IconButton>
 							<NodeTooltipContent
 								{...{
 									isLight: false,
@@ -43,7 +50,13 @@ export function RightDrawer() {
 										rel="noopener noreferrer"
 										style={{ cursor: "pointer" }}
 									>
-										<div style={{ position: "relative", zIndex: 0 }}>
+										<div
+											style={{
+												position: "relative",
+												zIndex: 0,
+												pointerEvents: "none",
+											}}
+										>
 											<TweetWidget
 												tweetId={selectedNode.id_str}
 												options={{ theme: "dark" }}
@@ -79,6 +92,11 @@ const DrawerStyles = styled.div`
 		min-height: 100vh;
 		padding: 5px 5px 64px;
 		${CUSTOM_SCROLLBAR_CSS}
+	}
+	.btnClose {
+		position: fixed;
+		top: 0;
+		left: 0;
 	}
 	box-sizing: content-box;
 	*,

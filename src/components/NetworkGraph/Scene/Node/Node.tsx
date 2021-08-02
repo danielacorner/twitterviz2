@@ -13,16 +13,14 @@ import {
 	useTooltipNode,
 	useTweets,
 } from "providers/store/useSelectors";
-import { UserNode } from "../useGraphWithUsersAndLinks";
-import { useHandleOpenRightClickMenu } from "../GraphRightClickMenu";
+import { UserNode } from "../../useGraphWithUsersAndLinks";
+import { useHandleOpenRightClickMenu } from "../../GraphRightClickMenu";
 import NodeBillboard from "./NodeBillboard";
-import { useGravity } from "./useGravity";
+import { useGravity } from "../useGravity";
 import { useSpring, animated } from "@react-spring/three";
 import { NodeBotScoreAntenna } from "./NodeBotScoreAntenna";
 import { NODE_RADIUS } from "utils/constants";
-import { useState } from "react";
-import { Text } from "@react-three/drei";
-import { getScoreFromBotScore } from "components/Game/getScoreFromBotScore";
+import { ScoreIncreasedPopupText } from "../ScoreIncreasedPopupText";
 
 const nodeMaterial = new THREE.MeshPhysicalMaterial({
 	emissive: "#0b152f",
@@ -202,37 +200,3 @@ export function NodeContent({
 		</>
 	);
 }
-
-function ScoreIncreasedPopupText({ isMounted, botScore }) {
-	const { scoreIncrease, scorePercent } = getScoreFromBotScore(botScore);
-	const maxHue = 120;
-	const minHue = 30;
-	const [isAnimationComplete, setIsAnimationComplete] = useState(false);
-	const springProps = useSpring({
-		color: `hsl(${(maxHue - minHue) * scorePercent},80%,60%)`,
-		position: [0, isMounted ? 11 : 0, 0],
-		opacity: isAnimationComplete ? 0 : isMounted ? 1 : 0,
-		delay: 200,
-		onRest: () => {
-			if (!isAnimationComplete) {
-				setIsAnimationComplete(true);
-			}
-		},
-	});
-	return (
-		<animated.mesh position={springProps.position} transparent={true}>
-			<AnimatedText
-				{...({} as any)}
-				color={springProps.color}
-				textAlign={"center"}
-				anchorY={"top"}
-				maxWidth={0.5}
-				fontSize={2}
-				fillOpacity={springProps.opacity}
-			>
-				+{scoreIncrease.toFixed(0)}
-			</AnimatedText>
-		</animated.mesh>
-	);
-}
-const AnimatedText = animated(Text);
