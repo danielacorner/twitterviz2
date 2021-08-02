@@ -7,10 +7,13 @@ import {
   shotsRemainingAtom,
   SHOTS_REMAINING,
 } from "providers/store/store";
-import TagTheBotButton from "./TagTheBotButton";
 import { useStreamNewTweets } from "components/NavBar/useStreamNewTweets";
 import { useDeleteAllTweets } from "components/common/useDeleteAllTweets";
-import { useLoading, useTweets } from "providers/store/useSelectors";
+import {
+  useLoading,
+  useSetLoading,
+  useTweets,
+} from "providers/store/useSelectors";
 import styled from "styled-components/macro";
 import {
   useReplaceNodesInDbForUser,
@@ -51,7 +54,9 @@ function GameContent() {
   const { fetchNewTweets } = useStreamNewTweets();
   const deleteAllTweets = useDeleteAllTweets();
   const replaceNodesInDbForUser = useReplaceNodesInDbForUser();
+  const setLoading = useSetLoading();
   function startGame() {
+    setLoading(true);
     deleteAllTweets().then((ret) => {
       console.log("🌟🚨 ~ deleteAllTweets ", ret);
       fetchNewTweets().then((newTweets) => {
@@ -64,6 +69,7 @@ function GameContent() {
           startTime: Date.now(),
         }));
         setShotsRemaining(SHOTS_REMAINING);
+        setLoading(false);
       });
     });
   }
@@ -157,7 +163,6 @@ function GameContent() {
               <Replay />
             </IconButton>
           </Tooltip>
-          <TagTheBotButton />
         </Step2Styles>
       );
     case GameStepsEnum.gameOver:

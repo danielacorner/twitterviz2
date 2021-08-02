@@ -5,12 +5,12 @@ import {
   GameStepsEnum,
   scoreAtom,
 } from "providers/store/store";
-import { a, animated } from "react-spring";
+import { animated } from "react-spring";
 import { useEffect, useState } from "react";
 import { ScoreStyles } from "./ScoreStyles";
 import { faunaClient } from "providers/faunaProvider";
 import { query as q } from "faunadb";
-import { Button, IconButton, TextField } from "@material-ui/core";
+import { IconButton, TextField } from "@material-ui/core";
 import { Check, Restore } from "@material-ui/icons";
 
 export function HighScores() {
@@ -18,13 +18,6 @@ export function HighScores() {
   const [score] = useAtom(scoreAtom);
   const isGameOver = gameState.step === GameStepsEnum.gameOver;
   const [highScores, setHighScores] = useState<HighScore[]>([]);
-  // useMount(() => {
-  //   fetchHighScores().then((data) => {
-  //     console.log("🌟🚨 ~ fetchHighScores ~ data", data);
-  //     setHighScores(data);
-  //   });
-  // });
-  const [userId] = useAtom(appUserIdAtom);
   const [isSubmitFormOpen, setIsSubmitFormOpen] = useState(false);
 
   // save high score on gameover, then display high scores
