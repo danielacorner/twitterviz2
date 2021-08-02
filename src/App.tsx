@@ -13,6 +13,7 @@ import { RightDrawer } from "./components/RightDrawer/RightDrawer";
 import { Game } from "./components/Game/Game";
 import { Canvas } from "@react-three/fiber";
 import { animated, useSpring } from "@react-spring/three";
+import { useMount } from "utils/utils";
 // import { useDeleteAllTweets } from "components/common/useDeleteAllTweets";
 // import { useMount } from "utils/utils";
 
@@ -45,12 +46,19 @@ function LoadingIndicator() {
 	});
 
 	const [toggle, setToggle] = useState(true);
+	const initial = (Math.PI / 180) * 30;
 	const springSpin = useSpring({
-		rotation: toggle ? [0, 0, 0] : [Math.PI * 2, Math.PI * 2, Math.PI * 2],
-		delay: 200,
+		rotation: toggle
+			? [initial, 0, 0]
+			: [Math.PI * 2 + initial, 0, Math.PI * 2],
+		delay: 500,
 		onRest: () => {
 			setToggle(!toggle);
 		},
+		config: { tension: 300, mass: 30, friction: 170 },
+	});
+	useMount(() => {
+		setToggle(!toggle);
 	});
 
 	return (
