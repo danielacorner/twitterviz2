@@ -7,7 +7,6 @@ import {
 } from "providers/store/store";
 import { animated } from "react-spring";
 import { useEffect, useState } from "react";
-import { ScoreStyles } from "../ScoreStyles";
 import { IconButton } from "@material-ui/core";
 import { Restore } from "@material-ui/icons";
 import { SubmitHighScoreForm } from "./SubmitHighScoreForm";
@@ -16,6 +15,7 @@ import {
   fetchHighScores,
   useDeleteAllHighScores,
 } from "./highScoresUtils";
+import styled from "styled-components/macro";
 
 export function HighScores() {
   const [gameState] = useAtom(gameStateAtom);
@@ -67,38 +67,33 @@ export function HighScores() {
     (a, b) => a.score - b.score
   );
   return !isGameOver ? null : (
-    <ScoreStyles>
-      <div className="high-scores">
-        <animated.div className="content">
-          <h1>High Scores</h1>
-          <h2>
-            {highScoresWithNewHighScore.map(
-              ({ name, score, isNewHighScore }) => {
-                return (
-                  <p key={name}>
-                    {isNewHighScore && (
-                      <>
-                        {isSubmitFormOpen ? (
-                          <SubmitHighScoreForm
-                            {...{
-                              highScores,
-                              setHighScores,
-                              setIsSubmitFormOpen,
-                              newHighScore,
-                            }}
-                          />
-                        ) : null}
-                      </>
-                    )}
-                    {name}: {score.toFixed(0)}
-                  </p>
-                );
-              }
-            )}
-          </h2>
-        </animated.div>
-      </div>
-
+    <HighScoresStyles>
+      <animated.div className="content">
+        <h1>High Scores</h1>
+        <h2>
+          {highScoresWithNewHighScore.map(({ name, score, isNewHighScore }) => {
+            return (
+              <p key={name}>
+                {isNewHighScore && (
+                  <>
+                    {isSubmitFormOpen ? (
+                      <SubmitHighScoreForm
+                        {...{
+                          highScores,
+                          setHighScores,
+                          setIsSubmitFormOpen,
+                          newHighScore,
+                        }}
+                      />
+                    ) : null}
+                  </>
+                )}
+                {name}: {score.toFixed(0)}
+              </p>
+            );
+          })}
+        </h2>
+      </animated.div>
       {process.env.NODE_ENV !== "production" && (
         <IconButton
           style={{ position: "fixed", bottom: 0, right: 0 }}
@@ -107,6 +102,18 @@ export function HighScores() {
           <Restore />
         </IconButton>
       )}
-    </ScoreStyles>
+    </HighScoresStyles>
   );
 }
+
+const HighScoresStyles = styled.div`
+  &,
+  * {
+    color: white;
+  }
+  position: fixed;
+  inset: 0;
+  .content {
+    margin-top: 128px;
+  }
+`;

@@ -3,6 +3,8 @@ import HUD from "./HUD";
 import { useThree } from "@react-three/fiber";
 import { NodeBotScoreAntenna } from "./NodeBotScoreAntenna";
 import { useSpring, animated } from "@react-spring/three";
+import { gameStateAtom, GameStepsEnum } from "providers/store/store";
+import { useAtom } from "jotai";
 
 const SCALE = 0.15;
 const RADIUS = 40;
@@ -18,12 +20,15 @@ export function BotScoreLegend({
   const {
     size: { width, height },
   } = useThree();
+  const [gameState] = useAtom(gameStateAtom);
+  const isGameOver = gameState.step === GameStepsEnum.gameOver;
 
+  const show = !isGameOver && showBotScore;
   const springProps = useSpring({
-    scale: showBotScore ? scale || [1, 1, 1] : [0, 0, 0],
+    scale: show ? scale || [1, 1, 1] : [0, 0, 0],
   });
 
-  return showBotScore ? (
+  return (
     <HUD
       position={
         position || [width / 2 - RADIUS * 2, height / 2 - RADIUS * 2.5, 0]
@@ -54,5 +59,5 @@ export function BotScoreLegend({
         </mesh>
       </animated.mesh>
     </HUD>
-  ) : null;
+  );
 }

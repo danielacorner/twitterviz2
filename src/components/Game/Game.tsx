@@ -165,7 +165,16 @@ function GameContent() {
             disabled={loading}
             variant="contained"
             onClick={startGame}
-            style={{ top: "64px", textTransform: "none" }}
+            style={{
+              top: "64px",
+              textTransform: "none",
+              position: "fixed",
+              left: 0,
+              right: 0,
+              margin: "auto",
+              width: "fit-content",
+              zIndex: 999999999,
+            }}
           >
             Play again
           </Button>

@@ -16,16 +16,15 @@ const Score = () => {
   console.log("🌟🚨 ~ file: Score.tsx ~ line 11 ~ Score ~ number", number);
 
   return (
-    <AnimatedScoreStyles>
+    <ScoreStyles>
       <div className="scoreText">Score:</div>
       <div className="scoreNum">{score.toFixed(0)}</div>
       {/* Score: {number.to((n) => n.toFixed(0))} */}
-      <HighScores />
-    </AnimatedScoreStyles>
+    </ScoreStyles>
   );
 };
 export default Score;
-const AnimatedScoreStyles = styled(animated.div)`
+const ScoreStyles = styled(animated.div)`
   position: fixed;
   top: 13px;
   right: 26px;
@@ -34,8 +33,5 @@ const AnimatedScoreStyles = styled(animated.div)`
   display: grid;
   grid-template-columns: auto 1fr;
   .scoreText {
-  }
-  .scoreNum {
-    text-align: end;
   }
 `;
