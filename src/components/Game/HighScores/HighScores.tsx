@@ -17,7 +17,7 @@ import {
 } from "./highScoresUtils";
 import styled from "styled-components/macro";
 import { uniqBy } from "lodash";
-
+import { sortDescendingByScore } from "./sortDescendingByScore";
 export function HighScores() {
   const [gameState] = useAtom(gameStateAtom);
   const [userScore] = useAtom(scoreAtom);
@@ -31,11 +31,6 @@ export function HighScores() {
     if (isGameOver) {
       fetchAllHighScoresSorted().then((data) => {
         const highScoresSliced = data.slice(0, NUM_SCORES);
-        console.log("🌟🚨 ~ fetchAllHighScoresSorted ~ data", data);
-        console.log(
-          "🌟🚨 ~ fetchAllHighScoresSorted ~ highScoresSliced",
-          highScoresSliced
-        );
         // it's a high score if it's > than the smallest high
         const lowestHighScore = highScores.reduce(
           (acc, cur) => Math.min(acc, cur.score),
@@ -43,7 +38,6 @@ export function HighScores() {
         );
         const isNewHighScore =
           userScore > (lowestHighScore === Infinity ? 0 : lowestHighScore);
-        console.log("🌟🚨 ~ useEffect ~ isNewHighScore", isNewHighScore);
 
         if (isNewHighScore) {
           setIsSubmitFormOpen(true);
@@ -54,8 +48,12 @@ export function HighScores() {
             isNewHighScore: true,
           };
           const highScoresDeduped = uniqBy(
-            highScoresSliced.sort((a, b) => a.score - b.score),
+            highScoresSliced.sort(sortDescendingByScore),
             (d) => d.name
+          );
+          console.log(
+            "🌟🚨 ~ fetchAllHighScoresSorted ~ highScoresDeduped",
+            highScoresDeduped
           );
           const topNminus1HighScores = highScoresDeduped.slice(
             0,
@@ -65,7 +63,7 @@ export function HighScores() {
           const highScoresWithNewHighScore = [
             ...topNminus1HighScores,
             newHighScore,
-          ].sort((a, b) => a.score - b.score);
+          ].sort(sortDescendingByScore);
 
           setHighScores(highScoresWithNewHighScore);
         }
@@ -79,29 +77,30 @@ export function HighScores() {
   return !isGameOver ? null : (
     <HighScoresStyles>
       <animated.div className="content">
-        <h1>High Scores</h1>
-        <h2>
-          {highScores.map(({ name, score, isNewHighScore }) => {
+        <h1>🌟 High Scores 🌟</h1>
+        <div className="highScores">
+          {highScores.map(({ name, score, isNewHighScore }, idx) => {
             return (
-              <p key={name}>
-                {isNewHighScore && (
-                  <>
-                    {isSubmitFormOpen ? (
-                      <SubmitHighScoreForm
-                        {...{
-                          highScores,
-                          setHighScores,
-                          setIsSubmitFormOpen,
-                        }}
-                      />
-                    ) : null}
-                  </>
-                )}
-                {name}: {score.toFixed(0)}
-              </p>
+              <div className="highScore" key={name}>
+                <div className="num">{idx + 1}.</div>
+                <div className="name">
+                  {isNewHighScore && isSubmitFormOpen ? (
+                    <SubmitHighScoreForm
+                      {...{
+                        highScores,
+                        setHighScores,
+                        setIsSubmitFormOpen,
+                      }}
+                    />
+                  ) : (
+                    name
+                  )}
+                </div>
+                <div className="score">{score.toFixed(0)}</div>
+              </div>
             );
           })}
-        </h2>
+        </div>
       </animated.div>
       {process.env.NODE_ENV !== "production" && (
         <IconButton
@@ -120,9 +119,29 @@ const HighScoresStyles = styled.div`
   * {
     color: white;
   }
+  h1 {
+    margin-bottom: 1em;
+  }
   position: fixed;
   inset: 0;
   .content {
     margin-top: 128px;
+  }
+  .highScores {
+  }
+  .name {
+  }
+  .highScore {
+    height: 40px;
+    align-content: end;
+    align-items: flex-end;
+    margin: auto;
+    width: 240px;
+    gap: 12px;
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+  }
+  .score {
+    text-align: right;
   }
 `;

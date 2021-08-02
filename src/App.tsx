@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import "./App.css";
 import styled from "styled-components/macro";
-import { useLoading } from "./providers/store/useSelectors";
+import { useLoading, usePrevious } from "./providers/store/useSelectors";
 import { useIsLight } from "./providers/ThemeManager";
 import "./video-react.css"; // import video-react css
 import AppFunctionalHooks from "./AppFunctionalHooks";
@@ -13,6 +13,7 @@ import { RightDrawer } from "./components/RightDrawer/RightDrawer";
 import { Game } from "./components/Game/Game";
 import { HighScores } from "components/Game/HighScores/HighScores";
 import { LoadingIndicator } from "./LoadingIndicator";
+import { BotScorePopupNode } from "./components/BotScorePopupNode";
 // import { useDeleteAllTweets } from "components/common/useDeleteAllTweets";
 // import { useMount } from "utils/utils";
 
@@ -33,6 +34,7 @@ function App() {
       <Game />
       <LoadingIndicator />
       <HighScores />
+      <BotScorePopupNode />
     </AppStyles>
   );
 }

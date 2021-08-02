@@ -68,7 +68,7 @@ export default function TagTheBotButton() {
             variant="contained"
             color="secondary"
           >
-            🔍 Investigate... <OpenInNew style={{ transform: "scale(0.8)" }} />
+            View User Data 📊
           </Button>
         </a>
       </Tooltip>
@@ -77,11 +77,10 @@ export default function TagTheBotButton() {
 }
 
 const BottomButtonsStyles = styled.div`
-  position: fixed;
-  z-index: 9999999;
+  position: absolute;
+  bottom: 12px;
   left: 0;
   right: 0;
-  bottom: 50px;
   margin: auto;
   display: flex;
   justify-content: center;

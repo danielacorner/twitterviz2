@@ -1,5 +1,6 @@
 import { faunaClient } from "providers/faunaProvider";
 import { query as q } from "faunadb";
+import { sortDescendingByScore } from "./sortDescendingByScore";
 
 export function useDeleteAllHighScores() {
   return () =>
@@ -29,7 +30,7 @@ export function fetchAllHighScoresSorted(): Promise<HighScore[]> {
       console.log("🌟🚨 ~ .then ~ ret", ret);
       const scores = (ret as any).data?.map((d) => d.data) || [];
       console.log("🌟🚨 ~ .then ~ scores", scores);
-      const highScoresSorted = [...scores].sort((a, b) => a.score - b.score);
+      const highScoresSorted = [...scores].sort(sortDescendingByScore);
       console.log("🌟🚨 ~ .then ~ highScoresSorted", highScoresSorted);
       return highScoresSorted as HighScore[];
     })

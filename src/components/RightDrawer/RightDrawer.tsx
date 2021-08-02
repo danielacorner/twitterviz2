@@ -70,7 +70,7 @@ export function RightDrawer() {
   );
 }
 const DrawerContentStyles = styled.div`
-  min-height: 100vh;
+  min-height: calc(100vh + 128px);
   width: 378px;
   max-width: calc(100vw - 64px);
   padding: 5px;

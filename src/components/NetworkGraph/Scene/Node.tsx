@@ -11,6 +11,7 @@ import { useAtom } from "jotai";
 import {
   getOriginalPoster,
   useTooltipNode,
+  useTweets,
 } from "providers/store/useSelectors";
 import { UserNode } from "../useGraphWithUsersAndLinks";
 import { useHandleOpenRightClickMenu } from "../GraphRightClickMenu";
@@ -22,6 +23,7 @@ import { NODE_RADIUS } from "utils/constants";
 import { useEffect, useState } from "react";
 import { Text } from "@react-three/drei";
 import { getScoreFromBotScore } from "components/Game/getScoreFromBotScore";
+import { Tweet } from "types";
 
 const nodeMaterial = new THREE.MeshPhysicalMaterial({
   emissive: "#0b152f",
@@ -126,14 +128,6 @@ export const Node = ({
       ? [1.8, 1.8, 1.8]
       : [1, 1, 1],
   });
-
-  const [hasBotScore, setHasBotScore] = useState(false);
-  useEffect(() => {
-    if (node.user.botScore && !hasBotScore) {
-      setHasBotScore(true);
-    }
-  }, [node.user.botScore, hasBotScore]);
-
   return (
     <animated.mesh
       ref={ref}
@@ -156,6 +150,17 @@ export const Node = ({
         onClick,
       }}
     >
+      <NodeContent {...{ node }} />
+    </animated.mesh>
+  );
+};
+
+export function NodeContent({ node }: { node: UserNode }) {
+  const tweets = useTweets();
+  const allTweetsByUser = tweets.filter((t) => t.user.id === node.user.id);
+  const hasBotScore = Boolean(node.user.botScore);
+  return (
+    <>
       {node.user.botScore ? (
         <>
           <NodeBotScoreAntenna {...{ botScore: node.user.botScore }} />
@@ -165,15 +170,17 @@ export const Node = ({
           />
         </>
       ) : null}
-      <NodeBillboard
-        {...{
-          tweets: node.tweets,
-          hasBotScore: Boolean(node.user.botScore),
-        }}
-      />
-    </animated.mesh>
+      {node ? (
+        <NodeBillboard
+          {...{
+            tweets: allTweetsByUser,
+            hasBotScore,
+          }}
+        />
+      ) : null}
+    </>
   );
-};
+}
 
 function BotScorePopup({ isMounted, botScore }) {
   const { scoreIncrease, scorePercent } = getScoreFromBotScore(botScore);

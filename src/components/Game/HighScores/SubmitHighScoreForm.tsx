@@ -6,6 +6,7 @@ import styled from "styled-components/macro";
 import { useLoading, useSetLoading } from "providers/store/useSelectors";
 import { useAtom } from "jotai";
 import { appUserIdAtom, scoreAtom } from "providers/store/store";
+import { sortDescendingByScore } from "./sortDescendingByScore";
 
 export const NUM_SCORES = 12;
 export const MAX_CHARACTERS_IN_NAME = 20;
@@ -31,7 +32,7 @@ export function SubmitHighScoreForm({
       console.log("🌟🚨 ~ saveHighScore ~ highScores", highScores);
       const newHighScores = highScores
         .map((d) => (d.isNewHighScore ? newHighScoreWithName : d))
-        .sort((a, b) => a.score - b.score)
+        .sort(sortDescendingByScore)
         .slice(0, NUM_SCORES);
       console.log("🌟🚨 ~ saveHighScore ~ newHighScores", newHighScores);
       setHighScores(newHighScores);
@@ -42,9 +43,9 @@ export function SubmitHighScoreForm({
 
   return (
     <SubmitHighScoreFormStyles>
-      <div className="content">
+      <div className="submitHighScoreContent">
         <h4>New High Score! 🎉</h4>
-        <div>
+        <div className="formRow">
           <TextField
             onChange={(e) => {
               setName(e.target.value.substring(0, MAX_CHARACTERS_IN_NAME));
@@ -53,6 +54,7 @@ export function SubmitHighScoreForm({
             label="name"
           />
           <IconButton
+            className="btnSubmit"
             disabled={name === "" || isLoading}
             onClick={saveHighScoreAndUpdate}
           >
@@ -65,21 +67,31 @@ export function SubmitHighScoreForm({
 }
 
 const SubmitHighScoreFormStyles = styled.div`
+  width: 180px;
   input {
     color: white;
   }
-  .content {
+  .submitHighScoreContent {
+    position: relative;
+    .btnSubmit {
+      position: absolute;
+      right: -92px;
+      bottom: -12px;
+    }
     h4 {
       font-size: 14px;
       text-align: left;
       margin-left: 38px;
       line-height: 0;
     }
+    .formRow {
+      display: flex;
+      gap: 12px;
+    }
     font-size: 16px;
     display: grid;
     gap: 10px;
     margin: auto;
-    margin-top: 360px;
     place-items: left;
     place-content: center;
   }
