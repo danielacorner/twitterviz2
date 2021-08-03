@@ -82,11 +82,14 @@ function useGetTweetsFromDb() {
 
   return () =>
     new Promise((resolve, reject) => {
-      if (!dbRef) {
+      const dbRefId = dbRef?.value?.id || dbRef?.["@ref"]?.id;
+
+      if (!dbRefId) {
+        console.log("🚨🚨 ~ no dbRefId", dbRef);
         reject("no dbRef");
       }
       faunaClient
-        .query(q.Get(q.Ref(q.Collection("Nodes"), dbRef["@ref"]?.id)))
+        .query(q.Get(q.Ref(q.Collection("Nodes"), dbRefId)))
         .then((ret: { data: any[] } | any) => {
           // just grab the whole db ok
           if (ret.data) {
@@ -113,26 +116,6 @@ function useGetTweetsFromDb() {
         });
     });
 }
-
-// export function useDeleteUser() {
-//   const [dbRef] = useAtom(dbRefAtom);
-
-//   return () =>
-//     new Promise((resolve, reject) => {
-//       faunaClient
-//         .query(q.Get(q.Ref(q.Collection("Nodes"), dbRef["@ref"]?.id)))
-//         .then((ret: { data: any[] } | any) => {
-//           faunaClient.query(q.Delete(ret.ref)).then((r) => {
-//             console.log("🌟🌟 ~ deleted user", r);
-//             resolve(r);
-//           });
-//         })
-//         .catch((err) => {
-//           console.log("🚨🚨 ~ newPromise ~ err", err);
-//           reject(err);
-//         });
-//     });
-// }
 
 export function useSetEmptyNodesForUser() {
   const setNodesForUser = useSetNodesInDbForUser();
@@ -167,14 +150,15 @@ export function useReplaceNodesInDbForUser() {
   const [userId] = useAtom(appUserIdAtom);
   const [dbRef, setDbRef] = useAtom(dbRefAtom);
 
+  const dbRefId = dbRef?.value?.id || dbRef?.["@ref"]?.id;
   return (nodes: Tweet[]) => {
-    if (!dbRef["@ref"]) {
-      console.log('🚨🚨 ~ return ~ !dbRef["@ref"]', dbRef);
+    if (!dbRefId) {
+      console.log("🚨🚨 ~ return ~ !dbRef id", dbRef);
       return;
     }
     faunaClient
       .query(
-        q.Replace(q.Ref(q.Collection("Nodes"), dbRef["@ref"]?.id), {
+        q.Replace(q.Ref(q.Collection("Nodes"), dbRefId), {
           data: { userId, nodes },
         })
       )

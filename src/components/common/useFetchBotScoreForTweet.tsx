@@ -42,15 +42,19 @@ export function useFetchBotScoreForTweet() {
       ...tweets.slice(tweetIndex + 1),
     ];
 
-    fetch(`${SERVER_URL}/api/save_bot_score_for_current_app_user`, {
-      headers: { "content-type": "application/json" },
-      method: "POST",
-      body: JSON.stringify({
-        appUserId,
-        allTweetsWithBotScore,
-        refId: dbRef["@ref"]?.id,
-      }),
-    });
+    if (!dbRef?.value) {
+      console.log("🚨🚨 ~ no dbRef", dbRef);
+    } else {
+      fetch(`${SERVER_URL}/api/save_bot_score_for_current_app_user`, {
+        headers: { "content-type": "application/json" },
+        method: "POST",
+        body: JSON.stringify({
+          appUserId,
+          allTweetsWithBotScore,
+          refId: dbRef?.value?.id,
+        }),
+      });
+    }
 
     setTweets(allTweetsWithBotScore);
 
