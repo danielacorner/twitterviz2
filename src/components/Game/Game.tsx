@@ -90,7 +90,7 @@ function GameContent() {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [shotsRemaining]);
-	const scale = 1.6;
+	const scale = 1.3;
 	const canContinue = tweets.length > 0 && shotsRemaining > 0;
 
 	switch (gameState.step) {
@@ -105,7 +105,7 @@ function GameContent() {
 						</p>
 						<p>There are different kinds of bot:</p>
 						<div style={{ margin: "auto", width: "fit-content" }}>
-							<Canvas style={{ width: 240, height: 280 }}>
+							<Canvas style={{ width: 240, height: 240 }}>
 								{getIsMobileDevice() ? (
 									<DeviceOrientationOrbitControls />
 								) : (
