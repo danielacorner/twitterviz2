@@ -3,6 +3,7 @@ import { dbRefAtom } from "providers/faunaProvider";
 import { appUserIdAtom } from "providers/store/store";
 import { useSetTweets, useTweets } from "providers/store/useSelectors";
 import { BotScore, Tweet } from "types";
+import { SERVER_URL } from "utils/constants";
 
 /** fetch one bot score and send to store>tweets
  *
@@ -21,7 +22,7 @@ export function useFetchBotScoreForTweet() {
     const tweetsByUser = tweets.filter(
       (t) => t.user.id_str === tweet.user.id_str
     );
-    const resp = await fetch("/api/generate_bot_score", {
+    const resp = await fetch(`${SERVER_URL}/api/generate_bot_score`, {
       headers: { "content-type": "application/json" },
       method: "POST",
       body: JSON.stringify(tweetsByUser),
@@ -41,7 +42,7 @@ export function useFetchBotScoreForTweet() {
       ...tweets.slice(tweetIndex + 1),
     ];
 
-    fetch("/api/save_bot_score_for_current_app_user", {
+    fetch(`${SERVER_URL}/api/save_bot_score_for_current_app_user`, {
       headers: { "content-type": "application/json" },
       method: "POST",
       body: JSON.stringify({

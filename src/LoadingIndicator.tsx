@@ -4,7 +4,6 @@ import { useLoading } from "./providers/store/useSelectors";
 import { Canvas } from "@react-three/fiber";
 import { animated, useSpring } from "@react-spring/three";
 import { useMount } from "utils/utils";
-import { useControls } from "leva";
 
 export function LoadingIndicator() {
   const isLoading = useLoading();

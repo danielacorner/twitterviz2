@@ -1,6 +1,7 @@
 import { faunaClient } from "providers/faunaProvider";
 import { query as q } from "faunadb";
 import { sortDescendingByScore } from "./sortDescendingByScore";
+import { SERVER_URL } from "utils/constants";
 
 export function useDeleteAllHighScores() {
   return () =>
@@ -40,7 +41,7 @@ export function fetchAllHighScoresSorted(): Promise<HighScore[]> {
     });
 }
 export function saveHighScore(highScore: HighScore): Promise<HighScore[]> {
-  return fetch("/api/save_highscore", {
+  return fetch(`${SERVER_URL}/api/save_highscore`, {
     headers: { "content-type": "application/json" },
     method: "POST",
     body: JSON.stringify(highScore),
