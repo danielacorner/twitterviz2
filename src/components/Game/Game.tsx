@@ -54,6 +54,7 @@ function GameContent() {
 	const { fetchNewTweets } = useStreamNewTweets();
 	const deleteAllTweets = useDeleteAllTweets();
 	const replaceNodesInDbForUser = useReplaceNodesInDbForUser();
+	const isLoading = useLoading();
 	const setLoading = useSetLoading();
 	function startGame() {
 		setLoading(true);
@@ -119,7 +120,7 @@ function GameContent() {
 							</Canvas>
 						</div>
 						<p>
-							You'll see 10 twitter accounts from the{" "}
+							You'll see 10 twitter accounts from{" "}
 							<a
 								href="https://developer.twitter.com/en/docs/tutorials/consuming-streaming-data"
 								target="_blank"
@@ -129,7 +130,8 @@ function GameContent() {
 							</a>
 							.
 						</p>
-						<p>Take your shot, guess which one is a bot!</p>
+						<p style={{ marginBottom: 0 }}>Take your shot,</p>
+						<p>guess which one is a bot!</p>
 						{/*
             <p style={{ textAlign: "center" }}>
               TODO: compete with others to get the highest bot score!
@@ -138,6 +140,7 @@ function GameContent() {
 							<Button
 								variant="contained"
 								color="primary"
+								disabled={isLoading}
 								onClick={continueGame}
 								style={{ marginRight: 12 }}
 							>
@@ -145,6 +148,7 @@ function GameContent() {
 							</Button>
 						) : (
 							<Button
+								disabled={isLoading}
 								variant="contained"
 								color={canContinue ? "secondary" : "primary"}
 								onClick={startGame}
@@ -218,6 +222,7 @@ const Step1Styles = styled.div`
 	box-shadow: 0px 2px 30px 8px hsla(0, 0%, 0%, 0.3);
 	.content {
 		${popupBaseCss}
+		max-width: calc(100vw - 32px);
 	}
 	p {
 		text-align: center;
