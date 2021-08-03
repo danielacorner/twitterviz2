@@ -36,6 +36,7 @@ export default function TagTheBotButton() {
     if (!selectedNode) {
       return;
     }
+    setShotsRemaining((p) => Math.max(0, p - 1));
     setLatestNodeWithBotScore({ ...selectedNode, botScore });
     setScore((p) => p + getScoreFromBotScore(botScore).scoreIncrease);
     // show and then hide the bot score popup
@@ -69,7 +70,6 @@ export default function TagTheBotButton() {
               if (selectedNode.hiddenBotScore) {
                 const newBotScore = { ...selectedNode.hiddenBotScore };
                 setSelectedNode(null);
-                setShotsRemaining((p) => Math.max(0, p - 1));
                 setTimeout(() => {
                   handleReceiveBotScore(newBotScore);
                 }, 1500);
@@ -77,7 +77,6 @@ export default function TagTheBotButton() {
                 fetchBotScoreForTweet(selectedNode).then((botScore) => {
                   setSelectedNode(null);
                   // setTooltipNode(null);
-                  setShotsRemaining((p) => Math.max(0, p - 1));
                   if (botScore) {
                     handleReceiveBotScore(botScore);
                   }

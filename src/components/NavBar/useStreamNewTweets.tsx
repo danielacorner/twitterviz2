@@ -8,11 +8,20 @@ import { useConfig } from "../../providers/store/useConfig";
 import { SERVER_URL } from "../../utils/constants";
 import { faunaClient } from "providers/faunaProvider";
 import { query as q } from "faunadb";
-import { INITIAL_NUM_TWEETS } from "providers/store/store";
-
-const isMonthlyTwitterApiUsageExceeded = false;
+import {
+  INITIAL_NUM_TWEETS,
+  isMonthlyTwitterApiUsageExceededAtom,
+} from "providers/store/store";
+import { useAtom } from "jotai";
+import { useRef } from "react";
+import { uniqBy } from "lodash";
+import { Tweet } from "types";
 
 export function useStreamNewTweets() {
+  const [
+    isMonthlyTwitterApiUsageExceeded,
+    setIsMonthlyTwitterApiUsageExceeded,
+  ] = useAtom(isMonthlyTwitterApiUsageExceededAtom);
   const { lang, countryCode, numTweets, filterLevel, geolocation } =
     useConfig();
   const allowedMediaTypesStrings = useAllowedMediaTypes();
@@ -21,34 +30,54 @@ export function useStreamNewTweets() {
   const setTweets = useSetTweets();
   // const addTweets = useAddTweets();
 
-  const fetchNewTweetsFromTwitterApi = async () => {
-    setLoading(true);
+  const timerRef = useRef(null as number | null);
 
-    const langParam = lang !== "All" ? `&lang=${lang}` : "";
-    const allowedMediaParam =
-      allowedMediaTypesStrings.length > 0
-        ? `&allowedMediaTypes=${allowedMediaTypesStrings.join(",")}`
+  const fetchNewTweetsFromTwitterApi = (): Promise<Tweet[]> => {
+    return new Promise(async (resolve, reject) => {
+      console.log("🤖... fetching from twitter stream API");
+      setLoading(true);
+
+      // set isMonthlyTwitterApiUsageExceeded to true if we don't get a response from stream within 10 seconds,
+      // so subsequent requests will come from the DB instead
+      timerRef.current = window.setTimeout(() => {
+        console.log(
+          "🤖💣 no response from twitter stream API -- fetching from DB instead"
+        );
+        setIsMonthlyTwitterApiUsageExceeded(true);
+        fetchOldTweetsWithBotScoresFromDB().then((tweetsFromDB) => {
+          resolve(tweetsFromDB);
+        });
+      }, 6 * 1000);
+
+      const langParam = lang !== "All" ? `&lang=${lang}` : "";
+      const allowedMediaParam =
+        allowedMediaTypesStrings.length > 0
+          ? `&allowedMediaTypes=${allowedMediaTypesStrings.join(",")}`
+          : "";
+      const countryParam =
+        countryCode !== "All" ? `&countryCode=${countryCode}` : "";
+
+      const locations = geolocation
+        ? `${geolocation.latitude.left},${geolocation.longitude.left},${geolocation.latitude.right},${geolocation.longitude.right}`
         : "";
-    const countryParam =
-      countryCode !== "All" ? `&countryCode=${countryCode}` : "";
 
-    const locations = geolocation
-      ? `${geolocation.latitude.left},${geolocation.longitude.left},${geolocation.latitude.right},${geolocation.longitude.right}`
-      : "";
+      const resp = await fetch(
+        geolocation
+          ? `${SERVER_URL}/api/filter?num=${numTweets}&locations=${locations}${allowedMediaParam}`
+          : `${SERVER_URL}/api/stream?num=${numTweets}&filterLevel=${filterLevel}${allowedMediaParam}${countryParam}${langParam}`
+      );
 
-    const resp = await fetch(
-      geolocation
-        ? `${SERVER_URL}/api/filter?num=${numTweets}&locations=${locations}${allowedMediaParam}`
-        : `${SERVER_URL}/api/stream?num=${numTweets}&filterLevel=${filterLevel}${allowedMediaParam}${countryParam}${langParam}`
-    );
+      const data = await resp.json();
 
-    const data = await resp.json();
+      setTweets(data);
 
-    setTweets(data);
-
-    setLoading(false);
-
-    return data;
+      setLoading(false);
+      if (timerRef.current) {
+        window.clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+      resolve(data);
+    });
   };
 
   const fetchOldTweetsWithBotScoresFromDB = async () => {
@@ -62,24 +91,30 @@ export function useStreamNewTweets() {
     );
     const tweetsWithBotScores =
       (resp as any)?.data?.map((d) => d?.data?.nodeWithBotScore) || [];
-    const tweetsWithHiddenBotScores = tweetsWithBotScores.map((t) => ({
+    const tweetsWithHiddenBotScores: Tweet[] = tweetsWithBotScores.map((t) => ({
       ...t,
       botScore: undefined,
       hiddenBotScore: t.botScore,
       user: { ...t.user, botScore: undefined, hiddenBotScore: t.botScore },
     }));
 
-    const randomTweets = shuffle([...tweetsWithHiddenBotScores]).slice(
+    const dedupedTweets = uniqBy(tweetsWithHiddenBotScores, (t) => t.id_str);
+    const randomDedupedTweets = shuffle([...dedupedTweets]).slice(
       0,
       INITIAL_NUM_TWEETS
     );
+    console.log(
+      "🌟🚨 ~ fetchOldTweetsWithBotScoresFromDB ~ randomDedupedTweets",
+      randomDedupedTweets
+    );
 
-    setTweets(randomTweets);
+    setTweets(randomDedupedTweets);
 
     setLoading(false);
 
-    // return data;
+    return randomDedupedTweets;
   };
+
   return {
     loading,
     fetchNewTweets: isMonthlyTwitterApiUsageExceeded

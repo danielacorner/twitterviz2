@@ -164,6 +164,7 @@ export function useReplaceNodesInDbForUser() {
       )
       .then((ret) => {
         console.log("🌟🚨 ~ .then ~ ret", ret);
+        return ret;
       })
       .catch((err) => {
         if (err.name === "NotFound") {

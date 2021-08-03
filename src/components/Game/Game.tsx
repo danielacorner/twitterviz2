@@ -12,6 +12,7 @@ import { useDeleteAllTweets } from "components/common/useDeleteAllTweets";
 import {
   useLoading,
   useSetLoading,
+  useSetTweets,
   useTweets,
 } from "providers/store/useSelectors";
 import styled from "styled-components/macro";
@@ -55,14 +56,19 @@ function GameContent() {
   const deleteAllTweets = useDeleteAllTweets();
   const replaceNodesInDbForUser = useReplaceNodesInDbForUser();
   const isLoading = useLoading();
+  const setTweets = useSetTweets();
   const setLoading = useSetLoading();
   function startGame() {
     setLoading(true);
     deleteAllTweets().then((ret) => {
       console.log("🌟🚨 ~ deleteAllTweets ", ret);
       fetchNewTweets().then((newTweets) => {
-        console.log("🌟🚨 ~ newTweets ", newTweets);
+        console.log("🌟🚨 ~ fetchNewTweets ~ newTweets", newTweets);
+        if (!newTweets) {
+          return;
+        }
         replaceNodesInDbForUser(newTweets);
+        setTweets(newTweets);
         setScore(0);
         setGameState((p) => ({
           ...p,
