@@ -8,7 +8,7 @@ import {
 import { Button, Tooltip } from "@material-ui/core";
 import { useFetchBotScoreForTweet } from "components/common/useFetchBotScoreForTweet";
 import { atom, useAtom } from "jotai";
-import { Tweet } from "types";
+import { BotScore, Tweet } from "types";
 import {
   botScorePopupNodeAtom,
   scoreAtom,
@@ -32,6 +32,25 @@ export default function TagTheBotButton() {
   const [, setScore] = useAtom(scoreAtom);
   const [, setBotScorePopupNode] = useAtom(botScorePopupNodeAtom);
 
+  function handleReceiveBotScore(botScore: BotScore) {
+    if (!selectedNode) {
+      return;
+    }
+    setLatestNodeWithBotScore({ ...selectedNode, botScore });
+    setScore((p) => p + getScoreFromBotScore(botScore).scoreIncrease);
+    // show and then hide the bot score popup
+    setBotScorePopupNode({
+      user: { ...selectedNode.user, botScore },
+      tweets: [{ ...selectedNode, botScore }],
+      id_str: selectedNode.user.id_str,
+    });
+    setTimeout(() => {
+      setBotScorePopupNode(null);
+    }, BOT_SCORE_POPUP_TIMEOUT);
+
+    setLoading(false);
+  }
+
   return selectedNode && shotsRemaining > 0 ? (
     <BottomButtonsStyles>
       {Boolean(selectedNode.botScore) ? null : (
@@ -47,27 +66,23 @@ export default function TagTheBotButton() {
                 tweets: [selectedNode],
                 id_str: selectedNode.user.id_str,
               });
-              fetchBotScoreForTweet(selectedNode).then((botScore) => {
+              if (selectedNode.hiddenBotScore) {
+                const newBotScore = { ...selectedNode.hiddenBotScore };
                 setSelectedNode(null);
-                // setTooltipNode(null);
                 setShotsRemaining((p) => Math.max(0, p - 1));
-                if (botScore) {
-                  setLatestNodeWithBotScore({ ...selectedNode, botScore });
-                  setScore(
-                    (p) => p + getScoreFromBotScore(botScore).scoreIncrease
-                  );
-                  // show and then hide the bot score popup
-                  setBotScorePopupNode({
-                    user: { ...selectedNode.user, botScore },
-                    tweets: [{ ...selectedNode, botScore }],
-                    id_str: selectedNode.user.id_str,
-                  });
-                  setTimeout(() => {
-                    setBotScorePopupNode(null);
-                  }, BOT_SCORE_POPUP_TIMEOUT);
-                }
-                setLoading(false);
-              });
+                setTimeout(() => {
+                  handleReceiveBotScore(newBotScore);
+                }, 1500);
+              } else {
+                fetchBotScoreForTweet(selectedNode).then((botScore) => {
+                  setSelectedNode(null);
+                  // setTooltipNode(null);
+                  setShotsRemaining((p) => Math.max(0, p - 1));
+                  if (botScore) {
+                    handleReceiveBotScore(botScore);
+                  }
+                });
+              }
             }}
           >
             It's a bot! 🎯
