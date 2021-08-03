@@ -96,6 +96,9 @@ export default function TagTheBotButton() {
 const BottomButtonsStyles = styled.div`
   position: absolute;
   bottom: 64px;
+  @media (min-width: 768px) {
+    bottom: 32px;
+  }
   left: 0;
   right: 0;
   margin: auto;
