@@ -4,6 +4,7 @@ import { useLoading } from "./providers/store/useSelectors";
 import { Canvas } from "@react-three/fiber";
 import { animated, useSpring } from "@react-spring/three";
 import { useMount } from "utils/utils";
+import { useControls } from "leva";
 
 export function LoadingIndicator() {
   const isLoading = useLoading();
@@ -13,14 +14,20 @@ export function LoadingIndicator() {
     position: isLoading ? [0, 0, 0] : [0, -5, 0],
   });
 
-  const [toggle, setToggle] = useState(true);
+  const [[x2, y2, z2], setPos2] = useState([
+    Math.random(),
+    Math.random(),
+    Math.random(),
+  ]);
+  const [toggle, setToggle] = useState(false);
   const initial = (Math.PI / 180) * 30;
   const springSpin = useSpring({
     rotation: toggle
       ? [initial, 0, 0]
-      : [Math.PI * 2 + initial, 0, Math.PI * 2],
+      : [2 * Math.PI * x2 + initial, 2 * Math.PI * y2, 2 * Math.PI * z2],
     delay: 500,
     onRest: () => {
+      setPos2([Math.random(), Math.random(), Math.random()]);
       setToggle(!toggle);
     },
     config: { tension: 300, mass: 30, friction: 170 },
@@ -34,7 +41,7 @@ export function LoadingIndicator() {
       <Canvas style={{ width: "100%", height: 180 }}>
         <animated.mesh {...springProps} rotation={springSpin.rotation}>
           <icosahedronBufferGeometry args={[1, 0]} />
-          <meshBasicMaterial wireframe={true} />
+          <meshBasicMaterial wireframe={true} color={"#5a8694"} />
         </animated.mesh>
       </Canvas>
     </LoadingIndicatorStyles>
