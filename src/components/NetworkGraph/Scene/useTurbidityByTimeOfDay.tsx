@@ -33,5 +33,5 @@ export function useTurbidityByTimeOfDay() {
     immediate: false,
   });
 
-  return turbidity;
+  return { turbidity, brightnessPct };
 }

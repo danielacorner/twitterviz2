@@ -104,6 +104,22 @@ function GameContent() {
         <Step1Styles>
           <div className="content">
             <h3>Twitter Botsketball 🤖🏀</h3>
+            <p>Twitter's known to be full of bots.</p>
+            <p>
+              For example,{" "}
+              <a
+                href="https://www.npr.org/sections/coronavirus-live-updates/2020/05/20/859814085/researchers-nearly-half-of-accounts-tweeting-about-coronavirus-are-likely-bots"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                researchers at Carnegie Mellon University reported that{" "}
+                <span style={{ fontWeight: "bold", color: "cornflowerblue" }}>
+                  half of all accounts
+                </span>{" "}
+                spreading messages about the coronavirus pandemic are likely
+                bots
+              </a>
+            </p>
             <p>There are different kinds of bot:</p>
             <div style={{ margin: "auto", width: "fit-content" }}>
               <Canvas style={{ width: 240, height: 240 }}>
@@ -128,17 +144,21 @@ function GameContent() {
               >
                 Twitter Stream API
               </a>
-              , then we can use{" "}
-              <a href="https://botometer.osome.iu.edu/">Botometer API</a> to
-              estimate which users act more like bots.
+              .
+            </p>
+            <p>
+              Guess which ones are bots. We'll get their a "bot score" from{" "}
+              <a href="https://botometer.osome.iu.edu/">Botometer API</a>.
             </p>
 
-            <br />
-            <p>Pick users with higher bot scores 🤖</p>
-            <p>to earn more points ⭐</p>
-            <br />
-
-            <div style={{ fontStyle: "italic", marginBottom: -6 }}>
+            <div
+              style={{
+                fontStyle: "italic",
+                fontSize: 14,
+                marginBottom: -6,
+                marginTop: 16,
+              }}
+            >
               <p style={{ marginBottom: 0 }}>Take your shot,</p>
               <p>guess which one is a bot!</p>
             </div>
@@ -171,6 +191,9 @@ function GameContent() {
                 {canContinue ? "Play Again" : "Play"}
               </Button>
             )}
+            <div style={{ fontSize: 14, marginTop: 12 }}>
+              🤖 higher bot score = more points ⭐
+            </div>
           </div>
         </Step1Styles>
       );
@@ -217,6 +240,9 @@ const Step1Styles = styled.div`
   .content {
     ${popupBaseCss}
     max-width: calc(100vw - 32px);
+    @media (min-width: 768px) {
+      max-width: 600px;
+    }
   }
   p {
     text-align: center;

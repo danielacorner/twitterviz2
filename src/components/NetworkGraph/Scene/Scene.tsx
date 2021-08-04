@@ -37,7 +37,7 @@ export function Scene() {
     config: { tension: 20, mass: 6, friction: 20 },
   });
   // lined up: hide if they don't have a bot score
-  const turbidity = useTurbidityByTimeOfDay();
+  const { turbidity } = useTurbidityByTimeOfDay();
   return (
     <Suspense fallback={null}>
       <ambientLight intensity={0.75} />

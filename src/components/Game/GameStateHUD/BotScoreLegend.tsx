@@ -45,6 +45,7 @@ export function BotScoreLegend({
           <NodeBotScoreAntenna
             {...{
               showLabels: true,
+              isInStartMenu,
               botScore: {
                 overall: 1,
                 fake_follower: 1,

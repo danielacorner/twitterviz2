@@ -8,7 +8,6 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import { UserNode } from "./NetworkGraph/useGraphWithUsersAndLinks";
 import { useWindowSize } from "utils/hooks";
 import { Environment } from "@react-three/drei";
-import { useControls } from "leva";
 
 /** pops up and animates when you get a new bot score */
 export function BotScorePopupNode() {
@@ -79,11 +78,7 @@ function ScanningAnimation() {
       ref2.current.rotation.z += 0.01;
     }
   });
-  const { name, aNumber, roughness } = useControls({
-    name: "World",
-    aNumber: 1,
-    roughness: 0,
-  });
+
   return (
     <mesh>
       {/* scanning box */}
@@ -92,7 +87,7 @@ function ScanningAnimation() {
         <meshPhysicalMaterial
           color={"#99dffa"}
           transmission={0.98}
-          roughness={roughness}
+          roughness={0}
           thickness={10}
         />
       </mesh>

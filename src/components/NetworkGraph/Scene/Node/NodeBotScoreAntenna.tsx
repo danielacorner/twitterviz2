@@ -3,11 +3,13 @@ import { Text, Billboard } from "@react-three/drei";
 import { useState } from "react";
 import { NODE_RADIUS } from "utils/constants";
 import { useMount } from "utils/utils";
+import { useTurbidityByTimeOfDay } from "../useTurbidityByTimeOfDay";
 
 export function NodeBotScoreAntenna({
   showLabels = false,
   botScore,
   forceOpaque = false,
+  isInStartMenu = false,
 }) {
   const antennae = [
     // top
@@ -61,6 +63,7 @@ export function NodeBotScoreAntenna({
             {...{
               color,
               forceOpaque,
+              isInStartMenu,
               score,
               label,
               showLabels,
@@ -77,7 +80,15 @@ const STICK_HEIGHT = 3.6;
 const STICK_SCALE = 0.7;
 const SPHERE_RADIUS = 0.5;
 
-function Antenna({ color, score, label, showLabels, isBottom, forceOpaque }) {
+function Antenna({
+  color,
+  score,
+  label,
+  showLabels,
+  isBottom,
+  forceOpaque,
+  isInStartMenu,
+}) {
   const [mounted, setMounted] = useState(false);
   useMount(() => {
     setMounted(true);
@@ -93,6 +104,8 @@ function Antenna({ color, score, label, showLabels, isBottom, forceOpaque }) {
       0,
     ],
   });
+  const { brightnessPct } = useTurbidityByTimeOfDay();
+  const textLightness = 1 - brightnessPct;
   return (
     <>
       {/* stick */}
@@ -114,7 +127,15 @@ function Antenna({ color, score, label, showLabels, isBottom, forceOpaque }) {
         <Billboard {...({} as any)} args={[0, 0]}>
           <Text
             {...({} as any)}
-            color="white"
+            color={
+              isInStartMenu ? "white" : `hsl(0,0%,${textLightness * 100}%)`
+            }
+            outlineColor={`hsl(0,0%,${brightnessPct * 100}%)`}
+            outlineWidth={0.000001}
+            outlineBlur={0.2}
+            outlineOpacity={0.4}
+            outlineOffsetY={0.05}
+            outlineOffsetX={0}
             textAlign={"center"}
             anchorY={isBottom ? "top" : "bottom"}
             maxWidth={0.5}
