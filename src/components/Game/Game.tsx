@@ -21,43 +21,42 @@ import {
   useSetNodesInDbForUser,
 } from "providers/faunaProvider";
 import { Canvas } from "@react-three/fiber";
-import { BotScoreLegend } from "components/NetworkGraph/Scene/BotScoreLegend";
+import { BotScoreLegend } from "components/Game/GameStateHUD/BotScoreLegend";
 import { IconButton, Tooltip } from "@material-ui/core";
 import { Replay } from "@material-ui/icons";
 import { DeviceOrientationOrbitControls } from "./DeviceOrientationOrbitControls";
 import { OrbitControls } from "@react-three/drei";
 import { useEffect } from "react";
-import Score from "./Score";
-import { ShotsRemaining } from "./ShotsRemaining";
 import { popupBaseCss } from "./popupBaseCss";
+import { GameStateHUD } from "./GameStateHUD/GameStateHUD";
 /** renders controls and instructions to play the game */
 export function Game() {
   return (
     <GameStyles>
       {/* always visible */}
-      <Score />
-      <ShotsRemaining />
+      <GameStateHUD />
+
       {/* switches for each step */}
       <GameContent />
     </GameStyles>
   );
 }
 const GameStyles = styled.div``;
+
 function GameContent() {
-  const [, setScore] = useAtom(scoreAtom);
-  const [gameState, setGameState] = useAtom(gameStateAtom);
   const tweets = useTweets();
   const loading = useLoading();
-
-  // this one saves in local storage
-  const [shotsRemaining, setShotsRemaining] = useAtom(shotsRemainingAtom);
-
   const { fetchNewTweets } = useStreamNewTweets();
   const deleteAllTweets = useDeleteAllTweets();
   const replaceNodesInDbForUser = useReplaceNodesInDbForUser();
   const isLoading = useLoading();
   const setTweets = useSetTweets();
   const setLoading = useSetLoading();
+  const setNodesInDb = useSetNodesInDbForUser();
+  const [, setScore] = useAtom(scoreAtom);
+  const [gameState, setGameState] = useAtom(gameStateAtom);
+  const [shotsRemaining, setShotsRemaining] = useAtom(shotsRemainingAtom);
+
   function startGame() {
     setLoading(true);
     deleteAllTweets().then((ret) => {
@@ -80,6 +79,7 @@ function GameContent() {
       });
     });
   }
+
   function continueGame() {
     setGameState((p) => ({
       ...p,
@@ -87,7 +87,7 @@ function GameContent() {
       startTime: Date.now(),
     }));
   }
-  const setNodesInDb = useSetNodesInDbForUser();
+
   // game over when no shots remain
   useEffect(() => {
     if (shotsRemaining === 0) {
@@ -97,7 +97,8 @@ function GameContent() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shotsRemaining]);
-  const scale = 1.3;
+
+  // can continue game instead of starting a new one
   const canContinue = tweets.length > 0 && shotsRemaining > 0;
 
   switch (gameState.step) {
@@ -121,7 +122,7 @@ function GameContent() {
                 <BotScoreLegend
                   isInStartMenu={true}
                   position={[0, 0.2, 0]}
-                  scale={[scale, scale, scale]}
+                  scale={[1.3, 1.3, 1.3]}
                 />
               </Canvas>
             </div>
