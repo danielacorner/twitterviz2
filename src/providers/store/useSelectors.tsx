@@ -1,7 +1,7 @@
 import { uniqBy } from "lodash";
 import { Tweet, User } from "../../types";
 import { useCallback, useEffect, useRef } from "react";
-import useStore from "./store";
+import useStore, { selectedNodeIdAtom } from "./store";
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 
@@ -15,9 +15,17 @@ export const useTweets = (): Tweet[] => {
   return tweetsFromServer;
   // useStore((state) => state.tweetsFromServer);
 };
-export const useSelectedNode = () => useStore((state) => state.selectedNode);
-export const useSetSelectedNode = () =>
-  useStore((state) => state.setSelectedNode);
+export const useSelectedNode = () => {
+  const tweets = useTweets();
+  const [selectedNodeId] = useAtom(selectedNodeIdAtom);
+  const selectedNode = tweets.find((t) => t.id_str === selectedNodeId);
+  return selectedNode;
+};
+export const useSetSelectedNode = () => {
+  const [, setSelectedNodeId] = useAtom(selectedNodeIdAtom);
+
+  return (node: Tweet | null) => setSelectedNodeId(node?.id_str || null);
+};
 export const useTooltipNode = (): Tweet | null =>
   useStore((state) => state.tooltipNode);
 export const useSetTooltipNode = () =>

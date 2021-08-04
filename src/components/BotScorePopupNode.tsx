@@ -4,9 +4,11 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import styled from "styled-components/macro";
 import { useAtom } from "jotai";
 import { botScorePopupNodeAtom } from "providers/store/store";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { UserNode } from "./NetworkGraph/useGraphWithUsersAndLinks";
 import { useWindowSize } from "utils/hooks";
+import { Environment } from "@react-three/drei";
+import { useControls } from "leva";
 
 /** pops up and animates when you get a new bot score */
 export function BotScorePopupNode() {
@@ -61,6 +63,7 @@ export function BotScorePopupNode() {
   );
 }
 const WIDTH = 4;
+const SCAN_SPEED = 2;
 function ScanningAnimation() {
   const ref = useRef<any>(null);
   const ref2 = useRef<any>(null);
@@ -68,7 +71,7 @@ function ScanningAnimation() {
   useFrame(({ clock }) => {
     const seconds = clock.getElapsedTime();
     if (ref.current && ref2.current) {
-      const progress = seconds % (Math.PI * 2);
+      const progress = (seconds % (Math.PI * 2)) * SCAN_SPEED;
       const y = Math.sin(progress) * WIDTH * 0.5;
       ref.current.position.set(0, y, 0);
 
@@ -76,12 +79,29 @@ function ScanningAnimation() {
       ref2.current.rotation.z += 0.01;
     }
   });
+  const { name, aNumber, roughness } = useControls({
+    name: "World",
+    aNumber: 1,
+    roughness: 0,
+  });
   return (
     <mesh>
+      {/* scanning box */}
       <mesh ref={ref}>
         <boxBufferGeometry args={[WIDTH, 0.02 * WIDTH, WIDTH]} />
-        <meshBasicMaterial color={"#3ac7ff"} transparent={true} opacity={0.5} />
+        <meshPhysicalMaterial
+          color={"#99dffa"}
+          transmission={0.98}
+          roughness={roughness}
+          thickness={10}
+        />
       </mesh>
+      <Suspense fallback="null">
+        <Environment preset="forest" />
+      </Suspense>
+      {/* Background plane w. scanning effect?  */}
+
+      {/* scanning icosahedron */}
       <mesh ref={ref2}>
         <icosahedronBufferGeometry args={[2.5, 1]} />
         <meshBasicMaterial
@@ -94,6 +114,13 @@ function ScanningAnimation() {
     </mesh>
   );
 }
+// https://codesandbox.io/s/arkanoid-under-60-loc-forked-rmfcq?file=/src/App.js:2616-2788
+// const Background = (props) => (
+//   <mesh scale={useAspect(5000, 3800, 3)} {...props}>
+//     <planeGeometry />
+//     <meshBasicMaterial map={useTexture("/bg.jpg")} />
+//   </mesh>
+// )
 
 const ContentStyles = styled.div`
   position: fixed;

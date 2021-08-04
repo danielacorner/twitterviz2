@@ -125,7 +125,12 @@ const HighScoresStyles = styled.div`
   position: fixed;
   inset: 0;
   .content {
-    margin-top: 128px;
+    margin: 128px auto auto;
+    width: fit-content;
+    background: #7b7b7b6c;
+    padding: 14px 14px 38px;
+    border-radius: 16px;
+    box-shadow: 1px 2px 3px rgba(0, 0, 0, 50%);
   }
   .highScores {
   }

@@ -6,9 +6,9 @@ import { useLocation } from "react-router";
 import qs from "query-string";
 import { WordcloudConfig } from "./useSelectors";
 import { atom, useAtom } from "jotai";
-import { atomWithStorage } from "jotai/utils";
+import { atomWithHash, atomWithStorage } from "jotai/utils";
 import { UserNode } from "components/NetworkGraph/useGraphWithUsersAndLinks";
-export const SHOTS_REMAINING = process.env.NODE_ENV === "development" ? 2 : 5;
+export const SHOTS_REMAINING = process.env.NODE_ENV === "development" ? 2 : 3;
 export const INITIAL_NUM_TWEETS = 10;
 
 export const isMonthlyTwitterApiUsageExceededAtom = atom<boolean>(false);
@@ -61,12 +61,10 @@ export const isDarkModeAtom = atomWithStorage<boolean>(
   "atoms:isDarkMode",
   true
 );
+export const selectedNodeIdAtom = atomWithHash<string | null>("selected", null);
 
 export const useSearchObj = () => qs.parse(useLocation()?.search);
-
 export type GlobalStateType = {
-  selectedNode: Tweet | null;
-  setSelectedNode: (node: Tweet | null) => void;
   tooltipNode: Tweet | null;
   setTooltipNode: (node: Tweet | null) => void;
   config: AppConfig;
@@ -137,10 +135,6 @@ const [useStore] = create<GlobalStateType>(
     setRetweetsByTweetId: (retweetsByTweetId) =>
       set(() => ({ retweetsByTweetId })),
     /** which node is displayed in the Tooltip */
-    selectedNode: null as Tweet | null,
-    setSelectedNode: (node: Tweet | null) =>
-      set(() => ({ selectedNode: node })),
-
     tooltipNode: null as Tweet | null,
     setTooltipNode: (node: Tweet | null) => set(() => ({ tooltipNode: node })),
     loading: false,

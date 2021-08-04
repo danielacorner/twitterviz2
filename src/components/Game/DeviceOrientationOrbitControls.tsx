@@ -5,6 +5,8 @@ import * as React from "react";
 import { ReactThreeFiber, useThree, useFrame } from "@react-three/fiber";
 import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 
+const ORIENTATION_SPEED = 0.4;
+
 // copied from https://stackoverflow.com/questions/35023076/orbiting-around-the-origin-using-a-devices-orientation
 // and modified so that the scene orbits with device orientation, and all other controls (mousemouve, touchmove etc) are disabled
 
@@ -752,9 +754,20 @@ class OrbitControls extends EventDispatcher {
      * have to be calculated here.  Though, I find that the deviceorientation
      * event is more common.
      */
-    function tilt(event) {
+    function tilt(originalEvent) {
       if (scope.enabled === false) return;
-      switch (event.type) {
+      const event = {
+        ...originalEvent,
+        //
+        gamma: originalEvent?.gamma * ORIENTATION_SPEED,
+        beta: originalEvent?.beta * ORIENTATION_SPEED,
+        rotationRate: {
+          ...originalEvent?.rotationRate,
+          alpha: originalEvent?.rotationRate?.alpha * ORIENTATION_SPEED,
+          beta: originalEvent?.rotationRate?.beta * ORIENTATION_SPEED,
+        },
+      };
+      switch (originalEvent.type) {
         case "deviceorientation":
           rotateEnd.set(event.gamma, event.beta);
           rotateDelta.subVectors(rotateEnd, rotateStart);

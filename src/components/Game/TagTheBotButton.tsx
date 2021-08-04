@@ -18,7 +18,7 @@ import { getScoreFromBotScore } from "./getScoreFromBotScore";
 // * animate a HUD-contained bot score display ?
 // * animate the selected node to the front and then back?
 const latestNodeWithBotScoreAtom = atom<Tweet | null>(null);
-const BOT_SCORE_POPUP_TIMEOUT = 3500;
+export const BOT_SCORE_POPUP_TIMEOUT = 2500;
 
 export default function TagTheBotButton() {
   const selectedNode = useSelectedNode();
@@ -89,19 +89,16 @@ export default function TagTheBotButton() {
         </Tooltip>
       )}
       <Tooltip title={"check out user stats on Botometer"}>
-        <a
-          href={`https://botometer.osome.iu.edu/userDetail/${selectedNode.user.screen_name}`}
-          target="_blank"
-          rel="noopener noreferrer"
+        <Button
+          style={{ textTransform: "none" }}
+          variant="contained"
+          color="secondary"
+          onClick={() => {
+            setSelectedNode(null);
+          }}
         >
-          <Button
-            style={{ textTransform: "none" }}
-            variant="contained"
-            color="secondary"
-          >
-            View User Data 📊
-          </Button>
-        </a>
+          Not a bot...
+        </Button>
       </Tooltip>
     </BottomButtonsStyles>
   ) : null;
