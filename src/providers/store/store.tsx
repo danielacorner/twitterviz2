@@ -166,7 +166,7 @@ const [useStore] = create<GlobalStateType>(
       },
       replace: false,
       filterLevel: FILTER_LEVELS[
-        process.env.NODE_ENV === "production" ? "low" : "none"
+        process.env.NODE_ENV === "production" ? "medium" : "none"
       ] as keyof typeof FILTER_LEVELS,
       searchTerm: "",
       numTweets: INITIAL_NUM_TWEETS,
