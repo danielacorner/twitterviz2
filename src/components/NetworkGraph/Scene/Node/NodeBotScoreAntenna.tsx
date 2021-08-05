@@ -3,7 +3,6 @@ import { Text, Billboard } from "@react-three/drei";
 import { useState } from "react";
 import { NODE_RADIUS } from "utils/constants";
 import { useMount } from "utils/utils";
-import { useTurbidityByTimeOfDay } from "../useTurbidityByTimeOfDay";
 
 export function NodeBotScoreAntenna({
   showLabels = false,
@@ -104,7 +103,7 @@ function Antenna({
       0,
     ],
   });
-  const { brightnessPct } = useTurbidityByTimeOfDay();
+  const brightnessPct = 0;
   const textLightness = 1 - brightnessPct;
   return (
     <>
@@ -147,7 +146,7 @@ function Antenna({
               0,
             ]}
             fontSize={1}
-            fillOpacity={score}
+            fillOpacity={score ** 0.3}
           >
             {showLabels ? label : (score * 100).toFixed(0) + "%"}
           </Text>
@@ -158,7 +157,7 @@ function Antenna({
           roughness={0.1}
           color={color}
           transparent={true}
-          opacity={showLabels ? 0.5 : score ** 0.4}
+          opacity={forceOpaque ? 1 : showLabels ? 0.5 : score ** 0.4}
         />
       </animated.mesh>
     </>

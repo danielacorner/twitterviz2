@@ -13,7 +13,7 @@ import { RightDrawer } from "./components/RightDrawer/RightDrawer";
 import { Game } from "./components/Game/Game";
 import { HighScores } from "components/Game/HighScores/HighScores";
 import { LoadingIndicator } from "./LoadingIndicator";
-import { BotScorePopupNode } from "./components/BotScorePopupNode";
+import { BotScorePopupNode } from "./components/NetworkGraph/Scene/Node/BotScorePopupNode";
 // import { useDeleteAllTweets } from "components/common/useDeleteAllTweets";
 // import { useMount } from "utils/utils";
 

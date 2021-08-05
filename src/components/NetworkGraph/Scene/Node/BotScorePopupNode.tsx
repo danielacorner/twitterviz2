@@ -5,7 +5,7 @@ import styled from "styled-components/macro";
 import { useAtom } from "jotai";
 import { botScorePopupNodeAtom } from "providers/store/store";
 import { Suspense, useEffect, useRef, useState } from "react";
-import { UserNode } from "./NetworkGraph/useGraphWithUsersAndLinks";
+import { UserNode } from "../../useGraphWithUsersAndLinks";
 import { useWindowSize } from "utils/hooks";
 import { Environment } from "@react-three/drei";
 

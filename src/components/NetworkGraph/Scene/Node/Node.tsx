@@ -21,7 +21,7 @@ import { useGravity } from "../useGravity";
 import { useSpring, animated } from "@react-spring/three";
 import { NodeBotScoreAntenna } from "./NodeBotScoreAntenna";
 import { NODE_RADIUS } from "utils/constants";
-import { ScoreIncreasedPopupText } from "../ScoreIncreasedPopupText";
+import { ScoreIncreasedPopupText } from "./ScoreIncreasedPopupText";
 
 const nodeMaterial = new THREE.MeshPhysicalMaterial({
   emissive: "#0b152f",

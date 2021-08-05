@@ -12,7 +12,6 @@ import { useSpring } from "react-spring";
 import { Suspense, useState } from "react";
 import { useMount } from "utils/utils";
 import { Sky /* Stars */ } from "@react-three/drei";
-import { useTurbidityByTimeOfDay } from "./useTurbidityByTimeOfDay";
 import { Stars } from "./Stars";
 import { gameStateAtom, GameStepsEnum } from "providers/store/store";
 import { useAtom } from "jotai";
@@ -37,7 +36,6 @@ export function Scene() {
     config: { tension: 20, mass: 6, friction: 20 },
   });
   // lined up: hide if they don't have a bot score
-  const { turbidity } = useTurbidityByTimeOfDay();
   return (
     <Suspense fallback={null}>
       <ambientLight intensity={0.75} />
@@ -54,7 +52,7 @@ export function Scene() {
           rayleigh={7}
           mieCoefficient={0.1}
           mieDirectionalG={1}
-          turbidity={turbidity}
+          turbidity={0.2}
         />
       </mesh>
       <directionalLight position={[0, 5, -4]} intensity={4} />
