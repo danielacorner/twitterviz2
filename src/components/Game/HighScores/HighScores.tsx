@@ -18,6 +18,7 @@ import {
 import styled from "styled-components/macro";
 import { uniqBy } from "lodash";
 import { sortDescendingByScore } from "./sortDescendingByScore";
+
 export function HighScores() {
   const [gameState] = useAtom(gameStateAtom);
   const [userScore] = useAtom(scoreAtom);
@@ -31,12 +32,15 @@ export function HighScores() {
     if (isGameOver) {
       fetchAllHighScoresSorted().then((data) => {
         const highScoresSliced = data.slice(0, NUM_SCORES);
+
         // it's a high score if it's > than the smallest high
         const lowestHighScore = highScores.reduce(
           (acc, cur) => Math.min(acc, cur.score),
           Infinity
         );
+        const isNotEnoughScoresYet = highScoresSliced.length < NUM_SCORES;
         const isNewHighScore =
+          isNotEnoughScoresYet ||
           userScore > (lowestHighScore === Infinity ? 0 : lowestHighScore);
 
         if (isNewHighScore) {
@@ -51,13 +55,12 @@ export function HighScores() {
             highScoresSliced.sort(sortDescendingByScore),
             (d) => d.name
           );
+          const topNminus1HighScores = highScoresDeduped
+            .slice(0, NUM_SCORES - 1)
+            .filter(Boolean);
           console.log(
-            "🌟🚨 ~ fetchAllHighScoresSorted ~ highScoresDeduped",
-            highScoresDeduped
-          );
-          const topNminus1HighScores = highScoresDeduped.slice(
-            0,
-            highScoresDeduped.length - 2
+            "🌟🚨 ~ fetchAllHighScoresSorted ~ topNminus1HighScores",
+            topNminus1HighScores
           );
 
           const highScoresWithNewHighScore = [

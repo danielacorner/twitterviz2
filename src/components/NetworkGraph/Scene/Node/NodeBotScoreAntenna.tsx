@@ -128,9 +128,11 @@ function Antenna({
           <Text
             {...({} as any)}
             color={
-              isInStartMenu ? "white" : `hsl(0,0%,${textLightness * 100}%)`
+              isInStartMenu
+                ? "white"
+                : `hsl(0,0%,${(textLightness * 100).toFixed(0)}%)`
             }
-            outlineColor={`hsl(0,0%,${brightnessPct * 100}%)`}
+            outlineColor={`hsl(0,0%,${(brightnessPct * 100).toFixed(0)}%)`}
             outlineWidth={0.000001}
             outlineBlur={0.2}
             outlineOpacity={0.4}

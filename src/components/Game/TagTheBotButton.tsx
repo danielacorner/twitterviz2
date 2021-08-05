@@ -52,42 +52,42 @@ export default function TagTheBotButton() {
     setLoading(false);
   }
 
-  return selectedNode && shotsRemaining > 0 ? (
+  return selectedNode &&
+    shotsRemaining > 0 &&
+    !Boolean(selectedNode.botScore) ? (
     <BottomButtonsStyles>
-      {Boolean(selectedNode.botScore) ? null : (
-        <Tooltip title={"Take your shot! Higher bot scores = more points"}>
-          <Button
-            disabled={isLoading}
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              setLoading(true);
-              setBotScorePopupNode({
-                user: selectedNode.user,
-                tweets: [selectedNode],
-                id_str: selectedNode.user.id_str,
-              });
-              if (selectedNode.hiddenBotScore) {
-                const newBotScore = { ...selectedNode.hiddenBotScore };
+      <Tooltip title={"Take your shot! Higher bot scores = more points"}>
+        <Button
+          disabled={isLoading}
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            setLoading(true);
+            setBotScorePopupNode({
+              user: selectedNode.user,
+              tweets: [selectedNode],
+              id_str: selectedNode.user.id_str,
+            });
+            if (selectedNode.hiddenBotScore) {
+              const newBotScore = { ...selectedNode.hiddenBotScore };
+              setSelectedNode(null);
+              setTimeout(() => {
+                handleReceiveBotScore(newBotScore);
+              }, 1500);
+            } else {
+              fetchBotScoreForTweet(selectedNode).then((botScore) => {
                 setSelectedNode(null);
-                setTimeout(() => {
-                  handleReceiveBotScore(newBotScore);
-                }, 1500);
-              } else {
-                fetchBotScoreForTweet(selectedNode).then((botScore) => {
-                  setSelectedNode(null);
-                  // setTooltipNode(null);
-                  if (botScore) {
-                    handleReceiveBotScore(botScore);
-                  }
-                });
-              }
-            }}
-          >
-            It's a bot! 🎯
-          </Button>
-        </Tooltip>
-      )}
+                // setTooltipNode(null);
+                if (botScore) {
+                  handleReceiveBotScore(botScore);
+                }
+              });
+            }
+          }}
+        >
+          It's a bot! 🎯
+        </Button>
+      </Tooltip>
       <Tooltip title={"check out user stats on Botometer"}>
         <Button
           style={{ textTransform: "none" }}
