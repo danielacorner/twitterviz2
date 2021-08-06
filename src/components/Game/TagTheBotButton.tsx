@@ -4,6 +4,8 @@ import {
   useSelectedNode,
   useSetLoading,
   useSetSelectedNode,
+  useSetTweets,
+  useTweets,
 } from "../../providers/store/useSelectors";
 import { Button, Tooltip } from "@material-ui/core";
 import { useFetchBotScoreForTweet } from "components/common/useFetchBotScoreForTweet";
@@ -21,6 +23,8 @@ const latestNodeWithBotScoreAtom = atom<Tweet | null>(null);
 export const BOT_SCORE_POPUP_TIMEOUT = 2500;
 
 export default function TagTheBotButton() {
+  const tweets = useTweets();
+  const setTweets = useSetTweets();
   const selectedNode = useSelectedNode();
   const setSelectedNode = useSetSelectedNode();
   // const originalPoster = selectedNode && getOriginalPoster(selectedNode);
@@ -68,10 +72,25 @@ export default function TagTheBotButton() {
               tweets: [selectedNode],
               id_str: selectedNode.user.id_str,
             });
-            if (selectedNode.hiddenBotScore) {
-              const newBotScore = { ...selectedNode.hiddenBotScore };
+            const hiddenBotScore = selectedNode.hiddenBotScore;
+            if (hiddenBotScore) {
+              const newBotScore = { ...hiddenBotScore };
               setSelectedNode(null);
               setTimeout(() => {
+                setTweets(
+                  tweets.map((t) =>
+                    t.id_str === selectedNode.id_str
+                      ? {
+                          ...t,
+                          botScore: newBotScore,
+                          user: {
+                            ...selectedNode.user,
+                            botScore: newBotScore,
+                          },
+                        }
+                      : t
+                  )
+                );
                 handleReceiveBotScore(newBotScore);
               }, 1500);
             } else {
