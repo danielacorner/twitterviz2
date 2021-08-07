@@ -136,9 +136,10 @@ const SubmitHighScoreFormStyles = styled.div<{ isSubmitted: boolean }>`
     place-content: center;
     .btnSubmit {
       position: absolute;
-      right: -111px;
-      bottom: -6px;
-      background: #72cea578;
+      right: -72px;
+      bottom: 1px;
+      background: #72cea5bd;
+      box-shadow: 0px 2px 6px 0px #000000a3;
     }
     .newHighScore {
       position: absolute;
