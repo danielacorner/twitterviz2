@@ -12,13 +12,13 @@ export function useDeleteAllHighScores() {
       )
     );
 }
-export type HighScore = {
+export type HighScoreType = {
   userId: string;
   name: string;
   isNewHighScore?: boolean;
   score: number;
 };
-export function fetchAllHighScoresSorted(): Promise<HighScore[]> {
+export function fetchAllHighScoresSorted(): Promise<HighScoreType[]> {
   // get all documents https://stackoverflow.com/questions/61488323/how-to-get-all-documents-from-a-collection-in-faunadb
   return faunaClient
     .query(
@@ -33,14 +33,16 @@ export function fetchAllHighScoresSorted(): Promise<HighScore[]> {
       console.log("🌟🚨 ~ .then ~ scores", scores);
       const highScoresSorted = [...scores].sort(sortDescendingByScore);
       console.log("🌟🚨 ~ .then ~ highScoresSorted", highScoresSorted);
-      return highScoresSorted as HighScore[];
+      return highScoresSorted as HighScoreType[];
     })
     .catch((err) => {
       console.error(err);
       return [];
     });
 }
-export function saveHighScore(highScore: HighScore): Promise<HighScore[]> {
+export function saveHighScore(
+  highScore: HighScoreType
+): Promise<HighScoreType[]> {
   return fetch(`${SERVER_URL}/api/save_highscore`, {
     headers: { "content-type": "application/json" },
     method: "POST",

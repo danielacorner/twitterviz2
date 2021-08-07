@@ -7,12 +7,15 @@ import { useLoading, useSetLoading } from "providers/store/useSelectors";
 import { useAtom } from "jotai";
 import { appUserIdAtom, scoreAtom } from "providers/store/store";
 import { sortDescendingByScore } from "./sortDescendingByScore";
+import { useSpring, animated } from "react-spring";
+import { useMount } from "utils/utils";
 
 export const NUM_SCORES = 12;
 export const MAX_CHARACTERS_IN_NAME = 20;
 export function SubmitHighScoreForm({
   highScores,
   setHighScores,
+  setSubmittedName,
   setIsSubmitFormOpen,
 }) {
   const [name, setName] = useState("");
@@ -21,31 +24,77 @@ export function SubmitHighScoreForm({
   const [userId] = useAtom(appUserIdAtom);
   const setLoading = useSetLoading();
   const newHighScore = { isNewHighScore: true, score, name, userId };
+  const [isSubmitted, setIsSubmitted] = useState(false);
   function saveHighScoreAndUpdate() {
+    setIsSubmitted(true);
     setLoading(true);
     saveHighScore(newHighScore).then(() => {
-      const newHighScoreWithName = { ...newHighScore, name };
-      console.log(
-        "🌟🚨 ~ saveHighScore ~ newHighScoreWithName",
-        newHighScoreWithName
+      const newHighScores = getHighScoresFromNewHighScore(
+        newHighScore,
+        name,
+        highScores
       );
-      console.log("🌟🚨 ~ saveHighScore ~ highScores", highScores);
-      const newHighScores = highScores
-        .map((d) => (d.isNewHighScore ? newHighScoreWithName : d))
-        .sort(sortDescendingByScore)
-        .slice(0, NUM_SCORES);
-      console.log("🌟🚨 ~ saveHighScore ~ newHighScores", newHighScores);
       setHighScores(newHighScores);
       setLoading(false);
       setIsSubmitFormOpen(false);
+      setSubmittedName(name);
     });
   }
+  function setIsSSSSSSS() {
+    setIsSubmitted(true);
+    setLoading(true);
+    setTimeout(() => {
+      const newHighScores = getHighScoresFromNewHighScore(
+        newHighScore,
+        name,
+        highScores
+      );
+      setHighScores(newHighScores);
+      setIsSubmitFormOpen(false);
+      setLoading(false);
+      setSubmittedName(name);
+    }, 1000);
+  }
+
+  const springButtonOnSubmit = useSpring({
+    transform: `rotate(${isSubmitted ? 0.3 : 0}turn) scale(${
+      isSubmitted ? 0 : 1
+    })`,
+    opacity: isSubmitted ? 0 : 1,
+    config: {
+      tension: 160,
+      mass: 5,
+      friction: 30,
+    },
+  });
+
+  const [isInputSprung, setIsInputSprung] = useState(false);
+  useMount(() => {
+    setTimeout(() => {
+      setIsInputSprung(true);
+    }, 250);
+  });
+  const isSprung = isInputSprung && !isSubmitted;
+  const springFormRowOnSubmit = useSpring({
+    transform: `rotate(${isSprung ? 2 : 0}deg) scale(${isSprung ? 1.1 : 1})`,
+    config: {
+      tension: 450,
+      mass: 1,
+      friction: 20,
+    },
+    onRest: () => {
+      setIsInputSprung(false);
+    },
+  });
 
   return (
-    <SubmitHighScoreFormStyles>
+    <SubmitHighScoreFormStyles {...{ isSubmitted }}>
       <div className="submitHighScoreContent">
-        <h4 className="newHighScore">New High Score! 🎉</h4>
-        <div className="formRow">
+        <div className="newHighScore">
+          <h4>New High Score!</h4>
+          <div>🎉</div>
+        </div>
+        <animated.div style={springFormRowOnSubmit} className="formRow">
           <TextField
             onChange={(e) => {
               setName(e.target.value.substring(0, MAX_CHARACTERS_IN_NAME));
@@ -54,25 +103,27 @@ export function SubmitHighScoreForm({
             label="name"
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                saveHighScoreAndUpdate();
+                setIsSSSSSSS();
               }
             }}
           />
-          <IconButton
-            className="btnSubmit"
-            size="small"
-            disabled={name === "" || isLoading}
-            onClick={saveHighScoreAndUpdate}
-          >
-            <Check />
-          </IconButton>
-        </div>
+        </animated.div>
+        <AnimatedIconButton
+          className="btnSubmit"
+          size="small"
+          disabled={name === "" || isLoading}
+          onClick={setIsSSSSSSS}
+          style={springButtonOnSubmit}
+        >
+          <Check />
+        </AnimatedIconButton>
       </div>
     </SubmitHighScoreFormStyles>
   );
 }
 
-const SubmitHighScoreFormStyles = styled.div`
+const AnimatedIconButton = animated(IconButton);
+const SubmitHighScoreFormStyles = styled.div<{ isSubmitted: boolean }>`
   width: 180px;
   input {
     color: white;
@@ -86,6 +137,8 @@ const SubmitHighScoreFormStyles = styled.div`
       background: #72cea578;
     }
     .newHighScore {
+      display: grid;
+      placei-items: center;
       font-size: 14px;
       text-align: left;
       line-height: 0;
@@ -111,3 +164,26 @@ const SubmitHighScoreFormStyles = styled.div`
     border-bottom: 1px solid rgba(223, 218, 218, 0.582) !important;
   }
 `;
+function getHighScoresFromNewHighScore(
+  newHighScore: {
+    isNewHighScore: boolean;
+    score: number;
+    name: string;
+    userId: string;
+  },
+  name: string,
+  highScores: any
+) {
+  const newHighScoreWithName = { ...newHighScore, name };
+  console.log(
+    "🌟🚨 ~ saveHighScore ~ newHighScoreWithName",
+    newHighScoreWithName
+  );
+  console.log("🌟🚨 ~ saveHighScore ~ highScores", highScores);
+  const newHighScores = highScores
+    .map((d) => (d.isNewHighScore ? newHighScoreWithName : d))
+    .sort(sortDescendingByScore)
+    .slice(0, NUM_SCORES);
+  console.log("🌟🚨 ~ saveHighScore ~ newHighScores", newHighScores);
+  return newHighScores;
+}

@@ -8,7 +8,7 @@ import { WordcloudConfig } from "./useSelectors";
 import { atom, useAtom } from "jotai";
 import { atomWithHash, atomWithStorage } from "jotai/utils";
 import { UserNode } from "components/NetworkGraph/useGraphWithUsersAndLinks";
-export const SHOTS_REMAINING = process.env.NODE_ENV === "development" ? 2 : 3;
+export const SHOTS_REMAINING = process.env.NODE_ENV === "development" ? 1 : 3;
 export const INITIAL_NUM_TWEETS = 10;
 
 export const isMonthlyTwitterApiUsageExceededAtom = atom<boolean>(false);

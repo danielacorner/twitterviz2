@@ -5,25 +5,26 @@ import {
   GameStepsEnum,
   scoreAtom,
 } from "providers/store/store";
-import { animated } from "react-spring";
 import { useEffect, useState } from "react";
 import { IconButton } from "@material-ui/core";
 import { Restore } from "@material-ui/icons";
 import { NUM_SCORES, SubmitHighScoreForm } from "./SubmitHighScoreForm";
 import {
-  HighScore,
+  HighScoreType,
   fetchAllHighScoresSorted,
   useDeleteAllHighScores,
 } from "./highScoresUtils";
 import styled from "styled-components/macro";
 import { uniqBy } from "lodash";
 import { sortDescendingByScore } from "./sortDescendingByScore";
+import { useSpring, animated } from "react-spring";
+import { useMount } from "utils/utils";
 
 export function HighScores() {
   const [gameState] = useAtom(gameStateAtom);
   const [userScore] = useAtom(scoreAtom);
   const isGameOver = gameState.step === GameStepsEnum.gameOver;
-  const [highScores, setHighScores] = useState<HighScore[]>([]);
+  const [highScores, setHighScores] = useState<HighScoreType[]>([]);
   const [isSubmitFormOpen, setIsSubmitFormOpen] = useState(false);
   const [userId] = useAtom(appUserIdAtom);
 
@@ -77,30 +78,30 @@ export function HighScores() {
 
   const deleteAllHighScores = useDeleteAllHighScores();
 
+  const [submittedName, setSubmittedName] = useState("");
+
   return !isGameOver ? null : (
     <HighScoresStyles>
       <animated.div className="content">
         <h1>🌟 High Scores 🌟</h1>
         <div className="highScores">
           {highScores.map(({ name, score, isNewHighScore }, idx) => {
+            const wasJustSubmitted = name === submittedName;
             return (
-              <div className="highScore" key={name}>
-                <div className="num">{idx + 1}.</div>
-                <div className="name">
-                  {isNewHighScore && isSubmitFormOpen ? (
-                    <SubmitHighScoreForm
-                      {...{
-                        highScores,
-                        setHighScores,
-                        setIsSubmitFormOpen,
-                      }}
-                    />
-                  ) : (
-                    name
-                  )}
-                </div>
-                <div className="score">{score.toFixed(0)}</div>
-              </div>
+              <HighScore
+                {...{
+                  name,
+                  idx,
+                  isNewHighScore,
+                  wasJustSubmitted,
+                  isSubmitFormOpen,
+                  highScores,
+                  setHighScores,
+                  setSubmittedName,
+                  setIsSubmitFormOpen,
+                  score,
+                }}
+              />
             );
           })}
         </div>
@@ -115,6 +116,131 @@ export function HighScores() {
       )}
     </HighScoresStyles>
   );
+}
+
+function HighScore({
+  name,
+  idx,
+  isNewHighScore,
+  wasJustSubmitted,
+  isSubmitFormOpen,
+  highScores,
+  setHighScores,
+  setSubmittedName,
+  setIsSubmitFormOpen,
+  score,
+}: {
+  name: string;
+  idx: number;
+  isNewHighScore: boolean | undefined;
+  wasJustSubmitted: boolean | undefined;
+  isSubmitFormOpen: boolean;
+  highScores: HighScoreType[];
+  setHighScores;
+  setSubmittedName;
+  setIsSubmitFormOpen;
+  score: number;
+}): JSX.Element {
+  return (
+    <div className="highScore" key={name}>
+      <div className="num">{idx + 1}.</div>
+      <div className="name">
+        {isNewHighScore && isSubmitFormOpen ? (
+          <SubmitHighScoreForm
+            {...{
+              highScores,
+              setHighScores,
+              setSubmittedName,
+              setIsSubmitFormOpen,
+            }}
+          />
+        ) : wasJustSubmitted ? (
+          <AnimatedName {...{ name }} />
+        ) : (
+          name
+        )}
+      </div>
+      <div className="score">{score.toFixed(0)}</div>
+    </div>
+  );
+}
+
+function AnimatedName({ name }) {
+  return (
+    <AnimatedNameStyles>
+      {name.split("").map((letter, idx) => (
+        <AnimatedLetter
+          key={idx}
+          {...{ progress: idx / (name.length - 1), letter, idx }}
+        />
+      ))}
+    </AnimatedNameStyles>
+  );
+}
+const AnimatedNameStyles = styled.div`
+  display: flex;
+`;
+
+function AnimatedLetter({ progress, letter, idx }) {
+  const [sprung, setSprung] = useState(false);
+  useMount(() => {
+    setTimeout(() => {
+      setSprung(true);
+    }, 20 * idx);
+  });
+  const heightUpAndDown =
+    Math.round(Math.sin(progress * Math.PI) * 1000) / 1000;
+  const spring = useSpring({
+    transform: `scale(${sprung ? 2 : 1}) rotate(${
+      sprung ? -6 + progress * 5 : 0
+    }deg) translate(${sprung ? idx * 2 : 0}px,${
+      sprung ? -4 - 5 * heightUpAndDown : 0
+    }px)`,
+    transformOrigin: "left",
+    letterSpacing: sprung ? 1 : 0,
+    color: sprung ? `#ecdd56` : "#ffffff",
+    config: {
+      tension: 500,
+      friction: 15,
+      mass: 0.7,
+    },
+    onRest: () => {
+      setSprung(false);
+    },
+  });
+  return (
+    <>
+      <animated.div style={spring}>{letter}</animated.div>
+      {progress === 1 ? <AnimatedTadah {...{ idx }} /> : null}
+    </>
+  );
+}
+function AnimatedTadah({ idx }) {
+  const [sprung, setSprung] = useState(false);
+  useMount(() => {
+    setTimeout(() => {
+      setSprung(true);
+    }, 30);
+  });
+  const spring = useSpring({
+    transform: `scale(${sprung ? 2 : 1}) rotate(${
+      sprung ? -6 + 5 : 0
+    }deg) translate(${sprung ? idx * 2 : 0}px,${sprung ? -4 : 0}px)`,
+    transformOrigin: "left",
+    letterSpacing: sprung ? 1 : 0,
+    color: sprung ? `#ecdd56` : "#ffffff",
+    marginLeft: 6,
+    config: {
+      tension: 340,
+      friction: 6,
+      mass: 0.7,
+    },
+    onRest: () => {
+      setSprung(false);
+    },
+  });
+
+  return <animated.div style={spring}>🎉</animated.div>;
 }
 
 const HighScoresStyles = styled.div`
