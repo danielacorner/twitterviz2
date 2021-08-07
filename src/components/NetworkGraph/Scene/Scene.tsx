@@ -1,13 +1,13 @@
 import { OrbitControls } from "@react-three/drei";
 import { useGraphWithUsersAndLinks } from "../useGraphWithUsersAndLinks";
 import { Debug, Physics } from "@react-three/cannon";
-import { Node } from "./Node/Node";
+import { Node, NODE_RADIUS_COLLISION_MULTIPLIER } from "./Node/Node";
 import * as THREE from "three";
 import { uniqBy } from "lodash";
 import { BotScoreLegend } from "../../Game/GameStateHUD/BotScoreLegend";
 import { useThree } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
-import { CAMERA_POSITION } from "utils/constants";
+import { CAMERA_POSITION, NODE_RADIUS } from "utils/constants";
 import { useSpring } from "react-spring";
 import { Suspense, useState } from "react";
 import { useMount } from "utils/utils";
@@ -37,6 +37,7 @@ export function Scene() {
     config: { tension: 20, mass: 6, friction: 20 },
   });
   // lined up: hide if they don't have a bot score
+  const { viewport } = useThree();
   return (
     <Suspense fallback={null}>
       <ambientLight intensity={0.75} />
@@ -58,18 +59,30 @@ export function Scene() {
       </mesh>
       <directionalLight position={[0, 5, -4]} intensity={4} />
       <OrbitControls {...({} as any)} />
-      <Physics {...{ gravity: [0, 0, 0] }}>
+      <Physics
+        {...{ gravity: [0, 0, 0] }}
+        defaultContactMaterial={{ friction: 10, restitution: 0.8 }}
+      >
         <DebugInDev>
           <Collisions />
           {graphWithUsers.nodes.map((node, idx) => {
             const isEven = idx % 2 === 0;
-
+            const width = viewport.width / 8;
             return (
               <Node
                 key={node.id_str}
                 node={node}
                 startPosition={
-                  vertices[isEven ? idx : vertices.length - idx - 1]
+                  [
+                    randBetween(-1, 1) * width,
+                    (isEven ? 1 : -1) * width * 1.4 +
+                      randBetween(-1, 1) *
+                        NODE_RADIUS *
+                        NODE_RADIUS_COLLISION_MULTIPLIER *
+                        1.5,
+                    (randBetween(-1, 1) * viewport.width) / 8,
+                  ]
+                  // vertices[isEven ? idx : vertices.length - idx - 1]
                 }
               />
             );
@@ -79,6 +92,9 @@ export function Scene() {
       <BotScoreLegend />
     </Suspense>
   );
+}
+function randBetween(min, max) {
+  return Math.random() * (max - min) + min;
 }
 function DebugInDev({ children }) {
   return process.env.NODE_ENV !== "production" ? (

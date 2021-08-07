@@ -23,7 +23,7 @@ import { NodeBotScoreAntenna } from "./NodeBotScoreAntenna";
 import { NODE_RADIUS } from "utils/constants";
 import { ScoreIncreasedPopupText } from "./ScoreIncreasedPopupText";
 
-const NODE_RADIUS_COLLISION_MULTIPLIER = 3;
+export const NODE_RADIUS_COLLISION_MULTIPLIER = 3;
 
 const nodeMaterial = new THREE.MeshPhysicalMaterial({
   emissive: "#0b152f",
