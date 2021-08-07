@@ -22,6 +22,8 @@ import { useSpring, animated } from "@react-spring/three";
 import { NodeBotScoreAntenna } from "./NodeBotScoreAntenna";
 import { NODE_RADIUS } from "utils/constants";
 import { ScoreIncreasedPopupText } from "./ScoreIncreasedPopupText";
+import { useState } from "react";
+import { useMount } from "utils/utils";
 
 export const NODE_RADIUS_COLLISION_MULTIPLIER = 3;
 
@@ -117,8 +119,13 @@ export const Node = ({
 
   useGravity(api, vec);
 
+  const [mounted, setMounted] = useState(false);
+  useMount(() => {
+    setMounted(true);
+  });
+
   // hide nodes when the game ends
-  const hide = useAreBotsLinedUp() && !node.user.botScore;
+  const hide = (useAreBotsLinedUp() && !node.user.botScore) || !mounted;
 
   const springProps = useSpring({
     scale: hide
