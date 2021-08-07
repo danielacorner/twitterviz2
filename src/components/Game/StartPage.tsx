@@ -5,7 +5,7 @@ import { Canvas } from "@react-three/fiber";
 import { BotScoreLegend } from "components/Game/GameStateHUD/BotScoreLegend";
 import { DeviceOrientationOrbitControls } from "./DeviceOrientationOrbitControls";
 import { OrbitControls } from "@react-three/drei";
-import { popupBaseCss } from "./popupBaseCss";
+import { POPUP_BASE_CSS } from "./popupBaseCss";
 import { getIsMobileDevice } from "./Game";
 import { useState } from "react";
 import { ChevronLeft } from "@material-ui/icons";
@@ -26,25 +26,24 @@ export function StartPage({
           <>
             <p>Twitter is known to be full of bots.</p>
             <p style={{ marginTop: 16 }}>
-              In 2020,{" "}
+              In 2020 for example,{" "}
               <a
                 href="https://www.npr.org/sections/coronavirus-live-updates/2020/05/20/859814085/researchers-nearly-half-of-accounts-tweeting-about-coronavirus-are-likely-bots"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 50% of all accounts spreading messages about the coronavirus
-                pandemic
-              </a>{" "}
-              and{" "}
+                pandemic were bots
+              </a>
+              , and{" "}
               <a
                 href="https://www.marketwatch.com/story/about-half-of-the-twitter-accounts-calling-for-reopening-america-are-probably-bots-report-2020-05-26"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 82% of the top 50 most influential coronavirus/COVID-19
-                retweeters
-              </a>{" "}
-              were bots.
+                retweeters were bots.
+              </a>
             </p>
             <p style={{ marginTop: 16 }}>There are different kinds of bot:</p>
             <div style={{ margin: "auto", width: "fit-content" }}>
@@ -75,24 +74,36 @@ export function StartPage({
         )}
         {step === 1 && (
           <>
-            <p>
-              I'll fetch 10 random twitter accounts from{" "}
-              <a
-                href="https://developer.twitter.com/en/docs/tutorials/consuming-streaming-data"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Twitter Stream
-              </a>
-            </p>
-            <p>You guess which ones are bots 🔍</p>
-            <p>
-              Then we'll get their "bot score" from{" "}
-              <a href="https://botometer.osome.iu.edu/">Botometer</a> and see
-              how well you did.
-            </p>
+            <ol>
+              <li>
+                <p>
+                  🕵️‍♀️ You'll see 10 random twitter accounts from{" "}
+                  <a
+                    href="https://developer.twitter.com/en/docs/tutorials/consuming-streaming-data"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ fontWeight: "bold" }}
+                  >
+                    Twitter Stream
+                  </a>
+                </p>
+              </li>
+              <li>
+                <p>🎯 Guess which ones are bots</p>
+              </li>
+              <li>
+                <p>
+                  🤖 Then we'll get their{" "}
+                  <span style={{ fontWeight: "bold" }}>
+                    <a href="https://botometer.osome.iu.edu/">Botometer</a> bot
+                    score
+                  </span>{" "}
+                  and see how well you did.
+                </p>
+              </li>
+            </ol>
             <div style={{ fontSize: 14, marginTop: 12 }}>
-              ( 🤖 higher bot score = more points ⭐ )
+              + bot score 🤖 = + points ⭐
             </div>
             <div
               style={{
@@ -146,7 +157,7 @@ const StartPageStyles = styled.div`
   .content {
     position: relative;
     margin-top: 120px;
-    ${popupBaseCss}
+    ${POPUP_BASE_CSS}
     max-width: calc(100vw - 32px);
     @media (min-width: 768px) {
       max-width: 600px;
@@ -155,6 +166,9 @@ const StartPageStyles = styled.div`
   p {
     text-align: center;
     margin-bottom: 0.5em;
+  }
+  ol p {
+    text-align: left;
   }
   h3 {
     margin-bottom: 1em;
@@ -173,9 +187,9 @@ const StartPageStyles = styled.div`
   }
   a {
     text-decoration: none;
-    color: cornflowerblue !important;
+    color: #91b6ff !important;
     &:visited {
-      color: cornflowerblue !important;
+      color: #91b6ff !important;
     }
   }
 `;

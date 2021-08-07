@@ -49,7 +49,7 @@ const AppStyles = styled.div`
     box-sizing: border-box;
   }
   a {
-    color: cornflowerblue;
+    color: #91b6ff;
     &:visited {
       color: hsl(250, 50%, 60%);
     }
