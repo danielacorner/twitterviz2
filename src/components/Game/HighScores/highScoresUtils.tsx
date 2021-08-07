@@ -28,11 +28,8 @@ export function fetchAllHighScoresSorted(): Promise<HighScoreType[]> {
       )
     )
     .then((ret) => {
-      console.log("🌟🚨 ~ .then ~ ret", ret);
       const scores = (ret as any).data?.map((d) => d.data) || [];
-      console.log("🌟🚨 ~ .then ~ scores", scores);
       const highScoresSorted = [...scores].sort(sortDescendingByScore);
-      console.log("🌟🚨 ~ .then ~ highScoresSorted", highScoresSorted);
       return highScoresSorted as HighScoreType[];
     })
     .catch((err) => {
@@ -50,7 +47,6 @@ export function saveHighScore(
   })
     .then((response) => response.json())
     .then((ret) => {
-      console.log("🌟🚨 ~ saveHighScore ~ ret", ret);
       return ret;
     })
     .catch((err) => {

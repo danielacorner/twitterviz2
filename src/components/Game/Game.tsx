@@ -56,9 +56,7 @@ function GameContent() {
   function resetScoreAndFetchNewTweets() {
     setLoading(true);
     deleteAllTweets().then((ret) => {
-      console.log("🌟🚨 ~ deleteAllTweets ", ret);
       fetchNewTweets().then((newTweets) => {
-        console.log("🌟🚨 ~ fetchNewTweets ~ newTweets", newTweets);
         if (!newTweets) {
           return;
         }

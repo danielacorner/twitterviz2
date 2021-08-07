@@ -40,7 +40,7 @@ export function SubmitHighScoreForm({
       setSubmittedName(name);
     });
   }
-  function setIsSSSSSSS() {
+  function setIsSubmitAnimatingTest() {
     setIsSubmitted(true);
     setLoading(true);
     setTimeout(() => {
@@ -103,7 +103,7 @@ export function SubmitHighScoreForm({
             label="name"
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                setIsSSSSSSS();
+                saveHighScoreAndUpdate();
               }
             }}
           />
@@ -112,7 +112,7 @@ export function SubmitHighScoreForm({
           className="btnSubmit"
           size="small"
           disabled={name === "" || isLoading}
-          onClick={setIsSSSSSSS}
+          onClick={saveHighScoreAndUpdate}
           style={springButtonOnSubmit}
         >
           <Check />
@@ -175,15 +175,9 @@ function getHighScoresFromNewHighScore(
   highScores: any
 ) {
   const newHighScoreWithName = { ...newHighScore, name };
-  console.log(
-    "🌟🚨 ~ saveHighScore ~ newHighScoreWithName",
-    newHighScoreWithName
-  );
-  console.log("🌟🚨 ~ saveHighScore ~ highScores", highScores);
   const newHighScores = highScores
     .map((d) => (d.isNewHighScore ? newHighScoreWithName : d))
     .sort(sortDescendingByScore)
     .slice(0, NUM_SCORES);
-  console.log("🌟🚨 ~ saveHighScore ~ newHighScores", newHighScores);
   return newHighScores;
 }

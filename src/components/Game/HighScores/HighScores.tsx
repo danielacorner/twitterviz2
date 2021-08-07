@@ -59,10 +59,6 @@ export function HighScores() {
           const topNminus1HighScores = highScoresDeduped
             .slice(0, NUM_SCORES - 1)
             .filter(Boolean);
-          console.log(
-            "🌟🚨 ~ fetchAllHighScoresSorted ~ topNminus1HighScores",
-            topNminus1HighScores
-          );
 
           const highScoresWithNewHighScore = [
             ...topNminus1HighScores,

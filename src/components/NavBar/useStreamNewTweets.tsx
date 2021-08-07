@@ -103,10 +103,6 @@ export function useStreamNewTweets() {
       0,
       INITIAL_NUM_TWEETS
     );
-    console.log(
-      "🌟🚨 ~ fetchOldTweetsWithBotScoresFromDB ~ randomDedupedTweets",
-      randomDedupedTweets
-    );
 
     setTweets(randomDedupedTweets);
 

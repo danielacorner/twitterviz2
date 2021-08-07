@@ -57,7 +57,6 @@ export function useFetchTweetsOnMount() {
   const [userId, setUserId] = useAtom(appUserIdAtom);
   // fetch tweets from DB on mount
   useMount(() => {
-    console.log("🌟🚨 ~ useMount ~ userId", userId);
     if (userId === "") {
       // create userid and empty nodes in db
       const newUserId = (Math.random() * 10 ** 16).toFixed();
@@ -68,7 +67,6 @@ export function useFetchTweetsOnMount() {
       });
     } else {
       getTweetsFromDb().then((newTweets) => {
-        console.log("🌟🚨 ~ getTweetsFromDb ~ newTweets", newTweets);
         setTweets(newTweets as Tweet[]);
         lastTweetsFromDb.current = newTweets as Tweet[];
       });
@@ -163,7 +161,6 @@ export function useReplaceNodesInDbForUser() {
         })
       )
       .then((ret) => {
-        console.log("🌟🚨 ~ .then ~ ret", ret);
         return ret;
       })
       .catch((err) => {
