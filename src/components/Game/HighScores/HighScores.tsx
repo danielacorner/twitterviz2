@@ -208,7 +208,9 @@ function AnimatedLetter({ progress, letter, idx }) {
       mass: 0.7,
     },
     onRest: () => {
-      setSprung(false);
+      setTimeout(() => {
+        setSprung(false);
+      }, 200);
     },
   });
   return (
@@ -226,18 +228,18 @@ function AnimatedTadah({ idx }) {
     }, 30);
   });
   const spring = useSpring({
-    transform: `scale(${sprung ? 2 : 1}) rotate(${
-      sprung ? -6 + 5 : 0
-    }deg) translate(${sprung ? idx * 2 : 0}px,${sprung ? -4 : 0}px)`,
-    transformOrigin: "left",
+    transform: `translate(${sprung ? idx * 5 : 0}px,${
+      sprung ? -20 : 0
+    }px) scale(${sprung ? 3 : 1}) rotate(${sprung ? 720 : 0}deg)`,
+    transformOrigin: "center",
     letterSpacing: sprung ? 1 : 0,
-    color: sprung ? `#ecdd56` : "#ffffff",
     marginLeft: 6,
     config: {
       tension: 340,
-      friction: 6,
-      mass: 0.7,
+      friction: 8,
+      mass: 0.8,
     },
+    delay: 100,
     onRest: () => {
       setSprung(false);
     },
