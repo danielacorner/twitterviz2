@@ -1,4 +1,9 @@
-import { Environment, OrbitControls, useAspect } from "@react-three/drei";
+import {
+  Environment,
+  OrbitControls,
+  useAspect,
+  useDetectGPU,
+} from "@react-three/drei";
 import { useGraphWithUsersAndLinks } from "../useGraphWithUsersAndLinks";
 import { Debug, Physics } from "@react-three/cannon";
 import { Node, NODE_RADIUS_COLLISION_MULTIPLIER } from "./Node/Node";
@@ -35,6 +40,8 @@ export function Scene() {
   });
   // lined up: hide if they don't have a bot score
   const { viewport } = useThree();
+  const gpuInfo = useDetectGPU();
+  console.log("🌟🚨 ~ Scene ~ gpuInfo", gpuInfo);
   return (
     <Suspense fallback={null}>
       {/* <ambientLight intensity={0.75} /> */}
@@ -44,7 +51,7 @@ export function Scene() {
         angle={0.2}
         color="blue"
       /> */}
-      <Stars count={8000} />
+      <Stars count={gpuInfo.tier > 2 ? 8000 : 4000} />
       {/* <Environment background={true} preset={"forest"} /> */}
       <mesh scale={[20, 20, 20]}>
         {/* <Sky

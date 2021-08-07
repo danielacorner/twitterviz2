@@ -10,6 +10,7 @@ import { Scene } from "./Scene/Scene";
 import { useSetTooltipNode } from "providers/store/useSelectors";
 import { CAMERA_POSITION } from "utils/constants";
 import { getIsTouchDevice } from "./getIsTouchDevice";
+import { Suspense } from "react";
 
 export const GraphStyles = styled.div`
   width: 100%;
@@ -35,24 +36,26 @@ function Graph3D() {
 
   return (
     <Graph3DStyles>
-      <Canvas
-        style={{ background: "none" }}
-        gl={{ alpha: true, stencil: false, depth: true, antialias: false }}
-        camera={{
-          position: CAMERA_POSITION.initial as any,
-          fov: 35,
-          near: 10,
-          far: 2000,
-        }}
-        onPointerMissed={(event) => {
-          if (event.type === "contextmenu") {
-            handleRightClick(event);
-          }
-          setTooltipNode(null);
-        }}
-      >
-        <Scene />
-      </Canvas>
+      <Suspense fallback={null}>
+        <Canvas
+          style={{ background: "none" }}
+          gl={{ alpha: true, stencil: false, depth: true, antialias: false }}
+          camera={{
+            position: CAMERA_POSITION.initial as any,
+            fov: 35,
+            near: 10,
+            far: 2000,
+          }}
+          onPointerMissed={(event) => {
+            if (event.type === "contextmenu") {
+              handleRightClick(event);
+            }
+            setTooltipNode(null);
+          }}
+        >
+          <Scene />
+        </Canvas>
+      </Suspense>
     </Graph3DStyles>
   );
 }

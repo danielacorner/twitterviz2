@@ -1,4 +1,4 @@
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 // import { IconButton } from "@material-ui/core";
 
 import styled from "styled-components/macro";
@@ -18,7 +18,7 @@ export default function ThemeManager({ children }: { children: any }) {
   // : `hsl(270,50%,60%)`;
   const textPrimaryColor = isDarkMode ? `hsl(0,0%,100%)` : `hsl(0,0%,0%)`;
   const textSecondaryColor = isDarkMode ? `hsl(0,0%,60%)` : `hsl(0,0%,40%)`;
-  const darkTheme = createMuiTheme({
+  const darkTheme = createTheme({
     palette: {
       type: palletType,
       primary: {

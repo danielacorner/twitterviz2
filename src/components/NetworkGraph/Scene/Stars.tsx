@@ -4,7 +4,7 @@ import { useFrame } from "@react-three/fiber";
 
 // https://codesandbox.io/s/9y8vkjykyy?file=/src/index.js
 const WIDTH = 200;
-export function Stars({ count = 2000 }) {
+export function Stars({ count }) {
   let group = useRef(null as any);
   let spin = 0.1;
   const speed = 0.0001;
