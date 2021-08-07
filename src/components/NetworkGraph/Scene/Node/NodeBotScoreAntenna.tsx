@@ -57,7 +57,7 @@ export function NodeBotScoreAntenna({
   return (
     <mesh>
       {antennae.map(({ rotation, color, score, label }, idx) => (
-        <mesh key={color} rotation={rotation} scale={[1, 1, 1]}>
+        <mesh key={color} rotation={rotation as any} scale={[1, 1, 1]}>
           <Antenna
             {...{
               color,
@@ -110,7 +110,7 @@ function Antenna({
       {/* stick */}
       <animated.mesh
         position={[0, NODE_RADIUS + stickHeightActual / 2, 0]}
-        scale={springProps.stickScale}
+        scale={springProps.stickScale as any}
       >
         <cylinderBufferGeometry args={[0.2, 0.2, STICK_HEIGHT, 26, 1]} />
         <meshPhysicalMaterial
@@ -122,7 +122,7 @@ function Antenna({
         />
       </animated.mesh>
       {/* ball */}
-      <animated.mesh position={springProps.spherePosition}>
+      <animated.mesh position={springProps.spherePosition as any}>
         <Billboard {...({} as any)} args={[0, 0]}>
           <Text
             {...({} as any)}

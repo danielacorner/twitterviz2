@@ -38,7 +38,10 @@ export function LoadingIndicator() {
   return (
     <LoadingIndicatorStyles>
       <Canvas style={{ width: "100%", height: 180 }}>
-        <animated.mesh {...springProps} rotation={springSpin.rotation}>
+        <animated.mesh
+          {...(springProps as any)}
+          rotation={springSpin.rotation as any}
+        >
           <icosahedronBufferGeometry args={[1, 0]} />
           <meshBasicMaterial wireframe={true} color={"#5a8694"} />
         </animated.mesh>

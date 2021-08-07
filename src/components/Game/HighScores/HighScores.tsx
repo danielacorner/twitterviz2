@@ -253,7 +253,7 @@ const HighScoresStyles = styled.div`
     margin-bottom: 1em;
     font-size: 28px;
   }
-  width: 600px;
+  width: 300px;
   display: grid;
   justify-content: center;
   justify-items: center;
