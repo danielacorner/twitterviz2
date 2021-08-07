@@ -23,6 +23,8 @@ import { NodeBotScoreAntenna } from "./NodeBotScoreAntenna";
 import { NODE_RADIUS } from "utils/constants";
 import { ScoreIncreasedPopupText } from "./ScoreIncreasedPopupText";
 
+const NODE_RADIUS_COLLISION_MULTIPLIER = 3;
+
 const nodeMaterial = new THREE.MeshPhysicalMaterial({
   emissive: "#0b152f",
   metalness: 0.97,
@@ -110,7 +112,7 @@ export const Node = ({
     // position: getRandomPosition(-5 * RADIUS, 5 * RADIUS),
     // type: !paused ? "Dynamic" : "Static",
     // https://threejs.org/docs/scenes/geometry-browser.html#IcosahedronBufferGeometry
-    args: NODE_RADIUS * 5,
+    args: NODE_RADIUS * NODE_RADIUS_COLLISION_MULTIPLIER,
   }));
 
   useGravity(api, vec);

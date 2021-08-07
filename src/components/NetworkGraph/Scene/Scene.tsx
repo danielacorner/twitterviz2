@@ -1,6 +1,6 @@
 import { OrbitControls } from "@react-three/drei";
 import { useGraphWithUsersAndLinks } from "../useGraphWithUsersAndLinks";
-import { Physics } from "@react-three/cannon";
+import { Debug, Physics } from "@react-three/cannon";
 import { Node } from "./Node/Node";
 import * as THREE from "three";
 import { uniqBy } from "lodash";
@@ -15,6 +15,7 @@ import { Sky /* Stars */ } from "@react-three/drei";
 import { Stars } from "./Stars";
 import { gameStateAtom, GameStepsEnum } from "providers/store/store";
 import { useAtom } from "jotai";
+import { Collisions } from "./Collisions";
 
 export function Scene() {
   const graphWithUsers = useGraphWithUsersAndLinks();
@@ -58,23 +59,34 @@ export function Scene() {
       <directionalLight position={[0, 5, -4]} intensity={4} />
       <OrbitControls {...({} as any)} />
       <Physics {...{ gravity: [0, 0, 0] }}>
-        {graphWithUsers.nodes.map((node, idx) => {
-          const isEven = idx % 2 === 0;
+        <DebugInDev>
+          <Collisions />
+          {graphWithUsers.nodes.map((node, idx) => {
+            const isEven = idx % 2 === 0;
 
-          return (
-            <Node
-              key={node.id_str}
-              node={node}
-              startPosition={vertices[isEven ? idx : vertices.length - idx - 1]}
-            />
-          );
-        })}
+            return (
+              <Node
+                key={node.id_str}
+                node={node}
+                startPosition={
+                  vertices[isEven ? idx : vertices.length - idx - 1]
+                }
+              />
+            );
+          })}
+        </DebugInDev>
       </Physics>
       <BotScoreLegend />
     </Suspense>
   );
 }
-
+function DebugInDev({ children }) {
+  return process.env.NODE_ENV !== "production" ? (
+    <Debug>{children}</Debug>
+  ) : (
+    <>{children}</>
+  );
+}
 const getVertices = (numNodes) => {
   const tooBig = numNodes > 92;
   const y = new THREE.IcosahedronGeometry(tooBig ? 65 : 60, tooBig ? 3 : 2);

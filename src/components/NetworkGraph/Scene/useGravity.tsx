@@ -4,7 +4,7 @@ import { useFrame } from "@react-three/fiber";
 import { useConfig } from "providers/store/useConfig";
 
 /** within this distance, nodes slow down to 0 */
-const MAX_DISTANCE_FROM_CENTER = 30;
+const MAX_DISTANCE_FROM_CENTER = 16;
 /** apply force toward center
     copied from https://codesandbox.io/s/zxpv7?file=/src/App.js:1195-1404 */
 export function useGravity(api: PublicApi, vec: any) {
@@ -38,7 +38,7 @@ export function useGravity(api: PublicApi, vec: any) {
 
       // if we're near the center, slow down
       if (distanceFromCenter < MAX_DISTANCE_FROM_CENTER) {
-        const [vx, vy, vz] = velocity.current.map((d) => d * 0.9);
+        const [vx, vy, vz] = velocity.current.map((d) => d * 0.95);
         api.velocity.set(vx, vy, vz);
       }
     }
