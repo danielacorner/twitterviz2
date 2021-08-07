@@ -40,7 +40,7 @@ export function SubmitHighScoreForm({
       setSubmittedName(name);
     });
   }
-  function setIsSubmitAnimatingTest() {
+  /* function setIsSubmitAnimatingTest() {
     setIsSubmitted(true);
     setLoading(true);
     setTimeout(() => {
@@ -54,7 +54,7 @@ export function SubmitHighScoreForm({
       setLoading(false);
       setSubmittedName(name);
     }, 1000);
-  }
+  } */
 
   const springButtonOnSubmit = useSpring({
     transform: `rotate(${isSubmitted ? 0.3 : 0}turn) scale(${
