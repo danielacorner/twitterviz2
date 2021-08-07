@@ -38,7 +38,7 @@ export function BotScorePopupNode() {
             zIndex: 999999999999999,
           }}
         >
-          <animated.mesh scale={springProps.scale} position={[0, 0, -2]}>
+          <animated.mesh scale={springProps.scale as any} position={[0, 0, -2]}>
             {nodeDisplay ? (
               <>
                 <NodeContent
@@ -92,7 +92,7 @@ function ScanningAnimation() {
         />
       </mesh>
       <Suspense fallback="null">
-        <Environment preset="forest" />
+        <Environment path="/cubemap/" files={"spacehdr.hdr"} />
       </Suspense>
       {/* Background plane w. scanning effect?  */}
 

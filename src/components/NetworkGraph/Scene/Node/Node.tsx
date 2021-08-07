@@ -30,25 +30,33 @@ export const NODE_RADIUS_COLLISION_MULTIPLIER = 3;
 const nodeMaterial = new THREE.MeshPhysicalMaterial({
   emissive: "#0b152f",
   metalness: 0.97,
-  roughness: 0.15,
+  transmission: 1,
+  roughness: 0,
+  envMapIntensity: 4,
   // color: "#316c83",
 });
 const rightClickNodeMaterial = new THREE.MeshPhysicalMaterial({
-  emissive: "#471111",
+  // emissive: "#471111",
   metalness: -1,
-  roughness: 0.18,
+  transmission: 1,
+  roughness: 0,
+  envMapIntensity: 4,
   // color: "#be5626",
 });
 const pointerOverMaterial = new THREE.MeshPhysicalMaterial({
-  emissive: "#002741",
+  // emissive: "#002741",
   metalness: 0.94,
   roughness: 0.1,
+  transmission: 1,
+  envMapIntensity: 4,
   // color: "#3ad64f",
 });
 const tooltipNodeMaterial = new THREE.MeshPhysicalMaterial({
-  emissive: "#002741",
+  // emissive: "#002741",
   metalness: 1,
   roughness: 0.2,
+  transmission: 1,
+  envMapIntensity: 4,
   // color: "#26be3a",
 });
 const nodeGeometry = new THREE.SphereGeometry(NODE_RADIUS, 28, 28);
@@ -139,7 +147,7 @@ export const Node = ({
   return (
     <animated.mesh
       ref={ref}
-      scale={springProps.scale}
+      scale={springProps.scale as any}
       {...{
         onPointerEnter,
         onPointerLeave,

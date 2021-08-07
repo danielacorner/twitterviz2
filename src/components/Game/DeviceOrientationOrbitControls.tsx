@@ -439,9 +439,9 @@ class OrbitControls extends EventDispatcher {
 
       this.target.copy(this.target0);
       this.object.position.copy(this.position0);
-      this.object.zoom = this.zoom0;
+      (this.object as any).zoom = this.zoom0;
 
-      this.object.updateProjectionMatrix();
+      (this.object as any).updateProjectionMatrix();
       (this as any).dispatchEvent(changeEvent);
 
       this.update();

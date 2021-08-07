@@ -3,7 +3,7 @@ import NodeTooltip from "./NodeTooltip";
 import styled from "styled-components/macro";
 // https://www.npmjs.com/package/d3-force-cluster
 import GraphRightClickMenu, {
-	useHandleOpenRightClickMenu,
+  useHandleOpenRightClickMenu,
 } from "./GraphRightClickMenu";
 import { Canvas } from "@react-three/fiber";
 import { Scene } from "./Scene/Scene";
@@ -12,54 +12,54 @@ import { CAMERA_POSITION } from "utils/constants";
 import { getIsTouchDevice } from "./getIsTouchDevice";
 
 export const GraphStyles = styled.div`
-	width: 100%;
+  width: 100%;
 `;
 
 const NetworkGraph = () => {
-	const isTouchDevice = getIsTouchDevice();
+  const isTouchDevice = getIsTouchDevice();
 
-	return (
-		<GraphStyles>
-			<Graph3D />
-			{!isTouchDevice && <NodeTooltip />}
-			{process.env.NODE_ENV !== "production" && <GraphRightClickMenu />}
-		</GraphStyles>
-	);
+  return (
+    <GraphStyles>
+      <Graph3D />
+      {!isTouchDevice && <NodeTooltip />}
+      {process.env.NODE_ENV !== "production" && <GraphRightClickMenu />}
+    </GraphStyles>
+  );
 };
 
 // {...({} as any)} = typescript is busted ?
 
 function Graph3D() {
-	const setTooltipNode = useSetTooltipNode();
-	const handleRightClick = useHandleOpenRightClickMenu(null);
+  const setTooltipNode = useSetTooltipNode();
+  const handleRightClick = useHandleOpenRightClickMenu(null);
 
-	return (
-		<Graph3DStyles>
-			<Canvas
-				style={{ background: "none" }}
-				gl={{ alpha: true, stencil: false, depth: true, antialias: false }}
-				camera={{
-					position: CAMERA_POSITION.initial,
-					fov: 35,
-					near: 10,
-					far: 500,
-				}}
-				onPointerMissed={(event) => {
-					if (event.type === "contextmenu") {
-						handleRightClick(event);
-					}
-					setTooltipNode(null);
-				}}
-			>
-				<Scene />
-			</Canvas>
-		</Graph3DStyles>
-	);
+  return (
+    <Graph3DStyles>
+      <Canvas
+        style={{ background: "none" }}
+        gl={{ alpha: true, stencil: false, depth: true, antialias: false }}
+        camera={{
+          position: CAMERA_POSITION.initial as any,
+          fov: 35,
+          near: 10,
+          far: 2000,
+        }}
+        onPointerMissed={(event) => {
+          if (event.type === "contextmenu") {
+            handleRightClick(event);
+          }
+          setTooltipNode(null);
+        }}
+      >
+        <Scene />
+      </Canvas>
+    </Graph3DStyles>
+  );
 }
 
 const Graph3DStyles = styled.div`
-	position: fixed;
-	inset: 0px;
+  position: fixed;
+  inset: 0px;
 `;
 
 export default NetworkGraph;

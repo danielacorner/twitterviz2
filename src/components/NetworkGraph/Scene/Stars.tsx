@@ -3,7 +3,7 @@ import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 
 // https://codesandbox.io/s/9y8vkjykyy?file=/src/index.js
-
+const WIDTH = 200;
 export function Stars({ count = 2000 }) {
   let group = useRef(null as any);
   let spin = 0.1;
@@ -21,7 +21,10 @@ export function Stars({ count = 2000 }) {
     const nMat = new THREE.MeshPhysicalMaterial({
       color: new THREE.Color("cornflowerblue"),
       metalness: 0.9,
-      roughness: 0.2,
+      transmission: 1,
+      roughness: 0,
+      envMapIntensity: 4,
+      // transparent:true,opacity
     });
     // const nMat = new THREE.MeshBasicMaterial({
     //   color: new THREE.Color("cornflowerblue"),
@@ -29,9 +32,9 @@ export function Stars({ count = 2000 }) {
     const nCoords = new Array(count)
       .fill(null)
       .map((i) => [
-        Math.random() * 800 - 400,
-        Math.random() * 800 - 400,
-        Math.random() * 800 - 400,
+        Math.random() * 2 * WIDTH - WIDTH,
+        Math.random() * 2 * WIDTH - WIDTH,
+        Math.random() * 2 * WIDTH - WIDTH,
       ]);
     return [nGeo, nMat, nCoords];
   }, [count]);

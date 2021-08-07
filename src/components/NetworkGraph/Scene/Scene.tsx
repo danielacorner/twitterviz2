@@ -1,25 +1,22 @@
-import { OrbitControls } from "@react-three/drei";
+import { Environment, OrbitControls, useAspect } from "@react-three/drei";
 import { useGraphWithUsersAndLinks } from "../useGraphWithUsersAndLinks";
 import { Debug, Physics } from "@react-three/cannon";
 import { Node, NODE_RADIUS_COLLISION_MULTIPLIER } from "./Node/Node";
-import * as THREE from "three";
-import { uniqBy } from "lodash";
 import { BotScoreLegend } from "../../Game/GameStateHUD/BotScoreLegend";
 import { useThree } from "@react-three/fiber";
-import { Environment } from "@react-three/drei";
 import { CAMERA_POSITION, NODE_RADIUS } from "utils/constants";
 import { useSpring } from "react-spring";
 import { Suspense, useState } from "react";
 import { useMount } from "utils/utils";
-import { Sky /* Stars */ } from "@react-three/drei";
 import { Stars } from "./Stars";
 import { gameStateAtom, GameStepsEnum } from "providers/store/store";
 import { useAtom } from "jotai";
 import { Collisions } from "./Collisions";
-
+import { HighScores } from "components/Game/HighScores/HighScores";
+const NODE_WIDTH = NODE_RADIUS * NODE_RADIUS_COLLISION_MULTIPLIER;
 export function Scene() {
   const graphWithUsers = useGraphWithUsersAndLinks();
-  const vertices = getVertices(graphWithUsers.nodes.length);
+  // const vertices = getVertices(graphWithUsers.nodes.length);
   const { camera } = useThree();
   const [gameState] = useAtom(gameStateAtom);
   const isGameOver = gameState.step === GameStepsEnum.gameOver;
@@ -48,14 +45,14 @@ export function Scene() {
         color="blue"
       />
       <Stars count={1000} />
-      <Environment background={true} path={"/"} preset={"forest"} />
+      {/* <Environment background={true} preset={"forest"} /> */}
       <mesh scale={[20, 20, 20]}>
-        <Sky
+        {/* <Sky
           rayleigh={7}
           mieCoefficient={0.1}
           mieDirectionalG={1}
           turbidity={0.2}
-        />
+        /> */}
       </mesh>
       <directionalLight position={[0, 5, -4]} intensity={4} />
       <OrbitControls {...({} as any)} />
@@ -68,20 +65,18 @@ export function Scene() {
           {graphWithUsers.nodes.map((node, idx) => {
             const isEven = idx % 2 === 0;
             const width = viewport.width / 8;
+
+            const x = randBetween(-1, 1) * width;
+            const z = (randBetween(-1, 1) * viewport.width) / 8;
+            const y =
+              randBetween(-1, 1) * NODE_WIDTH * 1.5 +
+              (isEven ? 1 : -1) * width * 1.4;
             return (
               <Node
                 key={node.id_str}
                 node={node}
                 startPosition={
-                  [
-                    randBetween(-1, 1) * width,
-                    (isEven ? 1 : -1) * width * 1.4 +
-                      randBetween(-1, 1) *
-                        NODE_RADIUS *
-                        NODE_RADIUS_COLLISION_MULTIPLIER *
-                        1.5,
-                    (randBetween(-1, 1) * viewport.width) / 8,
-                  ]
+                  [x, y, z]
                   // vertices[isEven ? idx : vertices.length - idx - 1]
                 }
               />
@@ -89,10 +84,34 @@ export function Scene() {
           })}
         </DebugInDev>
       </Physics>
+      <HighScores />
+
+      <Background position={[0, 0, -viewport.width * 3]} />
       <BotScoreLegend />
     </Suspense>
   );
 }
+
+const Background = (props) => {
+  const scale = useAspect(5000, 3800, 20);
+  console.log("🌟🚨 ~ Background ~ scale", scale);
+  return (
+    <>
+      {/* <mesh scale={scale} {...props}>
+        <planeGeometry />
+        <meshBasicMaterial map={useTexture("/bg.jpg")} />
+      </mesh> */}
+      <Environment
+        background={true}
+        // preset={"night"}
+        path="/cubemap/"
+        files={"spacehdr.hdr"}
+        // files={["px.jpg", "nx.jpg", "py.jpg", "ny.jpg", "pz.jpg", "nz.jpg"]}
+      />
+    </>
+  );
+};
+
 function randBetween(min, max) {
   return Math.random() * (max - min) + min;
 }
@@ -103,22 +122,22 @@ function DebugInDev({ children }) {
     <>{children}</>
   );
 }
-const getVertices = (numNodes) => {
-  const tooBig = numNodes > 92;
-  const y = new THREE.IcosahedronGeometry(tooBig ? 65 : 60, tooBig ? 3 : 2);
-  // Get float array of all coordinates of vertices
-  const float32array = y.attributes.position.array;
-  // run loop,  each step of loop need increment by 3, because each vertex has 3 coordinates, X, Y and Z
-  let vertices: [number, number, number][] = [];
-  for (let i = 0; i < float32array.length; i += 3) {
-    // inside the loop you can get coordinates
-    const x = float32array[i];
-    const y = float32array[i + 1];
-    const z = float32array[i + 2];
-    vertices.push([x, y, z]);
-  }
-  return uniqBy(vertices, JSON.stringify);
-};
+// const getVertices = (numNodes) => {
+//   const tooBig = numNodes > 92;
+//   const y = new THREE.IcosahedronGeometry(tooBig ? 65 : 60, tooBig ? 3 : 2);
+//   // Get float array of all coordinates of vertices
+//   const float32array = y.attributes.position.array;
+//   // run loop,  each step of loop need increment by 3, because each vertex has 3 coordinates, X, Y and Z
+//   let vertices: [number, number, number][] = [];
+//   for (let i = 0; i < float32array.length; i += 3) {
+//     // inside the loop you can get coordinates
+//     const x = float32array[i];
+//     const y = float32array[i + 1];
+//     const z = float32array[i + 2];
+//     vertices.push([x, y, z]);
+//   }
+//   return uniqBy(vertices, JSON.stringify);
+// };
 
 function useIsMounted() {
   const [isMounted, setIsMounted] = useState(false);

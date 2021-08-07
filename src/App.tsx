@@ -11,7 +11,6 @@ import { RowDiv } from "components/common/styledComponents";
 import NetworkGraph from "components/NetworkGraph/NetworkGraph";
 import { RightDrawer } from "./components/RightDrawer/RightDrawer";
 import { Game } from "./components/Game/Game";
-import { HighScores } from "components/Game/HighScores/HighScores";
 import { LoadingIndicator } from "./LoadingIndicator";
 import { BotScorePopupNode } from "./components/NetworkGraph/Scene/Node/BotScorePopupNode";
 // import { useDeleteAllTweets } from "components/common/useDeleteAllTweets";
@@ -33,7 +32,6 @@ function App() {
       <RightDrawer />
       <Game />
       <LoadingIndicator />
-      <HighScores />
       <BotScorePopupNode />
     </AppStyles>
   );

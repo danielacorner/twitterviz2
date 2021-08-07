@@ -38,7 +38,7 @@ export function useGravity(api: PublicApi, vec: any) {
 
       // if we're near the center, slow down
       if (distanceFromCenter < MAX_DISTANCE_FROM_CENTER) {
-        const [vx, vy, vz] = velocity.current.map((d) => d * 0.95);
+        const [vx, vy, vz] = velocity.current.map((d) => d * 0.94);
         api.velocity.set(vx, vy, vz);
       }
     }

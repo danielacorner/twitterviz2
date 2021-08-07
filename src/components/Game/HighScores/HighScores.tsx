@@ -19,7 +19,10 @@ import { uniqBy } from "lodash";
 import { sortDescendingByScore } from "./sortDescendingByScore";
 import { useSpring, animated } from "react-spring";
 import { useMount } from "utils/utils";
+import { Html } from "@react-three/drei";
+import { useControls } from "leva";
 
+const DIV_WIDTH = 280;
 export function HighScores() {
   const [gameState] = useAtom(gameStateAtom);
   const [userScore] = useAtom(scoreAtom);
@@ -75,42 +78,44 @@ export function HighScores() {
   const deleteAllHighScores = useDeleteAllHighScores();
 
   const [submittedName, setSubmittedName] = useState("");
-
+  const { x, y, z, scale } = useControls({ x: 0, y: 0, z: 0, scale: 10 });
   return !isGameOver ? null : (
-    <HighScoresStyles>
-      <animated.div className="content">
-        <h1>🌟 High Scores 🌟</h1>
-        <div className="highScores">
-          {highScores.map(({ name, score, isNewHighScore }, idx) => {
-            const wasJustSubmitted = name === submittedName;
-            return (
-              <HighScore
-                {...{
-                  name,
-                  idx,
-                  isNewHighScore,
-                  wasJustSubmitted,
-                  isSubmitFormOpen,
-                  highScores,
-                  setHighScores,
-                  setSubmittedName,
-                  setIsSubmitFormOpen,
-                  score,
-                }}
-              />
-            );
-          })}
-        </div>
-      </animated.div>
-      {process.env.NODE_ENV !== "production" && (
-        <IconButton
-          style={{ position: "fixed", bottom: 0, right: 0 }}
-          onClick={deleteAllHighScores}
-        >
-          <Restore />
-        </IconButton>
-      )}
-    </HighScoresStyles>
+    <Html transform={true} position={[x, y, z]} scale={[scale, scale, scale]}>
+      <HighScoresStyles>
+        <animated.div className="content">
+          <h1>🌟 High Scores 🌟</h1>
+          <div className="highScores">
+            {highScores.map(({ name, score, isNewHighScore }, idx) => {
+              const wasJustSubmitted = name === submittedName;
+              return (
+                <HighScore
+                  {...{
+                    name,
+                    idx,
+                    isNewHighScore,
+                    wasJustSubmitted,
+                    isSubmitFormOpen,
+                    highScores,
+                    setHighScores,
+                    setSubmittedName,
+                    setIsSubmitFormOpen,
+                    score,
+                  }}
+                />
+              );
+            })}
+          </div>
+        </animated.div>
+        {process.env.NODE_ENV !== "production" && (
+          <IconButton
+            style={{ position: "absolute", bottom: 0, right: 0 }}
+            onClick={deleteAllHighScores}
+          >
+            <Restore />
+          </IconButton>
+        )}
+      </HighScoresStyles>
+    </Html>
   );
 }
 
@@ -246,12 +251,18 @@ const HighScoresStyles = styled.div`
   }
   h1 {
     margin-bottom: 1em;
+    font-size: 28px;
   }
-  position: fixed;
-  inset: 0;
+  width: 600px;
+  display: grid;
+  justify-content: center;
+  justify-items: center;
+  align-items: start;
   .content {
-    margin: 128px auto auto;
-    width: fit-content;
+    position: relative;
+    margin: 0 auto;
+    /* width: fit-content; */
+    width: ${DIV_WIDTH}px;
     background: #7b7b7b6c;
     padding: 14px 14px 38px;
     border-radius: 16px;
