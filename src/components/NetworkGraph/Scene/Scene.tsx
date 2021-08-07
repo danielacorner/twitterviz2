@@ -37,13 +37,13 @@ export function Scene() {
   const { viewport } = useThree();
   return (
     <Suspense fallback={null}>
-      <ambientLight intensity={0.75} />
-      <spotLight
+      {/* <ambientLight intensity={0.75} /> */}
+      {/* <spotLight
         position={[20, 20, 25]}
         penumbra={1}
         angle={0.2}
         color="blue"
-      />
+      /> */}
       <Stars count={1000} />
       {/* <Environment background={true} preset={"forest"} /> */}
       <mesh scale={[20, 20, 20]}>

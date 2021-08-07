@@ -78,7 +78,7 @@ export function HighScores() {
   const deleteAllHighScores = useDeleteAllHighScores();
 
   const [submittedName, setSubmittedName] = useState("");
-  const { x, y, z, scale } = useControls({ x: 0, y: 0, z: 0, scale: 10 });
+  const { x, y, z, scale } = useControls({ x: 0, y: 0, z: 240, scale: 10 });
   return !isGameOver ? null : (
     <Html transform={true} position={[x, y, z]} scale={[scale, scale, scale]}>
       <HighScoresStyles>
@@ -241,7 +241,7 @@ function AnimatedTadah({ idx }) {
     },
   });
 
-  return <animated.div style={spring}>🎉</animated.div>;
+  return <animated.div style={spring}>⭐</animated.div>;
 }
 
 const HighScoresStyles = styled.div`
@@ -259,11 +259,10 @@ const HighScoresStyles = styled.div`
   justify-items: center;
   align-items: start;
   .content {
-    position: relative;
     margin: 0 auto;
     /* width: fit-content; */
     width: ${DIV_WIDTH}px;
-    background: #7b7b7b6c;
+    background: #92909096;
     padding: 14px 14px 38px;
     border-radius: 16px;
     box-shadow: 1px 2px 3px rgba(0, 0, 0, 50%);

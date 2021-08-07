@@ -92,7 +92,7 @@ export function SubmitHighScoreForm({
       <div className="submitHighScoreContent">
         <div className="newHighScore">
           <h4>New High Score!</h4>
-          <div>🎉</div>
+          <div className="tada">🎉</div>
         </div>
         <animated.div style={springFormRowOnSubmit} className="formRow">
           <TextField
@@ -130,6 +130,10 @@ const SubmitHighScoreFormStyles = styled.div<{ isSubmitted: boolean }>`
   }
   .submitHighScoreContent {
     position: relative;
+    gap: 10px;
+    margin: auto;
+    place-items: left;
+    place-content: center;
     .btnSubmit {
       position: absolute;
       right: -111px;
@@ -137,31 +141,34 @@ const SubmitHighScoreFormStyles = styled.div<{ isSubmitted: boolean }>`
       background: #72cea578;
     }
     .newHighScore {
-      display: grid;
-      placei-items: center;
-      font-size: 14px;
+      position: absolute;
+      bottom: 27px;
+      left: -24px;
+      display: flex;
+      place-items: baseline;
+      width: 210px;
+      gap: 6px;
       text-align: left;
-      line-height: 0;
-      width: 86px;
-      line-height: 1.3em;
-      letter-spacing: 1.6px;
-      text-align: center;
-      transform: translate(-99px, 48px) rotate(298deg);
+      /* line-height: 1.3em; */
+      letter-spacing: 1.4px;
+      /* transform: translate(20px, 78px); */
+      font-size: 9px;
+      opacity: 0.8;
+    }
+    .tada {
+      font-size: 16px;
     }
     .formRow {
       display: flex;
       gap: 12px;
       margin-bottom: -7px;
     }
-    font-size: 16px;
-    display: grid;
-    gap: 10px;
-    margin: auto;
-    place-items: left;
-    place-content: center;
   }
   .MuiInput-underline:before {
     border-bottom: 1px solid rgba(223, 218, 218, 0.582) !important;
+  }
+  .MuiFormLabel-root {
+    color: #fffb0095;
   }
 `;
 function getHighScoresFromNewHighScore(
