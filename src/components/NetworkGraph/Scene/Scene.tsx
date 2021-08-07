@@ -51,7 +51,7 @@ export function Scene() {
         angle={0.2}
         color="blue"
       /> */}
-      <Stars count={gpuInfo.tier > 2 ? 8000 : 1000} />
+      <Stars count={gpuInfo.tier > 2 ? 4000 : 2000} />
       {/* <Environment background={true} preset={"forest"} /> */}
       <mesh scale={[20, 20, 20]}>
         {/* <Sky
