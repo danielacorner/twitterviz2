@@ -20,7 +20,6 @@ import { sortDescendingByScore } from "./sortDescendingByScore";
 import { useSpring, animated } from "react-spring";
 import { useMount } from "utils/utils";
 import { Html } from "@react-three/drei";
-import { useControls } from "leva";
 
 const DIV_WIDTH = 280;
 export function HighScores() {
@@ -78,9 +77,8 @@ export function HighScores() {
   const deleteAllHighScores = useDeleteAllHighScores();
 
   const [submittedName, setSubmittedName] = useState("");
-  const { x, y, z, scale } = useControls({ x: 0, y: 0, z: 240, scale: 10 });
   return !isGameOver ? null : (
-    <Html transform={true} position={[x, y, z]} scale={[scale, scale, scale]}>
+    <Html transform={true} position={[0, 0, 240]} scale={[10, 10, 10]}>
       <HighScoresStyles>
         <animated.div className="content">
           <h1>🌟 High Scores 🌟</h1>
