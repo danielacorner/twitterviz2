@@ -24,6 +24,8 @@ export function Stars({ count = 2000 }) {
       transmission: 1,
       roughness: 0,
       envMapIntensity: 4,
+      transparent: true,
+      opacity: 0.4,
       // transparent:true,opacity
     });
     // const nMat = new THREE.MeshBasicMaterial({
@@ -41,9 +43,18 @@ export function Stars({ count = 2000 }) {
 
   return (
     <group ref={group}>
-      {coords.map(([p1, p2, p3], i) => (
-        <mesh key={i} geometry={geo} material={mat} position={[p1, p2, p3]} />
-      ))}
+      {coords.map(([p1, p2, p3], i) => {
+        const rand = Math.random() * 1.4;
+        return (
+          <mesh
+            key={i}
+            geometry={geo}
+            material={mat}
+            position={[p1, p2, p3]}
+            scale={[rand, rand, rand]}
+          />
+        );
+      })}
     </group>
   );
 }

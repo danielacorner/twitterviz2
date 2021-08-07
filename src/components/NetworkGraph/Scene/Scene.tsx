@@ -44,7 +44,7 @@ export function Scene() {
         angle={0.2}
         color="blue"
       /> */}
-      <Stars count={1000} />
+      <Stars count={8000} />
       {/* <Environment background={true} preset={"forest"} /> */}
       <mesh scale={[20, 20, 20]}>
         {/* <Sky
