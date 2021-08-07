@@ -42,6 +42,20 @@ export function Stars({ count = 2000 }) {
   }, [count]);
 
   return (
+    // <points
+    //   ref={group}
+    //   position={[0, 10, 0]}
+    //   rotation={[-Math.PI / 4, 0, Math.PI / 6]}
+    // >
+    //   <sphereBufferGeometry args={[1, 10, 10]}>
+    //     <bufferAttribute
+    //       attachObject={["attributes", "position"]}
+    //       count={coords.length / 3}
+    //       array={coords as any}
+    //       // itemSize={3}
+    //     />
+    //   </sphereBufferGeometry>
+    // </points>
     <group ref={group}>
       {coords.map(([p1, p2, p3], i) => {
         const rand = Math.random() * 1.4;

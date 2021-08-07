@@ -23,7 +23,7 @@ export function ScoreIncreasedPopupText({ isMounted, botScore }) {
     },
   });
   return (
-    <animated.mesh position={springProps.position} transparent={true}>
+    <animated.mesh position={springProps.position as any}>
       <AnimatedText
         {...({} as any)}
         color={color}
