@@ -84,7 +84,7 @@ export function HighScores() {
       <HighScoresStyles>
         <animated.div className="content">
           <h1>🌟 High Scores 🌟</h1>
-          <div className="highScores">
+          <div className="newHighScores">
             {highScores.map(({ name, score, isNewHighScore }, idx) => {
               const wasJustSubmitted = name === submittedName;
               return (
@@ -262,12 +262,18 @@ const HighScoresStyles = styled.div`
     margin: 0 auto;
     /* width: fit-content; */
     width: ${DIV_WIDTH}px;
-    background: #92909096;
+    background: #525252c1;
     padding: 14px 14px 38px;
     border-radius: 16px;
     box-shadow: 1px 2px 3px rgba(0, 0, 0, 50%);
   }
-  .highScores {
+  .newHighScores {
+    h4 {
+      background: #5e5e5eea;
+      border-radius: 4px;
+      padding: 0.2em 0.5em;
+      box-shadow: 0px 2px 2.5px 0.4px #00000053;
+    }
   }
   .name {
   }
