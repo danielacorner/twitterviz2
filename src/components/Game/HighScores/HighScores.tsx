@@ -172,7 +172,11 @@ function AnimatedName({ name }) {
       {name.split("").map((letter, idx) => (
         <AnimatedLetter
           key={idx}
-          {...{ progress: idx / (name.length - 1), letter, idx }}
+          {...{
+            progress: name.length === 1 ? 1 : idx / (name.length - 1),
+            letter,
+            idx,
+          }}
         />
       ))}
     </AnimatedNameStyles>
