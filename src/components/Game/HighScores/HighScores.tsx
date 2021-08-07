@@ -252,7 +252,6 @@ const HighScoresStyles = styled.div`
     color: white;
   }
   h1 {
-    margin-bottom: 1em;
     font-size: 28px;
   }
   width: 300px;
