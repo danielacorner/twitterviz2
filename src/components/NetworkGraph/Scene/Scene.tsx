@@ -65,7 +65,7 @@ export function Scene() {
         minPolarAngle={degToRad(45)}
         maxPolarAngle={degToRad(135)}
         minDistance={40}
-        maxDistance={1000}
+        maxDistance={500}
       />
       <Physics
         {...{ gravity: [0, 0, 0] }}

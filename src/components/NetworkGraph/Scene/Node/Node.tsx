@@ -161,15 +161,24 @@ export const Node = ({
     config: { mass: 3, friction: 40, tension: 800 },
   }));
   // Create a gesture that contains drag and hover, set the spring accordingly
-
+  const WOBBLE_ROTATION = 0.005;
+  const WOBBLE_POSITION = 0.005;
   const { size, viewport } = useThree();
   const aspect = (size.width / viewport.width) * 5;
   const bind = useGesture({
     onDrag: ({ event, offset: [x, y] }) => {
       event.stopPropagation();
       set({
-        position: [x / aspect, -y / aspect, 0],
-        rotation: [y / aspect / 100, x / aspect / 100, 0],
+        position: [
+          (x / aspect) * WOBBLE_POSITION,
+          (-y / aspect) * WOBBLE_POSITION,
+          0,
+        ],
+        rotation: [
+          (y / aspect) * WOBBLE_ROTATION,
+          (x / aspect) * WOBBLE_ROTATION,
+          0,
+        ],
       });
     },
     onHover: ({ hovering }) =>
