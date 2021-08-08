@@ -89,6 +89,7 @@ export function HighScores() {
               const wasJustSubmitted = name === submittedName;
               return (
                 <HighScore
+                  key={idx}
                   {...{
                     name,
                     idx,

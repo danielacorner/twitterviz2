@@ -176,8 +176,6 @@ export const Node = ({
       set({ scale: hovering ? [1.2, 1.2, 1.2] : [1, 1, 1] }),
   });
 
-  // TODO: slower on some computers, fewer bubbles
-  // TODO: hide post Node billboard?
   // TODO: check out name stays after submit
 
   const hasBotScore = Boolean(node.user.botScore);
