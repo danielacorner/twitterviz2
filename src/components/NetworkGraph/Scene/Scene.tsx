@@ -3,10 +3,10 @@ import { useGraphWithUsersAndLinks } from "../useGraphWithUsersAndLinks";
 import { Debug, Physics } from "@react-three/cannon";
 import { Node, NODE_RADIUS_COLLISION_MULTIPLIER } from "./Node/Node";
 import { BotScoreLegend } from "../../Game/GameStateHUD/BotScoreLegend";
-import { useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { CAMERA_POSITION, NODE_RADIUS } from "utils/constants";
 import { useSpring } from "react-spring";
-import { Suspense, useState } from "react";
+import { forwardRef, Suspense, useRef, useState } from "react";
 import { useMount } from "utils/utils";
 import { Stars } from "./Stars";
 import { gameStateAtom, GameStepsEnum } from "providers/store/store";
@@ -14,6 +14,9 @@ import { useAtom } from "jotai";
 import { Collisions } from "./Collisions";
 import { HighScores } from "components/Game/HighScores/HighScores";
 import Background from "./Background";
+import { EffectComposer, GodRays } from "@react-three/postprocessing";
+import { BlendFunction, Resizer, KernelSize } from "postprocessing";
+
 const NODE_WIDTH = NODE_RADIUS * NODE_RADIUS_COLLISION_MULTIPLIER;
 export function Scene() {
   const graphWithUsers = useGraphWithUsersAndLinks();
@@ -90,10 +93,57 @@ export function Scene() {
 
       <Background background={true} />
       <BotScoreLegend />
+      <Effects />
     </Suspense>
   );
 }
 
+const SUN_RADIUS = 10;
+const SUN_HEIGHT = 60;
+const SUN_WOBBLE = 6;
+const Sun = forwardRef(function Sun(props, forwardRef) {
+  useFrame(({ clock }) => {
+    (forwardRef as any).current.position.x =
+      Math.sin(clock.getElapsedTime()) * -SUN_WOBBLE;
+    (forwardRef as any).current.position.z =
+      Math.cos(clock.getElapsedTime()) * -SUN_WOBBLE - 500;
+  });
+
+  return (
+    <mesh ref={forwardRef as any} position={[0, SUN_HEIGHT, 0]}>
+      <sphereGeometry args={[SUN_RADIUS, 36, 36]} />
+      <meshBasicMaterial color={"#00FF00"} />
+    </mesh>
+  );
+});
+
+function Effects() {
+  // const [sun, set] = useState(null as any);
+  const sun = useRef(null as any);
+  return (
+    <>
+      <Sun ref={sun} />
+      {sun.current && (
+        <EffectComposer multisampling={0}>
+          <GodRays
+            sun={sun.current}
+            blendFunction={BlendFunction.Screen}
+            samples={30}
+            density={0.95}
+            decay={1.0}
+            weight={0.24}
+            exposure={0.16}
+            clampMax={1}
+            width={Resizer.AUTO_SIZE}
+            height={Resizer.AUTO_SIZE}
+            kernelSize={KernelSize.SMALL}
+            blur={0.1}
+          />
+        </EffectComposer>
+      )}
+    </>
+  );
+}
 function randBetween(min, max) {
   return Math.random() * (max - min) + min;
 }

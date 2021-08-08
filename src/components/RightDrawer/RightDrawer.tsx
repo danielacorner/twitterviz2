@@ -10,7 +10,6 @@ import { NodeTooltipContent } from "../NetworkGraph/NodeTooltip";
 import { CUSTOM_SCROLLBAR_CSS } from "components/common/styledComponents";
 import TagTheBotButton from "components/Game/TagTheBotButton";
 import { Close } from "@material-ui/icons";
-import { darkBlueBackground } from "utils/colors";
 
 /** Selected Tweet drawer */
 export function RightDrawer() {
