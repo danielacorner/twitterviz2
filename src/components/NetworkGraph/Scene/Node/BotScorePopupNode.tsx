@@ -38,6 +38,13 @@ export function BotScorePopupNode() {
             zIndex: 999999999999999,
           }}
         >
+          <Suspense fallback="null">
+            <Environment
+              path="/cubemap/"
+              files={"KelpForestTrue.hdr"}
+              // files={"spacehdr.hdr"}
+            />
+          </Suspense>
           <animated.mesh scale={springProps.scale as any} position={[0, 0, -2]}>
             {nodeDisplay ? (
               <>
@@ -66,6 +73,7 @@ const SCAN_SPEED = 2;
 function ScanningAnimation() {
   const ref = useRef<any>(null);
   const ref2 = useRef<any>(null);
+  const ref3 = useRef<any>(null);
 
   useFrame(({ clock }) => {
     const seconds = clock.getElapsedTime();
@@ -73,6 +81,8 @@ function ScanningAnimation() {
       const progress = (seconds % (Math.PI * 2)) * SCAN_SPEED;
       const y = Math.sin(progress) * WIDTH * 0.5;
       ref.current.position.set(0, y, 0);
+      const x = Math.sin(progress - 0.8) * WIDTH * 0.5;
+      ref3.current.position.set(x, 0, 0);
 
       ref2.current.rotation.y += 0.01;
       ref2.current.rotation.z += 0.01;
@@ -88,12 +98,19 @@ function ScanningAnimation() {
           color={"#99dffa"}
           transmission={0.98}
           roughness={0}
-          thickness={10}
         />
       </mesh>
-      <Suspense fallback="null">
-        <Environment path="/cubemap/" files={"spacehdr.hdr"} />
-      </Suspense>
+
+      {/* scanning box 2 */}
+      <mesh ref={ref3}>
+        <boxBufferGeometry args={[0.02 * WIDTH, WIDTH, WIDTH]} />
+        <meshPhysicalMaterial
+          color={"#99dffa"}
+          transmission={0.98}
+          roughness={0}
+        />
+      </mesh>
+
       {/* Background plane w. scanning effect?  */}
 
       {/* scanning icosahedron */}

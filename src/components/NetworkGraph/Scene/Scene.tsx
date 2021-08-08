@@ -111,7 +111,11 @@ const Background = (props) => {
         background={true}
         // preset={"night"}
         path="/cubemap/"
-        files={"spacehdr.hdr"}
+        files={"KelpForestTrue.hdr"}
+        // files={"p031kk27.hdr"}
+        // files={"maxresdefault.hdr"}
+        // files={"Subnautica-12.hdr"}
+        // files={"spacehdr.hdr"}
         // files={["px.jpg", "nx.jpg", "py.jpg", "ny.jpg", "pz.jpg", "nz.jpg"]}
       />
     </>
