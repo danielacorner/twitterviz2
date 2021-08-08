@@ -2,22 +2,14 @@ import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 // import { IconButton } from "@material-ui/core";
 
 import styled from "styled-components/macro";
-import { useAtom } from "jotai";
-import { isDarkModeAtom } from "./store/store";
 import { useMount } from "utils/utils";
 
 export default function ThemeManager({ children }: { children: any }) {
-  const [isDarkMode, setIsDarkMode] = useAtom(isDarkModeAtom);
-
-  const palletType = isDarkMode ? "dark" : "light";
-  const mainPrimaryColor = isDarkMode ? `hsl(200,70%,40%)` : `hsl(200,70%,50%)`;
-  const mainSecondaryColor = isDarkMode
-    ? `hsl(270,50%,45%)`
-    : `hsl(270,50%,60%)`;
-  // ? `hsl(270,50%,45%)`
-  // : `hsl(270,50%,60%)`;
-  const textPrimaryColor = isDarkMode ? `hsl(0,0%,100%)` : `hsl(0,0%,0%)`;
-  const textSecondaryColor = isDarkMode ? `hsl(0,0%,60%)` : `hsl(0,0%,40%)`;
+  const palletType = "dark";
+  const mainPrimaryColor = `#9e1840`;
+  const mainSecondaryColor = `#1b90f0`;
+  const textPrimaryColor = `hsl(0,0%,100%)`;
+  const textSecondaryColor = `hsl(0,0%,60%)`;
   const darkTheme = createTheme({
     palette: {
       type: palletType,
@@ -38,15 +30,15 @@ export default function ThemeManager({ children }: { children: any }) {
   // };
 
   // ? not sure why this reset is needed to get it working?
-  useMount(() => {
-    setIsDarkMode(!isDarkMode);
-    setTimeout(() => {
-      setIsDarkMode(isDarkMode);
-    }, 500);
-  });
+  // useMount(() => {
+  //   setIsDarkMode(!isDarkMode);
+  //   setTimeout(() => {
+  //     setIsDarkMode(isDarkMode);
+  //   }, 500);
+  // });
 
   return (
-    <ThemeManagerStyles isDarkMode={isDarkMode}>
+    <ThemeManagerStyles isDarkMode={true}>
       <ThemeProvider theme={darkTheme}>
         {children}
         {/* <SwitchStyles className="switchWrapper" onClick={handleThemeChange}>
