@@ -38,7 +38,7 @@ export function BotScorePopupNode() {
             zIndex: 999999999999999,
           }}
         >
-          <Background background={false} />
+          {nodeDisplay ? <Background background={false} /> : null}
           <animated.mesh scale={springProps.scale as any} position={[0, 0, -2]}>
             {nodeDisplay ? (
               <>
