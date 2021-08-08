@@ -156,7 +156,7 @@ const StartPageStyles = styled.div`
   box-shadow: 0px 2px 30px 8px hsla(0, 0%, 0%, 0.3);
   .content {
     position: relative;
-    margin-top: 120px;
+    margin-top: 96px;
     ${POPUP_BASE_CSS}
     max-width: calc(100vw - 32px);
     @media (min-width: 768px) {
