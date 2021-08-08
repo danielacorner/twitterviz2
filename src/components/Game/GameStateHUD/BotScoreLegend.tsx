@@ -5,6 +5,7 @@ import { NodeBotScoreAntenna } from "../../NetworkGraph/Scene/Node/NodeBotScoreA
 import { useSpring, animated } from "@react-spring/three";
 import { gameStateAtom, GameStepsEnum } from "providers/store/store";
 import { useAtom } from "jotai";
+import Background from "components/NetworkGraph/Scene/Background";
 
 const SCALE = 0.15;
 const RADIUS = 40;

@@ -24,6 +24,8 @@ import { NODE_RADIUS } from "utils/constants";
 import { ScoreIncreasedPopupText } from "./ScoreIncreasedPopupText";
 import { useState } from "react";
 import { useMount } from "utils/utils";
+import { useGesture } from "react-use-gesture";
+import { useThree } from "@react-three/fiber";
 
 export const NODE_RADIUS_COLLISION_MULTIPLIER = 2.5;
 
@@ -146,27 +148,58 @@ export const Node = ({
       ? [1.8 * scaleMult, 1.8 * scaleMult, 1.8 * scaleMult]
       : [1 * scaleMult, 1 * scaleMult, 1 * scaleMult],
   });
+
+  // -- drag to change position --
+
+  // https://codesandbox.io/s/react-three-fiber-gestures-forked-qi8xq?file=/src/App.js:351-672
+
+  // Set up a spring with values we're going to modify
+  const [{ rotation, ...rest }, set] = useSpring(() => ({
+    scale: [1, 1, 1],
+    position: [0, 0, 0],
+    rotation: [0, 0, 0],
+    config: { mass: 3, friction: 40, tension: 800 },
+  }));
+  // Create a gesture that contains drag and hover, set the spring accordingly
+
+  const { size, viewport } = useThree();
+  const aspect = (size.width / viewport.width) * 5;
+  const bind = useGesture({
+    onDrag: ({ event, offset: [x, y] }) => {
+      event.stopPropagation();
+      set({
+        position: [x / aspect, -y / aspect, 0],
+        rotation: [y / aspect / 100, x / aspect / 100, 0],
+      });
+    },
+    onHover: ({ hovering }) =>
+      set({ scale: hovering ? [1.2, 1.2, 1.2] : [1, 1, 1] }),
+  });
   return (
-    <animated.mesh
-      ref={ref}
-      scale={springProps.scale as any}
-      {...{
-        onPointerEnter,
-        onPointerLeave,
-        onContextMenu,
-        onWheel: onScroll,
-        onClick,
-      }}
-    >
-      <NodeContent
-        {...{
-          node,
-          isTooltipNode,
-          isPointerOver,
-          isRightClickingThisNode,
-        }}
-      />
-    </animated.mesh>
+    <animated.group {...(rest as any)}>
+      <animated.mesh rotation={rotation as any} {...(bind() as any)}>
+        <animated.mesh
+          ref={ref}
+          scale={springProps.scale as any}
+          {...{
+            onPointerEnter,
+            onPointerLeave,
+            onContextMenu,
+            onWheel: onScroll,
+            onClick,
+          }}
+        >
+          <NodeContent
+            {...{
+              node,
+              isTooltipNode,
+              isPointerOver,
+              isRightClickingThisNode,
+            }}
+          />
+        </animated.mesh>
+      </animated.mesh>
+    </animated.group>
   );
 };
 

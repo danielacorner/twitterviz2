@@ -2,7 +2,6 @@ import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 // import { IconButton } from "@material-ui/core";
 
 import styled from "styled-components/macro";
-import { useMount } from "utils/utils";
 
 export default function ThemeManager({ children }: { children: any }) {
   const palletType = "dark";
