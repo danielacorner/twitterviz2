@@ -60,6 +60,7 @@ export function Stars({ count }) {
     <group ref={group}>
       <Instances>
         <sphereBufferGeometry args={[1, 10, 10]} />
+
         <meshPhysicalMaterial
           {...{
             metalness: 0.9,
@@ -70,6 +71,7 @@ export function Stars({ count }) {
             opacity: 0.25,
           }}
         />
+
         {coords.map(([p1, p2, p3], i) => {
           const rand = rand_normal() * 3;
           return (

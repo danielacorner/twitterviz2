@@ -6,7 +6,7 @@ import { BotScoreLegend } from "../../Game/GameStateHUD/BotScoreLegend";
 import { useFrame, useThree } from "@react-three/fiber";
 import { CAMERA_POSITION, NODE_RADIUS } from "utils/constants";
 import { useSpring } from "react-spring";
-import { forwardRef, Suspense, useRef, useState } from "react";
+import { forwardRef, Suspense, useState } from "react";
 import { useMount } from "utils/utils";
 import { Stars } from "./Stars";
 import { gameStateAtom, GameStepsEnum } from "providers/store/store";
@@ -14,8 +14,8 @@ import { useAtom } from "jotai";
 import { Collisions } from "./Collisions";
 import { HighScores } from "components/Game/HighScores/HighScores";
 import Background from "./Background";
-import { Bloom, EffectComposer, GodRays } from "@react-three/postprocessing";
-import { BlendFunction, Resizer, KernelSize } from "postprocessing";
+import { KernelSize } from "postprocessing";
+import { Effects } from "./Effects";
 console.log("🌟🚨 ~ KernelSize", KernelSize);
 
 const NODE_WIDTH = NODE_RADIUS * NODE_RADIUS_COLLISION_MULTIPLIER;
@@ -62,7 +62,7 @@ export function Scene() {
         /> */}
       </mesh>
       <directionalLight position={[0, 5, -4]} intensity={4} />
-      <OrbitControls {...({} as any)} />
+      <OrbitControls {...{}} />
       <Physics
         {...{ gravity: [0, 0, 0] }}
         defaultContactMaterial={{ friction: 10, restitution: 0.8 }}
@@ -99,7 +99,7 @@ export function Scene() {
   );
 }
 
-function getHourOfDay() {
+export function getHourOfDay() {
   const now = new Date();
   const hours = now.getHours();
   return hours;
@@ -109,7 +109,7 @@ const SUN_RADIUS = 10;
 const SUN_Y = 170;
 const SUN_X = -60;
 const SUN_WOBBLE = 6;
-const Sun = forwardRef(function Sun(props, forwardRef) {
+export const Sun = forwardRef(function Sun(props, forwardRef) {
   useFrame(({ clock }) => {
     (forwardRef as any).current.position.x =
       Math.sin(clock.getElapsedTime()) * -SUN_WOBBLE + SUN_X;
@@ -125,48 +125,6 @@ const Sun = forwardRef(function Sun(props, forwardRef) {
   );
 });
 
-function Effects() {
-  // const [sun, set] = useState(null as any);
-  const sun = useRef(null as any);
-  const hourOfDay = getHourOfDay();
-  console.log("🌟🚨 ~ Effects ~ hourOfDay", hourOfDay);
-
-  return (
-    <>
-      <Sun ref={sun} />
-      {sun.current && (
-        <EffectComposer multisampling={0}>
-          <GodRays
-            sun={sun.current}
-            blendFunction={BlendFunction.Screen}
-            samples={30}
-            density={0.95}
-            decay={1.0}
-            weight={0.24}
-            exposure={0.16}
-            clampMax={1}
-            width={Resizer.AUTO_SIZE}
-            height={Resizer.AUTO_SIZE}
-            kernelSize={KernelSize.SMALL}
-            blur={0.1}
-          />
-          {/* <Bloom
-            kernelSize={3}
-            luminanceThreshold={0}
-            luminanceSmoothing={0.4}
-            intensity={0.6}
-          /> */}
-          <Bloom
-            kernelSize={KernelSize.VERY_LARGE}
-            luminanceThreshold={0}
-            luminanceSmoothing={0}
-            intensity={0.5}
-          />
-        </EffectComposer>
-      )}
-    </>
-  );
-}
 function randBetween(min, max) {
   return Math.random() * (max - min) + min;
 }

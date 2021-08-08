@@ -8,7 +8,6 @@ import { useEffect, useRef, useState } from "react";
 import { UserNode } from "../../useGraphWithUsersAndLinks";
 import { useWindowSize } from "utils/hooks";
 import Background from "../Background";
-import { MeshDistortMaterial, MeshWobbleMaterial } from "@react-three/drei";
 
 /** pops up and animates when you get a new bot score */
 export function BotScorePopupNode() {

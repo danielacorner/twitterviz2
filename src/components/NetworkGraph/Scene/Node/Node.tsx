@@ -226,7 +226,6 @@ export function NodeContent({
     : isTooltipNode
     ? tooltipNodeMaterial
     : nodeMaterial;
-
   return (
     <>
       <mesh material={material} geometry={nodeGeometry}></mesh>
