@@ -3,3 +3,4 @@ export const darkBorderColor = "hsla(0, 0%, 5%)";
 export const lightBackground = "hsla(0,0%,100%,0.9)";
 export const darkBackground = "hsla(0,0%,13%,0.9)";
 export const paleBlue = "#84957f";
+export const darkBlueBackground = "#196778c9";

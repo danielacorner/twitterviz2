@@ -21,6 +21,7 @@ import { useSpring, animated } from "react-spring";
 import { useMount } from "utils/utils";
 import { Html } from "@react-three/drei";
 import { useInterval } from "utils/useInterval";
+import { darkBlueBackground } from "utils/colors";
 
 const DIV_WIDTH = 280;
 export function HighScores() {
@@ -295,7 +296,7 @@ const HighScoresStyles = styled.div`
     margin: 0 auto;
     /* width: fit-content; */
     width: ${DIV_WIDTH}px;
-    background: #525252c1;
+    background: ${darkBlueBackground};
     padding: 14px 14px 38px;
     border-radius: 16px;
     box-shadow: 1px 2px 3px rgba(0, 0, 0, 50%);

@@ -10,6 +10,7 @@ import { NodeTooltipContent } from "../NetworkGraph/NodeTooltip";
 import { CUSTOM_SCROLLBAR_CSS } from "components/common/styledComponents";
 import TagTheBotButton from "components/Game/TagTheBotButton";
 import { Close } from "@material-ui/icons";
+import { darkBlueBackground } from "utils/colors";
 
 /** Selected Tweet drawer */
 export function RightDrawer() {
@@ -87,6 +88,7 @@ const DrawerStyles = styled.div`
   width: 378px;
   max-width: calc(100vw - 64px);
   height: 100vh;
+  background: #15232e9f !important;
   .content {
     height: 100%;
     min-height: 100vh;

@@ -98,7 +98,7 @@ function randBetween(min, max) {
   return Math.random() * (max - min) + min;
 }
 function DebugInDev({ children }) {
-  return process.env.NODE_ENV !== "production" ? (
+  return false && process.env.NODE_ENV !== "production" ? (
     <Debug>{children}</Debug>
   ) : (
     <>{children}</>
