@@ -8,6 +8,7 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import { UserNode } from "../../useGraphWithUsersAndLinks";
 import { useWindowSize } from "utils/hooks";
 import { Environment } from "@react-three/drei";
+import Background from "../Background";
 
 /** pops up and animates when you get a new bot score */
 export function BotScorePopupNode() {
@@ -38,13 +39,7 @@ export function BotScorePopupNode() {
             zIndex: 999999999999999,
           }}
         >
-          <Suspense fallback="null">
-            <Environment
-              path="/cubemap/"
-              files={"KelpForestTrue.hdr"}
-              // files={"spacehdr.hdr"}
-            />
-          </Suspense>
+          <Background background={false} />
           <animated.mesh scale={springProps.scale as any} position={[0, 0, -2]}>
             {nodeDisplay ? (
               <>

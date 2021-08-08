@@ -18,6 +18,7 @@ import { gameStateAtom, GameStepsEnum } from "providers/store/store";
 import { useAtom } from "jotai";
 import { Collisions } from "./Collisions";
 import { HighScores } from "components/Game/HighScores/HighScores";
+import Background from "./Background";
 const NODE_WIDTH = NODE_RADIUS * NODE_RADIUS_COLLISION_MULTIPLIER;
 export function Scene() {
   const graphWithUsers = useGraphWithUsersAndLinks();
@@ -52,7 +53,7 @@ export function Scene() {
         color="blue"
       /> */}
       <Stars count={gpuInfo.tier > 2 ? 4000 : 1500} />
-      {/* <Environment background={true} preset={"forest"} /> */}
+
       <mesh scale={[20, 20, 20]}>
         {/* <Sky
           rayleigh={7}
@@ -92,35 +93,11 @@ export function Scene() {
       </Physics>
       <HighScores />
 
-      <Background position={[0, 0, -viewport.width * 3]} />
+      <Background background={true} />
       <BotScoreLegend />
     </Suspense>
   );
 }
-
-const Background = (props) => {
-  const scale = useAspect(5000, 3800, 20);
-  console.log("🌟🚨 ~ Background ~ scale", scale);
-  return (
-    <>
-      {/* <mesh scale={scale} {...props}>
-        <planeGeometry />
-        <meshBasicMaterial map={useTexture("/bg.jpg")} />
-      </mesh> */}
-      <Environment
-        background={true}
-        // preset={"night"}
-        path="/cubemap/"
-        files={"KelpForestTrue.hdr"}
-        // files={"p031kk27.hdr"}
-        // files={"maxresdefault.hdr"}
-        // files={"Subnautica-12.hdr"}
-        // files={"spacehdr.hdr"}
-        // files={["px.jpg", "nx.jpg", "py.jpg", "ny.jpg", "pz.jpg", "nz.jpg"]}
-      />
-    </>
-  );
-};
 
 function randBetween(min, max) {
   return Math.random() * (max - min) + min;
