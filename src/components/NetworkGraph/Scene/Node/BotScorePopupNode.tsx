@@ -4,10 +4,9 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import styled from "styled-components/macro";
 import { useAtom } from "jotai";
 import { botScorePopupNodeAtom } from "providers/store/store";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { UserNode } from "../../useGraphWithUsersAndLinks";
 import { useWindowSize } from "utils/hooks";
-import { Environment } from "@react-three/drei";
 import Background from "../Background";
 
 /** pops up and animates when you get a new bot score */

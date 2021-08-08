@@ -1,9 +1,4 @@
-import {
-  Environment,
-  OrbitControls,
-  useAspect,
-  useDetectGPU,
-} from "@react-three/drei";
+import { OrbitControls, useDetectGPU } from "@react-three/drei";
 import { useGraphWithUsersAndLinks } from "../useGraphWithUsersAndLinks";
 import { Debug, Physics } from "@react-three/cannon";
 import { Node, NODE_RADIUS_COLLISION_MULTIPLIER } from "./Node/Node";
