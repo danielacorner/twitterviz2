@@ -5,7 +5,6 @@ import { Instance, Instances } from "./Instances";
 // https://codesandbox.io/s/9y8vkjykyy?file=/src/index.js
 const WIDTH = 200;
 export function Stars({ count }) {
-  console.log("🌟🚨 ~ Stars ~ count", count);
   let group = useRef(null as any);
   let spin = 0.1;
   const speed = 0.0001;

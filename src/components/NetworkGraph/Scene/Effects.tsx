@@ -1,14 +1,12 @@
 import { useRef } from "react";
 import { Bloom, EffectComposer, GodRays } from "@react-three/postprocessing";
 import { BlendFunction, Resizer, KernelSize } from "postprocessing";
-import { getHourOfDay, Sun } from "./Scene";
+import { Sun } from "./Scene";
 import { useDetectGPU } from "@react-three/drei";
 
 export function Effects() {
   // const [sun, set] = useState(null);
   const sun = useRef(null);
-  const hourOfDay = getHourOfDay();
-  console.log("🌟🚨 ~ Effects ~ hourOfDay", hourOfDay);
   const gpuInfo = useDetectGPU();
   return (
     <>

@@ -16,7 +16,6 @@ import { HighScores } from "components/Game/HighScores/HighScores";
 import Background from "./Background";
 import { KernelSize } from "postprocessing";
 import { Effects } from "./Effects";
-console.log("🌟🚨 ~ KernelSize", KernelSize);
 
 const NODE_WIDTH = NODE_RADIUS * NODE_RADIUS_COLLISION_MULTIPLIER;
 export function Scene() {
@@ -41,7 +40,6 @@ export function Scene() {
   // lined up: hide if they don't have a bot score
   const { viewport } = useThree();
   const gpuInfo = useDetectGPU();
-  console.log("🌟🚨 ~ Scene ~ gpuInfo", gpuInfo);
   return (
     <Suspense fallback={null}>
       {/* <ambientLight intensity={0.75} /> */}

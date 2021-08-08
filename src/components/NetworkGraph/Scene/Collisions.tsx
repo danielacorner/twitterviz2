@@ -9,7 +9,6 @@ export function Collisions() {
 
   // left, right
   const { viewport } = useThree();
-  console.log("🌟🚨 ~ Collisions ~ viewport", viewport);
   const width = viewport.width / 8;
   usePlane(() => ({
     position: [width * 1.2, 0, 0],
