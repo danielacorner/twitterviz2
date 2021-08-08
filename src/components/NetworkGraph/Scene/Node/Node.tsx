@@ -178,7 +178,6 @@ export const Node = ({
 
   // TODO: slower on some computers, fewer bubbles
   // TODO: hide post Node billboard?
-  // TODO: limit camera angle, limit zoom out
   // TODO: check out name stays after submit
 
   const hasBotScore = Boolean(node.user.botScore);
