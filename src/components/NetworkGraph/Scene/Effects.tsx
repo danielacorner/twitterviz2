@@ -2,13 +2,14 @@ import { useRef } from "react";
 import { Bloom, EffectComposer, GodRays } from "@react-three/postprocessing";
 import { BlendFunction, Resizer, KernelSize } from "postprocessing";
 import { getHourOfDay, Sun } from "./Scene";
+import { useDetectGPU } from "@react-three/drei";
 
 export function Effects() {
   // const [sun, set] = useState(null);
   const sun = useRef(null);
   const hourOfDay = getHourOfDay();
   console.log("🌟🚨 ~ Effects ~ hourOfDay", hourOfDay);
-
+  const gpuInfo = useDetectGPU();
   return (
     <>
       <Sun ref={sun} />
@@ -28,18 +29,24 @@ export function Effects() {
             kernelSize={KernelSize.SMALL}
             blur={0.1}
           />
-          <Bloom
-            kernelSize={2}
-            luminanceThreshold={0}
-            luminanceSmoothing={0.4}
-            intensity={0.6}
-          />
-          <Bloom
-            kernelSize={KernelSize.VERY_LARGE}
-            luminanceThreshold={0}
-            luminanceSmoothing={0}
-            intensity={0.5}
-          />
+          {gpuInfo.tier > 2 ? (
+            <>
+              <Bloom
+                kernelSize={2}
+                luminanceThreshold={0}
+                luminanceSmoothing={0.4}
+                intensity={0.6}
+              />
+              <Bloom
+                kernelSize={KernelSize.VERY_LARGE}
+                luminanceThreshold={0}
+                luminanceSmoothing={0}
+                intensity={0.5}
+              />
+            </>
+          ) : (
+            <></>
+          )}
         </EffectComposer>
       )}
     </>
