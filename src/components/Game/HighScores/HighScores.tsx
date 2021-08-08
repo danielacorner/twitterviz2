@@ -80,7 +80,7 @@ export function HighScores() {
 
   const [submittedName, setSubmittedName] = useState("");
   return !isGameOver ? null : (
-    <Html transform={true} position={[0, 0, 240]} scale={[10, 10, 10]}>
+    <Html transform={true} position={[0, 0, 30]} scale={[18, 18, 18]}>
       <HighScoresStyles>
         <animated.div className="content">
           <h1>🌟 High Scores 🌟</h1>
