@@ -76,11 +76,12 @@ export function SubmitHighScoreForm({
   });
   const isSprung = isInputSprung && !isSubmitted;
   const springFormRowOnSubmit = useSpring({
-    transform: `rotate(${isSprung ? 2 : 0}deg) scale(${isSprung ? 1.1 : 1})`,
+    transform: `rotate(${isSprung ? 2 : 0}deg) scale(${isSprung ? 1.08 : 1})`,
     config: {
-      tension: 450,
-      mass: 1,
+      tension: 550,
+      mass: 1.5,
       friction: 20,
+      clamp: !isInputSprung,
     },
     onRest: () => {
       setIsInputSprung(false);

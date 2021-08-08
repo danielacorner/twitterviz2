@@ -5,7 +5,7 @@ import {
   GameStepsEnum,
   scoreAtom,
 } from "providers/store/store";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IconButton } from "@material-ui/core";
 import { Restore } from "@material-ui/icons";
 import { NUM_SCORES, SubmitHighScoreForm } from "./SubmitHighScoreForm";
@@ -20,6 +20,9 @@ import { sortDescendingByScore } from "./sortDescendingByScore";
 import { useSpring, animated } from "react-spring";
 import { useMount } from "utils/utils";
 import { Html } from "@react-three/drei";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { useControls } from "leva";
+import { useInterval } from "utils/useInterval";
 
 const DIV_WIDTH = 280;
 export function HighScores() {
@@ -185,6 +188,7 @@ function AnimatedName({ name }) {
 }
 const AnimatedNameStyles = styled.div`
   display: flex;
+  align-items: flex-end;
 `;
 
 function AnimatedLetter({ progress, letter, idx }) {
@@ -231,24 +235,50 @@ function AnimatedTadah({ idx }) {
     }, 30);
   });
   const spring = useSpring({
-    transform: `translate(${sprung ? idx * 5 : 0}px,${
+    transform: `translate(${sprung ? idx * 20 : 0}px,${
       sprung ? -20 : 0
-    }px) scale(${sprung ? 3 : 1}) rotate(${sprung ? 720 : 0}deg)`,
+    }px) scale(${sprung ? 3 : 1}) rotate(${sprung ? 10 : 0}deg)`,
     transformOrigin: "center",
+    display: "flex",
     letterSpacing: sprung ? 1 : 0,
     marginLeft: 6,
+    zIndex: 2,
     config: {
       tension: 340,
       friction: 8,
       mass: 0.8,
+      clamp: !sprung,
     },
-    delay: 100,
+    delay: 0,
     onRest: () => {
       setSprung(false);
     },
   });
 
-  return <animated.div style={spring}>⭐</animated.div>;
+  const [rotations, setRotations] = useState(`0.2,0.6,0.3`);
+  console.log("🌟🚨 ~ AnimatedTadah ~ rotations", rotations);
+
+  useInterval({
+    callback: () => {
+      setRotations(
+        `${Math.round(Math.random() ** 0.5 * 10) / 10},${
+          Math.round(Math.random() ** 0.5 * 10) / 10
+        },${Math.round(Math.random() ** 0.5 * 10) / 10}`
+      );
+    },
+    delay: 400,
+    immediate: false,
+  });
+
+  const spring2 = useSpring({
+    transform: `rotate3d(${rotations},${sprung ? 780 : 0}deg)`,
+    config: { friction: 6, tension: 20, mass: 1.6 },
+  });
+  return (
+    <animated.div style={spring}>
+      <animated.div style={spring2}>⭐</animated.div>
+    </animated.div>
+  );
 }
 
 const HighScoresStyles = styled.div`
