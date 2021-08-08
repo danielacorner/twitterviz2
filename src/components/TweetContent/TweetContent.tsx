@@ -127,7 +127,7 @@ export default function TweetContent({
 
 function LocationInfo({ user, place }: { user: User; place: Place | null }) {
   return (
-    <Body2 className="locationInfo">
+    <div className="locationInfo">
       {user.location && (
         <>
           <LocationIcon />
@@ -137,7 +137,7 @@ function LocationInfo({ user, place }: { user: User; place: Place | null }) {
       {place?.country_code && (
         <div className="country">| {countryCodes[place?.country_code]}</div>
       )}
-    </Body2>
+    </div>
   );
 }
 

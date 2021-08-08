@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { UserNode } from "../../useGraphWithUsersAndLinks";
 import { useWindowSize } from "utils/hooks";
 import Background from "../Background";
+import { MeshDistortMaterial, MeshWobbleMaterial } from "@react-three/drei";
 
 /** pops up and animates when you get a new bot score */
 export function BotScorePopupNode() {
@@ -63,11 +64,12 @@ export function BotScorePopupNode() {
   );
 }
 const WIDTH = 4;
-const SCAN_SPEED = 2;
+const SCAN_SPEED = 2.4;
 function ScanningAnimation() {
   const ref = useRef<any>(null);
   const ref2 = useRef<any>(null);
   const ref3 = useRef<any>(null);
+  const ref4 = useRef<any>(null);
 
   useFrame(({ clock }) => {
     const seconds = clock.getElapsedTime();
@@ -75,11 +77,18 @@ function ScanningAnimation() {
       const progress = (seconds % (Math.PI * 2)) * SCAN_SPEED;
       const y = Math.sin(progress) * WIDTH * 0.5;
       ref.current.position.set(0, y, 0);
-      const x = Math.sin(progress - 0.8) * WIDTH * 0.5;
+      const x = Math.sin(progress - 0.9) * WIDTH * 0.5;
       ref3.current.position.set(x, 0, 0);
 
       ref2.current.rotation.y += 0.01;
-      ref2.current.rotation.z += 0.01;
+      ref2.current.rotation.z += y / 128;
+
+      ref2.current.scale.x = y / 16 + 1;
+      ref2.current.scale.y = y / 16 + 1;
+      ref2.current.scale.z = y / 16 + 1;
+
+      const opacity = (Math.round((y % 1) * 100) / 100 + 1) / 2;
+      ref4.current.opacity = opacity;
     }
   });
 
@@ -91,7 +100,7 @@ function ScanningAnimation() {
         <meshPhysicalMaterial
           color={"#99dffa"}
           transmission={0.98}
-          roughness={0}
+          roughness={0.05}
         />
       </mesh>
 
@@ -101,7 +110,7 @@ function ScanningAnimation() {
         <meshPhysicalMaterial
           color={"#99dffa"}
           transmission={0.98}
-          roughness={0}
+          roughness={0.05}
         />
       </mesh>
 
@@ -111,9 +120,10 @@ function ScanningAnimation() {
       <mesh ref={ref2}>
         <icosahedronBufferGeometry args={[2.5, 1]} />
         <meshBasicMaterial
+          ref={ref4}
           wireframe={true}
           transparent={true}
-          opacity={0.15}
+          // opacity={0.15}
           color={"#3ac7ff"}
         />
       </mesh>
