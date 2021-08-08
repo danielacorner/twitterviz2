@@ -99,19 +99,26 @@ export function Scene() {
   );
 }
 
+function getHourOfDay() {
+  const now = new Date();
+  const hours = now.getHours();
+  return hours;
+}
+
 const SUN_RADIUS = 10;
-const SUN_HEIGHT = 60;
+const SUN_Y = 170;
+const SUN_X = -60;
 const SUN_WOBBLE = 6;
 const Sun = forwardRef(function Sun(props, forwardRef) {
   useFrame(({ clock }) => {
     (forwardRef as any).current.position.x =
-      Math.sin(clock.getElapsedTime()) * -SUN_WOBBLE;
+      Math.sin(clock.getElapsedTime()) * -SUN_WOBBLE + SUN_X;
     (forwardRef as any).current.position.z =
       Math.cos(clock.getElapsedTime()) * -SUN_WOBBLE - 500;
   });
 
   return (
-    <mesh ref={forwardRef as any} position={[0, SUN_HEIGHT, 0]}>
+    <mesh ref={forwardRef as any} position={[0, SUN_Y, 0]}>
       <sphereGeometry args={[SUN_RADIUS, 36, 36]} />
       <meshBasicMaterial color={"#00FF00"} />
     </mesh>
@@ -121,6 +128,9 @@ const Sun = forwardRef(function Sun(props, forwardRef) {
 function Effects() {
   // const [sun, set] = useState(null as any);
   const sun = useRef(null as any);
+  const hourOfDay = getHourOfDay();
+  console.log("🌟🚨 ~ Effects ~ hourOfDay", hourOfDay);
+
   return (
     <>
       <Sun ref={sun} />
