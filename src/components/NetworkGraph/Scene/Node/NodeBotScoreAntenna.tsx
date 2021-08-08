@@ -126,9 +126,9 @@ function Antenna({
         <meshPhysicalMaterial
           metalness={0.8}
           roughness={0.1}
-          color="#a3a3a3"
+          color="#464646"
           transparent={true}
-          opacity={forceOpaque ? 1 : showLabels ? 0.5 : score ** 0.7}
+          opacity={forceOpaque ? 0.8 : showLabels ? 0.5 : score ** 0.7}
         />
       </animated.mesh>
       {/* ball */}

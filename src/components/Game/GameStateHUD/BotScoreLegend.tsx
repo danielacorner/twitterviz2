@@ -51,6 +51,7 @@ export function BotScoreLegend({
           <NodeBotScoreAntenna
             {...{
               showLabels: true,
+              forceOpaque: true,
               isInStartMenu,
               botScore: {
                 overall: 1,
@@ -64,6 +65,7 @@ export function BotScoreLegend({
             }}
           />
         </mesh>
+        <directionalLight position={[-7, 14.28, 12.18]} intensity={5} />
       </animated.mesh>
     </HUD>
   );
