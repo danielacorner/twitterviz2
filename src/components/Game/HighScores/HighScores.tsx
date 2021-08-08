@@ -141,7 +141,10 @@ function HighScore({
   score: number;
 }): JSX.Element {
   return (
-    <div className="highScore" key={name}>
+    <div
+      className={`highScore${isNewHighScore ? " isNewHighScore" : ""}`}
+      key={name}
+    >
       <div className="num">{idx + 1}.</div>
       <div className="name">
         {isNewHighScore && isSubmitFormOpen ? (
@@ -289,8 +292,17 @@ const HighScoresStyles = styled.div`
     gap: 12px;
     display: grid;
     grid-template-columns: auto auto 1fr;
+    &.isNewHighScore {
+      .num,
+      .score {
+        text-shadow: 1px 2px 3px #000000cc;
+      }
+    }
   }
   .score {
     text-align: right;
+  }
+  .MuiInput-input {
+    box-shadow: 0px 2px 0px 0 #000000bf;
   }
 `;

@@ -100,7 +100,7 @@ export function SubmitHighScoreForm({
               setName(e.target.value.substring(0, MAX_CHARACTERS_IN_NAME));
             }}
             value={name}
-            label="name"
+            label="enter your name"
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 saveHighScoreAndUpdate();
@@ -170,6 +170,12 @@ const SubmitHighScoreFormStyles = styled.div<{ isSubmitted: boolean }>`
   }
   .MuiFormLabel-root {
     color: #fffb0095;
+    font-variant: small-caps;
+    font-family: monospace;
+    padding: 0.2em;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    word-spacing: -0.4em;
   }
 `;
 function getHighScoresFromNewHighScore(
