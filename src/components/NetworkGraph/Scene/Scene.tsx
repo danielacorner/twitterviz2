@@ -76,8 +76,7 @@ export function Scene() {
             const x = randBetween(-1, 1) * width;
             const z = (randBetween(-1, 1) * viewport.width) / 8;
             const y =
-              randBetween(-1, 1) * NODE_WIDTH * 1.5 +
-              (isEven ? 1 : -1) * width * 1.4;
+              randBetween(-1, 1) * NODE_WIDTH * 5 + (isEven ? 1 : -1) * width;
             return (
               <Node
                 key={node.id_str}

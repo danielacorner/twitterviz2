@@ -25,7 +25,7 @@ import { ScoreIncreasedPopupText } from "./ScoreIncreasedPopupText";
 import { useState } from "react";
 import { useMount } from "utils/utils";
 
-export const NODE_RADIUS_COLLISION_MULTIPLIER = 3;
+export const NODE_RADIUS_COLLISION_MULTIPLIER = 2.5;
 
 const nodeMaterial = new THREE.MeshPhysicalMaterial({
   emissive: "#0b152f",
