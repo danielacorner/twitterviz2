@@ -8,8 +8,8 @@ const Background = ({ background }: { background: boolean }) => {
       <Environment
         background={background}
         path="/cubemap/"
-        files={"maxresdefault.hdr"}
-        // files={"maxresdefault.hdr"}
+        files={"kelp.hdr"}
+        // files={"deepsea.hdr"}
       />
     </Suspense>
   );
