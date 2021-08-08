@@ -39,7 +39,13 @@ export function BotScorePopupNode() {
             zIndex: 999999999999999,
           }}
         >
-          {nodeDisplay ? <Background background={false} /> : null}
+          {nodeDisplay ? (
+            <>
+              <Background background={false} />
+              <ambientLight intensity={4} />
+              <directionalLight position={[0, 5, -4]} intensity={6} />
+            </>
+          ) : null}
           <animated.mesh scale={springProps.scale as any} position={[0, 0, -2]}>
             {nodeDisplay ? (
               <>
@@ -53,8 +59,6 @@ export function BotScorePopupNode() {
                   }}
                 />
                 {nodeDisplay.user.botScore ? null : <ScanningAnimation />}
-                <ambientLight intensity={4} />
-                <directionalLight position={[0, 5, -4]} intensity={6} />
               </>
             ) : null}
           </animated.mesh>

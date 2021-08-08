@@ -14,8 +14,9 @@ import { useAtom } from "jotai";
 import { Collisions } from "./Collisions";
 import { HighScores } from "components/Game/HighScores/HighScores";
 import Background from "./Background";
-import { EffectComposer, GodRays } from "@react-three/postprocessing";
+import { Bloom, EffectComposer, GodRays } from "@react-three/postprocessing";
 import { BlendFunction, Resizer, KernelSize } from "postprocessing";
+console.log("🌟🚨 ~ KernelSize", KernelSize);
 
 const NODE_WIDTH = NODE_RADIUS * NODE_RADIUS_COLLISION_MULTIPLIER;
 export function Scene() {
@@ -138,6 +139,18 @@ function Effects() {
             height={Resizer.AUTO_SIZE}
             kernelSize={KernelSize.SMALL}
             blur={0.1}
+          />
+          {/* <Bloom
+            kernelSize={3}
+            luminanceThreshold={0}
+            luminanceSmoothing={0.4}
+            intensity={0.6}
+          /> */}
+          <Bloom
+            kernelSize={KernelSize.VERY_LARGE}
+            luminanceThreshold={0}
+            luminanceSmoothing={0}
+            intensity={0.5}
           />
         </EffectComposer>
       )}
