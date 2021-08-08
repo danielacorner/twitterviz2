@@ -256,7 +256,6 @@ function AnimatedTadah({ idx }) {
   });
 
   const [rotations, setRotations] = useState(`0.2,0.6,0.3`);
-  console.log("🌟🚨 ~ AnimatedTadah ~ rotations", rotations);
 
   useInterval({
     callback: () => {
