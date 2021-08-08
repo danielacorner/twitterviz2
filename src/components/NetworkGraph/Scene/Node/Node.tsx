@@ -28,7 +28,9 @@ import { useState } from "react";
 import { useMount } from "utils/utils";
 import { useGesture } from "react-use-gesture";
 import { useThree } from "@react-three/fiber";
-import { ScanningAnimation } from "./BotScorePopupNode";
+import { ScanningAnimation } from "./ScanningAnimation";
+import { isNonNullType } from "graphql";
+import { MeshWobbleMaterial } from "@react-three/drei";
 
 export const NODE_RADIUS_COLLISION_MULTIPLIER = 2.5;
 
@@ -167,8 +169,8 @@ export const Node = ({
     config: { mass: 3, friction: 40, tension: 800 },
   }));
   // Create a gesture that contains drag and hover, set the spring accordingly
-  const WOBBLE_ROTATION = 0.005;
-  const WOBBLE_POSITION = 0.005;
+  const WOBBLE_ROTATION = 0.1;
+  const WOBBLE_POSITION = 0.1;
   const { size, viewport } = useThree();
   const aspect = (size.width / viewport.width) * 5;
   const bind = useGesture({
@@ -195,34 +197,36 @@ export const Node = ({
 
   const hasBotScore = Boolean(node.user.botScore);
 
+  const isScanningNode = scanningNodeId === node.id_str;
   return (
-    <animated.group {...(rest as any)}>
-      <animated.mesh rotation={rotation as any} {...(bind() as any)}>
-        <animated.mesh
-          ref={ref}
-          scale={springProps.scale as any}
-          {...(hasBotScore
-            ? {}
-            : {
-                onPointerEnter,
-                onPointerLeave,
-                onContextMenu,
-                onClick,
-                onWheel: onScroll,
-              })}
-        >
+    <animated.mesh rotation={rotation as any} {...(bind() as any)}>
+      <animated.mesh
+        ref={ref}
+        scale={springProps.scale as any}
+        {...(hasBotScore
+          ? {}
+          : {
+              onPointerEnter,
+              onPointerLeave,
+              onContextMenu,
+              onClick,
+              onWheel: onScroll,
+            })}
+      >
+        <animated.group {...(rest as any)}>
           <NodeContent
             {...{
               node,
               isTooltipNode,
               isPointerOver,
+              isScanningNode,
               isRightClickingThisNode,
             }}
           />
-          {scanningNodeId === node.id_str ? <ScanningAnimation /> : null}
-        </animated.mesh>
+          {isScanningNode ? <ScanningAnimation /> : null}
+        </animated.group>
       </animated.mesh>
-    </animated.group>
+    </animated.mesh>
   );
 };
 
@@ -230,19 +234,23 @@ export function NodeContent({
   node,
   isTooltipNode,
   isPointerOver,
+  isScanningNode,
   isRightClickingThisNode,
   forceOpaque = false,
 }: {
   node: UserNode;
   isTooltipNode: boolean;
   isPointerOver: boolean;
+  isScanningNode: boolean;
   isRightClickingThisNode: boolean;
   forceOpaque?: boolean;
 }) {
   const tweets = useTweets();
   const allTweetsByUser = tweets.filter((t) => t.user.id === node.user.id);
   const hasBotScore = Boolean(node.user.botScore);
-  const material = isRightClickingThisNode
+  const material = isScanningNode
+    ? null
+    : isRightClickingThisNode
     ? rightClickNodeMaterial
     : isPointerOver && isTooltipNode
     ? pointerOverMaterial
@@ -251,8 +259,8 @@ export function NodeContent({
     : nodeMaterial;
   return (
     <>
-      <mesh material={material} geometry={nodeGeometry}></mesh>
-
+      <mesh {...(material ? { material } : {})} geometry={nodeGeometry}></mesh>
+      {isScanningNode ? <MeshWobbleMaterial skinning={true} /> : null}
       {node.user.botScore ? (
         <>
           <NodeBotScoreAntenna

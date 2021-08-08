@@ -1,13 +1,14 @@
 import { animated, useSpring } from "@react-spring/three";
 import { NodeContent } from "components/NetworkGraph/Scene/Node/Node";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import styled from "styled-components/macro";
 import { useAtom } from "jotai";
 import { botScorePopupNodeAtom } from "providers/store/store";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { UserNode } from "../../useGraphWithUsersAndLinks";
 import { useWindowSize } from "utils/hooks";
 import Background from "../Background";
+import { ScanningAnimation } from "./ScanningAnimation";
 
 /** pops up and animates when you get a new bot score */
 export function BotScorePopupNode() {
@@ -52,6 +53,7 @@ export function BotScorePopupNode() {
                   {...{
                     node: nodeDisplay,
                     isTooltipNode: false,
+                    isScanningNode: true,
                     isPointerOver: false,
                     isRightClickingThisNode: false,
                     forceOpaque: true,
@@ -66,74 +68,6 @@ export function BotScorePopupNode() {
     </PopupStyles>
   );
 }
-const WIDTH = 4;
-const SCAN_SPEED = 2.4;
-export function ScanningAnimation() {
-  const ref = useRef<any>(null);
-  const ref2 = useRef<any>(null);
-  const ref3 = useRef<any>(null);
-  const ref4 = useRef<any>(null);
-
-  useFrame(({ clock }) => {
-    const seconds = clock.getElapsedTime();
-    if (ref.current && ref2.current) {
-      const progress = (seconds % (Math.PI * 2)) * SCAN_SPEED;
-      const y = Math.sin(progress) * WIDTH * 0.5;
-      ref.current.position.set(0, y, 0);
-      const x = Math.sin(progress - 0.9) * WIDTH * 0.5;
-      ref3.current.position.set(x, 0, 0);
-
-      ref2.current.rotation.y += 0.01;
-      ref2.current.rotation.z += y / 128;
-
-      ref2.current.scale.x = y / 16 + 1;
-      ref2.current.scale.y = y / 16 + 1;
-      ref2.current.scale.z = y / 16 + 1;
-
-      const opacity = (Math.round((y % 1) * 100) / 100 + 1) / 2;
-      ref4.current.opacity = opacity;
-    }
-  });
-
-  return (
-    <mesh>
-      {/* scanning box */}
-      <mesh ref={ref}>
-        <boxBufferGeometry args={[WIDTH, 0.02 * WIDTH, WIDTH]} />
-        <meshPhysicalMaterial
-          color={"#99dffa"}
-          transmission={0.98}
-          roughness={0.05}
-        />
-      </mesh>
-
-      {/* scanning box 2 */}
-      <mesh ref={ref3}>
-        <boxBufferGeometry args={[0.02 * WIDTH, WIDTH, WIDTH]} />
-        <meshPhysicalMaterial
-          color={"#99dffa"}
-          transmission={0.98}
-          roughness={0.05}
-        />
-      </mesh>
-
-      {/* Background plane w. scanning effect?  */}
-
-      {/* scanning icosahedron */}
-      <mesh ref={ref2}>
-        <icosahedronBufferGeometry args={[2.5, 1]} />
-        <meshBasicMaterial
-          ref={ref4}
-          wireframe={true}
-          transparent={true}
-          // opacity={0.15}
-          color={"#3ac7ff"}
-        />
-      </mesh>
-    </mesh>
-  );
-}
-
 // https://codesandbox.io/s/arkanoid-under-60-loc-forked-rmfcq?file=/src/App.js:2616-2788
 // const Background = (props) => (
 //   <mesh scale={useAspect(5000, 3800, 3)} {...props}>
