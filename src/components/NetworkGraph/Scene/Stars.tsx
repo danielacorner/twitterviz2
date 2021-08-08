@@ -67,7 +67,7 @@ export function Stars({ count }) {
             roughness: 0,
             envMapIntensity: 4,
             transparent: true,
-            opacity: 0.4,
+            opacity: 0.25,
           }}
         />
         {coords.map(([p1, p2, p3], i) => {

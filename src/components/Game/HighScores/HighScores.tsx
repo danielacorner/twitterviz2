@@ -5,7 +5,7 @@ import {
   GameStepsEnum,
   scoreAtom,
 } from "providers/store/store";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { IconButton } from "@material-ui/core";
 import { Restore } from "@material-ui/icons";
 import { NUM_SCORES, SubmitHighScoreForm } from "./SubmitHighScoreForm";
@@ -20,8 +20,6 @@ import { sortDescendingByScore } from "./sortDescendingByScore";
 import { useSpring, animated } from "react-spring";
 import { useMount } from "utils/utils";
 import { Html } from "@react-three/drei";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { useControls } from "leva";
 import { useInterval } from "utils/useInterval";
 
 const DIV_WIDTH = 280;
@@ -271,7 +269,7 @@ function AnimatedTadah({ idx }) {
 
   const spring2 = useSpring({
     transform: `rotate3d(${rotations},${sprung ? 780 : 0}deg)`,
-    config: { friction: 6, tension: 20, mass: 1.6 },
+    config: { friction: 6, tension: 20, mass: 1.4 },
   });
   return (
     <animated.div style={spring}>
