@@ -30,23 +30,21 @@ export function Effects() {
             blur={0.1}
           />
           {gpuInfo.tier > 2 ? (
-            <>
-              <Bloom
-                kernelSize={2}
-                luminanceThreshold={0}
-                luminanceSmoothing={0.4}
-                intensity={0.6}
-              />
-              <Bloom
-                kernelSize={KernelSize.VERY_LARGE}
-                luminanceThreshold={0}
-                luminanceSmoothing={0}
-                intensity={0.5}
-              />
-            </>
+            <Bloom
+              kernelSize={2}
+              luminanceThreshold={0}
+              luminanceSmoothing={0.4}
+              intensity={0.6}
+            />
           ) : (
             <></>
           )}
+          <Bloom
+            kernelSize={KernelSize.VERY_LARGE}
+            luminanceThreshold={0}
+            luminanceSmoothing={0}
+            intensity={0.5}
+          />
         </EffectComposer>
       )}
     </>

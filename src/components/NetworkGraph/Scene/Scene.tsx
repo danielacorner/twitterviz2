@@ -51,7 +51,7 @@ export function Scene() {
         angle={0.2}
         color="blue"
       /> */}
-      <Stars count={gpuInfo.tier > 2 ? 4000 : 1500} />
+      <Stars count={gpuInfo.tier > 2 ? 4000 : 1000} />
 
       <mesh scale={[20, 20, 20]}>
         {/* <Sky
