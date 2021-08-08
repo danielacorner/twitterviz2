@@ -13,6 +13,8 @@ export const INITIAL_NUM_TWEETS = 10;
 
 export const isMonthlyTwitterApiUsageExceededAtom = atom<boolean>(false);
 
+export const isRightDrawerOpenAtom = atom<boolean>(false);
+export const scanningNodeIdAtom = atom<string | null>(null);
 export const botScorePopupNodeAtom = atom<UserNode | null>(null);
 export const appUserIdAtom = atomWithStorage<string>("atoms:userId", "");
 export enum GameStepsEnum {

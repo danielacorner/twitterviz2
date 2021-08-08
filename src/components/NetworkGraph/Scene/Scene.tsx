@@ -14,7 +14,6 @@ import { useAtom } from "jotai";
 import { Collisions } from "./Collisions";
 import { HighScores } from "components/Game/HighScores/HighScores";
 import Background from "./Background";
-import { KernelSize } from "postprocessing";
 import { Effects } from "./Effects";
 
 const NODE_WIDTH = NODE_RADIUS * NODE_RADIUS_COLLISION_MULTIPLIER;
@@ -66,6 +65,7 @@ export function Scene() {
         maxPolarAngle={degToRad(135)}
         minDistance={40}
         maxDistance={500}
+        enablePan={false}
       />
       <Physics
         {...{ gravity: [0, 0, 0] }}

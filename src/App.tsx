@@ -32,7 +32,7 @@ function App() {
       <RightDrawer />
       <Game />
       <LoadingIndicator />
-      <BotScorePopupNode />
+      {/* <BotScorePopupNode /> */}
     </AppStyles>
   );
 }

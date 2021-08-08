@@ -13,6 +13,8 @@ import { atom, useAtom } from "jotai";
 import { BotScore, Tweet } from "types";
 import {
   botScorePopupNodeAtom,
+  isRightDrawerOpenAtom,
+  scanningNodeIdAtom,
   scoreAtom,
   shotsRemainingAtom,
 } from "providers/store/store";
@@ -54,6 +56,7 @@ export default function TagTheBotButton() {
     }, BOT_SCORE_POPUP_TIMEOUT);
 
     setLoading(false);
+    setScanningNodeId(null);
   }
 
   function setNotABot(node: Tweet) {
@@ -69,6 +72,8 @@ export default function TagTheBotButton() {
       )
     );
   }
+  const [scanningNodeId, setScanningNodeId] = useAtom(scanningNodeIdAtom);
+  const [, setIsRightDrawerOpen] = useAtom(isRightDrawerOpenAtom);
 
   return selectedNode &&
     shotsRemaining > 0 &&
@@ -81,6 +86,8 @@ export default function TagTheBotButton() {
           color="primary"
           onClick={() => {
             setLoading(true);
+            setIsRightDrawerOpen(false);
+            setScanningNodeId(selectedNode.user.id_str);
             setBotScorePopupNode({
               user: selectedNode.user,
               tweets: [selectedNode],

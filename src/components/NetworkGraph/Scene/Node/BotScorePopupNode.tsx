@@ -68,7 +68,7 @@ export function BotScorePopupNode() {
 }
 const WIDTH = 4;
 const SCAN_SPEED = 2.4;
-function ScanningAnimation() {
+export function ScanningAnimation() {
   const ref = useRef<any>(null);
   const ref2 = useRef<any>(null);
   const ref3 = useRef<any>(null);

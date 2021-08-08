@@ -1,10 +1,8 @@
-import { TooltipContent, TooltipStyles } from "../../NodeTooltip";
 import styled from "styled-components/macro";
-import { useIsLight } from "providers/ThemeManager";
 import { getOriginalPoster } from "providers/store/useSelectors";
 import { Html, Billboard } from "@react-three/drei";
 import { DISABLE_SELECTION_OF_TEXT_CSS } from "utils/constants";
-import { Tweet, User } from "types";
+import { Tweet } from "types";
 
 export default function NodeBillboard({
   tweets,
@@ -55,57 +53,3 @@ const AvatarStyles = styled.div`
     height: auto;
   }
 `;
-const TweetsColumnStyles = styled.div`
-  opacity: 0.7;
-  position: absolute;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  transform: translate3d(
-    0,
-    ${({ hasBotScore }) => (hasBotScore ? 100 : 0)}px,
-    0
-  );
-  top: 216px;
-  font-size: 12px;
-  color: hsla(0, 0%, 95%, 0.9);
-  min-height: 200px;
-  display: grid;
-  gap: 12px;
-`;
-
-function TweetsColumn({
-  hasBotScore,
-  tweets,
-  originalPoster,
-}: {
-  hasBotScore: boolean;
-  tweets: Tweet[];
-  originalPoster: User | null;
-}) {
-  const isLight = useIsLight();
-
-  return (
-    <TweetsColumnStyles {...{ hasBotScore }}>
-      {tweets.map((tweet) => (
-        <TooltipStyles
-          key={tweet.id_str}
-          {...{
-            isLight,
-            width: 200,
-            css: `
-                .id_str {display:none;}
-      `,
-          }}
-        >
-          <TooltipContent
-            {...{
-              originalPoster,
-              tweet,
-              autoPlay: false,
-              compact: false,
-            }}
-          />
-        </TooltipStyles>
-      ))}
-    </TweetsColumnStyles>
-  );
-}

@@ -10,25 +10,36 @@ import { NodeTooltipContent } from "../NetworkGraph/NodeTooltip";
 import { CUSTOM_SCROLLBAR_CSS } from "components/common/styledComponents";
 import TagTheBotButton from "components/Game/TagTheBotButton";
 import { Close } from "@material-ui/icons";
+import { isRightDrawerOpenAtom } from "providers/store/store";
+import { useAtom } from "jotai";
 
 /** Selected Tweet drawer */
 export function RightDrawer() {
   const selectedNode = useSelectedNode();
   const setSelectedNode = useSetSelectedNode();
   const originalPoster = selectedNode && getOriginalPoster(selectedNode);
+  const [isRightDrawerOpen, setIsRightDrawerOpen] = useAtom(
+    isRightDrawerOpenAtom
+  );
   return (
     <>
       <Drawer
         anchor="right"
-        open={Boolean(originalPoster)}
-        onClose={() => setSelectedNode(null)}
+        open={isRightDrawerOpen}
+        onClose={() => {
+          setIsRightDrawerOpen(false);
+          setSelectedNode(null);
+        }}
       >
         <DrawerStyles>
           {selectedNode && originalPoster && (
             <div className="content">
               <IconButton
                 className="btnClose"
-                onClick={() => setSelectedNode(null)}
+                onClick={() => {
+                  setIsRightDrawerOpen(false);
+                  setSelectedNode(null);
+                }}
               >
                 <Close />
               </IconButton>
