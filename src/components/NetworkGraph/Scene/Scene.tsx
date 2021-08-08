@@ -49,7 +49,7 @@ export function Scene() {
         angle={0.2}
         color="blue"
       /> */}
-      <Stars count={gpuInfo.tier > 2 ? 4000 : 1000} />
+      <Stars count={gpuInfo.tier > 2 ? 4000 : gpuInfo.tier > 1 ? 1000 : 600} />
 
       <mesh scale={[20, 20, 20]}>
         {/* <Sky
@@ -60,7 +60,11 @@ export function Scene() {
         /> */}
       </mesh>
       <directionalLight position={[0, 5, -4]} intensity={4} />
-      <OrbitControls {...{}} />
+      <OrbitControls
+        {...{}}
+        minPolarAngle={degToRad(45)}
+        maxPolarAngle={degToRad(135)}
+      />
       <Physics
         {...{ gravity: [0, 0, 0] }}
         defaultContactMaterial={{ friction: 10, restitution: 0.8 }}
@@ -90,8 +94,8 @@ export function Scene() {
       </Physics>
       <HighScores />
 
-      <Background background={true} />
       <BotScoreLegend />
+      <Background background={true} />
       <Effects />
     </Suspense>
   );
@@ -156,4 +160,8 @@ function useIsMounted() {
     setIsMounted(true);
   });
   return isMounted;
+}
+
+function degToRad(deg) {
+  return (deg * Math.PI) / 180;
 }

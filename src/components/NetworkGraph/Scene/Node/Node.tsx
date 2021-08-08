@@ -175,19 +175,29 @@ export const Node = ({
     onHover: ({ hovering }) =>
       set({ scale: hovering ? [1.2, 1.2, 1.2] : [1, 1, 1] }),
   });
+
+  // TODO: slower on some computers, fewer bubbles
+  // TODO: hide post Node billboard?
+  // TODO: limit camera angle, limit zoom out
+  // TODO: check out name stays after submit
+
+  const hasBotScore = Boolean(node.user.botScore);
+
   return (
     <animated.group {...(rest as any)}>
       <animated.mesh rotation={rotation as any} {...(bind() as any)}>
         <animated.mesh
           ref={ref}
           scale={springProps.scale as any}
-          {...{
-            onPointerEnter,
-            onPointerLeave,
-            onContextMenu,
-            onWheel: onScroll,
-            onClick,
-          }}
+          {...(hasBotScore
+            ? {}
+            : {
+                onPointerEnter,
+                onPointerLeave,
+                onContextMenu,
+                onClick,
+                onWheel: onScroll,
+              })}
         >
           <NodeContent
             {...{

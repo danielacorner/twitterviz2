@@ -4,7 +4,7 @@ import { useIsLight } from "providers/ThemeManager";
 import { getOriginalPoster } from "providers/store/useSelectors";
 import { Html, Billboard } from "@react-three/drei";
 import { DISABLE_SELECTION_OF_TEXT_CSS } from "utils/constants";
-import { Tweet } from "types";
+import { Tweet, User } from "types";
 
 export default function NodeBillboard({
   tweets,
@@ -13,7 +13,6 @@ export default function NodeBillboard({
   tweets: Tweet[];
   hasBotScore: boolean;
 }) {
-  const isLight = useIsLight();
   const originalPoster = getOriginalPoster(tweets[0]);
   return (
     <Billboard {...({} as any)}>
@@ -31,29 +30,7 @@ export default function NodeBillboard({
           <AvatarStyles>
             <img src={originalPoster?.profile_image_url_https} alt="" />
           </AvatarStyles>
-          <TweetsColumnStyles {...{ hasBotScore }}>
-            {tweets.map((tweet) => (
-              <TooltipStyles
-                key={tweet.id_str}
-                {...{
-                  isLight,
-                  width: 200,
-                  css: `
-                .id_str {display:none;}
-      `,
-                }}
-              >
-                <TooltipContent
-                  {...{
-                    originalPoster,
-                    tweet,
-                    autoPlay: false,
-                    compact: false,
-                  }}
-                />
-              </TooltipStyles>
-            ))}
-          </TweetsColumnStyles>
+          {/* <TweetsColumn {...{ hasBotScore, tweets, isLight, originalPoster }} /> */}
         </HtmlStyles>
       </Html>
     </Billboard>
@@ -94,3 +71,41 @@ const TweetsColumnStyles = styled.div`
   display: grid;
   gap: 12px;
 `;
+
+function TweetsColumn({
+  hasBotScore,
+  tweets,
+  originalPoster,
+}: {
+  hasBotScore: boolean;
+  tweets: Tweet[];
+  originalPoster: User | null;
+}) {
+  const isLight = useIsLight();
+
+  return (
+    <TweetsColumnStyles {...{ hasBotScore }}>
+      {tweets.map((tweet) => (
+        <TooltipStyles
+          key={tweet.id_str}
+          {...{
+            isLight,
+            width: 200,
+            css: `
+                .id_str {display:none;}
+      `,
+          }}
+        >
+          <TooltipContent
+            {...{
+              originalPoster,
+              tweet,
+              autoPlay: false,
+              compact: false,
+            }}
+          />
+        </TooltipStyles>
+      ))}
+    </TweetsColumnStyles>
+  );
+}
