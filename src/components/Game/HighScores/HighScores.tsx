@@ -110,7 +110,15 @@ export function HighScores() {
         {process.env.NODE_ENV !== "production" && (
           <IconButton
             style={{ position: "absolute", bottom: 0, right: 0 }}
-            onClick={deleteAllHighScores}
+            onClick={() => {
+              if (
+                window.confirm(
+                  "Are you sure you want to delete all high scores?"
+                )
+              ) {
+                deleteAllHighScores();
+              }
+            }}
           >
             <Restore />
           </IconButton>

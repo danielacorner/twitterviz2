@@ -5,14 +5,19 @@ import { NodeBotScoreAntenna } from "../../NetworkGraph/Scene/Node/NodeBotScoreA
 import { useSpring, animated } from "@react-spring/three";
 import { gameStateAtom, GameStepsEnum } from "providers/store/store";
 import { useAtom } from "jotai";
+import Background from "components/NetworkGraph/Scene/Background";
 
 const SCALE = 0.15;
 const RADIUS = 40;
 
 export function BotScoreLegend({
-  position = undefined as number[] | undefined,
-  scale = undefined as number[] | undefined,
+  position = [0, 0, 0],
+  scale = [1, 1, 1],
   isInStartMenu = false,
+}: {
+  position?: number[];
+  scale?: number[];
+  isInStartMenu?: boolean;
 }) {
   const tweets = useTweets();
   const showBotScore =
@@ -24,18 +29,13 @@ export function BotScoreLegend({
   const isGameOver = gameState.step === GameStepsEnum.gameOver;
 
   const show = !isGameOver && showBotScore;
-  const scaleDisplay = show ? scale || [1, 1, 1] : [0, 0, 0];
+  const scaleDisplay = show ? scale : [0, 0, 0];
   const springProps = useSpring({
     scale: scaleDisplay,
   });
-  const positionDisplay = position || [
-    width / 2 - RADIUS * 2,
-    height / 2 - RADIUS * 2.5,
-    0,
-  ];
-  console.log("🌟🚨 ~ positionDisplay", positionDisplay);
+
   return (
-    <HUD position={positionDisplay}>
+    <HUD position={[width / 2 - RADIUS * 2, height / 2 - RADIUS * 2.5, 0]}>
       <animated.mesh
         scale={springProps.scale as any}
         position={position as any}

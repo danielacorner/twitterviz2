@@ -91,6 +91,10 @@ export function useStreamNewTweets() {
     );
     const tweetsWithBotScores =
       (resp as any)?.data?.map((d) => d?.data?.nodeWithBotScore) || [];
+    console.log(
+      "🌟🚨 ~ fetchOldTweetsWithBotScoresFromDB ~ tweetsWithBotScores",
+      tweetsWithBotScores
+    );
     const tweetsWithHiddenBotScores: Tweet[] = tweetsWithBotScores.map((t) => ({
       ...t,
       botScore: undefined,
@@ -102,6 +106,10 @@ export function useStreamNewTweets() {
     const randomDedupedTweets = shuffle([...dedupedTweets]).slice(
       0,
       INITIAL_NUM_TWEETS
+    );
+    console.log(
+      "🌟🚨 ~ fetchOldTweetsWithBotScoresFromDB ~ randomDedupedTweets",
+      randomDedupedTweets
     );
 
     setTweets(randomDedupedTweets);
