@@ -8,7 +8,7 @@ const Background = ({ background }: { background: boolean }) => {
       <Environment
         background={background}
         path="/cubemap/"
-        files={isDaytime ? "maxresdefault.hdr" : "deepsea.hdr"}
+        files={"maxresdefault.hdr"}
         // files={"maxresdefault.hdr"}
       />
     </Suspense>
