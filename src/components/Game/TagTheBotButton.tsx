@@ -56,6 +56,20 @@ export default function TagTheBotButton() {
     setLoading(false);
   }
 
+  function setNotABot(node: Tweet) {
+    setTweets(
+      tweets.map((t) =>
+        t.id_str === node.id_str
+          ? {
+              ...node,
+              isNotABot: true,
+              user: { ...node.user, isNotABot: true },
+            }
+          : t
+      )
+    );
+  }
+
   return selectedNode &&
     shotsRemaining > 0 &&
     !Boolean(selectedNode.botScore) ? (
@@ -113,6 +127,7 @@ export default function TagTheBotButton() {
           variant="contained"
           color="secondary"
           onClick={() => {
+            setNotABot(selectedNode);
             setSelectedNode(null);
           }}
         >

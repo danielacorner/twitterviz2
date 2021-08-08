@@ -156,6 +156,7 @@ export interface Tweet {
   botScore?: BotScore;
   hiddenBotScore?: BotScore;
   isUserNode?: boolean;
+  isNotABot?: boolean;
   isLikedNode?: boolean;
   /** is this a retweet of another tweet */
   isRetweetNode?: boolean;
@@ -386,6 +387,7 @@ export interface User {
   id_str: string;
   name: string;
   screen_name: string;
+  isNotABot?: boolean;
   botScore?: BotScore;
   hiddenBotScore?: BotScore;
   location: null | string;

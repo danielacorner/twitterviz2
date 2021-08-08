@@ -135,14 +135,16 @@ export const Node = ({
   // hide nodes when the game ends
   const hide = (useAreBotsLinedUp() && !node.user.botScore) || !mounted;
 
+  const scaleMult = node.user.isNotABot ? 0.5 : 1;
+
   const springProps = useSpring({
     scale: hide
       ? [0, 0, 0]
       : isPointerOver && isTooltipNode
-      ? [2.2, 2.2, 2.2]
+      ? [2.2 * scaleMult, 2.2 * scaleMult, 2.2 * scaleMult]
       : isTooltipNode
-      ? [1.8, 1.8, 1.8]
-      : [1, 1, 1],
+      ? [1.8 * scaleMult, 1.8 * scaleMult, 1.8 * scaleMult]
+      : [1 * scaleMult, 1 * scaleMult, 1 * scaleMult],
   });
   return (
     <animated.mesh
