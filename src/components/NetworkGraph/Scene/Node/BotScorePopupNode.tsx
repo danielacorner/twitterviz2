@@ -130,6 +130,7 @@ function ScanningAnimation() {
     </mesh>
   );
 }
+
 // https://codesandbox.io/s/arkanoid-under-60-loc-forked-rmfcq?file=/src/App.js:2616-2788
 // const Background = (props) => (
 //   <mesh scale={useAspect(5000, 3800, 3)} {...props}>

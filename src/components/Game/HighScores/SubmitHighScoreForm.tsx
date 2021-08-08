@@ -11,7 +11,7 @@ import { useSpring, animated } from "react-spring";
 import { useMount } from "utils/utils";
 
 export const NUM_SCORES = 12;
-export const MAX_CHARACTERS_IN_NAME = 20;
+export const MAX_CHARACTERS_IN_NAME = 14;
 export function SubmitHighScoreForm({
   highScores,
   setHighScores,
