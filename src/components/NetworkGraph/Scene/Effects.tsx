@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { Bloom, EffectComposer, GodRays } from "@react-three/postprocessing";
 import { BlendFunction, Resizer, KernelSize } from "postprocessing";
-import { Sun } from "./Scene";
+import { Sun } from "./Sun.1";
 import { useDetectGPU } from "@react-three/drei";
 
 export function Effects() {

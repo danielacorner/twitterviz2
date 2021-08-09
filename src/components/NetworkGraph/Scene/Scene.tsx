@@ -3,10 +3,10 @@ import { useGraphWithUsersAndLinks } from "../useGraphWithUsersAndLinks";
 import { Debug, Physics } from "@react-three/cannon";
 import { Node, NODE_RADIUS_COLLISION_MULTIPLIER } from "./Node/Node";
 import { BotScoreLegend } from "../../Game/GameStateHUD/BotScoreLegend";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useThree } from "@react-three/fiber";
 import { CAMERA_POSITION, NODE_RADIUS } from "utils/constants";
 import { useSpring } from "react-spring";
-import { forwardRef, Suspense, useState } from "react";
+import { Suspense, useState } from "react";
 import { useMount } from "utils/utils";
 import { Stars } from "./Stars";
 import { gameStateAtom, GameStepsEnum } from "providers/store/store";
@@ -15,6 +15,7 @@ import { Collisions } from "./Collisions";
 import { HighScores } from "components/Game/HighScores/HighScores";
 import Background from "./Background";
 import { Effects } from "./Effects";
+import { useControls } from "leva";
 
 const NODE_WIDTH = NODE_RADIUS * NODE_RADIUS_COLLISION_MULTIPLIER;
 export function Scene() {
@@ -39,6 +40,7 @@ export function Scene() {
   // lined up: hide if they don't have a bot score
   const { viewport } = useThree();
   const gpuInfo = useDetectGPU();
+  const { x, y, z } = useControls({ x: -2.15, y: 5, z: 0.1 });
   return (
     <Suspense fallback={null}>
       {/* <ambientLight intensity={0.75} /> */}
@@ -58,7 +60,7 @@ export function Scene() {
           turbidity={0.2}
         /> */}
       </mesh>
-      <directionalLight position={[0, 5, -4]} intensity={4} />
+      <directionalLight position={[x, y, z]} intensity={4} />
       <OrbitControls
         {...{}}
         minPolarAngle={degToRad(45)}
@@ -108,26 +110,6 @@ export function getHourOfDay() {
   const hours = now.getHours();
   return hours;
 }
-
-const SUN_RADIUS = 10;
-const SUN_Y = 170;
-const SUN_X = -60;
-const SUN_WOBBLE = 6;
-export const Sun = forwardRef(function Sun(props, forwardRef) {
-  useFrame(({ clock }) => {
-    (forwardRef as any).current.position.x =
-      Math.sin(clock.getElapsedTime()) * -SUN_WOBBLE + SUN_X;
-    (forwardRef as any).current.position.z =
-      Math.cos(clock.getElapsedTime()) * -SUN_WOBBLE - 500;
-  });
-
-  return (
-    <mesh ref={forwardRef as any} position={[0, SUN_Y, 0]}>
-      <sphereGeometry args={[SUN_RADIUS, 36, 36]} />
-      <meshBasicMaterial color={"#00FF00"} />
-    </mesh>
-  );
-});
 
 function randBetween(min, max) {
   return Math.random() * (max - min) + min;

@@ -5,6 +5,7 @@ import { NODE_RADIUS } from "utils/constants";
 import { useMount } from "utils/utils";
 import { scaleOrdinal } from "d3-scale";
 import { schemeCategory10 } from "d3-scale-chromatic";
+import * as THREE from "three";
 
 const colors = scaleOrdinal(schemeCategory10);
 
@@ -127,12 +128,13 @@ function Antenna({
           metalness={0.8}
           roughness={0.1}
           color="#464646"
+          emissive={new THREE.Color("#272727")}
           transparent={true}
-          opacity={forceOpaque ? 0.8 : showLabels ? 0.5 : score ** 0.7}
+          opacity={1}
         />
       </animated.mesh>
-      {/* ball */}
       <animated.mesh position={springProps.spherePosition as any}>
+        {/* text */}
         <Billboard {...({} as any)} args={[0, 0]}>
           <Text
             {...({} as any)}
@@ -156,18 +158,21 @@ function Antenna({
               0,
             ]}
             fontSize={1}
-            fillOpacity={score ** 0.3}
+            fillOpacity={score ** 0.1}
           >
             {showLabels ? label : (score * 100).toFixed(0) + "%"}
           </Text>
         </Billboard>
+        {/* ball */}
         <sphereBufferGeometry args={[SPHERE_RADIUS, 26, 26]} />
         <meshPhysicalMaterial
           metalness={0.8}
           roughness={0.1}
-          color={color}
+          // color="#666"
+          // color={color}
+          emissive={new THREE.Color(color)}
           transparent={true}
-          opacity={forceOpaque ? 1 : showLabels ? 0.5 : score ** 0.4}
+          opacity={forceOpaque ? 1 : showLabels ? 0.5 : score ** 0.5}
         />
       </animated.mesh>
     </>
