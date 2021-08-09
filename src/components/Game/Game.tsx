@@ -40,20 +40,17 @@ export function Game() {
 }
 const GameStyles = styled.div``;
 
-function GameContent() {
-  const tweets = useTweets();
-  const loading = useLoading();
+export const usePlayAgain = () => {
   const { fetchNewTweets } = useStreamNewTweets();
   const deleteAllTweets = useDeleteAllTweets();
   const replaceNodesInDbForUser = useReplaceNodesInDbForUser();
   const setTweets = useSetTweets();
   const setLoading = useSetLoading();
-  const setNodesInDb = useSetNodesInDbForUser();
   const [, setScore] = useAtom(scoreAtom);
   const [gameState, setGameState] = useAtom(gameStateAtom);
   const [shotsRemaining, setShotsRemaining] = useAtom(shotsRemainingAtom);
 
-  function resetScoreAndFetchNewTweets() {
+  return () => {
     setLoading(true);
     deleteAllTweets().then((ret) => {
       fetchNewTweets().then((newTweets) => {
@@ -67,15 +64,30 @@ function GameContent() {
         setLoading(false);
       });
     });
-  }
+  };
+};
 
-  function startLookingAtTweets() {
+export function useStartLookingAtTweets() {
+  const [gameState, setGameState] = useAtom(gameStateAtom);
+
+  return () => {
     setGameState((p) => ({
       ...p,
       step: GameStepsEnum.lookingAtTweetsWithBotScores,
       startTime: Date.now(),
     }));
-  }
+  };
+}
+
+function GameContent() {
+  const tweets = useTweets();
+  const setNodesInDb = useSetNodesInDbForUser();
+  const [gameState, setGameState] = useAtom(gameStateAtom);
+  const [shotsRemaining] = useAtom(shotsRemainingAtom);
+
+  const resetScoreAndFetchNewTweets = usePlayAgain();
+
+  const startLookingAtTweets = useStartLookingAtTweets();
 
   // game over when no shots remain
   useEffect(() => {
@@ -98,32 +110,12 @@ function GameContent() {
       );
     case GameStepsEnum.lookingAtTweetsWithBotScores:
       return <BtnStartOver />;
-    case GameStepsEnum.gameOver:
-      return (
-        <>
-          <Button
-            color="secondary"
-            disabled={loading}
-            variant="contained"
-            onClick={() => {
-              resetScoreAndFetchNewTweets();
-              startLookingAtTweets();
-            }}
-            style={{
-              bottom: 72,
-              textTransform: "none",
-              position: "fixed",
-              left: 0,
-              right: 0,
-              margin: "auto",
-              width: "fit-content",
-              zIndex: 999999999,
-            }}
-          >
-            Play again
-          </Button>
-        </>
-      );
+    // case GameStepsEnum.gameOver:
+    //   return (
+    //     <>
+
+    //     </>
+    //   );
     default:
       return null;
   }

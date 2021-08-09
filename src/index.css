@@ -19,3 +19,6 @@ code {
 .MuiDrawer-paper {
   background: none !important;
 }
+.MuiButton-containedSecondary {
+  background-color: #9e1840 !important;
+}

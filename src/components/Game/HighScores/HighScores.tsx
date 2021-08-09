@@ -6,7 +6,7 @@ import {
   scoreAtom,
 } from "providers/store/store";
 import { useEffect, useState } from "react";
-import { IconButton } from "@material-ui/core";
+import { Button, IconButton } from "@material-ui/core";
 import { Restore } from "@material-ui/icons";
 import { NUM_SCORES, SubmitHighScoreForm } from "./SubmitHighScoreForm";
 import {
@@ -22,6 +22,8 @@ import { useMount } from "utils/utils";
 import { Html } from "@react-three/drei";
 import { useInterval } from "utils/useInterval";
 import { darkBlueBackground } from "utils/colors";
+import { useLoading } from "providers/store/useSelectors";
+import { usePlayAgain, useStartLookingAtTweets } from "../Game";
 
 const DIV_WIDTH = 280;
 export function HighScores() {
@@ -77,8 +79,11 @@ export function HighScores() {
   }, [isGameOver]);
 
   const deleteAllHighScores = useDeleteAllHighScores();
-
+  const loading = useLoading();
   const [submittedName, setSubmittedName] = useState("");
+  const resetScoreAndFetchNewTweets = usePlayAgain();
+  const startLookingAtTweets = useStartLookingAtTweets();
+
   return !isGameOver ? null : (
     <Html transform={true} position={[0, 0, 30]} scale={[18, 18, 18]}>
       <HighScoresStyles>
@@ -123,6 +128,18 @@ export function HighScores() {
             <Restore />
           </IconButton>
         )}
+        <Button
+          className="btnPlayAgain"
+          color="secondary"
+          disabled={loading}
+          variant="contained"
+          onClick={() => {
+            resetScoreAndFetchNewTweets();
+            startLookingAtTweets();
+          }}
+        >
+          Play again
+        </Button>
       </HighScoresStyles>
     </Html>
   );
@@ -341,5 +358,13 @@ const HighScoresStyles = styled.div`
   }
   .MuiInput-input {
     box-shadow: 0px 2px 0px 0 #000000bf;
+  }
+  .btnPlayAgain {
+    position: absolute;
+    bottom: -56px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: fit-content;
   }
 `;
