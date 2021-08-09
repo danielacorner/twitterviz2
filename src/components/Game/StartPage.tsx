@@ -47,7 +47,7 @@ export function StartPage({
             </p>
             <p style={{ marginTop: 16 }}>There are different kinds of bot:</p>
             <div style={{ margin: "auto", width: "fit-content" }}>
-              <Canvas style={{ width: 240, height: 240 }}>
+              <Canvas style={{ width: 158, height: 240 }}>
                 {getIsMobileDevice() ? (
                   <DeviceOrientationOrbitControls />
                 ) : (

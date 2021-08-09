@@ -156,17 +156,17 @@ export const Node = ({
 
   const scaleMult = isNotABot ? 0.4 : 1;
 
+  const isScanningNode = scanningNodeId === node.id_str;
+
   const springProps = useSpring({
     scale: hide
       ? [0, 0, 0]
-      : isPointerOver && isTooltipNode
+      : isScanningNode || (isPointerOver && isTooltipNode)
       ? [2.2 * scaleMult, 2.2 * scaleMult, 2.2 * scaleMult]
       : isTooltipNode
       ? [1.8 * scaleMult, 1.8 * scaleMult, 1.8 * scaleMult]
       : [1 * scaleMult, 1 * scaleMult, 1 * scaleMult],
   });
-
-  const isScanningNode = scanningNodeId === node.id_str;
 
   // -- drag to change position --
 

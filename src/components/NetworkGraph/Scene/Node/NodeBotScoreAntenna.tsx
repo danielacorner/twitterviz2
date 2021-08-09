@@ -168,6 +168,11 @@ function Antenna({
         <meshPhysicalMaterial
           metalness={0.8}
           roughness={0.1}
+          {...(isInStartMenu
+            ? {
+                color,
+              }
+            : {})}
           // color="#666"
           // color={color}
           emissive={new THREE.Color(color)}
