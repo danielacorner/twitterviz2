@@ -50,6 +50,14 @@ const rightClickNodeMaterial = new THREE.MeshPhysicalMaterial({
   envMapIntensity: 4,
   // color: "#be5626",
 });
+const notABotMaterial = new THREE.MeshPhysicalMaterial({
+  // emissive: "#471111",
+  metalness: 0,
+  transmission: 1,
+  roughness: 0,
+  envMapIntensity: 4,
+  // color: "#be5626",
+});
 const pointerOverMaterial = new THREE.MeshPhysicalMaterial({
   // emissive: "#002741",
   metalness: 0.94,
@@ -145,7 +153,9 @@ export const Node = ({
   // hide nodes when the game ends
   const hide = (useAreBotsLinedUp() && !node.user.botScore) || !mounted;
 
-  const scaleMult = node.user.isNotABot ? 0.5 : 1;
+  const isNotABot = node.user.isNotABot;
+
+  const scaleMult = isNotABot ? 0.4 : 1;
 
   const springProps = useSpring({
     scale: hide
@@ -248,12 +258,16 @@ export function NodeContent({
   const tweets = useTweets();
   const allTweetsByUser = tweets.filter((t) => t.user.id === node.user.id);
   const hasBotScore = Boolean(node.user.botScore);
+  const isNotABot = node.user.isNotABot;
+
   const material = isScanningNode
     ? null
     : isRightClickingThisNode
     ? rightClickNodeMaterial
     : isPointerOver && isTooltipNode
     ? pointerOverMaterial
+    : isNotABot
+    ? notABotMaterial
     : isTooltipNode
     ? tooltipNodeMaterial
     : nodeMaterial;

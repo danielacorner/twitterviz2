@@ -139,6 +139,7 @@ export default function TagTheBotButton() {
           onClick={() => {
             setNotABot(selectedNode);
             setSelectedNode(null);
+            setIsRightDrawerOpen(false);
           }}
         >
           Not a bot...
