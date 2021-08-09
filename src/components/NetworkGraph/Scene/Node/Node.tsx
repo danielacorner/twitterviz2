@@ -257,10 +257,11 @@ export function NodeContent({
     : isTooltipNode
     ? tooltipNodeMaterial
     : nodeMaterial;
+  console.log("🌟🚨 ~ isScanningNode", isScanningNode);
   return (
     <>
-      <mesh {...(material ? { material } : {})} geometry={nodeGeometry}>
-        {isScanningNode ? (
+      {isScanningNode && (
+        <mesh geometry={nodeGeometry}>
           <MeshWobbleMaterial
             skinning={true}
             factor={20}
@@ -268,13 +269,19 @@ export function NodeContent({
             {...{
               metalness: 0.94,
               roughness: 0.1,
-              color: "blue",
+              color: "cornflowerblue",
               transparent: true,
               opacity: 0.8,
             }}
           />
-        ) : null}
-      </mesh>
+        </mesh>
+      )}
+      {isScanningNode ? null : (
+        <mesh
+          {...(material ? { material } : {})}
+          geometry={nodeGeometry}
+        ></mesh>
+      )}
       {node.user.botScore ? (
         <>
           <NodeBotScoreAntenna

@@ -31,7 +31,7 @@ export function ScanningAnimation() {
       ref2.current.scale.y = y / 16 + 1;
       ref2.current.scale.z = y / 16 + 1;
 
-      const opacity = 1 - (Math.round((y % 1) * 100) / 100 + 1) / 2;
+      const opacity = (1 - (Math.round((y % 1) * 100) / 100 + 1) / 2) * 0.5;
       ref4.current.opacity = opacity;
     }
   });
