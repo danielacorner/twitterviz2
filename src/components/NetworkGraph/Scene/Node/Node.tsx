@@ -166,13 +166,15 @@ export const Node = ({
       : [1 * scaleMult, 1 * scaleMult, 1 * scaleMult],
   });
 
+  const isScanningNode = scanningNodeId === node.id_str;
+
   // -- drag to change position --
 
   // https://codesandbox.io/s/react-three-fiber-gestures-forked-qi8xq?file=/src/App.js:351-672
 
   // Set up a spring with values we're going to modify
   const [{ rotation, ...rest }, set] = useSpring(() => ({
-    scale: [1, 1, 1],
+    scale: isScanningNode ? [1.2, 1.2, 1.2] : [1, 1, 1],
     position: [0, 0, 0],
     rotation: [0, 0, 0],
     config: { mass: 3, friction: 40, tension: 800 },
@@ -206,7 +208,6 @@ export const Node = ({
 
   const hasBotScore = Boolean(node.user.botScore);
 
-  const isScanningNode = scanningNodeId === node.id_str;
   return (
     <animated.mesh rotation={rotation as any} {...(bind() as any)}>
       <animated.mesh

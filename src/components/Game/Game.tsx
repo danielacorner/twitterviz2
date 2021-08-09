@@ -1,4 +1,3 @@
-import { Button } from "@material-ui/core";
 import { useAtom } from "jotai";
 import {
   gameStateAtom,
@@ -10,7 +9,6 @@ import {
 import { useStreamNewTweets } from "components/NavBar/useStreamNewTweets";
 import { useDeleteAllTweets } from "components/common/useDeleteAllTweets";
 import {
-  useLoading,
   useSetLoading,
   useSetTweets,
   useTweets,
@@ -47,8 +45,7 @@ export const usePlayAgain = () => {
   const setTweets = useSetTweets();
   const setLoading = useSetLoading();
   const [, setScore] = useAtom(scoreAtom);
-  const [gameState, setGameState] = useAtom(gameStateAtom);
-  const [shotsRemaining, setShotsRemaining] = useAtom(shotsRemainingAtom);
+  const [, setShotsRemaining] = useAtom(shotsRemainingAtom);
 
   return () => {
     setLoading(true);
@@ -68,7 +65,7 @@ export const usePlayAgain = () => {
 };
 
 export function useStartLookingAtTweets() {
-  const [gameState, setGameState] = useAtom(gameStateAtom);
+  const [, setGameState] = useAtom(gameStateAtom);
 
   return () => {
     setGameState((p) => ({

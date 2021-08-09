@@ -22,3 +22,6 @@ code {
 .MuiButton-containedSecondary {
   background-color: #9e1840 !important;
 }
+.MuiButton-containedPrimary {
+  background-color: #1b90f0 !important;
+}

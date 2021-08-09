@@ -15,7 +15,6 @@ import { Collisions } from "./Collisions";
 import { HighScores } from "components/Game/HighScores/HighScores";
 import Background from "./Background";
 import { Effects } from "./Effects";
-import { useControls } from "leva";
 
 const NODE_WIDTH = NODE_RADIUS * NODE_RADIUS_COLLISION_MULTIPLIER;
 export function Scene() {
@@ -40,7 +39,6 @@ export function Scene() {
   // lined up: hide if they don't have a bot score
   const { viewport } = useThree();
   const gpuInfo = useDetectGPU();
-  const { x, y, z } = useControls({ x: -2.15, y: 5, z: 0.1 });
   return (
     <Suspense fallback={null}>
       {/* <ambientLight intensity={0.75} /> */}
@@ -60,7 +58,7 @@ export function Scene() {
           turbidity={0.2}
         /> */}
       </mesh>
-      <directionalLight position={[x, y, z]} intensity={4} />
+      <directionalLight position={[-2.15, 5, 0.1]} intensity={4} />
       <OrbitControls
         {...{}}
         minPolarAngle={degToRad(45)}
