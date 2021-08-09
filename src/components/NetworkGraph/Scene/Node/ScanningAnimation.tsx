@@ -1,3 +1,4 @@
+import { MeshWobbleMaterial } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
 
@@ -41,18 +42,44 @@ export function ScanningAnimation() {
       {/* scanning box */}
       <mesh ref={ref}>
         <boxBufferGeometry args={[WIDTH, 0.02 * WIDTH, WIDTH]} />
-        <meshPhysicalMaterial
-          transparent={true}
+        <MeshWobbleMaterial
+          skinning={true}
+          factor={0.6}
+          speed={8}
           ref={ref5}
-          color={"#99dffa"}
-          transmission={0.98}
-          roughness={0.05}
+          {...{
+            metalness: 0.94,
+            roughness: 0.1,
+            color: "#1fd5db",
+            transparent: true,
+            opacity: 0.8,
+          }}
         />
+        {/* <meshPhysicalMaterial
+              transparent={true}
+              ref={ref5}
+              color={"#99dffa"}
+              transmission={0.98}
+              roughness={0.05}
+            /> */}
       </mesh>
 
       {/* scanning box 2 */}
       <mesh ref={ref3}>
         <boxBufferGeometry args={[0.02 * WIDTH, WIDTH, WIDTH]} />
+        {/* <MeshWobbleMaterial
+          skinning={true}
+          factor={0.6}
+          speed={8}
+          ref={ref6}
+          {...{
+            metalness: 0.94,
+            roughness: 0.1,
+            color: "#1fd5db",
+            transparent: true,
+            opacity: 0.8,
+          }}
+        /> */}
         <meshPhysicalMaterial
           transparent={true}
           ref={ref6}

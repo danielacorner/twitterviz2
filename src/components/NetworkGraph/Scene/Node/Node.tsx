@@ -282,7 +282,7 @@ export function NodeContent({
             {...{
               metalness: 0.94,
               roughness: 0.1,
-              color: "cornflowerblue",
+              color: "#1fd5db",
               transparent: true,
               opacity: 0.8,
             }}
