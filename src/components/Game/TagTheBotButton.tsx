@@ -1,5 +1,6 @@
 import styled from "styled-components/macro";
 import {
+  getOriginalPoster,
   useLoading,
   useSelectedNode,
   useSetLoading,
@@ -29,7 +30,6 @@ export default function TagTheBotButton() {
   const setTweets = useSetTweets();
   const selectedNode = useSelectedNode();
   const setSelectedNode = useSetSelectedNode();
-  // const originalPoster = selectedNode && getOriginalPoster(selectedNode);
   const fetchBotScoreForTweet = useFetchBotScoreForTweet();
   const isLoading = useLoading();
   const setLoading = useSetLoading();
@@ -87,7 +87,10 @@ export default function TagTheBotButton() {
           onClick={() => {
             setLoading(true);
             setIsRightDrawerOpen(false);
-            setScanningNodeId(selectedNode.user.id_str);
+            const op = getOriginalPoster(selectedNode);
+            if (op) {
+              setScanningNodeId(op.id_str);
+            }
             setBotScorePopupNode({
               user: selectedNode.user,
               tweets: [selectedNode],

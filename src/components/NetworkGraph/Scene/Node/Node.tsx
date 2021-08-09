@@ -259,8 +259,22 @@ export function NodeContent({
     : nodeMaterial;
   return (
     <>
-      <mesh {...(material ? { material } : {})} geometry={nodeGeometry}></mesh>
-      {isScanningNode ? <MeshWobbleMaterial skinning={true} /> : null}
+      <mesh {...(material ? { material } : {})} geometry={nodeGeometry}>
+        {isScanningNode ? (
+          <MeshWobbleMaterial
+            skinning={true}
+            factor={20}
+            speed={8}
+            {...{
+              metalness: 0.94,
+              roughness: 0.1,
+              color: "blue",
+              transparent: true,
+              opacity: 0.8,
+            }}
+          />
+        ) : null}
+      </mesh>
       {node.user.botScore ? (
         <>
           <NodeBotScoreAntenna
