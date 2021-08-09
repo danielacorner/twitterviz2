@@ -12,12 +12,8 @@ import NetworkGraph from "components/NetworkGraph/NetworkGraph";
 import { RightDrawer } from "./components/RightDrawer/RightDrawer";
 import { Game } from "./components/Game/Game";
 import { LoadingIndicator } from "./LoadingIndicator";
-import { BotScorePopupNode } from "./components/NetworkGraph/Scene/Node/BotScorePopupNode";
-// import { useDeleteAllTweets } from "components/common/useDeleteAllTweets";
-// import { useMount } from "utils/utils";
 
 function App() {
-  // useRecordSelectedNodeHistory();
   return (
     <AppStyles className="App">
       {/* {process.env.NODE_ENV !== "production" && <NavBar />} */}

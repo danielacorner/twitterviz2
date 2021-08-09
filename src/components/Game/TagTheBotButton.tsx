@@ -72,7 +72,7 @@ export default function TagTheBotButton() {
       )
     );
   }
-  const [scanningNodeId, setScanningNodeId] = useAtom(scanningNodeIdAtom);
+  const [, setScanningNodeId] = useAtom(scanningNodeIdAtom);
   const [, setIsRightDrawerOpen] = useAtom(isRightDrawerOpenAtom);
 
   return selectedNode &&

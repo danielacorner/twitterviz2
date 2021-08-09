@@ -29,7 +29,6 @@ import { useMount } from "utils/utils";
 import { useGesture } from "react-use-gesture";
 import { useThree } from "@react-three/fiber";
 import { ScanningAnimation } from "./ScanningAnimation";
-import { isNonNullType } from "graphql";
 import { MeshWobbleMaterial } from "@react-three/drei";
 
 export const NODE_RADIUS_COLLISION_MULTIPLIER = 2.5;
@@ -87,7 +86,7 @@ export const Node = ({
 }) => {
   const tooltipNode = useTooltipNode();
 
-  const [scanningNodeId, setScanningNodeId] = useAtom(scanningNodeIdAtom);
+  const [scanningNodeId] = useAtom(scanningNodeIdAtom);
   const [rightClickMenu] = useAtom(rightClickMenuAtom);
   const isRightClickingThisNode = rightClickMenu.node
     ? getOriginalPoster(rightClickMenu.node)?.id_str === node.id_str
@@ -271,7 +270,6 @@ export function NodeContent({
     : isTooltipNode
     ? tooltipNodeMaterial
     : nodeMaterial;
-  console.log("🌟🚨 ~ isScanningNode", isScanningNode);
   return (
     <>
       {isScanningNode && (
