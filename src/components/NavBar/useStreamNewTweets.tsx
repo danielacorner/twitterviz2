@@ -91,10 +91,7 @@ export function useStreamNewTweets() {
     );
     const tweetsWithBotScores =
       (resp as any)?.data?.map((d) => d?.data?.nodeWithBotScore) || [];
-    console.log(
-      "🌟🚨 ~ fetchOldTweetsWithBotScoresFromDB ~ tweetsWithBotScores",
-      tweetsWithBotScores
-    );
+
     const tweetsWithHiddenBotScores: Tweet[] = tweetsWithBotScores.map((t) => ({
       ...t,
       botScore: undefined,

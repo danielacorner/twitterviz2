@@ -9,7 +9,10 @@ import {
   useTweets,
 } from "../../providers/store/useSelectors";
 import { Button, Tooltip } from "@material-ui/core";
-import { useFetchBotScoreForTweet } from "components/common/useFetchBotScoreForTweet";
+import {
+  useFetchAndReplaceNode,
+  useFetchBotScoreForTweet,
+} from "components/common/useFetchBotScoreForTweet";
 import { atom, useAtom } from "jotai";
 import { BotScore, Tweet } from "types";
 import {
@@ -31,6 +34,7 @@ export default function TagTheBotButton() {
   const selectedNode = useSelectedNode();
   const setSelectedNode = useSetSelectedNode();
   const fetchBotScoreForTweet = useFetchBotScoreForTweet();
+  const fetchAndReplaceNode = useFetchAndReplaceNode();
   const isLoading = useLoading();
   const setLoading = useSetLoading();
   const [, setLatestNodeWithBotScore] = useAtom(latestNodeWithBotScoreAtom);
@@ -138,8 +142,11 @@ export default function TagTheBotButton() {
           color="secondary"
           onClick={() => {
             setNotABot(selectedNode);
-            setSelectedNode(null);
+            fetchAndReplaceNode(selectedNode).then(() => {
+              setSelectedNode(null);
+            });
             setIsRightDrawerOpen(false);
+            // TODO: fetch new node & replace on click
           }}
         >
           Not a bot...
