@@ -1,7 +1,7 @@
 import { faunaClient } from "providers/faunaProvider";
 import { query as q } from "faunadb";
 import { sortDescendingByScore } from "./sortDescendingByScore";
-import { SERVER_URL } from "utils/constants";
+// import { SERVER_URL } from "utils/constants";
 
 export function useDeleteAllHighScores() {
   return () =>
@@ -37,27 +37,44 @@ export function fetchAllHighScoresSorted(): Promise<HighScoreType[]> {
       return [];
     });
 }
-export function saveHighScore(
-  highScore: HighScoreType
-): Promise<HighScoreType[]> {
+export function saveHighScore(highScore: HighScoreType): Promise<void> {
   console.log("🌟🚨 ~ highScore", highScore);
   console.log("🌟🚨 ~ JSON.stringify(highScore)", JSON.stringify(highScore));
-  return fetch(`${SERVER_URL}/api/save_highscore`, {
-    headers: { "content-type": "application/json" },
-    method: "POST",
-    body: JSON.stringify(highScore),
-  })
-    .then((response) => {
-      console.log("🌟🚨 ~ .then ~ response", response);
-      console.log("🌟🚨 ~ .then ~ response.test()", response.text());
-      return response.json();
-    })
-    .then((ret) => {
-      console.log("🌟🚨 ~ .then highscore ~ ret", ret);
-      return ret;
-    })
-    .catch((err) => {
-      console.error(err);
-      return [];
-    });
+
+  const { userId, name, score } = highScore;
+  return new Promise((resolve, reject) => {
+    faunaClient
+      .query(
+        q.Create(q.Collection("player_scores"), {
+          data: { userId, name, score },
+        })
+      )
+      .then((ret) => {
+        console.log("🌟🚨 ~ .then ~ ret", ret);
+        resolve();
+        return ret;
+      })
+      .catch((err) => {
+        console.error(err);
+        reject(err);
+      });
+  });
+
+  // return fetch(`${SERVER_URL}/api/save_highscore`, {
+  //   headers: { "content-type": "application/json" },
+  //   method: "POST",
+  //   body: JSON.stringify(highScore),
+  // })
+  //   .then((response) => {
+  //     console.log("🌟🚨 ~ .then ~ response", response);
+  //     return response.json();
+  //   })
+  //   .then((ret) => {
+  //     console.log("🌟🚨 ~ .then highscore ~ ret", ret);
+  //     return ret;
+  //   })
+  //   .catch((err) => {
+  //     console.error(err);
+  //     return [];
+  //   });
 }
