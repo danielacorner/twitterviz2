@@ -40,13 +40,20 @@ export function fetchAllHighScoresSorted(): Promise<HighScoreType[]> {
 export function saveHighScore(
   highScore: HighScoreType
 ): Promise<HighScoreType[]> {
+  console.log("🌟🚨 ~ highScore", highScore);
+  console.log("🌟🚨 ~ JSON.stringify(highScore)", JSON.stringify(highScore));
   return fetch(`${SERVER_URL}/api/save_highscore`, {
     headers: { "content-type": "application/json" },
     method: "POST",
     body: JSON.stringify(highScore),
   })
-    .then((response) => response.json())
+    .then((response) => {
+      console.log("🌟🚨 ~ .then ~ response", response);
+      console.log("🌟🚨 ~ .then ~ response.test()", response.text());
+      return response.json();
+    })
     .then((ret) => {
+      console.log("🌟🚨 ~ .then highscore ~ ret", ret);
       return ret;
     })
     .catch((err) => {
