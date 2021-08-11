@@ -1,11 +1,11 @@
 import { Scene, Matrix4 } from "three";
-import React, { useRef, useMemo } from "react";
+import { useRef, useMemo } from "react";
 import { useFrame, useThree, createPortal, Vector3 } from "@react-three/fiber";
 import { OrthographicCamera, useCamera } from "@react-three/drei";
 
 /** displays a set of 3d components in a fixed position based on Viewcube https://codesandbox.io/s/react-three-fiber-viewcube-py4db */
 const HUD = ({ children, position }) => {
-  const { gl, scene, camera, size } = useThree();
+  const { gl, camera, size } = useThree();
   const virtualScene = useMemo(() => new Scene(), []);
   const virtualCam = useRef();
   const ref = useRef(null as any);
@@ -15,11 +15,11 @@ const HUD = ({ children, position }) => {
     matrix.copy(camera.matrix).invert();
     ref.current?.quaternion.setFromRotationMatrix(matrix);
     gl.autoClear = true;
-    gl.render(scene, camera);
+    // gl.render(scene, camera); // cancels out Effects
     gl.autoClear = false;
     gl.clearDepth();
     gl.render(virtualScene, virtualCam.current as any);
-  }, 1);
+  }, 2);
 
   const meshPosition: Vector3 = [0, 0, -size.width / 2];
 

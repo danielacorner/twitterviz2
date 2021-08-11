@@ -3,7 +3,7 @@ import { useGraphWithUsersAndLinks } from "../useGraphWithUsersAndLinks";
 import { Debug, Physics } from "@react-three/cannon";
 import { Node, NODE_RADIUS_COLLISION_MULTIPLIER } from "./Node/Node";
 import { BotScoreLegendHUD } from "../../Game/GameStateHUD/BotScoreLegend";
-import { useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { CAMERA_POSITION, NODE_RADIUS } from "utils/constants";
 import { useSpring } from "react-spring";
 import { Suspense, useState } from "react";
@@ -39,6 +39,12 @@ export function Scene() {
   // lined up: hide if they don't have a bot score
   const { viewport } = useThree();
   const gpuInfo = useDetectGPU();
+
+  // since we're rendering HUD with priotity > 0,
+  // we must explicitly render the scene with a specified priority in its own useFrame
+  // https://github.com/pmndrs/react-three-fiber/blob/master/markdown/api.md#useframe
+  useFrame(({ gl, scene, camera }) => gl.render(scene, camera), 1);
+
   return (
     <Suspense fallback={null}>
       {/* <ambientLight intensity={0.75} /> */}
@@ -99,7 +105,7 @@ export function Scene() {
       <Background background={true} />
 
       <BotScoreLegendHUD />
-      {/* <Effects /> */}
+      <Effects />
     </Suspense>
   );
 }
