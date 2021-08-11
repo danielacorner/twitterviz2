@@ -32,22 +32,21 @@ export function StartPage({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                50% of all accounts spreading messages about the coronavirus
-                pandemic were bots
-              </a>
-              , and{" "}
+                50% of all accounts spreading messages about COVID-19
+              </a>{" "}
+              and{" "}
               <a
                 href="https://www.marketwatch.com/story/about-half-of-the-twitter-accounts-calling-for-reopening-america-are-probably-bots-report-2020-05-26"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                82% of the top 50 most influential coronavirus/COVID-19
-                retweeters were bots.
-              </a>
+                82% of the most influential COVID-19 retweeters
+              </a>{" "}
+              were bots.
             </p>
             <p style={{ marginTop: 16 }}>There are different kinds of bot:</p>
             <div style={{ margin: "auto", width: "fit-content" }}>
-              <Canvas style={{ width: 158, height: 240 }}>
+              <Canvas style={{ width: 300, height: 240 }}>
                 {getIsMobileDevice() ? (
                   <DeviceOrientationOrbitControls />
                 ) : (
@@ -56,7 +55,7 @@ export function StartPage({
                 <BotScoreLegend
                   isInStartMenu={true}
                   position={[0, 0.2, 0]}
-                  scale={[1.3, 1.3, 1.3]}
+                  scale={[2.5, 2.5, 2.5]}
                 />
               </Canvas>
             </div>
@@ -157,6 +156,8 @@ const StartPageStyles = styled.div`
   .content {
     position: relative;
     margin-top: 72px;
+    max-height: calc(100vh - 72px - 16px);
+    overflow: auto;
     ${POPUP_BASE_CSS}
     max-width: calc(100vw - 32px);
     @media (min-width: 768px) {

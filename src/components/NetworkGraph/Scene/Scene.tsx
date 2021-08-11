@@ -2,7 +2,7 @@ import { OrbitControls, useDetectGPU } from "@react-three/drei";
 import { useGraphWithUsersAndLinks } from "../useGraphWithUsersAndLinks";
 import { Debug, Physics } from "@react-three/cannon";
 import { Node, NODE_RADIUS_COLLISION_MULTIPLIER } from "./Node/Node";
-import { BotScoreLegend } from "../../Game/GameStateHUD/BotScoreLegend";
+import { BotScoreLegendHUD } from "../../Game/GameStateHUD/BotScoreLegend";
 import { useThree } from "@react-three/fiber";
 import { CAMERA_POSITION, NODE_RADIUS } from "utils/constants";
 import { useSpring } from "react-spring";
@@ -14,7 +14,7 @@ import { useAtom } from "jotai";
 import { Collisions } from "./Collisions";
 import { HighScores } from "components/Game/HighScores/HighScores";
 import Background from "./Background";
-import { Effects } from "./Effects";
+import { Effects } from "./Effects/Effects";
 
 const NODE_WIDTH = NODE_RADIUS * NODE_RADIUS_COLLISION_MULTIPLIER;
 export function Scene() {
@@ -96,10 +96,10 @@ export function Scene() {
         </DebugInDev>
       </Physics>
       <HighScores />
-
-      <BotScoreLegend />
       <Background background={true} />
-      <Effects />
+
+      <BotScoreLegendHUD />
+      {/* <Effects /> */}
     </Suspense>
   );
 }

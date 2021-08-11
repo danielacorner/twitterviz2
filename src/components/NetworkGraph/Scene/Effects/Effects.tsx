@@ -1,19 +1,17 @@
 import { useRef } from "react";
 import { Bloom, EffectComposer, GodRays } from "@react-three/postprocessing";
 import { BlendFunction, Resizer, KernelSize } from "postprocessing";
-import { Sun } from "./Sun.1";
+import { Sun } from "../Sun.1";
 import { useDetectGPU } from "@react-three/drei";
 
 export function Effects() {
-  // const [sun, set] = useState(null);
   const sun = useRef(null);
   const gpuInfo = useDetectGPU();
-  console.log("🌟🚨 ~ Effects ~ gpuInfo", gpuInfo);
   return (
     <>
       <Sun ref={sun} />
       {sun.current && (
-        <EffectComposer multisampling={0}>
+        <EffectComposer multisampling={0} renderPriority={1}>
           <GodRays
             sun={sun.current as any}
             blendFunction={BlendFunction.Screen}

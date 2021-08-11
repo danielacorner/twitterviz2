@@ -154,7 +154,7 @@ export const Node = ({
 
   const isNotABot = node.user.isNotABot;
 
-  const scaleMult = isNotABot ? 0.4 : 1;
+  const scaleMult = isNotABot ? 0 : 1;
 
   const isScanningNode = scanningNodeId === node.id_str;
 

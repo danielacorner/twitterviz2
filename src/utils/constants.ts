@@ -24,9 +24,9 @@ export const TABS_HEIGHT = 48;
 export const NAV_HEIGHT = 64;
 
 export const SERVER_URL =
-  process.env.NODE_ENV !== "production"
+  /* process.env.NODE_ENV !== "production"
     ? ""
-    : "https://twit-viz-api.herokuapp.com";
+    :  */ "https://twit-viz-api.herokuapp.com";
 
 export const CONTROLS_PADDING_INNER = 14;
 export const FORM_HEIGHT = 36;
