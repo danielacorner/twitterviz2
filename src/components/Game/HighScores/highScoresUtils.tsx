@@ -38,9 +38,6 @@ export function fetchAllHighScoresSorted(): Promise<HighScoreType[]> {
     });
 }
 export function saveHighScore(highScore: HighScoreType): Promise<void> {
-  console.log("🌟🚨 ~ highScore", highScore);
-  console.log("🌟🚨 ~ JSON.stringify(highScore)", JSON.stringify(highScore));
-
   const { userId, name, score } = highScore;
   return new Promise((resolve, reject) => {
     faunaClient
@@ -50,7 +47,6 @@ export function saveHighScore(highScore: HighScoreType): Promise<void> {
         })
       )
       .then((ret) => {
-        console.log("🌟🚨 ~ .then ~ ret", ret);
         resolve();
         return ret;
       })
@@ -66,11 +62,9 @@ export function saveHighScore(highScore: HighScoreType): Promise<void> {
   //   body: JSON.stringify(highScore),
   // })
   //   .then((response) => {
-  //     console.log("🌟🚨 ~ .then ~ response", response);
   //     return response.json();
   //   })
   //   .then((ret) => {
-  //     console.log("🌟🚨 ~ .then highscore ~ ret", ret);
   //     return ret;
   //   })
   //   .catch((err) => {

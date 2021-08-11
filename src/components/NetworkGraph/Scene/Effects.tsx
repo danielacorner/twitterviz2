@@ -8,6 +8,7 @@ export function Effects() {
   // const [sun, set] = useState(null);
   const sun = useRef(null);
   const gpuInfo = useDetectGPU();
+  console.log("🌟🚨 ~ Effects ~ gpuInfo", gpuInfo);
   return (
     <>
       <Sun ref={sun} />
@@ -20,7 +21,7 @@ export function Effects() {
             density={0.95}
             decay={1.0}
             weight={0.24}
-            exposure={0.16}
+            exposure={0.26}
             clampMax={1}
             width={Resizer.AUTO_SIZE}
             height={Resizer.AUTO_SIZE}
@@ -28,21 +29,23 @@ export function Effects() {
             blur={0.1}
           />
           {gpuInfo.tier > 2 ? (
-            <Bloom
-              kernelSize={2}
-              luminanceThreshold={0}
-              luminanceSmoothing={0.4}
-              intensity={0.6}
-            />
+            <>
+              <Bloom
+                kernelSize={2}
+                luminanceThreshold={0}
+                luminanceSmoothing={0.4}
+                intensity={0.6}
+              />
+              <Bloom
+                kernelSize={KernelSize.VERY_LARGE}
+                luminanceThreshold={0}
+                luminanceSmoothing={0}
+                intensity={0.5}
+              />
+            </>
           ) : (
             <></>
           )}
-          <Bloom
-            kernelSize={KernelSize.VERY_LARGE}
-            luminanceThreshold={0}
-            luminanceSmoothing={0}
-            intensity={0.5}
-          />
         </EffectComposer>
       )}
     </>
