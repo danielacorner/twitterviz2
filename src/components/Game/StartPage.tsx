@@ -45,7 +45,7 @@ export function StartPage({
               were bots.
             </p>
             <p style={{ marginTop: 16 }}>There are different kinds of bot:</p>
-            <div style={{ margin: "auto", width: "fit-content" }}>
+            <div style={{ display: "flex", justifyContent: "center" }}>
               <Canvas style={{ width: 300, height: 240 }}>
                 {getIsMobileDevice() ? (
                   <DeviceOrientationOrbitControls />
@@ -133,6 +133,8 @@ export function StartPage({
               className="btnPrev"
               disabled={isLoading}
               color={"primary"}
+              size="small"
+              style={{ textTransform: "none" }}
               onClick={() => {
                 setStep(0);
               }}
@@ -179,7 +181,12 @@ const StartPageStyles = styled.div`
   }
   .btnPrev {
     position: absolute;
-    left: 32px;
+    left: 5px;
+    bottom: 5px;
+    text-transform: none;
+    * {
+      color: rgba(255, 255, 255, 0.6) !important;
+    }
   }
   .numSteps {
     position: absolute;

@@ -11,11 +11,9 @@ const RADIUS = 40;
 export function BotScoreLegendHUD({
   position = [0, 0, 0],
   scale = [1, 1, 1],
-  isInStartMenu = false,
 }: {
   position?: number[];
   scale?: number[];
-  isInStartMenu?: boolean;
 }) {
   const {
     size: { width, height },
@@ -23,7 +21,7 @@ export function BotScoreLegendHUD({
 
   return (
     <HUD position={[width / 2 - RADIUS * 2, height / 2 - RADIUS * 2.5, 0]}>
-      <BotScoreLegend {...{ isInStartMenu, position, scale }} />
+      <BotScoreLegend {...{ isInStartMenu: true, position, scale }} />
     </HUD>
   );
 }
