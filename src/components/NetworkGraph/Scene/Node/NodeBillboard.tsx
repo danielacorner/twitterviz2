@@ -10,6 +10,7 @@ export default function NodeBillboard({
   node: UserNode;
   hasBotScore: boolean;
 }) {
+  console.log("🌟🚨 ~ node.user", node.user);
   return (
     <Billboard {...({} as any)}>
       <Html
@@ -24,7 +25,13 @@ export default function NodeBillboard({
       >
         <HtmlStyles>
           <AvatarStyles>
-            <img src={node?.user?.profile_image_url_https} alt="" />
+            <img
+              src={
+                node?.user.profile_image_url_https ||
+                node?.user.profile_image_url
+              }
+              alt=""
+            />
           </AvatarStyles>
           {/* <TweetsColumn {...{ hasBotScore, tweets, isLight, originalPoster }} /> */}
         </HtmlStyles>
