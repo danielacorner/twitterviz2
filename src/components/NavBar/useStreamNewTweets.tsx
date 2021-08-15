@@ -17,6 +17,8 @@ import { useRef } from "react";
 import { uniqBy } from "lodash";
 import { Tweet } from "types";
 
+const WAIT_FOR_STREAM_TIMEOUT = 12 * 1000;
+
 export function useStreamNewTweets() {
   const [
     isMonthlyTwitterApiUsageExceeded,
@@ -47,7 +49,7 @@ export function useStreamNewTweets() {
         fetchOldTweetsWithBotScoresFromDB().then((tweetsFromDB) => {
           resolve(tweetsFromDB);
         });
-      }, 6 * 1000);
+      }, WAIT_FOR_STREAM_TIMEOUT); // TODO: add linearprogress bar
 
       const langParam = lang !== "All" ? `&lang=${lang}` : "";
       const allowedMediaParam =
@@ -57,14 +59,15 @@ export function useStreamNewTweets() {
       const countryParam =
         countryCode !== "All" ? `&countryCode=${countryCode}` : "";
 
-      const locations = geolocation
-        ? `${geolocation.latitude.left},${geolocation.longitude.left},${geolocation.latitude.right},${geolocation.longitude.right}`
-        : "";
+      // const locations = geolocation
+      //   ? `${geolocation.latitude.left},${geolocation.longitude.left},${geolocation.latitude.right},${geolocation.longitude.right}`
+      //   : "";
 
       const resp = await fetch(
-        geolocation
-          ? `${SERVER_URL}/api/filter?num=${numTweets}&locations=${locations}${allowedMediaParam}`
-          : `${SERVER_URL}/api/stream?num=${numTweets}&filterLevel=${filterLevel}${allowedMediaParam}${countryParam}${langParam}`
+        // geolocation
+        // ? `${SERVER_URL}/api/filter?num=${numTweets}&locations=${locations}${allowedMediaParam}`
+        // :
+        `${SERVER_URL}/api/stream?num=${numTweets}&filterLevel=${filterLevel}${allowedMediaParam}${countryParam}${langParam}`
       );
 
       const data = await resp.json();

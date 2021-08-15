@@ -23,6 +23,7 @@ import { GameStateHUD } from "./GameStateHUD/GameStateHUD";
 import { BtnStartOver } from "./BtnStartOver";
 import { BOT_SCORE_POPUP_TIMEOUT } from "./TagTheBotButton";
 import { StartPage } from "./StartPage";
+import { useMount } from "utils/utils";
 
 /** renders controls and instructions to play the game */
 export function Game() {
@@ -85,6 +86,8 @@ function GameContent() {
   const resetScoreAndFetchNewTweets = usePlayAgain();
 
   const startLookingAtTweets = useStartLookingAtTweets();
+  // start the game on mount
+  useMount(resetScoreAndFetchNewTweets);
 
   // game over when no shots remain
   useEffect(() => {
@@ -102,9 +105,7 @@ function GameContent() {
 
   switch (gameState.step) {
     case GameStepsEnum.welcome:
-      return (
-        <StartPage {...{ startLookingAtTweets, resetScoreAndFetchNewTweets }} />
-      );
+      return <StartPage {...{ startLookingAtTweets }} />;
     case GameStepsEnum.lookingAtTweetsWithBotScores:
       return <BtnStartOver />;
     // case GameStepsEnum.gameOver:

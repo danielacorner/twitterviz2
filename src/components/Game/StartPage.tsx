@@ -10,10 +10,7 @@ import { getIsMobileDevice } from "./Game";
 import { useState } from "react";
 import { ChevronLeft } from "@material-ui/icons";
 
-export function StartPage({
-  startLookingAtTweets,
-  resetScoreAndFetchNewTweets,
-}) {
+export function StartPage({ startLookingAtTweets }) {
   const isLoading = useLoading();
 
   const [step, setStep] = useState(0);
@@ -121,9 +118,8 @@ export function StartPage({
               variant="contained"
               color={"primary"}
               onClick={() => {
-                resetScoreAndFetchNewTweets();
-                startLookingAtTweets();
                 setStep(0);
+                startLookingAtTweets();
               }}
             >
               Play

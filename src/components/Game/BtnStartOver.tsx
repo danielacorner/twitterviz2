@@ -3,9 +3,12 @@ import { gameStateAtom, GameStepsEnum } from "providers/store/store";
 import styled from "styled-components/macro";
 import { IconButton, Tooltip } from "@material-ui/core";
 import { Replay } from "@material-ui/icons";
+import { usePlayAgain } from "./Game";
 
 export function BtnStartOver() {
   const [gameState, setGameState] = useAtom(gameStateAtom);
+  const resetScoreAndFetchNewTweets = usePlayAgain();
+
   return (
     <BtnStartOverStyles>
       <Tooltip title="Start Over">
@@ -13,6 +16,7 @@ export function BtnStartOver() {
           className="btnStartOver"
           onClick={() => {
             setGameState({ ...gameState, step: GameStepsEnum.welcome });
+            resetScoreAndFetchNewTweets();
           }}
         >
           <Replay />
