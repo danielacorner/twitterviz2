@@ -10,7 +10,7 @@ import { faunaClient } from "providers/faunaProvider";
 import { query as q } from "faunadb";
 import {
   INITIAL_NUM_TWEETS,
-  isMonthlyTwitterApiUsageExceededAtom,
+  lastTimeMonthlyTwitterApiUsageWasExceededAtom,
 } from "providers/store/store";
 import { useAtom } from "jotai";
 import { useRef } from "react";
@@ -21,9 +21,10 @@ const WAIT_FOR_STREAM_TIMEOUT = 12 * 1000;
 
 export function useStreamNewTweets() {
   const [
-    isMonthlyTwitterApiUsageExceeded,
-    setIsMonthlyTwitterApiUsageExceeded,
-  ] = useAtom(isMonthlyTwitterApiUsageExceededAtom);
+    lastTimeMonthlyTwitterApiUsageWasExceeded,
+    setLastTimeMonthlyTwitterApiUsageWasExceeded,
+  ] = useAtom(lastTimeMonthlyTwitterApiUsageWasExceededAtom);
+
   const { lang, countryCode, numTweets, filterLevel } = useConfig();
   const allowedMediaTypesStrings = useAllowedMediaTypes();
   const loading = useLoading();
@@ -34,6 +35,10 @@ export function useStreamNewTweets() {
   const timerRef = useRef(null as number | null);
 
   const fetchNewTweetsFromTwitterApi = (): Promise<Tweet[]> => {
+    //   if (lastTimeMonthlyTwitterApiUsageWasExceeded) {
+    //     const timeSinceLastExcession =
+    //       Date.now() - lastTimeMonthlyTwitterApiUsageWasExceeded;
+    //   }
     return new Promise(async (resolve, reject) => {
       console.log("🤖... fetching from twitter stream API");
       setLoading(true);
@@ -44,7 +49,7 @@ export function useStreamNewTweets() {
         console.log(
           "🤖💣 no response from twitter stream API -- fetching from DB instead"
         );
-        setIsMonthlyTwitterApiUsageExceeded(true);
+        setLastTimeMonthlyTwitterApiUsageWasExceeded(Date.now());
         fetchOldTweetsWithBotScoresFromDB().then((tweetsFromDB) => {
           resolve(tweetsFromDB);
         });
@@ -123,7 +128,7 @@ export function useStreamNewTweets() {
 
   return {
     loading,
-    fetchNewTweets: isMonthlyTwitterApiUsageExceeded
+    fetchNewTweets: lastTimeMonthlyTwitterApiUsageWasExceeded
       ? fetchOldTweetsWithBotScoresFromDB
       : fetchNewTweetsFromTwitterApi,
   };

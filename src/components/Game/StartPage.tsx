@@ -74,7 +74,7 @@ export function StartPage({ startLookingAtTweets }) {
             <ol>
               <li>
                 <p style={{ marginBottom: 2 }}>
-                  🕵️‍♀️ Inspect these 10 recent tweets about COVID{" "}
+                  🕵️‍♀️ Inspect 10 recent tweets about COVID{" "}
                   <span style={{ verticalAlign: "middle" }}>
                     <COVIDSVG />
                   </span>{" "}

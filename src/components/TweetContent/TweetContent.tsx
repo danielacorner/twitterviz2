@@ -37,6 +37,7 @@ export default function TweetContent({
     place,
     in_reply_to_screen_name,
   } = tweet;
+  console.log("🌟🚨 ~ tweet", tweet);
   const { height: windowHeight } = useWindowSize();
   const retweetedUser = getRetweetedUser(tweet);
 

@@ -155,6 +155,7 @@ export interface Tweet {
   created_at?: string;
   botScore?: BotScore;
   hiddenBotScore?: BotScore;
+  includes?: any;
   isUserNode?: boolean;
   isNotABot?: boolean;
   isLikedNode?: boolean;

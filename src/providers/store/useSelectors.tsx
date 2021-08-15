@@ -144,6 +144,7 @@ export function usePrevious(value: any): typeof value {
 }
 
 export function getRetweetedUser(tweet: Tweet): User | null {
+  console.log("🌟🚨 ~ getRetweetedUser ~ tweet", tweet);
   return tweet?.retweeted_status?.user || null;
 }
 
