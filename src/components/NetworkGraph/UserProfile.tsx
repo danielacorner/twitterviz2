@@ -4,7 +4,7 @@ import { darkBackground, paleBlue } from "utils/colors";
 import { AVATAR_WIDTH, TOOLTIP_WIDTH } from "utils/constants";
 
 export function UserProfile({ user }: { user: User }) {
-  console.log("🌟🚨 ~ UserProfile ~ user", user);
+  // TODO: profile_banner_url ? in v2 api
   const joinedDate = new Date(user.created_at);
   const backgroundUrl =
     user.profile_banner_url || user.profile_background_image_url_https;

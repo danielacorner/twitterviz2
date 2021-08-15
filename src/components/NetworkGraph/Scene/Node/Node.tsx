@@ -127,7 +127,15 @@ export const Node = ({
     setIsPointerOver(false);
   };
   const onClick = () => {
-    setSelectedNode(node.tweets[tooltipTweetIndex]);
+    const newSelectedNode = {
+      ...node.tweets[0],
+      user: node.user,
+      id_str: node.user.id_str,
+    };
+    console.log("🌟🚨 ~ onClick ~ newSelectedNode", newSelectedNode);
+    setSelectedNode(newSelectedNode);
+    console.log("🌟🚨 ~ onClick ~ node", node);
+
     setIsRightDrawerOpen(true);
   };
 

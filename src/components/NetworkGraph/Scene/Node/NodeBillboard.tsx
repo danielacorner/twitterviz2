@@ -10,7 +10,6 @@ export default function NodeBillboard({
   node: UserNode;
   hasBotScore: boolean;
 }) {
-  console.log("🌟🚨 ~ node.user", node.user);
   return (
     <Billboard {...({} as any)}>
       <Html

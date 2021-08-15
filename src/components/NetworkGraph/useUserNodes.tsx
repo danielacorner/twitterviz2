@@ -9,10 +9,10 @@ export type UserNode = {
 /** preprocess tweets to add links & user nodes */
 export function useUserNodes(): UserNode[] {
   const tweets = useTweets();
-  // TODO: map new api to old api (compatibly with nodes from old api)
   return tweets.map(getUserNodeFromTweet);
 }
 
+// map new api to old api (compatibly with nodes from old api)
 export function getUserNodeFromTweet(t: Tweet): UserNode {
   const userId = t.user.id_str || String(t.user.id);
 

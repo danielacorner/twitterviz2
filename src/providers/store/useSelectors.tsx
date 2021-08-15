@@ -18,13 +18,23 @@ export const useTweets = (): Tweet[] => {
 export const useSelectedNode = () => {
   const tweets = useTweets();
   const [selectedNodeId] = useAtom(selectedNodeIdAtom);
-  const selectedNode = tweets.find((t) => t.id_str === selectedNodeId);
+  console.log("🌟🚨 ~ useSelectedNode ~ selectedNodeId", selectedNodeId);
+  const selectedNode = selectedNodeId
+    ? tweets.find((t) =>
+        [t.id_str, t.id, t.user.id, t.user.id_str]
+          .map(String)
+          .includes(selectedNodeId)
+      )
+    : null;
   return selectedNode;
 };
 export const useSetSelectedNode = () => {
   const [, setSelectedNodeId] = useAtom(selectedNodeIdAtom);
 
-  return (node: Tweet | null) => setSelectedNodeId(node?.id_str || null);
+  return (node: Tweet | null) => {
+    console.log("🌟🚨 ~ return ~ node", node);
+    setSelectedNodeId(node?.id_str || String(node?.id) || null);
+  };
 };
 export const useTooltipNode = (): Tweet | null =>
   useStore((state) => state.tooltipNode);
