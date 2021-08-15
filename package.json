@@ -28,6 +28,7 @@
     "jotai": "^1.2.2",
     "leva": "^0.9.13",
     "lodash": "^4.17.19",
+    "node-fetch": "^2.6.1",
     "postprocessing": "^6.22.3",
     "query-string": "^6.13.2",
     "react": "^17.0.2",

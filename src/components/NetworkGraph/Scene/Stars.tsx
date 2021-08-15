@@ -56,7 +56,7 @@ export function Stars({ count }) {
     //     />
     //   </sphereBufferGeometry>
     // </points>
-    <group ref={group}>
+    <group ref={group} renderOrder={9}>
       <Instances>
         <sphereBufferGeometry args={[1, 10, 10]} />
 

@@ -21,7 +21,7 @@ export function StartPage({ startLookingAtTweets }) {
         <h3>Twitter Botsketball 🤖🏀</h3>
         {step === 0 && (
           <>
-            <p>Twitter is known to be full of bots.</p>
+            <p>Twitter is full of bots.</p>
             <p style={{ marginTop: 16 }}>
               In 2020 for example,{" "}
               <a

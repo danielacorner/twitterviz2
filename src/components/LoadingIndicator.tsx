@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components/macro";
-import { useLoading } from "./providers/store/useSelectors";
+import { useLoading } from "../providers/store/useSelectors";
 import { Canvas } from "@react-three/fiber";
 import { animated, useSpring } from "@react-spring/three";
 import { useMount } from "utils/utils";

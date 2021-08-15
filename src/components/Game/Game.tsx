@@ -83,11 +83,11 @@ function GameContent() {
   const [gameState, setGameState] = useAtom(gameStateAtom);
   const [shotsRemaining] = useAtom(shotsRemainingAtom);
 
-  const resetScoreAndFetchNewTweets = usePlayAgain();
+  const startGame = usePlayAgain();
 
   const startLookingAtTweets = useStartLookingAtTweets();
   // start the game on mount
-  useMount(resetScoreAndFetchNewTweets);
+  useMount(startGame);
 
   // game over when no shots remain
   useEffect(() => {

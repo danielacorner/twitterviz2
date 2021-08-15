@@ -70,6 +70,7 @@ export function useStreamNewTweets() {
       );
 
       const data = await resp.json();
+      console.log("🌟🚨 ~ returnnewPromise ~ data", data);
 
       setTweets(data);
 
