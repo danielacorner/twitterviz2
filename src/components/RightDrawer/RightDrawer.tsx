@@ -114,15 +114,15 @@ const DrawerStyles = styled.div`
   height: 100vh;
   background: #15232e9f !important;
   .pinnedTweet {
+    margin-top: 24px;
     position: relative;
     .pinnedTweetIndicator {
       display: flex;
-      align-items: center;
+      align-items: flex-end;
       gap: 4px;
       position: absolute;
-      transform: scale(0.7);
-      transform-origin: top left;
-      top: 0;
+      font-size: 14px;
+      top: -20px;
       left: 12px;
       .text {
         color: darkgrey;
