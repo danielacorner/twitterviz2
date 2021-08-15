@@ -88,7 +88,7 @@
     "tslint-sonarts": "^1.9.0",
     "typescript": "^4.3.5"
   },
-  "proxy": "http://172.17.80.1:8080",
+  "proxy": "http://192.168.0.234:8080",
   "resolutions": {
     "**/@typescript-eslint/eslint-plugin": "^4.1.1",
     "**/@typescript-eslint/parser": "^4.1.1"

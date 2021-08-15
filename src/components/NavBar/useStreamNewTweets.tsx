@@ -24,8 +24,7 @@ export function useStreamNewTweets() {
     isMonthlyTwitterApiUsageExceeded,
     setIsMonthlyTwitterApiUsageExceeded,
   ] = useAtom(isMonthlyTwitterApiUsageExceededAtom);
-  const { lang, countryCode, numTweets, filterLevel, geolocation } =
-    useConfig();
+  const { lang, countryCode, numTweets, filterLevel } = useConfig();
   const allowedMediaTypesStrings = useAllowedMediaTypes();
   const loading = useLoading();
   const setLoading = useSetLoading();
