@@ -16,7 +16,7 @@ import {
   useTooltipNode,
   useTweets,
 } from "providers/store/useSelectors";
-import { UserNode } from "../../useGraphWithUsersAndLinks";
+import { UserNode } from "../../useNodes";
 import { useHandleOpenRightClickMenu } from "../../GraphRightClickMenu";
 import NodeBillboard from "./NodeBillboard";
 import { useGravity } from "../useGravity";

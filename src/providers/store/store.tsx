@@ -7,7 +7,7 @@ import qs from "query-string";
 import { WordcloudConfig } from "./useSelectors";
 import { atom, useAtom } from "jotai";
 import { atomWithHash, atomWithStorage } from "jotai/utils";
-import { UserNode } from "components/NetworkGraph/useGraphWithUsersAndLinks";
+import { UserNode } from "components/NetworkGraph/useNodes";
 export const SHOTS_REMAINING = process.env.NODE_ENV === "development" ? 2 : 3;
 export const INITIAL_NUM_TWEETS = 10;
 

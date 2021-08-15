@@ -5,7 +5,7 @@ import styled from "styled-components/macro";
 import { useAtom } from "jotai";
 import { botScorePopupNodeAtom } from "providers/store/store";
 import { useEffect, useState } from "react";
-import { UserNode } from "../../useGraphWithUsersAndLinks";
+import { UserNode } from "../../useNodes";
 import { useWindowSize } from "utils/hooks";
 import Background from "../Background";
 import { ScanningAnimation } from "./ScanningAnimation";

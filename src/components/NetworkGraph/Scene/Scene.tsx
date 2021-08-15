@@ -1,5 +1,5 @@
 import { OrbitControls, useDetectGPU } from "@react-three/drei";
-import { useGraphWithUsersAndLinks } from "../useGraphWithUsersAndLinks";
+import { useNodes } from "../useNodes";
 import { Debug, Physics } from "@react-three/cannon";
 import { Node, NODE_RADIUS_COLLISION_MULTIPLIER } from "./Node/Node";
 import { BotScoreLegendHUD } from "../../Game/GameStateHUD/BotScoreLegend";
@@ -18,8 +18,9 @@ import { Effects } from "./Effects/Effects";
 
 const NODE_WIDTH = NODE_RADIUS * NODE_RADIUS_COLLISION_MULTIPLIER;
 export function Scene() {
-  const graphWithUsers = useGraphWithUsersAndLinks();
-  // const vertices = getVertices(graphWithUsers.nodes.length);
+  const nodes = useNodes();
+  console.log("🌟🚨 ~ Scene ~ nodes", nodes);
+  // const vertices = getVertices(nodes.length);
   const { camera } = useThree();
   const [gameState] = useAtom(gameStateAtom);
   const isGameOver = gameState.step === GameStepsEnum.gameOver;
@@ -79,7 +80,7 @@ export function Scene() {
       >
         <DebugInDev>
           <Collisions />
-          {graphWithUsers.nodes.map((node, idx) => {
+          {nodes.map((node, idx) => {
             const isEven = idx % 2 === 0;
             const width = viewport.width / 8;
 
