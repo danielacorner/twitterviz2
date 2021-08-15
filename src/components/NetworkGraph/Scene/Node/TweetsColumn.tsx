@@ -2,15 +2,16 @@ import { TooltipContent, TooltipStyles } from "../../NodeTooltip";
 import styled from "styled-components/macro";
 import { useIsLight } from "providers/ThemeManager";
 import { Tweet, User } from "types";
+import { UserNode } from "components/NetworkGraph/useUserNodes";
 
 export default function TweetsColumn({
   hasBotScore,
   tweets,
-  originalPoster,
+  userNode,
 }: {
   hasBotScore: boolean;
   tweets: Tweet[];
-  originalPoster: User | null;
+  userNode: UserNode | null;
 }) {
   const isLight = useIsLight();
 
@@ -29,7 +30,7 @@ export default function TweetsColumn({
         >
           <TooltipContent
             {...{
-              originalPoster,
+              userNode,
               tweet,
               autoPlay: false,
               compact: false,

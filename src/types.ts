@@ -386,7 +386,14 @@ export interface User {
   id: number;
   id_str: string;
   name: string;
+  username?: string;
   screen_name: string;
+  public_metrics?: {
+    followers_count: number;
+    following_count: number;
+    tweet_count: number;
+    listed_count: number;
+  };
   isNotABot?: boolean;
   botScore?: BotScore;
   hiddenBotScore?: BotScore;

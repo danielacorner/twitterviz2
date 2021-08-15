@@ -79,11 +79,7 @@ const NodeTooltip = () => {
     },
   });
 
-  const {
-    isLight,
-    originalPoster,
-    tweet,
-  }: { isLight: boolean; originalPoster: User; tweet: Tweet } =
+  const { isLight, tweet }: { isLight: boolean; tweet: Tweet } =
     useNodeTooltipContentPropsLite();
   return (
     <animated.div style={springToMousePosition as any}>
@@ -92,7 +88,6 @@ const NodeTooltip = () => {
           springToMousePosition,
           ref,
           isLight,
-          originalPoster,
           tweet,
           compact: true,
         }}
@@ -107,7 +102,6 @@ export type NodeTooltipContentProps = {
   ref: React.MutableRefObject<any>;
   isLight: boolean;
   compact: boolean;
-  originalPoster: User;
   tweet: Tweet | null;
   tooltipStyles?: any;
   tooltipCss?: string;
@@ -116,7 +110,6 @@ export const NodeTooltipContent = forwardRef(
   (
     {
       isLight,
-      originalPoster,
       tweet,
       tooltipStyles,
       tooltipCss,
@@ -131,24 +124,22 @@ export const NodeTooltipContent = forwardRef(
         tooltipCss={tooltipCss}
         style={tooltipStyles}
       >
-        {originalPoster && (
+        {tweet && (
           <div className="userProfile">
-            <UserProfile {...{ user: originalPoster }} />
+            <UserProfile {...{ user: tweet.user }} />
           </div>
         )}
-        <TooltipContentWithIndex {...{ originalPoster, tweet, compact }} />
+        <TooltipContentWithIndex {...{ user: tweet?.user, tweet, compact }} />
       </TooltipStyles>
     );
   }
 );
 
 export function TooltipContent({
-  originalPoster,
   tweet,
   autoPlay = true,
   compact,
 }: {
-  originalPoster: any;
   tweet: Tweet | null;
   autoPlay?: boolean;
   compact: boolean;
@@ -157,7 +148,7 @@ export function TooltipContent({
     <div className="profileAndContent">
       <RowDiv style={{ alignItems: "start" }}>
         <AvatarStyles>
-          <img src={originalPoster?.profile_image_url_https} alt="" />
+          <img src={tweet?.user?.profile_image_url_https} alt="" />
         </AvatarStyles>
       </RowDiv>
       {tweet && (
@@ -169,11 +160,11 @@ export function TooltipContent({
 
 /** this one shows the index e.g. "1 / 5" -- TooltipContent is used in NodeBillboardContent so we don't want it to re-render */
 export function TooltipContentWithIndex({
-  originalPoster,
+  user,
   tweet,
   compact,
 }: {
-  originalPoster: any;
+  user: any;
   tweet: Tweet | null;
   compact: boolean;
 }) {
@@ -183,7 +174,7 @@ export function TooltipContentWithIndex({
     <div className="profileAndContent">
       <RowDiv style={{ alignItems: "start" }}>
         <AvatarStyles>
-          <img src={originalPoster?.profile_image_url_https} alt="" />
+          <img src={user?.profile_image_url_https} alt="" />
         </AvatarStyles>
       </RowDiv>
       {tweet && (
