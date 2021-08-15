@@ -1,5 +1,5 @@
 import { OrbitControls, useDetectGPU } from "@react-three/drei";
-import { useNodes } from "../useNodes";
+import { useUserNodes } from "../useUserNodes";
 import { Debug, Physics } from "@react-three/cannon";
 import { Node, NODE_RADIUS_COLLISION_MULTIPLIER } from "./Node/Node";
 import { BotScoreLegendHUD } from "../../Game/GameStateHUD/BotScoreLegend";
@@ -18,7 +18,7 @@ import { Effects } from "./Effects/Effects";
 
 const NODE_WIDTH = NODE_RADIUS * NODE_RADIUS_COLLISION_MULTIPLIER;
 export function Scene() {
-  const nodes = useNodes();
+  const nodes = useUserNodes();
   console.log("🌟🚨 ~ Scene ~ nodes", nodes);
   // const vertices = getVertices(nodes.length);
   const { camera } = useThree();

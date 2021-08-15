@@ -1,17 +1,15 @@
 import styled from "styled-components/macro";
-import { getOriginalPoster } from "providers/store/useSelectors";
 import { Html, Billboard } from "@react-three/drei";
 import { DISABLE_SELECTION_OF_TEXT_CSS } from "utils/constants";
-import { Tweet } from "types";
+import { UserNode } from "components/NetworkGraph/useUserNodes";
 
 export default function NodeBillboard({
-  tweets,
+  node,
   hasBotScore,
 }: {
-  tweets: Tweet[];
+  node: UserNode;
   hasBotScore: boolean;
 }) {
-  const originalPoster = getOriginalPoster(tweets[0]);
   return (
     <Billboard {...({} as any)}>
       <Html
@@ -26,7 +24,7 @@ export default function NodeBillboard({
       >
         <HtmlStyles>
           <AvatarStyles>
-            <img src={originalPoster?.profile_image_url_https} alt="" />
+            <img src={node?.user?.profile_image_url_https} alt="" />
           </AvatarStyles>
           {/* <TweetsColumn {...{ hasBotScore, tweets, isLight, originalPoster }} /> */}
         </HtmlStyles>

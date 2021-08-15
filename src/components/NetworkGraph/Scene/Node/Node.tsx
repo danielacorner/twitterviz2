@@ -11,12 +11,10 @@ import useStore, {
 } from "providers/store/store";
 import { useAtom } from "jotai";
 import {
-  getOriginalPoster,
   useSetSelectedNode,
   useTooltipNode,
-  useTweets,
 } from "providers/store/useSelectors";
-import { UserNode } from "../../useNodes";
+import { UserNode } from "../../useUserNodes";
 import { useHandleOpenRightClickMenu } from "../../GraphRightClickMenu";
 import NodeBillboard from "./NodeBillboard";
 import { useGravity } from "../useGravity";
@@ -89,10 +87,10 @@ export const Node = ({
   const [scanningNodeId] = useAtom(scanningNodeIdAtom);
   const [rightClickMenu] = useAtom(rightClickMenuAtom);
   const isRightClickingThisNode = rightClickMenu.node
-    ? getOriginalPoster(rightClickMenu.node)?.id_str === node.id_str
+    ? rightClickMenu.node?.id_str === node.id_str
     : false;
   const isTooltipNode = tooltipNode
-    ? getOriginalPoster(tooltipNode)?.id_str === node.id_str
+    ? tooltipNode?.id_str === node.id_str
     : false;
   const setTooltipNode = useStore((state) => state.setTooltipNode);
   const setSelectedNode = useSetSelectedNode();
@@ -259,8 +257,6 @@ export function NodeContent({
   isRightClickingThisNode: boolean;
   forceOpaque?: boolean;
 }) {
-  const tweets = useTweets();
-  const allTweetsByUser = tweets.filter((t) => t.user.id === node.user.id);
   const hasBotScore = Boolean(node.user.botScore);
   const isNotABot = node.user.isNotABot;
 
@@ -313,7 +309,7 @@ export function NodeContent({
       {node ? (
         <NodeBillboard
           {...{
-            tweets: allTweetsByUser,
+            node,
             hasBotScore,
           }}
         />

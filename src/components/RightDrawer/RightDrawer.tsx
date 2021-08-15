@@ -1,6 +1,5 @@
 import styled from "styled-components/macro";
 import {
-  getOriginalPoster,
   useSelectedNode,
   useSetSelectedNode,
 } from "../../providers/store/useSelectors";
@@ -17,7 +16,6 @@ import { useAtom } from "jotai";
 export function RightDrawer() {
   const selectedNode = useSelectedNode();
   const setSelectedNode = useSetSelectedNode();
-  const originalPoster = selectedNode && getOriginalPoster(selectedNode);
   const [isRightDrawerOpen, setIsRightDrawerOpen] = useAtom(
     isRightDrawerOpenAtom
   );
@@ -32,7 +30,7 @@ export function RightDrawer() {
         }}
       >
         <DrawerStyles>
-          {selectedNode && originalPoster && (
+          {selectedNode?.user && (
             <div className="content">
               <IconButton
                 className="btnClose"
@@ -46,7 +44,7 @@ export function RightDrawer() {
               <NodeTooltipContent
                 {...{
                   isLight: false,
-                  originalPoster,
+                  originalPoster: selectedNode?.user,
                   tweet: selectedNode,
                   tooltipCss: `.allMedia{max-height:unset}`,
                   compact: false,
@@ -79,7 +77,7 @@ export function RightDrawer() {
               <Timeline
                 dataSource={{
                   sourceType: "profile",
-                  screenName: originalPoster.screen_name,
+                  screenName: selectedNode?.user.screen_name,
                 }}
                 options={{
                   theme: "dark",
