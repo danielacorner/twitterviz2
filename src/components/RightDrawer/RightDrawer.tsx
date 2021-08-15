@@ -72,6 +72,20 @@ export function RightDrawer() {
                       />
                     </div>
                   </a>
+                  {selectedNode.user.pinned_tweet_id && (
+                    <div className="pinnedTweet">
+                      <div className="pinnedTweetIndicator">
+                        <div className="icon">
+                          <PinnedTweetIcon />
+                        </div>
+                        <div className="text">Pinned Tweet</div>
+                      </div>
+                      <TweetWidget
+                        tweetId={selectedNode.user.pinned_tweet_id}
+                        options={{ theme: "dark" }}
+                      />
+                    </div>
+                  )}
                 </>
               )}
               <Timeline
@@ -99,6 +113,27 @@ const DrawerStyles = styled.div`
   max-width: calc(100vw - 64px);
   height: 100vh;
   background: #15232e9f !important;
+  .pinnedTweet {
+    position: relative;
+    .pinnedTweetIndicator {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      position: absolute;
+      transform: scale(0.7);
+      transform-origin: top left;
+      top: 0;
+      left: 12px;
+      .text {
+        color: darkgrey;
+      }
+      .icon {
+        width: 16px;
+        height: 16px;
+        fill: darkgrey;
+      }
+    }
+  }
   .content {
     height: 100%;
     min-height: 100vh;
@@ -117,3 +152,13 @@ const DrawerStyles = styled.div`
   }
   background-color: #4b4b4b;
 `;
+
+function PinnedTweetIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <g>
+        <path d="M20.235 14.61c-.375-1.745-2.342-3.506-4.01-4.125l-.544-4.948 1.495-2.242c.157-.236.172-.538.037-.787-.134-.25-.392-.403-.675-.403h-9.14c-.284 0-.542.154-.676.403-.134.25-.12.553.038.788l1.498 2.247-.484 4.943c-1.668.62-3.633 2.38-4.004 4.116-.04.16-.016.404.132.594.103.132.304.29.68.29H8.64l2.904 6.712c.078.184.26.302.458.302s.38-.118.46-.302l2.903-6.713h4.057c.376 0 .576-.156.68-.286.146-.188.172-.434.135-.59z"></path>
+      </g>
+    </svg>
+  );
+}

@@ -397,6 +397,7 @@ export interface User {
   };
   isNotABot?: boolean;
   botScore?: BotScore;
+  pinned_tweet_id?: string;
   hiddenBotScore?: BotScore;
   location: null | string;
   url: null | string;
