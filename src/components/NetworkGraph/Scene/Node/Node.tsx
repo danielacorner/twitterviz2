@@ -132,9 +132,7 @@ export const Node = ({
       user: node.user,
       id_str: node.user.id_str,
     };
-    console.log("🌟🚨 ~ onClick ~ newSelectedNode", newSelectedNode);
     setSelectedNode(newSelectedNode);
-    console.log("🌟🚨 ~ onClick ~ node", node);
 
     setIsRightDrawerOpen(true);
   };

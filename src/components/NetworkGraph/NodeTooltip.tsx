@@ -11,7 +11,7 @@ import useStore, {
 } from "../../providers/store/store";
 import useContainerDimensions from "../../utils/useContainerDimensions";
 import { useWindowSize } from "../../utils/hooks";
-import { Tweet, User } from "types";
+import { Tweet } from "types";
 import { RowDiv } from "../common/styledComponents";
 import { LEFT_DRAWER_WIDTH } from "components/LEFT_DRAWER_WIDTH";
 import { useNodeTooltipContentPropsLite } from "./useNodeTooltipContentProps";

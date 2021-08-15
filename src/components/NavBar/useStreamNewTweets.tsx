@@ -72,15 +72,13 @@ export function useStreamNewTweets() {
       const data = await resp.json();
       console.log("🌟🚨 ~ useStreamNewTweets ~ data", data);
 
-      const tweetsFromData = data.map((d) => {
-        const userId = d.user.id_str || d.user.id;
-        console.log("🌟🚨 ~ tweetsFromData ~ userId", userId);
-        return {
-          ...d,
-        };
-      });
-      console.log("🌟🚨 ~ useStreamNewTweets ~ tweetsFromData", tweetsFromData);
-      setTweets(tweetsFromData);
+      // const tweetsFromData = data.map((d) => {
+      //   const userId = d.user.id_str || d.user.id;
+      //   return {
+      //     ...d,
+      //   };
+      // });
+      setTweets(data);
 
       setLoading(false);
       if (timerRef.current) {

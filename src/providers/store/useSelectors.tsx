@@ -18,7 +18,6 @@ export const useTweets = (): Tweet[] => {
 export const useSelectedNode = () => {
   const tweets = useTweets();
   const [selectedNodeId] = useAtom(selectedNodeIdAtom);
-  console.log("🌟🚨 ~ useSelectedNode ~ selectedNodeId", selectedNodeId);
   const selectedNode = selectedNodeId
     ? tweets.find((t) =>
         [t.id_str, t.id, t.user.id, t.user.id_str]
@@ -32,7 +31,6 @@ export const useSetSelectedNode = () => {
   const [, setSelectedNodeId] = useAtom(selectedNodeIdAtom);
 
   return (node: Tweet | null) => {
-    console.log("🌟🚨 ~ return ~ node", node);
     setSelectedNodeId(node?.id_str || String(node?.id) || null);
   };
 };

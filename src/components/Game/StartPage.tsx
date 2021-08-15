@@ -9,6 +9,7 @@ import { POPUP_BASE_CSS } from "./popupBaseCss";
 import { getIsMobileDevice } from "./Game";
 import { useState } from "react";
 import { ChevronLeft } from "@material-ui/icons";
+import COVIDSVG from "./COVIDSVG";
 
 export function StartPage({ startLookingAtTweets }) {
   const isLoading = useLoading();
@@ -72,8 +73,12 @@ export function StartPage({ startLookingAtTweets }) {
           <>
             <ol>
               <li>
-                <p>
-                  🕵️‍♀️ You'll see 10 random twitter accounts from{" "}
+                <p style={{ marginBottom: 2 }}>
+                  🕵️‍♀️ Inspect these 10 recent tweets about COVID{" "}
+                  <span style={{ verticalAlign: "middle" }}>
+                    <COVIDSVG />
+                  </span>{" "}
+                  (from{" "}
                   <a
                     href="https://developer.twitter.com/en/docs/tutorials/consuming-streaming-data"
                     target="_blank"
@@ -82,6 +87,7 @@ export function StartPage({ startLookingAtTweets }) {
                   >
                     Twitter Stream
                   </a>
+                  )
                 </p>
               </li>
               <li>
@@ -188,6 +194,9 @@ const StartPageStyles = styled.div`
     position: absolute;
     right: 13px;
     color: gray;
+  }
+  li {
+    line-height: 1.5em;
   }
   a {
     text-decoration: none;

@@ -15,7 +15,6 @@ import { useAtom } from "jotai";
 /** Selected Tweet drawer */
 export function RightDrawer() {
   const selectedNode = useSelectedNode();
-  console.log("🌟🚨 ~ RightDrawer ~ selectedNode", selectedNode);
   const setSelectedNode = useSetSelectedNode();
   const [isRightDrawerOpen, setIsRightDrawerOpen] = useAtom(
     isRightDrawerOpenAtom

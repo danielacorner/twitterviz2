@@ -19,7 +19,6 @@ import { Effects } from "./Effects/Effects";
 const NODE_WIDTH = NODE_RADIUS * NODE_RADIUS_COLLISION_MULTIPLIER;
 export function Scene() {
   const nodes = useUserNodes();
-  console.log("🌟🚨 ~ Scene ~ nodes", nodes);
   // const vertices = getVertices(nodes.length);
   const { camera } = useThree();
   const [gameState] = useAtom(gameStateAtom);
