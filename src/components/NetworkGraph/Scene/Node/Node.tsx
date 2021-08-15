@@ -33,7 +33,7 @@ import { MeshWobbleMaterial } from "@react-three/drei";
 
 export const NODE_RADIUS_COLLISION_MULTIPLIER = 2.5;
 
-const nodeMaterial = new THREE.MeshPhysicalMaterial({
+const defaultNodeMaterial = new THREE.MeshPhysicalMaterial({
   emissive: "#0b152f",
   metalness: 0.97,
   transmission: 1,
@@ -158,7 +158,7 @@ export const Node = ({
 
   const isScanningNode = scanningNodeId === node.id_str;
 
-  const springProps = useSpring({
+  const springScale = useSpring({
     scale: hide
       ? [0, 0, 0]
       : isScanningNode || (isPointerOver && isTooltipNode)
@@ -209,10 +209,14 @@ export const Node = ({
   const hasBotScore = Boolean(node.user.botScore);
 
   return (
-    <animated.mesh rotation={rotation as any} {...(bind() as any)}>
+    <animated.mesh
+      rotation={rotation as any}
+      {...(bind() as any)}
+      renderOrder={2}
+    >
       <animated.mesh
         ref={ref}
-        scale={springProps.scale as any}
+        scale={springScale.scale as any}
         {...(hasBotScore
           ? {}
           : {
@@ -270,7 +274,7 @@ export function NodeContent({
     ? notABotMaterial
     : isTooltipNode
     ? tooltipNodeMaterial
-    : nodeMaterial;
+    : defaultNodeMaterial;
   return (
     <>
       {isScanningNode && (
