@@ -49,7 +49,8 @@ export default function TweetContent({
     retweeted_status?.text ||
     text;
 
-  const textWithLinks = addLinksToText(fullText);
+  const textWithLinks = fullText ? addLinksToText(fullText) : "";
+  console.log("🌟🚨 ~ fullText", fullText);
 
   const [ref, dimensions] = useContainerDimensions();
   // const searchObj = useSearchObj();
