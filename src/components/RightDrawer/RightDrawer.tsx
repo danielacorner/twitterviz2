@@ -67,7 +67,7 @@ export function RightDrawer() {
                       }}
                     >
                       <TweetWidget
-                        tweetId={selectedNode.id_str}
+                        tweetId={selectedNode.id_str || String(selectedNode.id)}
                         options={{ theme: "dark" }}
                       />
                     </div>
