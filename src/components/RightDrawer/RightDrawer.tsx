@@ -78,7 +78,9 @@ export function RightDrawer() {
               <Timeline
                 dataSource={{
                   sourceType: "profile",
-                  screenName: selectedNode?.user.screen_name,
+                  screenName:
+                    selectedNode?.user.screen_name ||
+                    selectedNode?.user.username,
                 }}
                 options={{
                   theme: "dark",
