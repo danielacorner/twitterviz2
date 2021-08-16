@@ -8,10 +8,8 @@ import {
   useTweets,
 } from "../../providers/store/useSelectors";
 import { Button, Tooltip } from "@material-ui/core";
-import {
-  useFetchAndReplaceNode,
-  useFetchBotScoreForTweet,
-} from "components/common/useFetchBotScoreForTweet";
+import { useFetchBotScoreForTweet } from "components/common/useFetchBotScoreForTweet";
+import { useFetchAndReplaceNode } from "components/common/useFetchAndReplaceNode";
 import { atom, useAtom } from "jotai";
 import { BotScore, Tweet } from "types";
 import {
@@ -137,8 +135,10 @@ export default function TagTheBotButton() {
           variant="contained"
           color="secondary"
           onClick={() => {
+            setLoading(true);
             setNotABot(selectedNode);
             fetchAndReplaceNode(selectedNode).then(() => {
+              setLoading(false);
               setSelectedNode(null);
             });
             setIsRightDrawerOpen(false);

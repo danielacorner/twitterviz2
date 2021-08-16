@@ -1,14 +1,9 @@
 import { useMount } from "utils/utils";
-import { useFetchTweetsByIds } from "../utils/hooks";
-import { useTweets } from "../providers/store/useSelectors";
 import { useConfig } from "../providers/store/useConfig";
 import { useFetchTweetsOnMount } from "../providers/faunaProvider";
-import qs from "query-string";
-import { useLocation } from "react-router";
 
 export default function AppFunctionalHooks() {
   useFetchTweetsOnMount();
-  useFetchQueryTweetsOnMount();
   // useStopLoadingEventually();
   useDetectOffline();
 
@@ -22,37 +17,6 @@ function useDetectOffline() {
       setConfig({ isOffline: true });
     });
   });
-}
-
-/** fetch tweets if there's a query string like /?t=12345,12346
- *
- * [docs](https://docs.fauna.com/fauna/current/tutorials/crud?lang=javascript#retrieve)
- */
-function useFetchQueryTweetsOnMount() {
-  const query = useQueryString();
-  const qTweets = query.tweets;
-  const fetchTweetsByIds = useFetchTweetsByIds();
-  const tweets = useTweets();
-  // fetch tweets from DB on mount
-  useMount(() => {
-    if (
-      // skip if we already have tweets,
-      tweets.length > 0 ||
-      // or if the query is empty
-      !qTweets ||
-      qTweets.length === 0
-    ) {
-      return;
-    }
-
-    const tweetIds = Array.isArray(qTweets) ? qTweets : qTweets.split(",");
-    fetchTweetsByIds(tweetIds);
-  });
-}
-
-function useQueryString() {
-  const location = useLocation();
-  return qs.parse(location.search);
 }
 
 // const MAX_LOADING_TIME = 2 * 1000;

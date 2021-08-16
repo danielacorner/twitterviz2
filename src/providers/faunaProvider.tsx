@@ -39,8 +39,6 @@ export function useFetchTweetsOnMount() {
   //     });
   // });
 
-  const getTweetsFromDb = useGetTweetsFromDb();
-
   // sync tweets to DB
   const lastTweetsFromDb = useRef<Tweet[]>([]);
   const tweets = useTweets();
@@ -52,73 +50,70 @@ export function useFetchTweetsOnMount() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tweets]);
 
-  const setTweets = useSetTweets();
-  const setEmptyNodesForUser = useSetEmptyNodesForUser();
-  const [userId, setUserId] = useAtom(appUserIdAtom);
   // fetch tweets from DB on mount
+
+  const setTweets = useSetTweets();
+  const setNodesInDb = useSetNodesInDbForUser();
+  const [, /* userId */ setUserId] = useAtom(appUserIdAtom);
+  // const getTweetsFromDb = useGetTweetsFromDb();
   useMount(() => {
-    if (userId === "") {
-      // create userid and empty nodes in db
-      const newUserId = (Math.random() * 10 ** 16).toFixed();
-      setUserId(newUserId);
-      setEmptyNodesForUser().then((ret) => {
-        const newTweets = (ret as any).data.nodes as Tweet[];
-        setTweets(newTweets);
-      });
-    } else {
-      getTweetsFromDb().then((newTweets) => {
-        setTweets(newTweets as Tweet[]);
-        lastTweetsFromDb.current = newTweets as Tweet[];
-      });
-    }
+    // if (userId === "") {
+    // create userid and empty nodes in db
+    const newUserId = (Math.random() * 10 ** 16).toFixed();
+    setUserId(newUserId);
+    setNodesInDb([]).then((ret) => {
+      const newTweets = (ret as any).data.nodes as Tweet[];
+      setTweets(newTweets);
+    });
+    // } else {
+    //   getTweetsFromDb().then((newTweets) => {
+    //     setTweets(newTweets as Tweet[]);
+    //     lastTweetsFromDb.current = newTweets as Tweet[];
+    //   });
+    // }
   });
 }
 
-function useGetTweetsFromDb() {
-  const [dbRef] = useAtom(dbRefAtom);
-  const setEmptyNodesForUser = useSetEmptyNodesForUser();
+// function useGetTweetsFromDb() {
+//   const [dbRef] = useAtom(dbRefAtom);
+//   const setNodesInDb = useSetNodesInDbForUser();
 
-  return () =>
-    new Promise((resolve, reject) => {
-      const dbRefId = dbRef?.value?.id || dbRef?.["@ref"]?.id;
+//   return () =>
+//     new Promise((resolve, reject) => {
+//       const dbRefId = dbRef?.value?.id || dbRef?.["@ref"]?.id;
 
-      if (!dbRefId) {
-        console.log("🚨🚨 ~ no dbRefId", dbRef);
-        reject("no dbRef");
-      }
-      faunaClient
-        .query(q.Get(q.Ref(q.Collection("Nodes"), dbRefId)))
-        .then((ret: { data: any[] } | any) => {
-          // just grab the whole db ok
-          if (ret.data) {
-            // then find the user's nodes
-            const nodesInDb = ret.data.nodes || [];
-            resolve(nodesInDb as Tweet[]);
-          }
-        })
-        .catch((err) => {
-          if (err.name === "NotFound") {
-            console.log("🌟🌟 no nodes for this user yet");
-            // initialize the user's nodes as empty array to avoid this error next time
-            setEmptyNodesForUser();
-            resolve([]);
-            return;
-          } else if (err.name === "BadRequest") {
-            console.log("🚨🚨 bad request", err);
-            setEmptyNodesForUser();
-            resolve([]);
-            return;
-          }
-          console.log("🚨🚨 ~ newPromise ~ err", err);
-          reject(err);
-        });
-    });
-}
-
-export function useSetEmptyNodesForUser() {
-  const setNodesForUser = useSetNodesInDbForUser();
-  return () => setNodesForUser([]);
-}
+//       if (!dbRefId) {
+//         console.log("🚨🚨 ~ no dbRefId", dbRef);
+//         reject("no dbRef");
+//       }
+//       faunaClient
+//         .query(q.Get(q.Ref(q.Collection("Nodes"), dbRefId)))
+//         .then((ret: { data: any[] } | any) => {
+//           // just grab the whole db ok
+//           if (ret.data) {
+//             // then find the user's nodes
+//             const nodesInDb = ret.data.nodes || [];
+//             resolve(nodesInDb as Tweet[]);
+//           }
+//         })
+//         .catch((err) => {
+//           if (err.name === "NotFound") {
+//             console.log("🌟🌟 no nodes for this user yet");
+//             // initialize the user's nodes as empty array to avoid this error next time
+//             setNodesInDb([]);
+//             resolve([]);
+//             return;
+//           } else if (err.name === "BadRequest") {
+//             console.log("🚨🚨 bad request", err);
+//             setNodesInDb([]);
+//             resolve([]);
+//             return;
+//           }
+//           console.log("🚨🚨 ~ newPromise ~ err", err);
+//           reject(err);
+//         });
+//     });
+// }
 
 export function useSetNodesInDbForUser() {
   const [, setDbRef] = useAtom(dbRefAtom);

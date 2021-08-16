@@ -3,6 +3,7 @@ import {
   useAllowedMediaTypes,
   useSetLoading,
   useSetTweets,
+  isLoadingFromTwitterApiAtom,
 } from "../../providers/store/useSelectors";
 import { useConfig } from "../../providers/store/useConfig";
 import { SERVER_URL } from "../../utils/constants";
@@ -17,7 +18,8 @@ import { useRef } from "react";
 import { uniqBy } from "lodash";
 import { Tweet } from "types";
 
-const WAIT_FOR_STREAM_TIMEOUT = 12 * 1000;
+export const WAIT_FOR_STREAM_TIMEOUT =
+  (process.env.NODE_ENV !== "production" ? 24 : 12) * 1000;
 
 export function useStreamNewTweets() {
   const [
@@ -29,6 +31,9 @@ export function useStreamNewTweets() {
   const allowedMediaTypesStrings = useAllowedMediaTypes();
   const loading = useLoading();
   const setLoading = useSetLoading();
+  const [, /* isLoadingFromTwitterApi */ setLoadingFromTwitterApi] = useAtom(
+    isLoadingFromTwitterApiAtom
+  );
   const setTweets = useSetTweets();
   // const addTweets = useAddTweets();
 
@@ -42,6 +47,7 @@ export function useStreamNewTweets() {
     return new Promise(async (resolve, reject) => {
       console.log("🤖... fetching from twitter stream API");
       setLoading(true);
+      setLoadingFromTwitterApi(true);
 
       // set isMonthlyTwitterApiUsageExceeded to true if we don't get a response from stream within 10 seconds,
       // so subsequent requests will come from the DB instead

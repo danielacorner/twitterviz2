@@ -1,9 +1,9 @@
 import { useAtom } from "jotai";
 import { dbRefAtom } from "providers/faunaProvider";
-import { appUserIdAtom, selectedNodeIdAtom } from "providers/store/store";
+import { appUserIdAtom } from "providers/store/store";
 import { useSetTweets, useTweets } from "providers/store/useSelectors";
 import { BotScore, Tweet } from "types";
-import { FILTER_LEVELS, SERVER_URL } from "utils/constants";
+import { SERVER_URL } from "utils/constants";
 
 /** fetch one bot score and send to store>tweets
  *
@@ -19,21 +19,24 @@ export function useFetchBotScoreForTweet() {
     if (!tweet) {
       return null;
     }
-    const tweetsByUser = tweets.filter(
-      (t) => t.user.id_str === tweet.user.id_str
-    );
+    // const tweetsByUser = tweets.filter(
+    //   (t) => t.user.id_str === tweet.user.id_str
+    // );
+    console.log("🌟🚨 ~ return ~ tweets", tweets);
     const resp = await fetch(`${SERVER_URL}/api/generate_bot_score`, {
       headers: { "content-type": "application/json" },
       method: "POST",
-      body: JSON.stringify(tweetsByUser),
+      body: JSON.stringify([tweet]),
     });
     const botScore = await resp.json();
 
+    // save the bot score to the tweet
     const tweetWithBotScore = {
       ...tweet,
       botScore,
       user: { ...tweet.user, botScore },
     };
+
     const tweetIndex = tweets.findIndex((t) => t.id_str === tweet.id_str);
 
     const allTweetsWithBotScore = [
@@ -59,34 +62,5 @@ export function useFetchBotScoreForTweet() {
     setTweets(allTweetsWithBotScore);
 
     return botScore;
-  };
-}
-
-/** replace one tweet with a new one from the stream
- *
- * 500 per day https://rapidapi.com/OSoMe/api/botometer-pro/pricing
- */
-export function useFetchAndReplaceNode() {
-  const tweets = useTweets();
-  const setTweets = useSetTweets();
-  const [selectedNodeId] = useAtom(selectedNodeIdAtom);
-  return async (tweet: Tweet): Promise<Tweet[] | null> => {
-    if (!tweet) {
-      return null;
-    }
-    // replace with N new tweets
-    const NEW_TWEETS = 2;
-    const resp = await fetch(
-      `${SERVER_URL}/api/stream?num=${NEW_TWEETS}&filterLevel=${FILTER_LEVELS.low}`
-    );
-    const responseTweets = await resp.json();
-    const filteredTweets = tweets.filter((t) => t.id_str !== selectedNodeId);
-    const newTweets = [...filteredTweets, ...responseTweets];
-    setTweets(newTweets);
-    // const newTweets =
-
-    // setTweets(allTweetsWithBotScore);
-
-    return newTweets;
   };
 }

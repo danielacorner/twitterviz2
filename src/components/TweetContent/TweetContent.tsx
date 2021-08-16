@@ -37,7 +37,6 @@ export default function TweetContent({
     place,
     in_reply_to_screen_name,
   } = tweet;
-  console.log("🌟🚨 ~ tweet", tweet);
   const { height: windowHeight } = useWindowSize();
   const retweetedUser = getRetweetedUser(tweet);
 
@@ -50,7 +49,6 @@ export default function TweetContent({
     text;
 
   const textWithLinks = fullText ? addLinksToText(fullText) : "";
-  console.log("🌟🚨 ~ fullText", fullText);
 
   const [ref, dimensions] = useContainerDimensions();
   // const searchObj = useSearchObj();

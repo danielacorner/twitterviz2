@@ -1,7 +1,7 @@
 import { useAtom } from "jotai";
 import {
   // useDeleteUser,
-  useSetEmptyNodesForUser,
+  useSetNodesInDbForUser,
 } from "providers/faunaProvider";
 import {
   tweetsFromServerAtom,
@@ -11,7 +11,7 @@ import {
 export function useDeleteAllTweets() {
   const [, setTweetsFromServer] = useAtom(tweetsFromServerAtom);
   const setTweets = useSetTweets();
-  const setEmptyNodesForUser = useSetEmptyNodesForUser();
+  const setNodesInDb = useSetNodesInDbForUser();
   // const deleteUser = useDeleteUser();
   return () =>
     new Promise((resolve, reject) => {
@@ -20,7 +20,7 @@ export function useDeleteAllTweets() {
       setTweets([]);
       // delete all tweets for this user in the db
       // deleteUser().then(() => {
-      setEmptyNodesForUser().then(() => {
+      setNodesInDb([]).then(() => {
         resolve(true);
       });
       // });

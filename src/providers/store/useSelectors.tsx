@@ -2,13 +2,14 @@ import { uniqBy } from "lodash";
 import { Tweet, User } from "../../types";
 import { useCallback, useEffect, useRef } from "react";
 import useStore, { selectedNodeIdAtom } from "./store";
-import { useAtom } from "jotai";
+import { atom, useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 
 export const tweetsFromServerAtom = atomWithStorage<Tweet[]>(
   "atoms:tweetsFromServerAtom",
   []
 );
+export const isLoadingFromTwitterApiAtom = atom<boolean>(false);
 
 export const useTweets = (): Tweet[] => {
   const [tweetsFromServer] = useAtom(tweetsFromServerAtom);
@@ -144,8 +145,9 @@ export function usePrevious(value: any): typeof value {
 }
 
 export function getRetweetedUser(tweet: Tweet): User | null {
-  console.log("🌟🚨 ~ getRetweetedUser ~ tweet", tweet);
-  return tweet?.retweeted_status?.user || null;
+  const retweetedUser = tweet?.retweeted_status?.user || null;
+  console.log("🌟🚨 ~ getRetweetedUser ~ retweetedUser", retweetedUser);
+  return retweetedUser;
 }
 
 export function getOriginalPoster(tweet: Tweet): User | null {
