@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components/macro";
 import { useLoading } from "../providers/store/useSelectors";
 import { Canvas } from "@react-three/fiber";
@@ -76,7 +76,14 @@ function LinearProgressIndicator() {
       setProgress((p) => p + progressPerSecond); // ? wat
     }, 1000);
   });
-  return isLoading ? (
+  // when we stop loading, reset progress
+  useEffect(() => {
+    if (!isLoading) {
+      setProgress(0);
+    }
+  }, [isLoading]);
+
+  return isLoading && progress < 100 ? (
     <LinearProgress
       color={"secondary"}
       variant="determinate"
