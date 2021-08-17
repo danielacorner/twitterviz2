@@ -146,7 +146,6 @@ export function usePrevious(value: any): typeof value {
 
 export function getRetweetedUser(tweet: Tweet): User | null {
   const retweetedUser = tweet?.retweeted_status?.user || null;
-  console.log("🌟🚨 ~ getRetweetedUser ~ retweetedUser", retweetedUser);
   return retweetedUser;
 }
 

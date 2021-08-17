@@ -68,12 +68,17 @@ function LinearProgressIndicator() {
   const isLoading = useLoading();
 
   const [progress, setProgress] = useState(0);
-  console.log("🌟🚨 ~ LinearProgressIndicator ~ progress", progress);
   useMount(() => {
     // increment progress every second
-    setInterval(() => {
+    const timer = setInterval(() => {
       const progressPerSecond = 100 / (WAIT_FOR_STREAM_TIMEOUT / 1000);
-      setProgress((p) => p + progressPerSecond); // ? wat
+      setProgress((p) => {
+        const newProgress = p + progressPerSecond;
+        if (newProgress >= 100) {
+          clearInterval(timer);
+        }
+        return newProgress;
+      });
     }, 1000);
   });
   // when we stop loading, reset progress

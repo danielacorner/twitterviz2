@@ -137,12 +137,12 @@ export default function TagTheBotButton() {
           onClick={() => {
             setLoading(true);
             setNotABot(selectedNode);
+            // fetch new nodes & replace on click
             fetchAndReplaceNode(selectedNode).then(() => {
               setLoading(false);
               setSelectedNode(null);
             });
             setIsRightDrawerOpen(false);
-            // TODO: fetch new node & replace on click
           }}
         >
           Not a bot...

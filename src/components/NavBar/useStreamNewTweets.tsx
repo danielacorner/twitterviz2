@@ -103,12 +103,7 @@ export function useStreamNewTweets() {
   const fetchOldTweetsWithBotScoresFromDB = async () => {
     setLoading(true);
 
-    const resp = await faunaClient.query(
-      q.Map(
-        q.Paginate(q.Documents(q.Collection("nodes_with_bot_scores"))),
-        q.Lambda((x) => q.Get(x))
-      )
-    );
+    const resp = await getAllNodesWithBotScoresFromDB();
     const tweetsWithBotScores =
       (resp as any)?.data?.map((d) => d?.data?.nodeWithBotScore) || [];
 
@@ -141,7 +136,7 @@ export function useStreamNewTweets() {
 }
 
 // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
-function shuffle(array) {
+export function shuffle(array) {
   var currentIndex = array.length,
     randomIndex;
 
@@ -159,4 +154,13 @@ function shuffle(array) {
   }
 
   return array;
+}
+
+export function getAllNodesWithBotScoresFromDB() {
+  return faunaClient.query(
+    q.Map(
+      q.Paginate(q.Documents(q.Collection("nodes_with_bot_scores"))),
+      q.Lambda((x) => q.Get(x))
+    )
+  );
 }
