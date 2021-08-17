@@ -12,11 +12,10 @@ export function useLatestTaggedNode() {
       setLastNode(node);
     }
   }, [node]);
-  const nodeDisplay = node || lastNode; // ?
-  const latestBotScore = nodeDisplay?.user.botScore;
+  const latestBotScore = lastNode?.user.botScore;
   return {
     latestBotScore,
     node,
-    nodeDisplay,
+    nodeDisplay: lastNode,
   };
 }

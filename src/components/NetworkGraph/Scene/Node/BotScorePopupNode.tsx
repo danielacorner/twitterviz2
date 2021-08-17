@@ -7,7 +7,6 @@ import { NodeContent } from "components/NetworkGraph/Scene/Node/Node";
 import { Canvas } from "@react-three/fiber";
 
 import Alert from "@material-ui/lab/Alert";
-import AlertTitle from "@material-ui/lab/AlertTitle";
 import styled from "styled-components/macro";
 import { useAtom } from "jotai";
 import { UserNode } from "../../useUserNodes";
@@ -62,7 +61,7 @@ function Alerts() {
   const [isUp, setIsUp] = useAtom(isBotScoreExplainerUpAtom);
   const springUp = useSpringDom({
     position: "fixed",
-    bottom: isUp ? 24 : -96,
+    bottom: isUp ? 24 : -500,
     right: 24,
     pointerEvents: "auto",
   });
@@ -74,12 +73,64 @@ function Alerts() {
           setIsUp(false);
         }}
       >
-        <AlertTitle>Info</AlertTitle>
-        You got a bot score woop {latestBotScore?.overall}
+        <AlertContentStyles>
+          <div className="title">
+            You got a bot score woop {latestBotScore?.overall}
+          </div>
+          <div className="score">
+            <div className="category">Overall: </div>
+            <div className="value">{latestBotScore?.overall}</div>
+          </div>
+          <div className="score">
+            <div className="category">Astroturf: </div>
+            <div className="value">{latestBotScore?.astroturf}</div>
+          </div>
+          <div className="score">
+            <div className="category"> Fake follower:</div>{" "}
+            <div className="value">{latestBotScore?.fake_follower} </div>
+          </div>
+          <div className="score">
+            <div className="category">Financial: </div>
+            <div className="value">{latestBotScore?.financial}</div>
+          </div>
+          <div className="score">
+            <div className="category">Other: </div>
+            <div className="value">{latestBotScore?.other}</div>
+          </div>
+          <div className="score">
+            <div className="category"> Self declared:</div>{" "}
+            <div className="value">{latestBotScore?.self_declared} </div>
+          </div>
+          <div className="score">
+            <div className="category">Spammer: </div>
+            <div className="value">{latestBotScore?.spammer}</div>
+          </div>
+        </AlertContentStyles>
       </Alert>
     </animatedDom.div>
   );
 }
+const AlertContentStyles = styled.div`
+  .title {
+    font-size: 2em;
+  }
+
+  .score {
+    font-size: 1.5em;
+    color: #fff;
+    font-weight: bold;
+    display: grid;
+    grid-template-columns: 1fr auto;
+  }
+
+  .score:hover {
+    color: #fff;
+  }
+
+  .score:active {
+    color: #fff;
+  }
+`;
 
 function BotScorePopupNodeAnimation({
   windowSize,

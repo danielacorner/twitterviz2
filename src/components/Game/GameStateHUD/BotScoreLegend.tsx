@@ -4,7 +4,6 @@ import { NodeBotScoreAntenna } from "../../NetworkGraph/Scene/Node/NodeBotScoreA
 import { useSpring, animated } from "@react-spring/three";
 import { gameStateAtom, GameStepsEnum } from "providers/store/store";
 import { atom, useAtom } from "jotai";
-import { useEffect } from "react";
 import { useLatestTaggedNode } from "components/NetworkGraph/Scene/Node/useLatestTaggedNode";
 
 const SCALE = 0.15;
@@ -23,16 +22,12 @@ export function BotScoreLegendHUD({
     size: { width, height },
   } = useThree();
   const { latestBotScore, node, nodeDisplay } = useLatestTaggedNode();
+  console.log("🌟🚨 ~ latestBotScore", latestBotScore);
 
-  const [isUp, setIsUp] = useAtom(isBotScoreExplainerUpAtom);
-
-  // when we get a new bot score, raise the alert
-  useEffect(() => {
-    setIsUp(true);
-  }, [setIsUp, latestBotScore]);
+  const [isUp] = useAtom(isBotScoreExplainerUpAtom);
 
   const springProps = useSpring({
-    position: [0, isUp ? 0 : -2, 0],
+    position: [0, isUp ? 0 : -4, 0],
   });
 
   return (

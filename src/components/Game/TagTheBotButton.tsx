@@ -20,6 +20,7 @@ import {
   shotsRemainingAtom,
 } from "providers/store/store";
 import { getScoreFromBotScore } from "./getScoreFromBotScore";
+import { isBotScoreExplainerUpAtom } from "./GameStateHUD/BotScoreLegend";
 // * animate a HUD-contained bot score display ?
 // * animate the selected node to the front and then back?
 const latestNodeWithBotScoreAtom = atom<Tweet | null>(null);
@@ -38,6 +39,9 @@ export default function TagTheBotButton() {
   const [shotsRemaining, setShotsRemaining] = useAtom(shotsRemainingAtom);
   const [, setScore] = useAtom(scoreAtom);
   const [, setBotScorePopupNode] = useAtom(botScorePopupNodeAtom);
+  const [scanningNodeId, setScanningNodeId] = useAtom(scanningNodeIdAtom);
+  const [, setIsRightDrawerOpen] = useAtom(isRightDrawerOpenAtom);
+  const [isUp, setIsUp] = useAtom(isBotScoreExplainerUpAtom);
 
   function handleReceiveBotScore(botScore: BotScore) {
     if (!selectedNode) {
@@ -52,8 +56,12 @@ export default function TagTheBotButton() {
       tweets: [{ ...selectedNode, botScore }],
       id_str: selectedNode.user.id_str,
     });
+
+    setIsUp(true);
+
     setTimeout(() => {
       setBotScorePopupNode(null);
+      console.log("🌟🚨 ~ scanningNodeId", scanningNodeId);
     }, BOT_SCORE_POPUP_TIMEOUT);
 
     setLoading(false);
@@ -73,8 +81,6 @@ export default function TagTheBotButton() {
       )
     );
   }
-  const [, setScanningNodeId] = useAtom(scanningNodeIdAtom);
-  const [, setIsRightDrawerOpen] = useAtom(isRightDrawerOpenAtom);
 
   return selectedNode &&
     shotsRemaining > 0 &&

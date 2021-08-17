@@ -247,7 +247,6 @@ export const Node = ({
     </animated.mesh>
   );
 };
-
 export function NodeContent({
   node,
   isTooltipNode,
