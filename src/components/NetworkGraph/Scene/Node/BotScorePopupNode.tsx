@@ -1,23 +1,27 @@
 import { animated, useSpring } from "@react-spring/three";
-import {
-  animated as animatedDom,
-  useSpring as useSpringDom,
-} from "react-spring";
+
 import { NodeContent } from "components/NetworkGraph/Scene/Node/Node";
 import { Canvas } from "@react-three/fiber";
 
-import Alert from "@material-ui/lab/Alert";
 import styled from "styled-components/macro";
-import { useAtom } from "jotai";
 import { UserNode } from "../../useUserNodes";
-import { useWindowSize } from "utils/hooks";
 import Background from "../Background";
 import { ScanningAnimation } from "./ScanningAnimation";
-import { isBotScoreExplainerUpAtom } from "components/Game/GameStateHUD/BotScoreLegend";
 import { useLatestTaggedNode } from "./useLatestTaggedNode";
+import { useWindowSize } from "utils/hooks";
 /** pops up and animates when you get a new bot score */
 export function BotScorePopupNode() {
-  const { latestBotScore, node, nodeDisplay } = useLatestTaggedNode();
+  const { /* latestBotScore, */ node, nodeDisplay } = useLatestTaggedNode();
+  const latestBotScore = {
+    astroturf: 0.33,
+    fake_follower: 0.51,
+    financial: 0,
+    other: 0.63,
+    overall: 0.63,
+    self_declared: 0.1,
+    spammer: 0.09,
+  };
+  console.log("🌟🚨 ~ Alerts ~ latestBotScore", latestBotScore);
 
   const springProps = useSpring({
     scale: node
@@ -33,7 +37,6 @@ export function BotScorePopupNode() {
         <BotScorePopupNodeAnimation
           {...{ windowSize, nodeDisplay, springProps }}
         />
-        <Alerts />
       </ContentStyles>
     </PopupStyles>
   );
@@ -55,81 +58,6 @@ const ContentStyles = styled.div`
 `;
 const PopupStyles = styled.div`
   pointer-events: none;
-`;
-function Alerts() {
-  const { latestBotScore, node, nodeDisplay } = useLatestTaggedNode();
-  const [isUp, setIsUp] = useAtom(isBotScoreExplainerUpAtom);
-  const springUp = useSpringDom({
-    position: "fixed",
-    bottom: isUp ? 24 : -500,
-    right: 24,
-    pointerEvents: "auto",
-  });
-  return (
-    <animatedDom.div style={springUp as any} className="alerts">
-      <Alert
-        severity="success"
-        onClose={() => {
-          setIsUp(false);
-        }}
-      >
-        <AlertContentStyles>
-          <div className="title">
-            You got a bot score woop {latestBotScore?.overall}
-          </div>
-          <div className="score">
-            <div className="category">Overall: </div>
-            <div className="value">{latestBotScore?.overall}</div>
-          </div>
-          <div className="score">
-            <div className="category">Astroturf: </div>
-            <div className="value">{latestBotScore?.astroturf}</div>
-          </div>
-          <div className="score">
-            <div className="category"> Fake follower:</div>{" "}
-            <div className="value">{latestBotScore?.fake_follower} </div>
-          </div>
-          <div className="score">
-            <div className="category">Financial: </div>
-            <div className="value">{latestBotScore?.financial}</div>
-          </div>
-          <div className="score">
-            <div className="category">Other: </div>
-            <div className="value">{latestBotScore?.other}</div>
-          </div>
-          <div className="score">
-            <div className="category"> Self declared:</div>{" "}
-            <div className="value">{latestBotScore?.self_declared} </div>
-          </div>
-          <div className="score">
-            <div className="category">Spammer: </div>
-            <div className="value">{latestBotScore?.spammer}</div>
-          </div>
-        </AlertContentStyles>
-      </Alert>
-    </animatedDom.div>
-  );
-}
-const AlertContentStyles = styled.div`
-  .title {
-    font-size: 2em;
-  }
-
-  .score {
-    font-size: 1.5em;
-    color: #fff;
-    font-weight: bold;
-    display: grid;
-    grid-template-columns: 1fr auto;
-  }
-
-  .score:hover {
-    color: #fff;
-  }
-
-  .score:active {
-    color: #fff;
-  }
 `;
 
 function BotScorePopupNodeAnimation({

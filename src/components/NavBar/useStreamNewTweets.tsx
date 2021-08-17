@@ -19,7 +19,7 @@ import { uniqBy } from "lodash";
 import { Tweet } from "types";
 
 export const WAIT_FOR_STREAM_TIMEOUT =
-  (process.env.NODE_ENV !== "production" ? 24 : 12) * 1000;
+  (process.env.NODE_ENV !== "production" ? 12 : 12) * 1000;
 
 export function useStreamNewTweets() {
   const [

@@ -5,39 +5,202 @@ import { useSpring, animated } from "@react-spring/three";
 import { gameStateAtom, GameStepsEnum } from "providers/store/store";
 import { atom, useAtom } from "jotai";
 import { useLatestTaggedNode } from "components/NetworkGraph/Scene/Node/useLatestTaggedNode";
+import {
+  animated as animatedDom,
+  useSpring as useSpringDom,
+} from "react-spring";
+import { useWindowSize } from "utils/hooks";
+import Alert from "@material-ui/lab/Alert";
+import styled from "styled-components/macro";
+import { Html } from "@react-three/drei";
 
 const SCALE = 0.15;
 const RADIUS = 40;
 export const isBotScoreExplainerUpAtom = atom<boolean>(false);
 
 /** displays at the bottom when you get a bot score */
-export function BotScoreLegendHUD({
-  position = [0, 0, 0],
-  scale = [1, 1, 1],
-}: {
-  position?: number[];
-  scale?: number[];
-}) {
+export function BotScoreLegendHUD() {
   const {
     size: { width, height },
   } = useThree();
   const { latestBotScore, node, nodeDisplay } = useLatestTaggedNode();
   console.log("🌟🚨 ~ latestBotScore", latestBotScore);
 
-  const [isUp] = useAtom(isBotScoreExplainerUpAtom);
+  const isUp = true;
+  // const [isUp] = useAtom(isBotScoreExplainerUpAtom);
 
+  // const springPosition = [0, isUp ? 0 : -6, 0];
   const springProps = useSpring({
-    position: [0, isUp ? 0 : -4, 0],
+    position: [0, isUp ? 0 : -8, 0],
   });
 
   return (
-    <HUD position={[width / 2 - RADIUS * 2, height / 2 - RADIUS * 2.5, 0]}>
-      <animated.mesh position={springProps.position as any} renderOrder={9999}>
-        <BotScoreLegend {...{ isInStartMenu: true, position, scale }} />
+    <HUD position={[width / 2 - RADIUS * 2.5, height / 2 - RADIUS * 3, 0]}>
+      <animated.mesh
+        position={springProps.position as any}
+        scale={[1.3, 1.3, 1.3]}
+      >
+        <Html transform={true} position={[0.57, 0.3, -0]}>
+          <Alerts />
+        </Html>
+        <BotScoreLegend
+          {...{
+            isInStartMenu: true,
+            position: [0, 0, 0],
+            scale: [1, 1, 1],
+          }}
+        />
       </animated.mesh>
     </HUD>
   );
 }
+function Alerts() {
+  const { /* latestBotScore, */ node, nodeDisplay } = useLatestTaggedNode();
+  const latestBotScore = {
+    astroturf: 0.33,
+    fake_follower: 0.51,
+    financial: 0,
+    other: 0.63,
+    overall: 0.63,
+    self_declared: 0.1,
+    spammer: 0.09,
+  };
+  console.log("🌟🚨 ~ Alerts ~ latestBotScore", latestBotScore);
+  const [isUp, setIsUp] = useAtom(isBotScoreExplainerUpAtom);
+  const springUp = useSpringDom({
+    position: "fixed",
+    bottom: isUp ? 24 : -500,
+    right: 24,
+    pointerEvents: "auto",
+    width: `calc(100vw - ${2 * 24}px)`,
+  });
+
+  return (
+    <AlertContentStyles>
+      <animatedDom.div style={springUp as any} className="alerts">
+        <Alert
+          severity="info"
+          onClose={() => {
+            setIsUp(false);
+          }}
+        >
+          {latestBotScore ? (
+            <>
+              <div className="scoreBar">
+                <div className="category">Overall </div>
+                <div
+                  className="value"
+                  style={{ width: latestBotScore.overall * 100 + "%" }}
+                >
+                  {latestBotScore.overall}
+                </div>
+              </div>
+              <div className="scoreBar">
+                <div className="category">Astroturf </div>
+                <div
+                  className="value"
+                  style={{ width: latestBotScore.astroturf * 100 + "%" }}
+                >
+                  {latestBotScore.astroturf}
+                </div>
+              </div>
+              <div className="scoreBar">
+                <div className="category"> Fakefollower:</div>{" "}
+                <div
+                  className="value"
+                  style={{ width: latestBotScore.fake_follower * 100 + "%" }}
+                >
+                  {latestBotScore.fake_follower}{" "}
+                </div>
+              </div>
+              <div className="scoreBar">
+                <div className="category">Financial </div>
+                <div
+                  className="value"
+                  style={{ width: latestBotScore.financial * 100 + "%" }}
+                >
+                  {latestBotScore.financial}
+                </div>
+              </div>
+              <div className="scoreBar">
+                <div className="category">Other </div>
+                <div
+                  className="value"
+                  style={{ width: latestBotScore.other * 100 + "%" }}
+                >
+                  {latestBotScore.other}
+                </div>
+              </div>
+              <div className="scoreBar">
+                <div className="category"> Self declared:</div>{" "}
+                <div
+                  className="value"
+                  style={{ width: latestBotScore.self_declared * 100 + "%" }}
+                >
+                  {latestBotScore.self_declared}{" "}
+                </div>
+              </div>
+              <div className="scoreBar">
+                <div className="category">Spammer: </div>
+                <div
+                  className="value"
+                  style={{ width: latestBotScore.spammer * 100 + "%" }}
+                >
+                  {latestBotScore.spammer}
+                </div>
+              </div>
+            </>
+          ) : null}
+        </Alert>
+      </animatedDom.div>
+    </AlertContentStyles>
+  );
+}
+const AlertContentStyles = styled.div`
+  .MuiAlert-standardInfo {
+    background: hsla(0, 0%, 0%, 0.8);
+  }
+  .MuiAlert-icon {
+    display: none;
+  }
+  .MuiAlert-action {
+    align-items: flex-start;
+  }
+  .title {
+    font-size: 1.5em;
+  }
+  height: 300px;
+  display: grid;
+  grid-gap: 1em;
+  .scoreBar {
+    height: 24px;
+    width: 100%;
+    font-size: 1em;
+    color: #fff;
+    font-weight: bold;
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    position: relative;
+    .category {
+      text-align: left;
+      position: absolute;
+      left: -2em;
+    }
+    .value {
+      position: absolute;
+      left: -1em;
+      text-align: right;
+    }
+  }
+
+  .score:hover {
+    color: #fff;
+  }
+
+  .score:active {
+    color: #fff;
+  }
+`;
 
 export function BotScoreLegend({
   isInStartMenu,

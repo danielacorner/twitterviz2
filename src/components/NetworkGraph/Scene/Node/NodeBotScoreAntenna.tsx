@@ -126,11 +126,12 @@ function Antenna({
         <cylinderBufferGeometry args={[0.2, 0.2, STICK_HEIGHT, 26, 1]} />
         <meshPhysicalMaterial
           metalness={0.8}
-          roughness={0.1}
           color="#464646"
           emissive={new THREE.Color("#272727")}
           transparent={true}
-          opacity={1}
+          opacity={0.5}
+          transmission={0.98}
+          roughness={0.05}
         />
       </animated.mesh>
       <animated.mesh position={springProps.spherePosition as any}>
@@ -173,10 +174,9 @@ function Antenna({
                 color,
               }
             : {})}
-          // color="#666"
-          // color={color}
+          // color="#777"
           emissive={new THREE.Color(color)}
-          transparent={true}
+          transparent={forceOpaque ? false : true}
           opacity={forceOpaque ? 1 : showLabels ? 0.5 : score ** 0.5}
         />
       </animated.mesh>
