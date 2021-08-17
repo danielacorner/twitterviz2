@@ -12,6 +12,7 @@ import NetworkGraph from "components/NetworkGraph/NetworkGraph";
 import { RightDrawer } from "./components/RightDrawer/RightDrawer";
 import { Game } from "./components/Game/Game";
 import { LoadingIndicator } from "./components/LoadingIndicator";
+import { BotScorePopupNode } from "components/NetworkGraph/Scene/Node/BotScorePopupNode";
 
 function App() {
   return (
@@ -28,7 +29,7 @@ function App() {
       <RightDrawer />
       <Game />
       <LoadingIndicator />
-      {/* <BotScorePopupNode /> */}
+      <BotScorePopupNode />
     </AppStyles>
   );
 }

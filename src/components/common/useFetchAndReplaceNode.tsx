@@ -1,8 +1,5 @@
 import { useAtom } from "jotai";
-import {
-  lastTimeMonthlyTwitterApiUsageWasExceededAtom,
-  selectedNodeIdAtom,
-} from "providers/store/store";
+import { lastTimeMonthlyTwitterApiUsageWasExceededAtom } from "providers/store/store";
 import { useSetTweets, useTweets } from "providers/store/useSelectors";
 import { Tweet } from "types";
 import { FILTER_LEVELS, SERVER_URL } from "utils/constants";
@@ -21,7 +18,7 @@ const NUM_NEW_TWEETS = 3;
 export function useFetchAndReplaceNode() {
   const tweets = useTweets();
   const setTweets = useSetTweets();
-  const [selectedNodeId] = useAtom(selectedNodeIdAtom);
+  // const [selectedNodeId] = useAtom(selectedNodeIdAtom);
   const [lastTimeMonthlyTwitterApiUsageWasExceeded] = useAtom(
     lastTimeMonthlyTwitterApiUsageWasExceededAtom
   );

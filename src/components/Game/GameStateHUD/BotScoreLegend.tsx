@@ -3,11 +3,15 @@ import { useThree } from "@react-three/fiber";
 import { NodeBotScoreAntenna } from "../../NetworkGraph/Scene/Node/NodeBotScoreAntenna";
 import { useSpring, animated } from "@react-spring/three";
 import { gameStateAtom, GameStepsEnum } from "providers/store/store";
-import { useAtom } from "jotai";
+import { atom, useAtom } from "jotai";
+import { useEffect } from "react";
+import { useLatestTaggedNode } from "components/NetworkGraph/Scene/Node/useLatestTaggedNode";
 
 const SCALE = 0.15;
 const RADIUS = 40;
+export const isBotScoreExplainerUpAtom = atom<boolean>(false);
 
+/** displays at the bottom when you get a bot score */
 export function BotScoreLegendHUD({
   position = [0, 0, 0],
   scale = [1, 1, 1],
@@ -18,10 +22,24 @@ export function BotScoreLegendHUD({
   const {
     size: { width, height },
   } = useThree();
+  const { latestBotScore, node, nodeDisplay } = useLatestTaggedNode();
+
+  const [isUp, setIsUp] = useAtom(isBotScoreExplainerUpAtom);
+
+  // when we get a new bot score, raise the alert
+  useEffect(() => {
+    setIsUp(true);
+  }, [setIsUp, latestBotScore]);
+
+  const springProps = useSpring({
+    position: [0, isUp ? 0 : -2, 0],
+  });
 
   return (
     <HUD position={[width / 2 - RADIUS * 2, height / 2 - RADIUS * 2.5, 0]}>
-      <BotScoreLegend {...{ isInStartMenu: true, position, scale }} />
+      <animated.mesh position={springProps.position as any} renderOrder={9999}>
+        <BotScoreLegend {...{ isInStartMenu: true, position, scale }} />
+      </animated.mesh>
     </HUD>
   );
 }
