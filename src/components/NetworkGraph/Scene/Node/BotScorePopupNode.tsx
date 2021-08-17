@@ -53,11 +53,6 @@ const ContentStyles = styled.div`
   display: grid;
   place-items: center;
   z-index: 9999999999999999999;
-  .alerts {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-  }
 `;
 const PopupStyles = styled.div`
   pointer-events: none;
@@ -66,21 +61,21 @@ function Alerts() {
   const { latestBotScore, node, nodeDisplay } = useLatestTaggedNode();
   const [isUp, setIsUp] = useAtom(isBotScoreExplainerUpAtom);
   const springUp = useSpringDom({
-    position: "absolute",
-    bottom: isUp ? 24 : 0,
+    position: "fixed",
+    bottom: isUp ? 24 : -96,
+    right: 24,
+    pointerEvents: "auto",
   });
   return (
     <animatedDom.div style={springUp as any} className="alerts">
-      <Alert severity="success">
-        You got a bot score woop {latestBotScore?.overall}
-      </Alert>
-      <Alert severity="info">
+      <Alert
+        severity="success"
+        onClose={() => {
+          setIsUp(false);
+        }}
+      >
         <AlertTitle>Info</AlertTitle>
-        This is an info alert — <strong>check it out!</strong>
-      </Alert>
-      <Alert severity="success" onClose={() => {}}>
-        <AlertTitle>Success</AlertTitle>
-        This is a success alert — <strong>check it out!</strong>
+        You got a bot score woop {latestBotScore?.overall}
       </Alert>
     </animatedDom.div>
   );
