@@ -23,7 +23,6 @@ export function BotScoreInfoCard() {
     self_declared: 0.1,
     spammer: 0.09,
   };
-  const [, setAreOrbitControlsEnabled] = useAtom(areOrbitControlsEnabledAtom);
   // -- drag to change position --
 
   // https://codesandbox.io/s/react-three-fiber-gestures-forked-qi8xq?file=/src/App.js:351-672
@@ -38,6 +37,8 @@ export function BotScoreInfoCard() {
   // Create a gesture that contains drag and hover, set the spring accordingly
   const { size, viewport } = useThree();
   const aspect = (size.width / viewport.width) * 5;
+
+  const [, setAreOrbitControlsEnabled] = useAtom(areOrbitControlsEnabledAtom);
   const bind = useGesture({
     onDrag: ({ event, offset: [x, y] }) => {
       console.log("🌟🚨 ~ BotScoreInfoCard ~ event", event);
@@ -102,7 +103,21 @@ export function BotScoreInfoCard() {
   });
   return (
     /* !lastNode ? null : */
-    <animated.mesh {...bind}>
+    <animated.mesh>
+      <Html>
+        <div
+          {...bind()}
+          style={{
+            width: 100,
+            height: 100,
+            ...(process.env.NODE_ENV !== "production"
+              ? { border: "1px solid tomato" }
+              : {}),
+          }}
+        >
+          {process.env.NODE_ENV !== "production" ? "DRAG AREA" : ""}
+        </div>
+      </Html>
       <mesh position={[x, y, z]} receiveShadow={true}>
         <Box args={[sx, sy, sz]} receiveShadow={true}>
           <meshPhysicalMaterial
