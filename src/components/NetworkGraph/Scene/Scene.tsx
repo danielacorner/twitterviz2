@@ -9,7 +9,11 @@ import { useSpring } from "react-spring";
 import { Suspense, useState } from "react";
 import { useMount } from "utils/utils";
 import { Stars } from "./Stars";
-import { gameStateAtom, GameStepsEnum } from "providers/store/store";
+import {
+  areOrbitControlsEnabledAtom,
+  gameStateAtom,
+  GameStepsEnum,
+} from "providers/store/store";
 import { useAtom } from "jotai";
 import { Collisions } from "./Collisions";
 import { HighScores } from "components/Game/HighScores/HighScores";
@@ -22,6 +26,11 @@ export function Scene() {
   // const vertices = getVertices(nodes.length);
   const { camera } = useThree();
   const [gameState] = useAtom(gameStateAtom);
+  const [areOrbitControlsEnabled] = useAtom(areOrbitControlsEnabledAtom);
+  console.log(
+    "🌟🚨 ~ Scene ~ areOrbitControlsEnabled",
+    areOrbitControlsEnabled
+  );
   const isGameOver = gameState.step === GameStepsEnum.gameOver;
   const isMounted = useIsMounted();
   // zoom in camera on mount
@@ -72,6 +81,7 @@ export function Scene() {
         minDistance={40}
         maxDistance={500}
         enablePan={false}
+        enabled={areOrbitControlsEnabled}
       />
       <Physics
         {...{ gravity: [0, 0, 0] }}

@@ -16,6 +16,7 @@ export const lastTimeMonthlyTwitterApiUsageWasExceededAtom = atom<
 >(null);
 
 export const isRightDrawerOpenAtom = atom<boolean>(false);
+export const areOrbitControlsEnabledAtom = atom<boolean>(true);
 export const scanningNodeIdAtom = atom<string | null>(null);
 export const botScorePopupNodeAtom = atom<UserNode | null>(null);
 export const appUserIdAtom = atomWithStorage<string>("atoms:userId", "");

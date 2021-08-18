@@ -6,6 +6,7 @@ import { UserNode } from "../../useUserNodes";
 export function useLatestTaggedNode() {
   const [node] = useAtom(botScorePopupNodeAtom);
   const [lastNode, setLastNode] = useState<UserNode | null>(null);
+  const clearLastNode = () => setLastNode(null);
   // const lastNode = useRef<UserNode | null>(null);
   useEffect(() => {
     if (node) {
@@ -16,6 +17,7 @@ export function useLatestTaggedNode() {
   return {
     latestBotScore,
     node,
-    nodeDisplay: lastNode,
+    lastNode,
+    clearLastNode,
   };
 }

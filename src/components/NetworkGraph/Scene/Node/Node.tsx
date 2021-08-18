@@ -1,6 +1,7 @@
 import { useSphere } from "@react-three/cannon";
 import * as THREE from "three";
 import useStore, {
+  areOrbitControlsEnabledAtom,
   isPointerOverAtom,
   isRightDrawerOpenAtom,
   numTooltipTweetsAtom,
@@ -100,6 +101,9 @@ export const Node = ({
   );
   const [, setIsRightDrawerOpen] = useAtom(isRightDrawerOpenAtom);
   const [, setNumTooltipTweets] = useAtom(numTooltipTweetsAtom);
+  const [areOrbitControlsEnabled, setAreOrbitControlsEnabled] = useAtom(
+    areOrbitControlsEnabledAtom
+  );
 
   const handleRightClick = useHandleOpenRightClickMenu(node.tweets[0]);
   const onContextMenu = (event) => {
@@ -132,6 +136,9 @@ export const Node = ({
       user: node.user,
       id_str: node.user.id_str,
     };
+    if (!areOrbitControlsEnabled) {
+      return;
+    }
     setSelectedNode(newSelectedNode);
 
     setIsRightDrawerOpen(true);
@@ -184,25 +191,27 @@ export const Node = ({
     config: { mass: 3, friction: 40, tension: 800 },
   }));
   // Create a gesture that contains drag and hover, set the spring accordingly
-  const WOBBLE_ROTATION = 0.1;
-  const WOBBLE_POSITION = 0.1;
+  // const mu = 1;
+  const meow = 1;
   const { size, viewport } = useThree();
   const aspect = (size.width / viewport.width) * 5;
   const bind = useGesture({
     onDrag: ({ event, offset: [x, y] }) => {
       event.stopPropagation();
       set({
-        position: [
-          (x / aspect) * WOBBLE_POSITION,
-          (-y / aspect) * WOBBLE_POSITION,
-          0,
-        ],
-        rotation: [
-          (y / aspect) * WOBBLE_ROTATION,
-          (x / aspect) * WOBBLE_ROTATION,
-          0,
-        ],
+        position: [(x / aspect) * meow, (-y / aspect) * meow, 0],
+        // rotation: [(y / aspect) * mu, (x / aspect) * mu, 0],
       });
+    },
+    onDragStart: () => {
+      setAreOrbitControlsEnabled(false);
+      console.log("🌟🚨 ~ Node ~ onDragStart");
+    },
+    onDragEnd: () => {
+      console.log("🌟🚨 ~ Node ~ onDragEnd");
+      setTimeout(() => {
+        setAreOrbitControlsEnabled(true);
+      }, 250);
     },
     onHover: ({ hovering }) =>
       set({ scale: hovering ? [1.2, 1.2, 1.2] : [1, 1, 1] }),
