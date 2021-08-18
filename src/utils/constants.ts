@@ -19,6 +19,14 @@ export const FILTER_LEVELS = {
   low: "low",
   none: "none",
 };
+export const BOT_LABELS = {
+  OVERALL: "Overall",
+  ASTROTURF: "Astroturf",
+  FINANCIAL: "Financial",
+  FAKE_FOLLOWER: "Fake Follower",
+  SPAMMER: "Spammer",
+  SELF_DECLARED: "Self Declared",
+};
 export const CONTROLS_WIDTH = 220;
 export const TABS_HEIGHT = 48;
 export const NAV_HEIGHT = 64;

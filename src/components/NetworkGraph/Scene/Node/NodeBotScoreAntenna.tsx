@@ -1,7 +1,7 @@
 import { useSpring, animated } from "@react-spring/three";
 import { Text, Billboard } from "@react-three/drei";
 import { useState } from "react";
-import { NODE_RADIUS } from "utils/constants";
+import { BOT_LABELS, NODE_RADIUS } from "utils/constants";
 import { useMount } from "utils/utils";
 import { scaleOrdinal } from "d3-scale";
 import { schemeCategory10 } from "d3-scale-chromatic";
@@ -20,7 +20,7 @@ export function NodeBotScoreAntenna({
   const antennae = [
     // top
     {
-      label: "Overall",
+      label: BOT_LABELS.OVERALL,
       score: botScore.overall,
       color: colors("0"),
       // color: "#ff0000",
@@ -28,7 +28,7 @@ export function NodeBotScoreAntenna({
     },
     // top right
     {
-      label: "Astroturf",
+      label: BOT_LABELS.ASTROTURF,
       score: botScore.astroturf,
       color: colors("1"),
       // color: "#09ff00",
@@ -36,7 +36,7 @@ export function NodeBotScoreAntenna({
     },
     // top left
     {
-      label: "Financial",
+      label: BOT_LABELS.FINANCIAL,
       score: botScore.financial,
       color: colors("2"),
       // color: "#75d87a",
@@ -44,7 +44,7 @@ export function NodeBotScoreAntenna({
     },
     // bottom right
     {
-      label: "Fake Follower",
+      label: BOT_LABELS.FAKE_FOLLOWER,
       score: botScore.fake_follower,
       color: colors("3"),
       // color: "#de70f1",
@@ -52,7 +52,7 @@ export function NodeBotScoreAntenna({
     },
     // bottom left
     {
-      label: "Spammer",
+      label: BOT_LABELS.SPAMMER,
       score: botScore.spammer,
       color: colors("4"),
       // color: "#f19244",
@@ -60,7 +60,7 @@ export function NodeBotScoreAntenna({
     },
     // bottom
     {
-      label: "Self Declared",
+      label: BOT_LABELS.SELF_DECLARED,
       score: botScore.self_declared,
       color: colors("5"),
       // color: "#dadada",
