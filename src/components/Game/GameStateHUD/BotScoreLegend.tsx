@@ -223,13 +223,22 @@ export function BotScoreLegend({
     scale: scaleDisplay,
   });
 
+  const [infoCardSpringProps, set] = useSpring(() => ({
+    scale: [1, 1, 1],
+    position: [0, 0, 0],
+    rotation: [0, 0, 0],
+    config: { mass: 3, friction: 40, tension: 800 },
+  }));
   return (
     <>
-      {!isInStartMenu && <BotScoreInfoCard />}
+      {!isInStartMenu && (
+        <BotScoreInfoCard {...{ set, springProps: infoCardSpringProps }} />
+      )}
       <animated.mesh
         castShadow={true}
         scale={springProps.scale as any}
-        position={position as any}
+        position={infoCardSpringProps.position as any}
+        // position={position as any}
       >
         {/* sphere in the middle */}
         <mesh castShadow={true}>

@@ -10,8 +10,10 @@ import { useGesture } from "react-use-gesture";
 import { areOrbitControlsEnabledAtom } from "providers/store/store";
 import { useAtom } from "jotai";
 import { useSpring, animated } from "@react-spring/three";
+import { createPortal } from "react-dom";
+import { useRef } from "react";
 
-export function BotScoreInfoCard() {
+export function BotScoreInfoCard({ set, springProps }) {
   const { /* latestBotScore, */ node, lastNode, clearLastNode } =
     useLatestTaggedNode();
   const latestBotScore = {
@@ -28,36 +30,26 @@ export function BotScoreInfoCard() {
   // https://codesandbox.io/s/react-three-fiber-gestures-forked-qi8xq?file=/src/App.js:351-672
 
   // Set up a spring with values we're going to modify
-  const [{ rotation, ...rest }, set] = useSpring(() => ({
-    scale: [1, 1, 1],
-    position: [0, 0, 0],
-    rotation: [0, 0, 0],
-    config: { mass: 3, friction: 40, tension: 800 },
-  }));
+
   // Create a gesture that contains drag and hover, set the spring accordingly
   const { size, viewport } = useThree();
   const aspect = (size.width / viewport.width) * 5;
 
+  const MAX_Y = 0.3;
+  const currentY = useRef(MAX_Y);
   const [, setAreOrbitControlsEnabled] = useAtom(areOrbitControlsEnabledAtom);
   const bind = useGesture({
-    onDrag: ({ event, offset: [x, y] }) => {
-      console.log("🌟🚨 ~ BotScoreInfoCard ~ event", event);
-      event.stopPropagation();
+    onDrag: ({ event, delta, ...rest }) => {
+      const dy = (-delta[1] / size.height) * 10;
+      const newY = Math.min(MAX_Y, currentY.current + dy);
+      currentY.current = newY;
+      console.log("🌟🚨 ~ BotScoreInfoCard ~ newY", newY);
       set({
-        position: [x / aspect, -y / aspect, 0],
-        rotation: [y / aspect, x / aspect, 0],
+        position: [0, newY, 0],
       });
     },
-    onDragStart: () => {
-      setAreOrbitControlsEnabled(false);
-      console.log("🌟🚨 ~ BotScoreInfoCard ~ onDragStart");
-    },
-    onDragEnd: () => {
-      console.log("🌟🚨 ~ BotScoreInfoCard ~ onDragEnd");
-      setAreOrbitControlsEnabled(true);
-    },
     onHover: ({ hovering }) =>
-      set({ scale: hovering ? [1.2, 1.2, 1.2] : [1, 1, 1] }),
+      set({ scale: hovering ? [1.05, 1.05, 1.05] : [1, 1, 1] }),
   });
 
   const {
@@ -103,20 +95,28 @@ export function BotScoreInfoCard() {
   });
   return (
     /* !lastNode ? null : */
-    <animated.mesh>
+    <animated.mesh
+      position={springProps.position as any}
+      scale={springProps.scale as any}
+    >
       <Html>
-        <div
-          {...bind()}
-          style={{
-            width: 100,
-            height: 100,
-            ...(process.env.NODE_ENV !== "production"
-              ? { border: "1px solid tomato" }
-              : {}),
-          }}
-        >
-          {process.env.NODE_ENV !== "production" ? "DRAG AREA" : ""}
-        </div>
+        {createPortal(
+          <div
+            {...bind()}
+            style={{
+              position: "fixed",
+              bottom: 0,
+              width: window.innerWidth,
+              height: window.innerHeight * 0.27,
+              ...(process.env.NODE_ENV !== "production"
+                ? { border: "1px solid tomato" }
+                : {}),
+            }}
+          >
+            {process.env.NODE_ENV !== "production" ? "DRAG AREA" : ""}
+          </div>,
+          document.body
+        )}
       </Html>
       <mesh position={[x, y, z]} receiveShadow={true}>
         <Box args={[sx, sy, sz]} receiveShadow={true}>
@@ -139,7 +139,7 @@ export function BotScoreInfoCard() {
         anchorX="left"
         anchorY="middle"
       >
-        xX
+        Score:
       </Text>
       <Text
         position={[x4, y2, z + 0.15]}
