@@ -12,7 +12,9 @@ import {
 import { useWindowSize } from "utils/hooks";
 import Alert from "@material-ui/lab/Alert";
 import styled from "styled-components/macro";
-import { Html } from "@react-three/drei";
+import { Html, Box, Text } from "@react-three/drei";
+import { useControls } from "leva";
+import { getScoreFromBotScore } from "../getScoreFromBotScore";
 
 const SCALE = 0.15;
 const RADIUS = 40;
@@ -30,8 +32,9 @@ export function BotScoreLegendHUD() {
   // const [isUp] = useAtom(isBotScoreExplainerUpAtom);
 
   // const springPosition = [0, isUp ? 0 : -6, 0];
+  const { yy } = useControls({ yy: 1.64 });
   const springProps = useSpring({
-    position: [0, isUp ? 0 : -8, 0],
+    position: [0, isUp ? yy : -8, 0],
   });
 
   return (
@@ -40,12 +43,9 @@ export function BotScoreLegendHUD() {
         position={springProps.position as any}
         scale={[1.3, 1.3, 1.3]}
       >
-        <Html transform={true} position={[0.57, 0.3, -0]}>
-          <Alerts />
-        </Html>
         <BotScoreLegend
           {...{
-            isInStartMenu: true,
+            isInStartMenu: false,
             position: [0, 0, 0],
             scale: [1, 1, 1],
           }}
@@ -66,13 +66,11 @@ function Alerts() {
     spammer: 0.09,
   };
   console.log("🌟🚨 ~ Alerts ~ latestBotScore", latestBotScore);
-  const [isUp, setIsUp] = useAtom(isBotScoreExplainerUpAtom);
+  const isUp = true;
+  const [, setIsUp] = useAtom(isBotScoreExplainerUpAtom);
   const springUp = useSpringDom({
-    position: "fixed",
-    bottom: isUp ? 24 : -500,
-    right: 24,
+    marginBottom: isUp ? 24 : -500,
     pointerEvents: "auto",
-    width: `calc(100vw - ${2 * 24}px)`,
   });
 
   return (
@@ -157,6 +155,9 @@ function Alerts() {
   );
 }
 const AlertContentStyles = styled.div`
+  pointer-events: none;
+  /* width: 100px;
+  height: 60px; */
   .MuiAlert-standardInfo {
     background: hsla(0, 0%, 0%, 0.8);
   }
@@ -165,17 +166,17 @@ const AlertContentStyles = styled.div`
   }
   .MuiAlert-action {
     align-items: flex-start;
+    pointer-events: auto;
   }
   .title {
-    font-size: 1.5em;
+    font-size: 4px;
   }
-  height: 300px;
   display: grid;
   grid-gap: 1em;
   .scoreBar {
     height: 24px;
     width: 100%;
-    font-size: 1em;
+    font-size: 4px;
     color: #fff;
     font-weight: bold;
     display: grid;
@@ -221,36 +222,131 @@ export function BotScoreLegend({
   const springProps = useSpring({
     scale: scaleDisplay,
   });
+
   return (
-    <animated.mesh scale={springProps.scale as any} position={position as any}>
-      <mesh>
-        <meshPhysicalMaterial
-          {...{ metalness: 1, color: "#316c83" }}
-          clearcoat={1}
-          clearcoatRoughness={0.5}
-          depthTest={false}
-        />
-        <sphereBufferGeometry args={[RADIUS * 0.007, 26, 26]} />
+    <>
+      {!isInStartMenu && <BotScoreInfoCard />}
+      <animated.mesh
+        castShadow={true}
+        scale={springProps.scale as any}
+        position={position as any}
+      >
+        {/* sphere in the middle */}
+        <mesh castShadow={true}>
+          <meshPhysicalMaterial
+            {...{ metalness: 1, color: "#316c83" }}
+            clearcoat={1}
+            clearcoatRoughness={0.5}
+          />
+          <sphereBufferGeometry args={[RADIUS * 0.007, 26, 26]} />
+        </mesh>
+        <mesh castShadow={true} scale={[SCALE, SCALE, SCALE]}>
+          <NodeBotScoreAntenna
+            {...{
+              showLabels: true,
+              forceOpaque: true,
+              isInStartMenu,
+              brightenText: true,
+              brightenBalls: true,
+              botScore: {
+                overall: 1,
+                fake_follower: 1,
+                astroturf: 1,
+                financial: 1,
+                other: 1,
+                self_declared: 1,
+                spammer: 1,
+              },
+            }}
+          />
+        </mesh>
+        <directionalLight position={[-7, 14.28, 12.18]} intensity={5} />
+      </animated.mesh>
+    </>
+  );
+}
+function BotScoreInfoCard() {
+  const { /* latestBotScore, */ node, nodeDisplay } = useLatestTaggedNode();
+  const latestBotScore = {
+    astroturf: 0.33,
+    fake_follower: 0.51,
+    financial: 0,
+    other: 0.63,
+    overall: 0.63,
+    self_declared: 0.1,
+    spammer: 0.09,
+  };
+  const {
+    x,
+    x2,
+    y,
+    y2,
+    z,
+    sx,
+    sy,
+    sz,
+    fontSize,
+    legendHeight,
+    metalness,
+    color,
+    clearcoat,
+    roughness,
+  } = useControls({
+    x: 1.56,
+    y: -1.38,
+    z: -0.45,
+    sx: 4.78,
+    sy: -2.77,
+    sz: -0.13,
+    fontSize: 0.33,
+    legendHeight: 0,
+    metalness: 0.15,
+    roughness: 0.78,
+    clearcoat: 0,
+    color: "#316c83",
+    x2: 1.12,
+    y2: 0.25,
+  });
+  return (
+    <>
+      <mesh position={[x, y, z]} receiveShadow={true}>
+        <Box args={[sx, sy, sz]} receiveShadow={true}>
+          <meshPhysicalMaterial
+            attach="material"
+            {...{ metalness, color, roughness, clearcoat }}
+            clearcoatRoughness={0.5}
+          />
+        </Box>
       </mesh>
-      <mesh scale={[SCALE, SCALE, SCALE]}>
-        <NodeBotScoreAntenna
-          {...{
-            showLabels: true,
-            forceOpaque: true,
-            isInStartMenu,
-            botScore: {
-              overall: 1,
-              fake_follower: 1,
-              astroturf: 1,
-              financial: 1,
-              other: 1,
-              self_declared: 1,
-              spammer: 1,
-            },
-          }}
-        />
-      </mesh>
-      <directionalLight position={[-7, 14.28, 12.18]} intensity={5} />
-    </animated.mesh>
+
+      <Text
+        position={[x2, y2, z + 0.1]}
+        color={"#000000"}
+        fontSize={fontSize}
+        maxWidth={200}
+        lineHeight={1}
+        letterSpacing={0.02}
+        textAlign={"left"}
+        font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
+        anchorX="left"
+        anchorY="middle"
+      >
+        Bot Score: {getScoreFromBotScore(latestBotScore).scoreIncrease}
+      </Text>
+      <Text
+        position={[x2, y2, z + 0.1]}
+        color={"#000000"}
+        fontSize={fontSize}
+        maxWidth={200}
+        lineHeight={1}
+        letterSpacing={0.02}
+        textAlign={"left"}
+        font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
+        anchorX="left"
+        anchorY="middle"
+      >
+        Bot Score: {getScoreFromBotScore(latestBotScore).scoreIncrease}
+      </Text>
+    </>
   );
 }

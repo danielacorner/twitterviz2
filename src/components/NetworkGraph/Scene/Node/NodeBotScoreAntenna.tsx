@@ -14,6 +14,8 @@ export function NodeBotScoreAntenna({
   botScore,
   forceOpaque = false,
   isInStartMenu = false,
+  brightenText = false,
+  brightenBalls = false,
 }) {
   const antennae = [
     // top
@@ -77,6 +79,8 @@ export function NodeBotScoreAntenna({
               score,
               label,
               showLabels,
+              brightenText,
+              brightenBalls,
               isBottom: idx > 2,
             }}
           />
@@ -98,6 +102,8 @@ function Antenna({
   isBottom,
   forceOpaque,
   isInStartMenu,
+  brightenText,
+  brightenBalls,
 }) {
   const [mounted, setMounted] = useState(false);
   useMount(() => {
@@ -120,6 +126,7 @@ function Antenna({
     <>
       {/* stick */}
       <animated.mesh
+        castShadow={true}
         position={[0, NODE_RADIUS + stickHeightActual / 2, 0]}
         scale={springProps.stickScale as any}
       >
@@ -134,13 +141,16 @@ function Antenna({
           roughness={0.05}
         />
       </animated.mesh>
-      <animated.mesh position={springProps.spherePosition as any}>
+      <animated.mesh
+        position={springProps.spherePosition as any}
+        castShadow={true}
+      >
         {/* text */}
         <Billboard {...({} as any)} args={[0, 0]}>
           <Text
             {...({} as any)}
             color={
-              isInStartMenu
+              brightenText
                 ? "white"
                 : `hsl(0,0%,${(textLightness * 100).toFixed(0)}%)`
             }
@@ -169,7 +179,7 @@ function Antenna({
         <meshPhysicalMaterial
           metalness={0.8}
           roughness={0.1}
-          {...(isInStartMenu
+          {...(brightenBalls
             ? {
                 color,
               }

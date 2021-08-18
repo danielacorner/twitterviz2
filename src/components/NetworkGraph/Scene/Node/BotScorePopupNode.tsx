@@ -81,7 +81,11 @@ function BotScorePopupNodeAnimation({
         <>
           <Background background={false} />
           <ambientLight intensity={4} />
-          <directionalLight position={[0, 5, -4]} intensity={6} />
+          <directionalLight
+            castShadow={true}
+            position={[0, 5, -4]}
+            intensity={6}
+          />
         </>
       ) : null}
       <animated.mesh scale={springProps.scale as any} position={[0, 0, -2]}>
