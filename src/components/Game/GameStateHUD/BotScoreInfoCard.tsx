@@ -110,7 +110,7 @@ export function BotScoreInfoCard({
     sz: -0.13,
     fontSize: 0.37,
     fontColor: "#cbebec",
-    fontSize2: 0.26,
+    fontSize2: 0.24,
     fontSize3: 0.18,
     legendHeight: 0,
     metalness: 0.36,
@@ -121,8 +121,8 @@ export function BotScoreInfoCard({
     x3: 1.15,
     x4: 2.85,
     y2: -0.42,
-    y3: -1.86,
-    y4: -2.25,
+    y3: -1.69,
+    y4: -2.3,
   });
   const colorByBotScore = latestBotScore
     ? getScoreFromBotScore(latestBotScore).color

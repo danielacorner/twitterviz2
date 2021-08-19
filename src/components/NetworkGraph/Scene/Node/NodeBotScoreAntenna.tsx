@@ -169,7 +169,7 @@ function Antenna({
               0,
             ]}
             fontSize={1}
-            fillOpacity={score ** 0.1}
+            fillOpacity={brightenText ? 1 : score ** 0.1}
           >
             {showLabels ? label : (score * 100).toFixed(0) + "%"}
           </Text>

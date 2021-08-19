@@ -21,6 +21,8 @@ export function ScanningAnimation() {
       ref5.current.opacity = y ** 2;
       ref6.current.opacity = 1 - y ** 2;
 
+      ref5.current.speed = Math.sin(progress - 0.9) * 10;
+
       ref.current.position.set(0, y, 0);
       const x = Math.sin(progress - 0.9) * WIDTH * 0.5;
       ref3.current.position.set(x, 0, 0);

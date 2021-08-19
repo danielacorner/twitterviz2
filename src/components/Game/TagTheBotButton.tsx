@@ -24,7 +24,7 @@ import { isBotScoreExplainerUpAtom } from "./GameStateHUD/BotScoreLegend";
 // * animate a HUD-contained bot score display ?
 // * animate the selected node to the front and then back?
 const latestNodeWithBotScoreAtom = atom<Tweet | null>(null);
-export const BOT_SCORE_POPUP_TIMEOUT = 2500;
+export const BOT_SCORE_POPUP_TIMEOUT = 500;
 
 export default function TagTheBotButton() {
   const tweets = useTweets();

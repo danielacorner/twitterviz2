@@ -13,6 +13,7 @@ import { useControls } from "leva";
 import { BotScoreInfoCard } from "./BotScoreInfoCard";
 import { INFO_CARD_INITIAL_Y, INFO_CARD_MAX_Y } from "utils/constants";
 import { useEffect, useRef, useState } from "react";
+import { Circle, useTexture } from "@react-three/drei";
 
 const SCALE = 0.15;
 const RADIUS = 40;
@@ -76,7 +77,6 @@ export function BotScoreLegend({
     position: [0, INFO_CARD_INITIAL_Y, 0],
     rotation: [0, 0, 0],
   }));
-
   const currentY = useRef(INFO_CARD_MAX_Y);
   const [currentYActual, setCurrentYActual] = useState(INFO_CARD_MAX_Y);
   // pop it up when we're done scanning
@@ -113,40 +113,58 @@ export function BotScoreLegend({
         }
         // position={position as any}
       >
-        {/* sphere in the middle */}
-        <mesh castShadow={true}>
-          <meshPhysicalMaterial
-            {...{ metalness: 1, color: "#316c83" }}
-            clearcoat={1}
-            clearcoatRoughness={0.5}
-          />
-          <sphereBufferGeometry args={[RADIUS * 0.007, 26, 26]} />
-        </mesh>
-        <mesh castShadow={true} scale={[SCALE, SCALE, SCALE]}>
-          <NodeBotScoreAntenna
-            {...{
-              showLabels: true,
-              forceOpaque: true,
-              isInStartMenu,
-              brightenText: true,
-              brightenBalls: true,
-              botScore:
-                isInStartMenu || !latestBotScore
-                  ? {
-                      overall: 1,
-                      fake_follower: 1,
-                      astroturf: 1,
-                      financial: 1,
-                      other: 1,
-                      self_declared: 1,
-                      spammer: 1,
-                    }
-                  : latestBotScore,
-            }}
-          />
-        </mesh>
+        <group>
+          {/* sphere in the middle */}
+          <mesh castShadow={true}>
+            <meshPhysicalMaterial
+              {...{ metalness: 1, color: "#316c83" }}
+              clearcoat={1}
+              clearcoatRoughness={0.5}
+            />
+            <sphereBufferGeometry args={[RADIUS * 0.007, 26, 26]} />
+          </mesh>
+          {lastNode && !isInStartMenu && <AvatarCircle {...{ lastNode }} />}
+          <mesh castShadow={true} scale={[SCALE, SCALE, SCALE]}>
+            <NodeBotScoreAntenna
+              {...{
+                showLabels: true,
+                forceOpaque: true,
+                isInStartMenu,
+                brightenText: true,
+                brightenBalls: true,
+                botScore:
+                  isInStartMenu || !latestBotScore
+                    ? {
+                        overall: 1,
+                        fake_follower: 1,
+                        astroturf: 1,
+                        financial: 1,
+                        other: 1,
+                        self_declared: 1,
+                        spammer: 1,
+                      }
+                    : latestBotScore,
+              }}
+            />
+          </mesh>
+        </group>
+
         <directionalLight position={[-7, 14.28, 12.18]} intensity={5} />
       </animated.mesh>
     </>
+  );
+}
+function AvatarCircle({ lastNode }) {
+  const { posz, radius } = useControls({ posz: 0.18, radius: 0.2 });
+
+  const avatarTexture = useTexture(
+    lastNode.user.profile_image_url_https ||
+      lastNode.user.profile_image_url ||
+      ""
+  );
+  return (
+    <Circle position={[0, 0, posz]} args={[radius, 32]}>
+      <meshBasicMaterial depthTest={false} map={avatarTexture as any} />
+    </Circle>
   );
 }
