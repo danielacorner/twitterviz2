@@ -41,7 +41,7 @@ export function BotScoreInfoCard({ set, springProps, currentY }) {
       if (!lastNode) {
         return;
       }
-      const dy = (-delta[1] / size.height) * 11;
+      const dy = (-delta[1] / size.height) * 13;
       const newY = Math.min(INFO_CARD_MAX_Y, currentY.current + dy);
       currentY.current = newY;
       set({

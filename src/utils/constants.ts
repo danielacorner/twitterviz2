@@ -10,9 +10,9 @@ export const CAMERA_POSITION = {
 export const AVATAR_WIDTH = 46;
 export const TOOLTIP_WIDTH = 380;
 
-export const INFO_CARD_INITIAL_Y = -30;
+export const INFO_CARD_INITIAL_Y = -10;
 export const INFO_CARD_MAX_Y = 0.3;
-export const INFO_CARD_MIN_Y = -2.1;
+export const INFO_CARD_MIN_Y = -1.9;
 export const COLOR_BY = {
   mediaType: "mediaType",
   media: "media",
