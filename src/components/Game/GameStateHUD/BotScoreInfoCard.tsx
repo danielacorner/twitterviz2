@@ -3,9 +3,13 @@ import { Box, Html, Text } from "@react-three/drei";
 import { useControls } from "leva";
 import { getScoreFromBotScore } from "../getScoreFromBotScore";
 import { BotScore } from "types";
-import { BOT_LABELS, INFO_CARD_MAX_Y, INFO_CARD_MIN_Y } from "utils/constants";
+import {
+  BOT_LABELS,
+  INFO_CARD_INITIAL_Y,
+  INFO_CARD_MAX_Y,
+  INFO_CARD_MIN_Y,
+} from "utils/constants";
 import { useThree } from "@react-three/fiber";
-import { set } from "lodash";
 import { useGesture } from "react-use-gesture";
 import { areOrbitControlsEnabledAtom } from "providers/store/store";
 import { useAtom } from "jotai";
@@ -42,10 +46,9 @@ export function BotScoreInfoCard({ set, springProps }) {
       if (!lastNode) {
         return;
       }
-      const dy = (-delta[1] / size.height) * 10;
+      const dy = (-delta[1] / size.height) * 11;
       const newY = Math.min(INFO_CARD_MAX_Y, currentY.current + dy);
       currentY.current = newY;
-      console.log("🌟🚨 ~ BotScoreInfoCard ~ newY", newY);
       set({
         position: [0, newY, 0],
       });
@@ -54,6 +57,8 @@ export function BotScoreInfoCard({ set, springProps }) {
           "🌟🚨 ~ BotScoreInfoCard ~ INFO_CARD_MIN_Y",
           INFO_CARD_MIN_Y
         );
+        set({ position: [0, INFO_CARD_INITIAL_Y, 0] });
+
         // close the popup
         clearLastNode();
       }
@@ -76,6 +81,7 @@ export function BotScoreInfoCard({ set, springProps }) {
     sz,
     fontSize,
     fontSize2,
+    fontColor,
     legendHeight,
     metalness,
     maxWidth,
@@ -90,13 +96,14 @@ export function BotScoreInfoCard({ set, springProps }) {
     sy: -2.77,
     sz: -0.13,
     fontSize: 0.37,
-    fontSize2: 0.28,
+    fontColor: "#cbebec",
+    fontSize2: 0.26,
     legendHeight: 0,
-    metalness: 0.15,
-    roughness: 0.78,
+    metalness: 0.36,
+    roughness: 0.62,
     clearcoat: 0,
     maxWidth: 4,
-    color: "#316c83",
+    color: "#000000",
     x2: 1.32,
     x3: 1.55,
     x4: 3.55,
@@ -141,20 +148,6 @@ export function BotScoreInfoCard({ set, springProps }) {
           />
         </Box>
       </mesh>
-      {/* <Text
-        position={[x2, y2, z + 0.15]}
-        color={"#000000"}
-        fontSize={fontSize}
-        maxWidth={200}
-        lineHeight={1}
-        letterSpacing={0.02}
-        textAlign={"left"}
-        font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
-        anchorX="left"
-        anchorY="middle"
-      >
-        Score:
-      </Text> */}
       {latestBotScore && (
         <>
           <Text
@@ -173,7 +166,7 @@ export function BotScoreInfoCard({ set, springProps }) {
           </Text>
           <Text
             position={[x3, y3, z + 0.15]}
-            color={"#000000"}
+            color={fontColor}
             fontSize={fontSize2}
             maxWidth={maxWidth}
             lineHeight={1.3}
@@ -212,9 +205,9 @@ function getMostLikelyBotTypeText(botScore: BotScore) {
   );
   console.log("🌟🚨 ~ getMostLikelyBotTypeText ~ maxScore", maxScore);
   if (maxScore > 0.6) {
-    response += "is likely bot type ";
+    response += "is likely ";
   } else if (maxScore > 0.4) {
-    response += "coule be bot type ";
+    response += "could be ";
   } else {
     response += "is probably not a bot";
     return response;
@@ -223,16 +216,16 @@ function getMostLikelyBotTypeText(botScore: BotScore) {
   /*  if (maxScore === overall) {
     response += BOT_LABELS.OVERALL;
   } else */ if (maxScore === fake_follower) {
-    response += BOT_LABELS.FAKE_FOLLOWER;
+    response += "a " + BOT_LABELS.FAKE_FOLLOWER;
   } else if (maxScore === astroturf) {
-    response += BOT_LABELS.ASTROTURF;
+    response += "an " + BOT_LABELS.ASTROTURF;
   } else if (maxScore === financial) {
-    response += BOT_LABELS.FINANCIAL;
+    response += "a " + BOT_LABELS.FINANCIAL;
   } else if (maxScore === self_declared) {
-    response += BOT_LABELS.SELF_DECLARED;
+    response += "a " + BOT_LABELS.SELF_DECLARED;
   } else if (maxScore === spammer) {
-    response += BOT_LABELS.SPAMMER;
+    response += "a " + BOT_LABELS.SPAMMER;
   }
 
-  return response;
+  return response + ` bot (${(maxScore * 100).toFixed(0)}%)`;
 }

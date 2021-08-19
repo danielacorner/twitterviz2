@@ -32,7 +32,6 @@ export function BotScoreLegendHUD() {
     size: { width, height },
   } = useThree();
   const { latestBotScore, node, lastNode } = useLatestTaggedNode();
-  console.log("🌟🚨 ~ latestBotScore", latestBotScore);
 
   const isUp = true;
   // const [isUp] = useAtom(isBotScoreExplainerUpAtom);
@@ -71,7 +70,6 @@ function Alerts() {
     self_declared: 0.1,
     spammer: 0.09,
   };
-  console.log("🌟🚨 ~ Alerts ~ latestBotScore", latestBotScore);
   const isUp = true;
   const [, setIsUp] = useAtom(isBotScoreExplainerUpAtom);
   const springUp = useSpringDom({
@@ -245,12 +243,6 @@ export function BotScoreLegend({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDoneScanning]);
   // when we close it, pop it back down
-  useEffect(() => {
-    if (!lastNode) {
-      set({ position: [0, INFO_CARD_INITIAL_Y, 0] });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lastNode]);
 
   return (
     <>
