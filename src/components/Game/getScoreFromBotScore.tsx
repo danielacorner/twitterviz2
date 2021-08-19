@@ -14,7 +14,7 @@ export function getScoreFromBotScore(botScore: BotScore) {
     (acc, score) => Math.max(acc, score),
     0
   );
-  const scoreIncrease = MAX_POSSIBLE_SCORE_EACH * maxBotScore;
+  const scoreIncrease = Math.round(MAX_POSSIBLE_SCORE_EACH * maxBotScore);
   const scorePercent = scoreIncrease / scoreIncrease;
   const maxHue = 130;
   const minHue = 0;

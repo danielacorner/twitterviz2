@@ -41,7 +41,7 @@ export default function TagTheBotButton() {
   const [, setBotScorePopupNode] = useAtom(botScorePopupNodeAtom);
   const [scanningNodeId, setScanningNodeId] = useAtom(scanningNodeIdAtom);
   const [, setIsRightDrawerOpen] = useAtom(isRightDrawerOpenAtom);
-  const [isUp, setIsUp] = useAtom(isBotScoreExplainerUpAtom);
+  const [, setIsUp] = useAtom(isBotScoreExplainerUpAtom);
 
   function handleReceiveBotScore(botScore: BotScore) {
     if (!selectedNode) {

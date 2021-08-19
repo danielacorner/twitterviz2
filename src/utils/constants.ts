@@ -27,11 +27,23 @@ export const FILTER_LEVELS = {
 };
 export const BOT_LABELS = {
   OVERALL: "Overall",
+  OTHER: "Other",
   ASTROTURF: "Astroturf",
   FINANCIAL: "Financial",
   FAKE_FOLLOWER: "Fake Follower",
   SPAMMER: "Spammer",
   SELF_DECLARED: "Self Declared",
+};
+export const BOT_TYPE_MORE_INFO = {
+  OVERALL: "Overall",
+  ASTROTURF:
+    "(A.K.A. Echo-chamber bot) accounts that engage in follow back groups and share and delete political content in high volume",
+  FINANCIAL: "bots that post using cashtags",
+  FAKE_FOLLOWER: "bots purchased to increase follower counts",
+  SPAMMER: "accounts labeled as spambots from several datasets",
+  SELF_DECLARED: "bots from botwiki.org",
+  OTHER:
+    "miscellaneous other bots obtained from manual annotation, user feedback, etc.",
 };
 export const CONTROLS_WIDTH = 220;
 export const TABS_HEIGHT = 48;

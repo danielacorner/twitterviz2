@@ -101,9 +101,7 @@ export const Node = ({
   );
   const [, setIsRightDrawerOpen] = useAtom(isRightDrawerOpenAtom);
   const [, setNumTooltipTweets] = useAtom(numTooltipTweetsAtom);
-  const [areOrbitControlsEnabled, setAreOrbitControlsEnabled] = useAtom(
-    areOrbitControlsEnabledAtom
-  );
+  const [areOrbitControlsEnabled] = useAtom(areOrbitControlsEnabledAtom);
 
   const handleRightClick = useHandleOpenRightClickMenu(node.tweets[0]);
   const onContextMenu = (event) => {

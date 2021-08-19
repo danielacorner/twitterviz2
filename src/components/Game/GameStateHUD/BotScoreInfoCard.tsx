@@ -5,19 +5,17 @@ import { getScoreFromBotScore } from "../getScoreFromBotScore";
 import { BotScore } from "types";
 import {
   BOT_LABELS,
+  BOT_TYPE_MORE_INFO,
   INFO_CARD_INITIAL_Y,
   INFO_CARD_MAX_Y,
   INFO_CARD_MIN_Y,
 } from "utils/constants";
 import { useThree } from "@react-three/fiber";
 import { useGesture } from "react-use-gesture";
-import { areOrbitControlsEnabledAtom } from "providers/store/store";
-import { useAtom } from "jotai";
 import { animated } from "@react-spring/three";
 import { createPortal } from "react-dom";
-import { useRef } from "react";
 
-export function BotScoreInfoCard({ set, springProps }) {
+export function BotScoreInfoCard({ set, springProps, currentY }) {
   const { latestBotScore, node, lastNode, clearLastNode } =
     useLatestTaggedNode();
   // const latestBotScore = {
@@ -36,11 +34,8 @@ export function BotScoreInfoCard({ set, springProps }) {
   // Set up a spring with values we're going to modify
 
   // Create a gesture that contains drag and hover, set the spring accordingly
-  const { size, viewport } = useThree();
-  const aspect = (size.width / viewport.width) * 5;
+  const { size } = useThree();
 
-  const currentY = useRef(INFO_CARD_MAX_Y);
-  const [, setAreOrbitControlsEnabled] = useAtom(areOrbitControlsEnabledAtom);
   const bind = useGesture({
     onDrag: ({ event, delta, ...rest }) => {
       if (!lastNode) {
@@ -53,13 +48,9 @@ export function BotScoreInfoCard({ set, springProps }) {
         position: [0, newY, 0],
       });
       if (newY <= INFO_CARD_MIN_Y) {
-        console.log(
-          "🌟🚨 ~ BotScoreInfoCard ~ INFO_CARD_MIN_Y",
-          INFO_CARD_MIN_Y
-        );
-        set({ position: [0, INFO_CARD_INITIAL_Y, 0] });
-
         // close the popup
+        currentY.current = INFO_CARD_INITIAL_Y;
+        set({ position: [0, INFO_CARD_INITIAL_Y, 0] });
         clearLastNode();
       }
     },
@@ -69,12 +60,12 @@ export function BotScoreInfoCard({ set, springProps }) {
 
   const {
     x,
-    x2,
     x3,
     x4,
     y,
     y2,
     y3,
+    y4,
     z,
     sx,
     sy,
@@ -82,7 +73,6 @@ export function BotScoreInfoCard({ set, springProps }) {
     fontSize,
     fontSize2,
     fontColor,
-    legendHeight,
     metalness,
     maxWidth,
     color,
@@ -104,15 +94,18 @@ export function BotScoreInfoCard({ set, springProps }) {
     clearcoat: 0,
     maxWidth: 4,
     color: "#000000",
-    x2: 1.32,
     x3: 1.55,
     x4: 3.55,
     y2: -0.4,
     y3: -1.56,
+    y4: -2.06,
   });
   const colorByBotScore = latestBotScore
     ? getScoreFromBotScore(latestBotScore).color
     : "#000000";
+  const { botTypeText, botTypeInfo } = latestBotScore
+    ? getMostLikelyBotTypeText(latestBotScore)
+    : { botTypeText: null, botTypeInfo: null };
   return (
     /* !lastNode ? null : */
     <animated.mesh
@@ -175,8 +168,20 @@ export function BotScoreInfoCard({ set, springProps }) {
             anchorX="center"
             anchorY="middle"
           >
-            {lastNode?.user.screen_name}{" "}
-            {getMostLikelyBotTypeText(latestBotScore)}
+            {lastNode?.user.screen_name} {botTypeText}
+          </Text>
+          <Text
+            position={[x3, y4, z + 0.15]}
+            color={fontColor}
+            fontSize={fontSize2}
+            maxWidth={maxWidth}
+            lineHeight={1.3}
+            letterSpacing={0.02}
+            textAlign={"left"}
+            anchorX="center"
+            anchorY="middle"
+          >
+            {botTypeInfo}
           </Text>
         </>
       )}
@@ -184,14 +189,15 @@ export function BotScoreInfoCard({ set, springProps }) {
   );
 }
 function getMostLikelyBotTypeText(botScore: BotScore) {
-  let response = "";
+  let botTypeText = "";
+  let botTypeInfo = "";
 
   const {
-    overall,
+    // overall,
     fake_follower,
     astroturf,
     financial,
-    // other,
+    other,
     self_declared,
     spammer,
   } = botScore;
@@ -203,29 +209,43 @@ function getMostLikelyBotTypeText(botScore: BotScore) {
     self_declared,
     spammer
   );
-  console.log("🌟🚨 ~ getMostLikelyBotTypeText ~ maxScore", maxScore);
-  if (maxScore > 0.6) {
-    response += "is likely ";
+
+  const scorePercent = `(${(maxScore * 100).toFixed(0)}%)`;
+
+  if (maxScore > 0.8) {
+    botTypeText += "is very likely ";
+  } else if (maxScore > 0.6) {
+    botTypeText += "is likely ";
   } else if (maxScore > 0.4) {
-    response += "could be ";
+    botTypeText += "could be ";
   } else {
-    response += "is probably not a bot";
-    return response;
+    botTypeText += `is probably not a bot ${scorePercent}`;
+    return { botTypeText, botTypeInfo };
   }
 
   /*  if (maxScore === overall) {
-    response += BOT_LABELS.OVERALL;
+    botTypeText += BOT_LABELS.OVERALL;
   } else */ if (maxScore === fake_follower) {
-    response += "a " + BOT_LABELS.FAKE_FOLLOWER;
+    botTypeText += "a " + BOT_LABELS.FAKE_FOLLOWER;
+    botTypeInfo += BOT_TYPE_MORE_INFO.FAKE_FOLLOWER;
   } else if (maxScore === astroturf) {
-    response += "an " + BOT_LABELS.ASTROTURF;
+    botTypeText += "an " + BOT_LABELS.ASTROTURF;
+    botTypeInfo += BOT_TYPE_MORE_INFO.ASTROTURF;
   } else if (maxScore === financial) {
-    response += "a " + BOT_LABELS.FINANCIAL;
+    botTypeText += "a " + BOT_LABELS.FINANCIAL;
+    botTypeInfo += BOT_TYPE_MORE_INFO.FINANCIAL;
+  } else if (maxScore === other) {
+    botTypeText += "an " + BOT_LABELS.OTHER;
+    botTypeInfo += BOT_TYPE_MORE_INFO.OTHER;
   } else if (maxScore === self_declared) {
-    response += "a " + BOT_LABELS.SELF_DECLARED;
+    botTypeText += "a " + BOT_LABELS.SELF_DECLARED;
+    botTypeInfo += BOT_TYPE_MORE_INFO.SELF_DECLARED;
   } else if (maxScore === spammer) {
-    response += "a " + BOT_LABELS.SPAMMER;
+    botTypeText += "a " + BOT_LABELS.SPAMMER;
+    botTypeInfo += BOT_TYPE_MORE_INFO.SPAMMER;
   }
 
-  return response + ` bot (${(maxScore * 100).toFixed(0)}%)`;
+  botTypeText += ` bot ${scorePercent}`;
+
+  return { botTypeText, botTypeInfo };
 }
