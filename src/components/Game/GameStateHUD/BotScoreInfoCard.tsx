@@ -1,5 +1,5 @@
 import { useLatestTaggedNode } from "components/NetworkGraph/Scene/Node/useLatestTaggedNode";
-import { Box, Html, Text } from "@react-three/drei";
+import { Box, Html, RoundedBox, Text } from "@react-three/drei";
 import { useControls } from "leva";
 import { getScoreFromBotScore } from "../getScoreFromBotScore";
 import { BotScore } from "types";
@@ -22,7 +22,6 @@ import {
 import { useAtom } from "jotai";
 import { useSetNodesInDbForUser } from "providers/faunaProvider";
 import { useTweets } from "providers/store/useSelectors";
-import { usePlayAgain, useStartLookingAtTweets } from "../Game";
 import { BOT_SCORE_POPUP_TIMEOUT } from "../TagTheBotButton";
 
 export function BotScoreInfoCard({
@@ -101,13 +100,15 @@ export function BotScoreInfoCard({
     color,
     clearcoat,
     roughness,
+    sqRadius,
+    sqSmoothness,
   } = useControls({
     x: 1.09,
     y: -1.38,
     z: -0.45,
     sx: 3.97,
     sy: -2.77,
-    sz: -0.13,
+    sz: 0.16,
     fontSize: 0.37,
     fontColor: "#cbebec",
     fontSize2: 0.24,
@@ -123,6 +124,8 @@ export function BotScoreInfoCard({
     y2: -0.42,
     y3: -1.69,
     y4: -2.3,
+    sqRadius: 0.04,
+    sqSmoothness: 4,
   });
   const colorByBotScore = latestBotScore
     ? getScoreFromBotScore(latestBotScore).color
@@ -130,8 +133,6 @@ export function BotScoreInfoCard({
   const { botTypeText, botTypeInfo } = latestBotScore
     ? getMostLikelyBotTypeText(latestBotScore)
     : { botTypeText: null, botTypeInfo: null };
-  console.log("🌟🚨 ~ BotScoreInfoCard ~ currentY.current", currentY.current);
-  console.log("🌟🚨 ~ BotScoreInfoCard ~ currentYActual", currentYActual);
 
   return (
     /* !lastNode ? null : */
@@ -159,14 +160,20 @@ export function BotScoreInfoCard({
           document.body
         )}
       </Html>
+      {/* Card box */}
       <mesh position={[x, y, z]} receiveShadow={true}>
-        <Box args={[sx, sy, sz]} receiveShadow={true}>
+        <RoundedBox
+          args={[sx, sy, sz]}
+          receiveShadow={true}
+          radius={sqRadius}
+          smoothness={sqSmoothness}
+        >
           <meshPhysicalMaterial
             attach="material"
             {...{ metalness, color, roughness, clearcoat }}
             clearcoatRoughness={0.5}
           />
-        </Box>
+        </RoundedBox>
       </mesh>
       {latestBotScore && (
         <>

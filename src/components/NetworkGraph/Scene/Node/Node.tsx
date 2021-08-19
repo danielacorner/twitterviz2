@@ -23,7 +23,7 @@ import { useSpring, animated } from "@react-spring/three";
 import { NodeBotScoreAntenna } from "./NodeBotScoreAntenna";
 import { NODE_RADIUS } from "utils/constants";
 import { ScoreIncreasedPopupText } from "./ScoreIncreasedPopupText";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMount } from "utils/utils";
 import { useGesture } from "react-use-gesture";
 import { useThree } from "@react-three/fiber";
@@ -99,7 +99,9 @@ export const Node = ({
   const [tooltipTweetIndex, setTooltipTweetIndex] = useAtom(
     tooltipTweetIndexAtom
   );
-  const [, setIsRightDrawerOpen] = useAtom(isRightDrawerOpenAtom);
+  const [isRightDrawerOpen, setIsRightDrawerOpen] = useAtom(
+    isRightDrawerOpenAtom
+  );
   const [, setNumTooltipTweets] = useAtom(numTooltipTweetsAtom);
   const [areOrbitControlsEnabled] = useAtom(areOrbitControlsEnabledAtom);
 
@@ -134,12 +136,11 @@ export const Node = ({
       user: node.user,
       id_str: node.user.id_str,
     };
-    if (!areOrbitControlsEnabled) {
-      return;
+    console.log("🌟🚨 ~ onClick ~ newSelectedNode", newSelectedNode);
+    if (newSelectedNode.user) {
+      setSelectedNode(newSelectedNode);
+      setIsRightDrawerOpen(true);
     }
-    setSelectedNode(newSelectedNode);
-
-    setIsRightDrawerOpen(true);
   };
 
   const [ref, api] = useSphere(() => ({
@@ -177,6 +178,8 @@ export const Node = ({
       : [1 * scaleMult, 1 * scaleMult, 1 * scaleMult],
   });
 
+  const [, setAreOrbitControlsEnabled] = useAtom(areOrbitControlsEnabledAtom);
+
   // -- drag to change position --
 
   // https://codesandbox.io/s/react-three-fiber-gestures-forked-qi8xq?file=/src/App.js:351-672
@@ -193,26 +196,46 @@ export const Node = ({
   const meow = 1;
   const { size, viewport } = useThree();
   const aspect = (size.width / viewport.width) * 5;
+  // const [mouseMoved, setMouseMoved] = useState<{
+  //   mousemoved: boolean;
+  //   mousedown: boolean;
+  // }>({
+  //   mousemoved: false,
+  //   mousedown: false,
+  // });
+
+  const totalDelta = useRef(0);
   const bind = useGesture({
-    onDrag: ({ event, offset: [x, y], ...rest }) => {
-      console.log("🌟🚨 ~ rest", rest);
+    onPointerDown: () => {
+      totalDelta.current = 0;
+      // setMouseMoved({ mousedown: true, mousemoved: false });
+      setAreOrbitControlsEnabled(false);
+    },
+    onDrag: ({ event, offset: [x, y], delta: [dx, dy], ...rest }) => {
+      totalDelta.current += dx + dy;
       // ? could start dragging after timeout?
-      // setAreOrbitControlsEnabled(false);
       // event.stopPropagation();
       set({
         position: [(x / aspect) * meow, (-y / aspect) * meow, 0],
         // rotation: [(y / aspect) * mu, (x / aspect) * mu, 0],
       });
-      // setAreOrbitControlsEnabled(true);
-    },
-    onDragStart: () => {
-      console.log("🌟🚨 ~ Node ~ onDragStart");
     },
     onDragEnd: () => {
-      console.log("🌟🚨 ~ Node ~ onDragEnd");
-      // setTimeout(() => {
-      // setAreOrbitControlsEnabled(true);
-      // }, 250);
+      // setMouseMoved((p) => ({ ...p, mousemoved: true }));
+    },
+    onPointerUp: () => {
+      console.log("🌟🚨 ~ totalDelta.current", totalDelta.current);
+      const MAX_MOUSE_MOVE_FOR_CLICK = 5;
+      const shouldClick =
+        Math.abs(totalDelta.current) < MAX_MOUSE_MOVE_FOR_CLICK &&
+        !isRightDrawerOpen;
+      console.log("🌟🚨 ~ shouldClick", shouldClick);
+
+      if (shouldClick) {
+        onClick();
+      }
+      setAreOrbitControlsEnabled(true);
+      // setMouseMoved({ mousedown: false, mousemoved: false });
     },
     onHover: ({ hovering }) =>
       set({ scale: hovering ? [1.2, 1.2, 1.2] : [1, 1, 1] }),
@@ -237,7 +260,7 @@ export const Node = ({
               onPointerEnter,
               onPointerLeave,
               onContextMenu,
-              onClick,
+              // onClick,
               onWheel: onScroll,
             })}
       >

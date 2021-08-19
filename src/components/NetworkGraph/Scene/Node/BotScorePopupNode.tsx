@@ -11,17 +11,7 @@ import { useLatestTaggedNode } from "./useLatestTaggedNode";
 import { useWindowSize } from "utils/hooks";
 /** pops up and animates when you get a new bot score */
 export function BotScorePopupNode() {
-  const { /* latestBotScore, */ node, lastNode } = useLatestTaggedNode();
-  const latestBotScore = {
-    astroturf: 0.33,
-    fake_follower: 0.51,
-    financial: 0,
-    other: 0.63,
-    overall: 0.63,
-    self_declared: 0.1,
-    spammer: 0.09,
-  };
-  console.log("🌟🚨 ~ Alerts ~ latestBotScore", latestBotScore);
+  const { latestBotScore, node, lastNode } = useLatestTaggedNode();
 
   const springProps = useSpring({
     scale: node
