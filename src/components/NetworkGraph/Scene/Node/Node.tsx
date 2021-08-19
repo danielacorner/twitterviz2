@@ -136,10 +136,11 @@ export const Node = ({
       user: node.user,
       id_str: node.user.id_str,
     };
-    console.log("🌟🚨 ~ onClick ~ newSelectedNode", newSelectedNode);
     if (newSelectedNode.user) {
-      setSelectedNode(newSelectedNode);
-      setIsRightDrawerOpen(true);
+      setTimeout(() => {
+        setSelectedNode(newSelectedNode);
+        setIsRightDrawerOpen(true);
+      });
     }
   };
 
@@ -222,8 +223,6 @@ export const Node = ({
     },
     onDragEnd: () => {
       // setMouseMoved((p) => ({ ...p, mousemoved: true }));
-    },
-    onPointerUp: () => {
       console.log("🌟🚨 ~ totalDelta.current", totalDelta.current);
       const MAX_MOUSE_MOVE_FOR_CLICK = 5;
       const shouldClick =
@@ -237,6 +236,7 @@ export const Node = ({
       setAreOrbitControlsEnabled(true);
       // setMouseMoved({ mousedown: false, mousemoved: false });
     },
+    onPointerUp: () => {},
     onHover: ({ hovering }) =>
       set({ scale: hovering ? [1.2, 1.2, 1.2] : [1, 1, 1] }),
   });
