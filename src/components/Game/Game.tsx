@@ -8,20 +8,11 @@ import {
 } from "providers/store/store";
 import { useStreamNewTweets } from "components/NavBar/useStreamNewTweets";
 import { useDeleteAllTweets } from "components/common/useDeleteAllTweets";
-import {
-  useSetLoading,
-  useSetTweets,
-  useTweets,
-} from "providers/store/useSelectors";
+import { useSetLoading, useSetTweets } from "providers/store/useSelectors";
 import styled from "styled-components/macro";
-import {
-  useReplaceNodesInDbForUser,
-  useSetNodesInDbForUser,
-} from "providers/faunaProvider";
-import { useEffect } from "react";
+import { useReplaceNodesInDbForUser } from "providers/faunaProvider";
 import { GameStateHUD } from "./GameStateHUD/GameStateHUD";
 import { BtnStartOver } from "./BtnStartOver";
-import { BOT_SCORE_POPUP_TIMEOUT } from "./TagTheBotButton";
 import { StartPage } from "./StartPage";
 import { useMount } from "utils/utils";
 
@@ -78,28 +69,14 @@ export function useStartLookingAtTweets() {
 }
 
 function GameContent() {
-  const tweets = useTweets();
-  const setNodesInDb = useSetNodesInDbForUser();
-  const [gameState, setGameState] = useAtom(gameStateAtom);
-  const [shotsRemaining] = useAtom(shotsRemainingAtom);
+  const [gameState] = useAtom(gameStateAtom);
 
   const startGame = usePlayAgain();
 
   const startLookingAtTweets = useStartLookingAtTweets();
+
   // start the game on mount
   useMount(startGame);
-
-  // game over when no shots remain
-  useEffect(() => {
-    if (shotsRemaining === 0) {
-      setTimeout(() => {
-        setGameState((p) => ({ ...p, step: GameStepsEnum.gameOver }));
-        const botTweets = tweets.filter((t) => Boolean(t.botScore));
-        setNodesInDb(botTweets);
-      }, BOT_SCORE_POPUP_TIMEOUT);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shotsRemaining]);
 
   // can continue game instead of starting a new one
 

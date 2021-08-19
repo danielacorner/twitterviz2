@@ -12,11 +12,12 @@ export function ShotsRemaining() {
   return (
     <ShotsRemainingStyles>
       <div className="shots">{"🏀".repeat(shotsRemaining)}</div>
-      <div className="shotsLeft">
-        {shotsRemaining} shot
-        {shotsRemaining === 1 ? "" : "s"} left
-        {gameState.step === GameStepsEnum.gameOver ? " - game over" : ""}
-      </div>
+      {gameState.step === GameStepsEnum.gameOver ? null : (
+        <div className="shotsLeft">
+          {shotsRemaining} shot
+          {shotsRemaining === 1 ? "" : "s"} left
+        </div>
+      )}
     </ShotsRemainingStyles>
   );
 }

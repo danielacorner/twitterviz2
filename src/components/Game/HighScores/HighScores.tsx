@@ -83,33 +83,38 @@ export function HighScores() {
   const [submittedName, setSubmittedName] = useState("");
   const resetScoreAndFetchNewTweets = usePlayAgain();
   const startLookingAtTweets = useStartLookingAtTweets();
-
   return !isGameOver ? null : (
-    <Html transform={true} position={[0, 0, 30]} scale={[18, 18, 18]}>
+    <Html transform={true} position={[0, 30, 30]} scale={[18, 18, 18]}>
       <HighScoresStyles>
         <animated.div className="content">
           <h1>🌟 High Scores 🌟</h1>
           <div className="newHighScores">
-            {highScores.map(({ name, score, isNewHighScore }, idx) => {
-              const wasJustSubmitted = name === submittedName;
-              return (
-                <HighScore
-                  key={idx}
-                  {...{
-                    name,
-                    idx,
-                    isNewHighScore,
-                    wasJustSubmitted,
-                    isSubmitFormOpen,
-                    highScores,
-                    setHighScores,
-                    setSubmittedName,
-                    setIsSubmitFormOpen,
-                    score,
-                  }}
-                />
-              );
-            })}
+            {/* high score or empty score, so the height is constant */}
+            {[...new Array(NUM_SCORES)]
+              .map((_, idx) => ({
+                isNewHighScore: false,
+                ...(highScores[idx] || { name: "", score: 0 }),
+              }))
+              .map(({ name, score, isNewHighScore }, idx) => {
+                const wasJustSubmitted = name === submittedName;
+                return (
+                  <HighScore
+                    key={idx}
+                    {...{
+                      name,
+                      idx,
+                      isNewHighScore,
+                      wasJustSubmitted,
+                      isSubmitFormOpen,
+                      highScores,
+                      setHighScores,
+                      setSubmittedName,
+                      setIsSubmitFormOpen,
+                      score,
+                    }}
+                  />
+                );
+              })}
           </div>
         </animated.div>
         {process.env.NODE_ENV !== "production" && (
@@ -361,7 +366,7 @@ const HighScoresStyles = styled.div`
   }
   .btnPlayAgain {
     position: absolute;
-    bottom: -56px;
+    bottom: -18px;
     left: 0;
     right: 0;
     margin: auto;

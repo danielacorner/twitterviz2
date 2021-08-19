@@ -12,7 +12,7 @@ import { useLatestTaggedNode } from "components/NetworkGraph/Scene/Node/useLates
 import { useControls } from "leva";
 import { BotScoreInfoCard } from "./BotScoreInfoCard";
 import { INFO_CARD_INITIAL_Y, INFO_CARD_MAX_Y } from "utils/constants";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const SCALE = 0.15;
 const RADIUS = 40;
@@ -78,12 +78,13 @@ export function BotScoreLegend({
   }));
 
   const currentY = useRef(INFO_CARD_MAX_Y);
-
+  const [currentYActual, setCurrentYActual] = useState(INFO_CARD_MAX_Y);
   // pop it up when we're done scanning
   useEffect(() => {
     if (isDoneScanning) {
       set({ position: [0, INFO_CARD_MAX_Y, 0] });
       currentY.current = INFO_CARD_MAX_Y;
+      setCurrentYActual(INFO_CARD_MAX_Y);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDoneScanning]);
@@ -93,7 +94,13 @@ export function BotScoreLegend({
     <>
       {!isInStartMenu && (
         <BotScoreInfoCard
-          {...{ set, springProps: infoCardSpringProps, currentY }}
+          {...{
+            set,
+            springProps: infoCardSpringProps,
+            currentY,
+            currentYActual,
+            setCurrentYActual,
+          }}
         />
       )}
       <animated.mesh

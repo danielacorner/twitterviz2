@@ -14,20 +14,37 @@ import { useThree } from "@react-three/fiber";
 import { useGesture } from "react-use-gesture";
 import { animated } from "@react-spring/three";
 import { createPortal } from "react-dom";
+import {
+  gameStateAtom,
+  GameStepsEnum,
+  shotsRemainingAtom,
+} from "providers/store/store";
+import { useAtom } from "jotai";
+import { useSetNodesInDbForUser } from "providers/faunaProvider";
+import { useTweets } from "providers/store/useSelectors";
+import { usePlayAgain, useStartLookingAtTweets } from "../Game";
+import { BOT_SCORE_POPUP_TIMEOUT } from "../TagTheBotButton";
 
-export function BotScoreInfoCard({ set, springProps, currentY }) {
+export function BotScoreInfoCard({
+  set,
+  springProps,
+  currentY,
+  setCurrentYActual,
+  currentYActual,
+}) {
+  const tweets = useTweets();
+  const setNodesInDb = useSetNodesInDbForUser();
+  const [, setGameState] = useAtom(gameStateAtom);
+  const [shotsRemaining] = useAtom(shotsRemainingAtom);
+
+  const endGame = () => {
+    setGameState((p) => ({ ...p, step: GameStepsEnum.gameOver }));
+    const botTweets = tweets.filter((t) => Boolean(t.botScore));
+    setNodesInDb(botTweets);
+  };
+
   const { latestBotScore, node, lastNode, clearLastNode } =
     useLatestTaggedNode();
-  // const latestBotScore = {
-  //   astroturf: 0.33,
-  //   fake_follower: 0.51,
-  //   financial: 0,
-  //   other: 0.63,
-  //   overall: 0.63,
-  //   self_declared: 0.1,
-  //   spammer: 0.09,
-  // };
-  // -- drag to change position --
 
   // https://codesandbox.io/s/react-three-fiber-gestures-forked-qi8xq?file=/src/App.js:351-672
 
@@ -51,7 +68,12 @@ export function BotScoreInfoCard({ set, springProps, currentY }) {
         // close the popup
         currentY.current = INFO_CARD_INITIAL_Y;
         set({ position: [0, INFO_CARD_INITIAL_Y, 0] });
+        setCurrentYActual(INFO_CARD_INITIAL_Y);
         clearLastNode();
+        // game over if 0 shots remaining
+        if (shotsRemaining === 0) {
+          setTimeout(endGame, BOT_SCORE_POPUP_TIMEOUT);
+        }
       }
     },
     onHover: ({ hovering }) =>
@@ -80,10 +102,10 @@ export function BotScoreInfoCard({ set, springProps, currentY }) {
     clearcoat,
     roughness,
   } = useControls({
-    x: 1.56,
+    x: 1.09,
     y: -1.38,
     z: -0.45,
-    sx: 4.78,
+    sx: 3.97,
     sy: -2.77,
     sz: -0.13,
     fontSize: 0.37,
@@ -94,12 +116,12 @@ export function BotScoreInfoCard({ set, springProps, currentY }) {
     metalness: 0.36,
     roughness: 0.62,
     clearcoat: 0,
-    maxWidth: 4,
+    maxWidth: 3.2,
     color: "#000000",
-    x3: 1.55,
-    x4: 3.55,
-    y2: -0.4,
-    y3: -1.56,
+    x3: 1.15,
+    x4: 2.85,
+    y2: -0.42,
+    y3: -1.86,
     y4: -2.25,
   });
   const colorByBotScore = latestBotScore
@@ -108,6 +130,9 @@ export function BotScoreInfoCard({ set, springProps, currentY }) {
   const { botTypeText, botTypeInfo } = latestBotScore
     ? getMostLikelyBotTypeText(latestBotScore)
     : { botTypeText: null, botTypeInfo: null };
+  console.log("🌟🚨 ~ BotScoreInfoCard ~ currentY.current", currentY.current);
+  console.log("🌟🚨 ~ BotScoreInfoCard ~ currentYActual", currentYActual);
+
   return (
     /* !lastNode ? null : */
     <animated.mesh
@@ -120,7 +145,7 @@ export function BotScoreInfoCard({ set, springProps, currentY }) {
             {...bind()}
             style={{
               position: "fixed",
-              bottom: 0,
+              bottom: currentYActual * 100,
               width: window.innerWidth,
               height: 276,
               ...(process.env.NODE_ENV !== "production"
