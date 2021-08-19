@@ -72,6 +72,7 @@ export function BotScoreInfoCard({ set, springProps, currentY }) {
     sz,
     fontSize,
     fontSize2,
+    fontSize3,
     fontColor,
     metalness,
     maxWidth,
@@ -88,6 +89,7 @@ export function BotScoreInfoCard({ set, springProps, currentY }) {
     fontSize: 0.37,
     fontColor: "#cbebec",
     fontSize2: 0.26,
+    fontSize3: 0.18,
     legendHeight: 0,
     metalness: 0.36,
     roughness: 0.62,
@@ -98,7 +100,7 @@ export function BotScoreInfoCard({ set, springProps, currentY }) {
     x4: 3.55,
     y2: -0.4,
     y3: -1.56,
-    y4: -2.06,
+    y4: -2.25,
   });
   const colorByBotScore = latestBotScore
     ? getScoreFromBotScore(latestBotScore).color
@@ -170,19 +172,23 @@ export function BotScoreInfoCard({ set, springProps, currentY }) {
           >
             {lastNode?.user.screen_name} {botTypeText}
           </Text>
-          <Text
-            position={[x3, y4, z + 0.15]}
-            color={fontColor}
-            fontSize={fontSize2}
-            maxWidth={maxWidth}
-            lineHeight={1.3}
-            letterSpacing={0.02}
-            textAlign={"left"}
-            anchorX="center"
-            anchorY="middle"
-          >
-            {botTypeInfo}
-          </Text>
+          {botTypeInfo && (
+            <Text
+              position={[x3, y4, z + 0.15]}
+              color={fontColor}
+              fontSize={fontSize3}
+              maxWidth={maxWidth}
+              lineHeight={1.3}
+              letterSpacing={0.02}
+              textAlign={"left"}
+              anchorX="center"
+              anchorY="middle"
+            >
+              {"("}
+              {botTypeInfo}
+              {")"}
+            </Text>
+          )}
         </>
       )}
     </animated.mesh>
