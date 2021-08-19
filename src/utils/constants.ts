@@ -1,3 +1,6 @@
+export const WAIT_FOR_STREAM_TIMEOUT =
+  (process.env.NODE_ENV !== "production" ? 2 : 12) * 1000;
+
 const finalZ = window.innerWidth < 768 ? 130 : 100; // zoom out for smaller screen widths
 export const CAMERA_POSITION = {
   initial: [0, 0, 500],
@@ -7,6 +10,9 @@ export const CAMERA_POSITION = {
 export const AVATAR_WIDTH = 46;
 export const TOOLTIP_WIDTH = 380;
 
+export const INFO_CARD_INITIAL_Y = -30;
+export const INFO_CARD_MAX_Y = 0.3;
+export const INFO_CARD_MIN_Y = -3.2;
 export const COLOR_BY = {
   mediaType: "mediaType",
   media: "media",

@@ -28,6 +28,7 @@ export function BtnStartOver() {
 const BtnStartOverStyles = styled.div`
   .btnStartOver {
     position: fixed;
+    z-index: 999999999999999999;
     bottom: 0;
     left: 0;
   }

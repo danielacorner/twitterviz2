@@ -4,12 +4,7 @@ import { Text } from "@react-three/drei";
 import { getScoreFromBotScore } from "components/Game/getScoreFromBotScore";
 
 export function ScoreIncreasedPopupText({ isMounted, botScore }) {
-  const { scoreIncrease, scorePercent } = getScoreFromBotScore(botScore);
-  const maxHue = 130;
-  const minHue = 0;
-  const color = `hsl(${((maxHue - minHue) * scorePercent).toFixed(
-    0
-  )},100%,50%)`;
+  const { scoreIncrease, scorePercent, color } = getScoreFromBotScore(botScore);
 
   const [isAnimationComplete, setIsAnimationComplete] = useState(false);
   const springProps = useSpring({

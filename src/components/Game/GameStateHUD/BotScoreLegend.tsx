@@ -2,7 +2,11 @@ import HUD from "../../NetworkGraph/Scene/HUD";
 import { useThree } from "@react-three/fiber";
 import { NodeBotScoreAntenna } from "../../NetworkGraph/Scene/Node/NodeBotScoreAntenna";
 import { useSpring, animated } from "@react-spring/three";
-import { gameStateAtom, GameStepsEnum } from "providers/store/store";
+import {
+  gameStateAtom,
+  GameStepsEnum,
+  scanningNodeIdAtom,
+} from "providers/store/store";
 import { atom, useAtom } from "jotai";
 import { useLatestTaggedNode } from "components/NetworkGraph/Scene/Node/useLatestTaggedNode";
 import {
@@ -15,6 +19,8 @@ import styled from "styled-components/macro";
 import { Html } from "@react-three/drei";
 import { useControls } from "leva";
 import { BotScoreInfoCard } from "./BotScoreInfoCard";
+import { INFO_CARD_INITIAL_Y, INFO_CARD_MAX_Y } from "utils/constants";
+import { useEffect } from "react";
 
 const SCALE = 0.15;
 const RADIUS = 40;
@@ -222,13 +228,30 @@ export function BotScoreLegend({
   const springProps = useSpring({
     scale: scaleDisplay,
   });
-
+  const { latestBotScore, node, lastNode, clearLastNode } =
+    useLatestTaggedNode();
+  const [scanningNodeId] = useAtom(scanningNodeIdAtom);
+  const isDoneScanning = !scanningNodeId && lastNode;
   const [infoCardSpringProps, set] = useSpring(() => ({
     scale: [1, 1, 1],
-    position: [0, 0, 0],
+    position: [0, INFO_CARD_INITIAL_Y, 0],
     rotation: [0, 0, 0],
-    config: { mass: 3, friction: 40, tension: 800 },
   }));
+  // pop it up when we're done scanning
+  useEffect(() => {
+    if (isDoneScanning) {
+      set({ position: [0, INFO_CARD_MAX_Y, 0] });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDoneScanning]);
+  // when we close it, pop it back down
+  useEffect(() => {
+    if (!lastNode) {
+      set({ position: [0, INFO_CARD_INITIAL_Y, 0] });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lastNode]);
+
   return (
     <>
       {!isInStartMenu && (
@@ -236,8 +259,12 @@ export function BotScoreLegend({
       )}
       <animated.mesh
         castShadow={true}
-        scale={springProps.scale as any}
-        position={infoCardSpringProps.position as any}
+        scale={
+          isInStartMenu ? springProps.scale : (infoCardSpringProps.scale as any)
+        }
+        position={
+          (isInStartMenu ? position : infoCardSpringProps.position) as any
+        }
         // position={position as any}
       >
         {/* sphere in the middle */}
@@ -257,15 +284,18 @@ export function BotScoreLegend({
               isInStartMenu,
               brightenText: true,
               brightenBalls: true,
-              botScore: {
-                overall: 1,
-                fake_follower: 1,
-                astroturf: 1,
-                financial: 1,
-                other: 1,
-                self_declared: 1,
-                spammer: 1,
-              },
+              botScore:
+                isInStartMenu || !latestBotScore
+                  ? {
+                      overall: 1,
+                      fake_follower: 1,
+                      astroturf: 1,
+                      financial: 1,
+                      other: 1,
+                      self_declared: 1,
+                      spammer: 1,
+                    }
+                  : latestBotScore,
             }}
           />
         </mesh>

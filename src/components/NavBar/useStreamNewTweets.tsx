@@ -6,7 +6,7 @@ import {
   isLoadingFromTwitterApiAtom,
 } from "../../providers/store/useSelectors";
 import { useConfig } from "../../providers/store/useConfig";
-import { SERVER_URL } from "../../utils/constants";
+import { SERVER_URL, WAIT_FOR_STREAM_TIMEOUT } from "../../utils/constants";
 import { faunaClient } from "providers/faunaProvider";
 import { query as q } from "faunadb";
 import {
@@ -17,9 +17,6 @@ import { useAtom } from "jotai";
 import { useRef } from "react";
 import { uniqBy } from "lodash";
 import { Tweet } from "types";
-
-export const WAIT_FOR_STREAM_TIMEOUT =
-  (process.env.NODE_ENV !== "production" ? 12 : 12) * 1000;
 
 export function useStreamNewTweets() {
   const [

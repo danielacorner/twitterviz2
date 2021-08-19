@@ -16,5 +16,10 @@ export function getScoreFromBotScore(botScore: BotScore) {
   );
   const scoreIncrease = MAX_POSSIBLE_SCORE_EACH * maxBotScore;
   const scorePercent = scoreIncrease / scoreIncrease;
-  return { scoreIncrease, scorePercent };
+  const maxHue = 130;
+  const minHue = 0;
+  const color = `hsl(${((maxHue - minHue) * scorePercent).toFixed(
+    0
+  )},100%,50%)`;
+  return { scoreIncrease, scorePercent, color };
 }

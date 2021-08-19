@@ -5,7 +5,7 @@ import { Canvas } from "@react-three/fiber";
 import { animated, useSpring } from "@react-spring/three";
 import { useMount } from "utils/utils";
 import { LinearProgress } from "@material-ui/core";
-import { WAIT_FOR_STREAM_TIMEOUT } from "./NavBar/useStreamNewTweets";
+import { WAIT_FOR_STREAM_TIMEOUT } from "utils/constants";
 
 export function LoadingIndicator() {
   const isLoading = useLoading();

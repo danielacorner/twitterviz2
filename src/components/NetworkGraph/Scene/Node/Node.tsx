@@ -196,22 +196,25 @@ export const Node = ({
   const { size, viewport } = useThree();
   const aspect = (size.width / viewport.width) * 5;
   const bind = useGesture({
-    onDrag: ({ event, offset: [x, y] }) => {
-      event.stopPropagation();
+    onDrag: ({ event, offset: [x, y], ...rest }) => {
+      console.log("🌟🚨 ~ rest", rest);
+      // ? could start dragging after timeout?
+      // setAreOrbitControlsEnabled(false);
+      // event.stopPropagation();
       set({
         position: [(x / aspect) * meow, (-y / aspect) * meow, 0],
         // rotation: [(y / aspect) * mu, (x / aspect) * mu, 0],
       });
+      // setAreOrbitControlsEnabled(true);
     },
     onDragStart: () => {
-      setAreOrbitControlsEnabled(false);
       console.log("🌟🚨 ~ Node ~ onDragStart");
     },
     onDragEnd: () => {
       console.log("🌟🚨 ~ Node ~ onDragEnd");
-      setTimeout(() => {
-        setAreOrbitControlsEnabled(true);
-      }, 250);
+      // setTimeout(() => {
+      // setAreOrbitControlsEnabled(true);
+      // }, 250);
     },
     onHover: ({ hovering }) =>
       set({ scale: hovering ? [1.2, 1.2, 1.2] : [1, 1, 1] }),
