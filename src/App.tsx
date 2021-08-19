@@ -13,6 +13,7 @@ import { RightDrawer } from "./components/RightDrawer/RightDrawer";
 import { Game } from "./components/Game/Game";
 import { LoadingIndicator } from "./components/LoadingIndicator";
 import { BotScorePopupNode } from "components/NetworkGraph/Scene/Node/BotScorePopupNode";
+import { Leva } from "leva";
 
 function App() {
   return (
@@ -30,6 +31,14 @@ function App() {
       <Game />
       <LoadingIndicator />
       <BotScorePopupNode />
+      <Leva
+        // fill             // default = false,  true makes the pane fill the parent dom node it's rendered in
+        // flat             // default = false,  true removes border radius and shadow
+        // oneLineLabels    // default = false, alternative layout for labels, with labels and fields on separate rows
+        // hideTitleBar     // default = false, hides the GUI header
+        // collapsed        // default = false, when true the GUI is collpased
+        hidden={process.env.NODE_ENV === "production"} // default = false, when true the GUI is hidden
+      />
     </AppStyles>
   );
 }

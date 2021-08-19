@@ -127,7 +127,7 @@ export function BotScoreInfoCard({ set, springProps }) {
               position: "fixed",
               bottom: 0,
               width: window.innerWidth,
-              height: window.innerHeight * 0.27,
+              height: 276,
               ...(process.env.NODE_ENV !== "production"
                 ? { border: "1px solid tomato" }
                 : {}),
