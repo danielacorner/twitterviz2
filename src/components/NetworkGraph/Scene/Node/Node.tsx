@@ -1,7 +1,6 @@
 import { useSphere } from "@react-three/cannon";
 import * as THREE from "three";
 import useStore, {
-  areOrbitControlsEnabledAtom,
   isPointerOverAtom,
   isRightDrawerOpenAtom,
   numTooltipTweetsAtom,
@@ -23,10 +22,8 @@ import { useSpring, animated } from "@react-spring/three";
 import { NodeBotScoreAntenna } from "./NodeBotScoreAntenna";
 import { NODE_RADIUS } from "utils/constants";
 import { ScoreIncreasedPopupText } from "./ScoreIncreasedPopupText";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useMount } from "utils/utils";
-import { useGesture } from "react-use-gesture";
-import { useThree } from "@react-three/fiber";
 import { ScanningAnimation } from "./ScanningAnimation";
 import { MeshWobbleMaterial } from "@react-three/drei";
 
@@ -99,11 +96,8 @@ export const Node = ({
   const [tooltipTweetIndex, setTooltipTweetIndex] = useAtom(
     tooltipTweetIndexAtom
   );
-  const [isRightDrawerOpen, setIsRightDrawerOpen] = useAtom(
-    isRightDrawerOpenAtom
-  );
+  const [, setIsRightDrawerOpen] = useAtom(isRightDrawerOpenAtom);
   const [, setNumTooltipTweets] = useAtom(numTooltipTweetsAtom);
-  const [areOrbitControlsEnabled] = useAtom(areOrbitControlsEnabledAtom);
 
   const handleRightClick = useHandleOpenRightClickMenu(node.tweets[0]);
   const onContextMenu = (event) => {
@@ -179,8 +173,6 @@ export const Node = ({
       : [1 * scaleMult, 1 * scaleMult, 1 * scaleMult],
   });
 
-  const [, setAreOrbitControlsEnabled] = useAtom(areOrbitControlsEnabledAtom);
-
   // -- drag to change position --
 
   // https://codesandbox.io/s/react-three-fiber-gestures-forked-qi8xq?file=/src/App.js:351-672
@@ -192,54 +184,45 @@ export const Node = ({
     rotation: [0, 0, 0],
     config: { mass: 3, friction: 40, tension: 800 },
   }));
+
   // Create a gesture that contains drag and hover, set the spring accordingly
-  // const mu = 1;
-  const meow = 1;
-  const { size, viewport } = useThree();
-  const aspect = (size.width / viewport.width) * 5;
-  // const [mouseMoved, setMouseMoved] = useState<{
-  //   mousemoved: boolean;
-  //   mousedown: boolean;
-  // }>({
-  //   mousemoved: false,
-  //   mousedown: false,
+
+  // ! when you re-enable orbit controls, it thinks there's still a mouse down? breaks future mouse events
+  // const totalDelta = useRef(0);
+  // const bind = useGesture({
+  //   onPointerDown: () => {
+  //     totalDelta.current = 0;
+  //     // setMouseMoved({ mousedown: true, mousemoved: false });
+  //     setAreOrbitControlsEnabled(false);
+  //   },
+  //   onDrag: ({ event, offset: [x, y], delta: [dx, dy], ...rest }) => {
+  //     totalDelta.current += dx + dy;
+  //     // ? could start dragging after timeout?
+  //     // event.stopPropagation();
+  //     set({
+  //       position: [(x / aspect) * meow, (-y / aspect) * meow, 0],
+  //       // rotation: [(y / aspect) * mu, (x / aspect) * mu, 0],
+  //     });
+  //   },
+  //   onDragEnd: () => {
+  //     // setMouseMoved((p) => ({ ...p, mousemoved: true }));
+  //     console.log("🌟🚨 ~ totalDelta.current", totalDelta.current);
+  //     const MAX_MOUSE_MOVE_FOR_CLICK = 5;
+  //     const shouldClick =
+  //       Math.abs(totalDelta.current) < MAX_MOUSE_MOVE_FOR_CLICK &&
+  //       !isRightDrawerOpen;
+  //     console.log("🌟🚨 ~ shouldClick", shouldClick);
+
+  //     if (shouldClick) {
+  //       onClick();
+  //     }
+  //     setAreOrbitControlsEnabled(true);
+  //     // setMouseMoved({ mousedown: false, mousemoved: false });
+  //   },
+  //   onPointerUp: () => {},
+  //   onHover: ({ hovering }) =>
+  //     set({ scale: hovering ? [1.2, 1.2, 1.2] : [1, 1, 1] }),
   // });
-
-  const totalDelta = useRef(0);
-  const bind = useGesture({
-    onPointerDown: () => {
-      totalDelta.current = 0;
-      // setMouseMoved({ mousedown: true, mousemoved: false });
-      setAreOrbitControlsEnabled(false);
-    },
-    onDrag: ({ event, offset: [x, y], delta: [dx, dy], ...rest }) => {
-      totalDelta.current += dx + dy;
-      // ? could start dragging after timeout?
-      // event.stopPropagation();
-      set({
-        position: [(x / aspect) * meow, (-y / aspect) * meow, 0],
-        // rotation: [(y / aspect) * mu, (x / aspect) * mu, 0],
-      });
-    },
-    onDragEnd: () => {
-      // setMouseMoved((p) => ({ ...p, mousemoved: true }));
-      console.log("🌟🚨 ~ totalDelta.current", totalDelta.current);
-      const MAX_MOUSE_MOVE_FOR_CLICK = 5;
-      const shouldClick =
-        Math.abs(totalDelta.current) < MAX_MOUSE_MOVE_FOR_CLICK &&
-        !isRightDrawerOpen;
-      console.log("🌟🚨 ~ shouldClick", shouldClick);
-
-      if (shouldClick) {
-        onClick();
-      }
-      setAreOrbitControlsEnabled(true);
-      // setMouseMoved({ mousedown: false, mousemoved: false });
-    },
-    onPointerUp: () => {},
-    onHover: ({ hovering }) =>
-      set({ scale: hovering ? [1.2, 1.2, 1.2] : [1, 1, 1] }),
-  });
 
   // TODO: check out name stays after submit
 
@@ -248,7 +231,7 @@ export const Node = ({
   return (
     <animated.mesh
       rotation={rotation as any}
-      {...(bind() as any)}
+      // {...(bind() as any)}
       renderOrder={2}
     >
       <animated.mesh
@@ -260,7 +243,7 @@ export const Node = ({
               onPointerEnter,
               onPointerLeave,
               onContextMenu,
-              // onClick,
+              onClick,
               onWheel: onScroll,
             })}
       >
