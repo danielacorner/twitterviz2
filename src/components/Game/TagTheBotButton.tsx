@@ -59,7 +59,6 @@ export default function TagTheBotButton() {
     });
     setTimeout(() => {
       setBotScorePopupNode(null);
-      console.log("🌟🚨 ~ timeout - scanningNodeId", scanningNodeId);
     }, BOT_SCORE_POPUP_TIMEOUT);
 
     // raise the info card
@@ -67,7 +66,6 @@ export default function TagTheBotButton() {
 
     setLoading(false);
 
-    console.log("🌟🚨 ~ scanningNodeId", scanningNodeId);
     setScanningNodeId(null);
 
     // rotate the camera to face the

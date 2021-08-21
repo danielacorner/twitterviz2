@@ -19,7 +19,6 @@ function Alerts() {
     self_declared: 0.1,
     spammer: 0.09,
   };
-  console.log("🌟🚨 ~ Alerts ~ latestBotScore", latestBotScore);
   const isUp = true;
   const [, setIsUp] = useAtom(isBotScoreExplainerUpAtom);
   const springUp = useSpringDom({

@@ -27,10 +27,7 @@ export function Scene() {
   const { camera } = useThree();
   const [gameState] = useAtom(gameStateAtom);
   const [areOrbitControlsEnabled] = useAtom(areOrbitControlsEnabledAtom);
-  console.log(
-    "🌟🚨 ~ Scene ~ areOrbitControlsEnabled",
-    areOrbitControlsEnabled
-  );
+
   const isGameOver = gameState.step === GameStepsEnum.gameOver;
   const isMounted = useIsMounted();
   // zoom in camera on mount
@@ -188,7 +185,6 @@ function degToRad(deg) {
 
 function GLTFModel() {
   const gltf = useGLTF("/sea_life_challenge_pack/scene.gltf");
-  console.log("🌟🚨 ~ GLTFModel ~ gltf ", gltf);
   return (
     <mesh>
       <primitive
