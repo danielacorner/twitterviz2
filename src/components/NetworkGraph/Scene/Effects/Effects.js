@@ -4,6 +4,7 @@ import {
   DepthOfField,
   EffectComposer,
   GodRays,
+  Scanline,
   Vignette,
 } from "@react-three/postprocessing";
 import { BlendFunction, Resizer, KernelSize } from "postprocessing";
@@ -13,6 +14,8 @@ import { extend, useLoader, useThree } from "@react-three/fiber";
 import { LUTPass } from "three/examples/jsm/postprocessing/LUTPass";
 import { LUTCubeLoader } from "three/examples/jsm/loaders/LUTCubeLoader";
 import { useControls } from "leva";
+import { useAtom } from "jotai";
+import { scanningNodeIdAtom } from "providers/store/store";
 extend({ LUTPass });
 
 export function Effects() {
@@ -20,15 +23,21 @@ export function Effects() {
   const gpuInfo = useDetectGPU();
   const { viewport: { width, height } } = useThree() // prettier-ignore
   const { texture3D } = useLoader(LUTCubeLoader, "/cubemap/cubicle-99.CUBE");
-  const { focalLength, focusDistance } = useControls({
+  const { focalLength, focusDistance, bokehScale } = useControls({
     focalLength: 1,
     focusDistance: 0.2,
+    bokehScale: 2,
   });
+  const [scanningNodeId] = useAtom(scanningNodeIdAtom);
+
+  const isScanning = Boolean(scanningNodeId);
   return gpuInfo.tier > 2 ? (
     <>
       <Sun ref={sun} />
       {sun.current && (
         <EffectComposer multisampling={0} renderPriority={1}>
+          {/* react-postprocessing docs https://github.com/pmndrs/react-postprocessing/blob/master/api.md */}
+          {/* postprocessing docs https://vanruesc.github.io/postprocessing/public/docs/ */}
           <GodRays
             sun={sun.current}
             blendFunction={BlendFunction.Screen}
@@ -51,18 +60,12 @@ export function Effects() {
           />
           <Bloom
             kernelSize={KernelSize.VERY_LARGE}
-            luminanceThreshold={0}
+            luminanceThreshold={0.4} // only bloom the centermost nodes
             luminanceSmoothing={0}
             intensity={0.5}
           />
-          <DepthOfField
-            /* ref={ref}  */ bokehScale={4}
-            focalLength={focalLength}
-            focusDistance={focusDistance}
-            width={(width * 5) / 2}
-            height={(height * 5) / 2}
-          />
           <Vignette />
+          {/* <StereoEffect /> */}
           {/* <lUTPass attachArray="passes" lut={texture3D} /> */}
         </EffectComposer>
       )}

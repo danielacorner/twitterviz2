@@ -294,22 +294,7 @@ export function NodeContent({
     : defaultNodeMaterial;
   return (
     <>
-      {isScanningNode && (
-        <mesh geometry={nodeGeometry}>
-          <MeshWobbleMaterial
-            skinning={true}
-            factor={20}
-            speed={8}
-            {...{
-              metalness: 0.94,
-              roughness: 0.1,
-              color: "#1fd5db",
-              transparent: true,
-              opacity: 0.8,
-            }}
-          />
-        </mesh>
-      )}
+      {isScanningNode && <ScanningNodeAnimation />}
       {isScanningNode ? null : (
         <mesh
           {...(material ? { material } : {})}
@@ -335,6 +320,27 @@ export function NodeContent({
           }}
         />
       ) : null}
+    </>
+  );
+}
+
+function ScanningNodeAnimation() {
+  return (
+    <>
+      <mesh geometry={nodeGeometry}>
+        <MeshWobbleMaterial
+          skinning={true}
+          factor={20}
+          speed={8}
+          {...{
+            metalness: 0.94,
+            roughness: 0.1,
+            color: "#1fd5db",
+            transparent: true,
+            opacity: 0.2,
+          }}
+        />
+      </mesh>
     </>
   );
 }

@@ -9,13 +9,12 @@ import {
 } from "components/NavBar/useStreamNewTweets";
 import { uniqBy } from "lodash";
 
-const NUM_NEW_TWEETS = 3;
-
 /** replace one tweet with a new one from the stream
  *
  * 500 per day https://rapidapi.com/OSoMe/api/botometer-pro/pricing
  */
 export function useFetchAndReplaceNode() {
+  const numNewTweets = shuffle([1, 2, 3])[0];
   const tweets = useTweets();
   const setTweets = useSetTweets();
   // const [selectedNodeId] = useAtom(selectedNodeIdAtom);
@@ -33,7 +32,7 @@ export function useFetchAndReplaceNode() {
     // if we still have stream API usage remaining
     if (!lastTimeMonthlyTwitterApiUsageWasExceeded) {
       const resp = await fetch(
-        `${SERVER_URL}/api/stream?num=${NUM_NEW_TWEETS}&filterLevel=${FILTER_LEVELS.low}`
+        `${SERVER_URL}/api/stream?num=${numNewTweets}&filterLevel=${FILTER_LEVELS.low}`
       );
       const responseTweets = await resp.json();
       const newTweets = [...filteredTweets, ...responseTweets];
@@ -62,7 +61,7 @@ export function useFetchAndReplaceNode() {
       );
       const randomDedupedTweets = shuffle([...dedupedWithCurrentTweets]).slice(
         0,
-        NUM_NEW_TWEETS
+        numNewTweets
       );
       const newTweets = [...filteredTweets, ...randomDedupedTweets];
       setTweets(newTweets);

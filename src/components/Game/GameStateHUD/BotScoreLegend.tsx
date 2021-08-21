@@ -91,7 +91,7 @@ export function BotScoreLegend({
   // when we close it, pop it back down
 
   return (
-    <Billboard>
+    <>
       {!isInStartMenu && (
         <BotScoreInfoCard
           {...{
@@ -151,7 +151,7 @@ export function BotScoreLegend({
 
         <directionalLight position={[-7, 14.28, 12.18]} intensity={5} />
       </animated.mesh>
-    </Billboard>
+    </>
   );
 }
 function AvatarCircle({ lastNode }) {

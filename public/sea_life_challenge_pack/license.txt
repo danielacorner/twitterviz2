@@ -1,0 +1,8 @@
+Model Information:
+* title:	Sea life challenge pack
+* source:	https://sketchfab.com/3d-models/sea-life-challenge-pack-0f2db5f8bf9f4212a7fe095594710347
+* author:	Clément Fromentin (https://sketchfab.com/Majest)
+
+Model License:
+* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
+* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works

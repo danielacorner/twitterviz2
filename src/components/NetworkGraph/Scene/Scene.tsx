@@ -1,4 +1,4 @@
-import { OrbitControls, useDetectGPU } from "@react-three/drei";
+import { OrbitControls, useDetectGPU, useGLTF } from "@react-three/drei";
 import { useUserNodes } from "../useUserNodes";
 import { Debug, Physics } from "@react-three/cannon";
 import { Node, NODE_RADIUS_COLLISION_MULTIPLIER } from "./Node/Node";
@@ -53,6 +53,13 @@ export function Scene() {
   // we must explicitly render the scene with a specified priority in its own useFrame
   // https://github.com/pmndrs/react-three-fiber/blob/master/markdown/api.md#useframe
   useFrame(({ gl, scene, camera }) => gl.render(scene, camera), 1);
+  const [isFirstMount, setIsFirstMount] = useState(true);
+  useMount(() => {
+    setIsFirstMount(false);
+  });
+  const areNodesInRandomStartPositions =
+    [GameStepsEnum.welcome, GameStepsEnum.gameOver].includes(gameState.step) ||
+    isFirstMount;
 
   return (
     <Suspense fallback={null}>
@@ -64,7 +71,7 @@ export function Scene() {
         color="blue"
       /> */}
       <Stars count={gpuInfo.tier > 2 ? 2000 : 1000} />
-
+      <GLTFModel />
       <mesh scale={[20, 20, 20]}>
         {/* <Sky
           rayleigh={7}
@@ -93,10 +100,25 @@ export function Scene() {
             const isEven = idx % 2 === 0;
             const width = viewport.width / 8;
 
-            const x = randBetween(-1, 1) * width;
-            const z = (randBetween(-1, 1) * viewport.width) / 8;
-            const y =
-              randBetween(-1, 1) * NODE_WIDTH * 5 + (isEven ? 1 : -1) * width;
+            let x, y, z;
+            if (areNodesInRandomStartPositions) {
+              // start at random position
+              x = randBetween(-1, 1) * width;
+              z = (randBetween(-1, 1) * viewport.width) / 8;
+              y =
+                randBetween(-1, 1) * NODE_WIDTH * 5 + (isEven ? 1 : -1) * width;
+            } else {
+              // for the rest of the game,
+              // start at ("bubble up" or "emerge from") bottom center
+              const spread = NODE_WIDTH * 2;
+              const newX = 0;
+              const newY = -NODE_WIDTH * 20;
+              const newZ = 0;
+              x = randBetween(newX - spread, newX + spread);
+              y = randBetween(newY - spread, newY + spread);
+              z = randBetween(newZ - spread, newZ + spread);
+            }
+
             return (
               <Node
                 key={node.id_str}
@@ -162,4 +184,20 @@ function useIsMounted() {
 
 function degToRad(deg) {
   return (deg * Math.PI) / 180;
+}
+
+function GLTFModel() {
+  const gltf = useGLTF("/sea_life_challenge_pack/scene.gltf");
+  console.log("🌟🚨 ~ GLTFModel ~ gltf ", gltf);
+  return (
+    <mesh>
+      <primitive
+        scale={0.05}
+        position={[1.09, -38.44, -6.45]}
+        object={gltf.scene}
+        //  material={nodes.ATP___Gaussian_surface.material}
+        //  geometry={nodes.ATP___Gaussian_surface.geometry}
+      />
+    </mesh>
+  );
 }
