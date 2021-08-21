@@ -1,4 +1,5 @@
 import { Environment } from "@react-three/drei";
+import { shuffle } from "lodash";
 import { Suspense } from "react";
 
 const Background = ({ background }: { background: boolean }) => {
@@ -8,8 +9,9 @@ const Background = ({ background }: { background: boolean }) => {
       <Environment
         background={background}
         path="/cubemap/"
+        // files={shuffle(["kelp.hdr", "deepsea.hdr"])[0]} // * random background?
         files={"kelp.hdr"}
-        // files={"deepsea.hdr"}
+        // files={["px.jpg", "nx.jpg", "py.jpg", "ny.jpg", "pz.jpg", "nz.jpg"]}
       />
     </Suspense>
   );

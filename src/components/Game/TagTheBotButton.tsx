@@ -50,22 +50,27 @@ export default function TagTheBotButton() {
     setShotsRemaining((p) => Math.max(0, p - 1));
     setLatestNodeWithBotScore({ ...selectedNode, botScore });
     setScore((p) => p + getScoreFromBotScore(botScore).scoreIncrease);
+
     // show and then hide the bot score popup
     setBotScorePopupNode({
       user: { ...selectedNode.user, botScore },
       tweets: [{ ...selectedNode, botScore }],
       id_str: selectedNode.user.id_str,
     });
-
-    setIsUp(true);
-
     setTimeout(() => {
       setBotScorePopupNode(null);
-      console.log("🌟🚨 ~ scanningNodeId", scanningNodeId);
+      console.log("🌟🚨 ~ timeout - scanningNodeId", scanningNodeId);
     }, BOT_SCORE_POPUP_TIMEOUT);
 
+    // raise the info card
+    setIsUp(true);
+
     setLoading(false);
+
+    console.log("🌟🚨 ~ scanningNodeId", scanningNodeId);
     setScanningNodeId(null);
+
+    // rotate the camera to face the
   }
 
   function setNotABot(node: Tweet) {

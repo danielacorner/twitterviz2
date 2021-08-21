@@ -13,7 +13,7 @@ import { useControls } from "leva";
 import { BotScoreInfoCard } from "./BotScoreInfoCard";
 import { INFO_CARD_INITIAL_Y, INFO_CARD_MAX_Y } from "utils/constants";
 import { useEffect, useRef, useState } from "react";
-import { Circle, useTexture } from "@react-three/drei";
+import { Billboard, Circle, useTexture } from "@react-three/drei";
 
 const SCALE = 0.15;
 const RADIUS = 40;
@@ -91,7 +91,7 @@ export function BotScoreLegend({
   // when we close it, pop it back down
 
   return (
-    <>
+    <Billboard>
       {!isInStartMenu && (
         <BotScoreInfoCard
           {...{
@@ -151,7 +151,7 @@ export function BotScoreLegend({
 
         <directionalLight position={[-7, 14.28, 12.18]} intensity={5} />
       </animated.mesh>
-    </>
+    </Billboard>
   );
 }
 function AvatarCircle({ lastNode }) {
