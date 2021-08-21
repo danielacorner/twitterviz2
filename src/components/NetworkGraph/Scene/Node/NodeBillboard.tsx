@@ -19,7 +19,7 @@ export default function NodeBillboard({
     if (!ref.current) {
       return;
     }
-    const turnPercent = 0.16;
+    const turnPercent = 0.08;
     const speed = 0.5;
     const roty =
       Math.sin((clock.getElapsedTime() - delay.current) * speed) *

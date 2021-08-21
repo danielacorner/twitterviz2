@@ -11,6 +11,7 @@ import { useSetTooltipNode } from "providers/store/useSelectors";
 import { CAMERA_POSITION } from "utils/constants";
 import { getIsTouchDevice } from "./getIsTouchDevice";
 import { Suspense } from "react";
+import { CameraShake } from "@react-three/drei";
 
 export const GraphStyles = styled.div`
   width: 100%;
@@ -54,6 +55,16 @@ function Graph3D() {
           }}
         >
           <Scene />
+          {/* slow camera shake like waves */}
+          {/* ! doesn't shake Billboard > Html */}
+          {/* <CameraShake
+            maxRoll={0.01}
+            maxPitch={0.005}
+            maxYaw={0.005}
+            yawFrequency={0.1}
+            pitchFrequency={0.1}
+            rollFrequency={0.1}
+          /> */}
         </Canvas>
       </Suspense>
     </Graph3DStyles>

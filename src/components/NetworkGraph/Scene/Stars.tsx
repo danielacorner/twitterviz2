@@ -62,7 +62,7 @@ export function Stars({ count }) {
 
         <meshPhysicalMaterial
           {...{
-            metalness: 0.9,
+            metalness: 0.4,
             transmission: 1,
             roughness: 0,
             envMapIntensity: 4,
