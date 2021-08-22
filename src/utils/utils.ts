@@ -39,3 +39,7 @@ export function useMount(cb: EffectCallback) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   return useEffect(cb, []);
 }
+
+export function randBetween(min, max) {
+  return Math.random() * (max - min) + min;
+}

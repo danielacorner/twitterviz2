@@ -1,10 +1,10 @@
 import { OrbitControls, useDetectGPU, useGLTF } from "@react-three/drei";
 import { useUserNodes } from "../useUserNodes";
 import { Debug, Physics } from "@react-three/cannon";
-import { Node, NODE_RADIUS_COLLISION_MULTIPLIER } from "./Node/Node";
+import { Node } from "./Node/Node";
 import { BotScoreLegendHUD } from "../../Game/GameStateHUD/BotScoreLegend";
 import { useFrame, useThree } from "@react-three/fiber";
-import { CAMERA_POSITION, NODE_RADIUS } from "utils/constants";
+import { CAMERA_POSITION } from "utils/constants";
 import { useSpring } from "react-spring";
 import { Suspense, useEffect, useState } from "react";
 import { useMount } from "utils/utils";
@@ -20,11 +20,8 @@ import { HighScores } from "components/Game/HighScores/HighScores";
 import Background from "./Background";
 import { Effects } from "./Effects/Effects";
 import { useControls } from "leva";
-import { isEqual } from "lodash";
 
-const NODE_WIDTH = NODE_RADIUS * NODE_RADIUS_COLLISION_MULTIPLIER;
 export function Scene() {
-  const nodes = useUserNodes();
   // const vertices = getVertices(nodes.length);
   const { camera } = useThree();
   const [gameState] = useAtom(gameStateAtom);
@@ -45,44 +42,13 @@ export function Scene() {
     config: { tension: 20, mass: 6, friction: 20 },
   });
   // lined up: hide if they don't have a bot score
-  const { viewport } = useThree();
   const gpuInfo = useDetectGPU();
 
   // since we're rendering HUD with priotity > 0,
   // we must explicitly render the scene with a specified priority in its own useFrame
   // https://github.com/pmndrs/react-three-fiber/blob/master/markdown/api.md#useframe
   useFrame(({ gl, scene, camera }) => gl.render(scene, camera), 1);
-  const [isFirstMount, setIsFirstMount] = useState(true);
-  useMount(() => {
-    setIsFirstMount(false);
-  });
-  const areNodesInRandomStartPositions = false;
-  // [GameStepsEnum.welcome, GameStepsEnum.gameOver].includes(gameState.step) ||
-  // isFirstMount;
 
-  const [nodesMemo, setNodesMemo] = useState(nodes);
-  useEffect(() => {
-    const newNodes = nodes.filter(
-      (t) =>
-        !nodesMemo.map((nt) => nt.id_str).includes(t.id_str) ||
-        !nodes.map((nt) => nt.id_str).includes(t.id_str)
-    );
-    console.log("🌟🚨 ~ useEffect ~ newNodes", newNodes);
-    const deletedNodes = nodesMemo.filter(
-      (t) => !nodes.map((nt) => nt.id_str).includes(t.id_str)
-    );
-    if (newNodes.length > 0) {
-      setNodesMemo((prev) => [...prev, ...newNodes]);
-    } else if (deletedNodes.length > 0) {
-      setNodesMemo((prev) =>
-        prev.filter(
-          (t) => !deletedNodes.map((nt) => nt.id_str).includes(t.id_str)
-        )
-      );
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nodes]);
   return (
     <Suspense fallback={null}>
       {/* <ambientLight intensity={0.75} /> */}
@@ -118,40 +84,7 @@ export function Scene() {
       >
         <DebugInDev>
           <Collisions />
-          {nodesMemo.map((node, idx) => {
-            const isEven = idx % 2 === 0;
-            const width = viewport.width / 8;
-
-            let x, y, z;
-            if (areNodesInRandomStartPositions) {
-              // start at random position
-              x = randBetween(-1, 1) * width;
-              z = (randBetween(-1, 1) * viewport.width) / 8;
-              y =
-                randBetween(-1, 1) * NODE_WIDTH * 5 + (isEven ? 1 : -1) * width;
-            } else {
-              // for the rest of the game,
-              // start at ("bubble up" or "emerge from") bottom center
-              const spread = NODE_WIDTH * 2;
-              const newX = 0;
-              const newY = -NODE_WIDTH * 20;
-              const newZ = 0;
-              x = randBetween(newX - spread, newX + spread);
-              y = randBetween(newY - spread, newY + spread);
-              z = randBetween(newZ - spread, newZ + spread);
-            }
-
-            return (
-              <Node
-                key={node.id_str}
-                node={node}
-                startPosition={
-                  [x, y, z]
-                  // vertices[isEven ? idx : vertices.length - idx - 1]
-                }
-              />
-            );
-          })}
+          <Nodes />
         </DebugInDev>
       </Physics>
       <HighScores />
@@ -163,15 +96,48 @@ export function Scene() {
   );
 }
 
+function Nodes() {
+  const nodes = useUserNodes();
+  const { viewport } = useThree();
+
+  const [nodesMemo, setNodesMemo] = useState(nodes);
+  useEffect(() => {
+    const newNodes = nodes.filter(
+      (t) =>
+        !nodesMemo.map((nt) => nt.id_str).includes(t.id_str) ||
+        !nodes.map((nt) => nt.id_str).includes(t.id_str)
+    );
+    console.log("🌟🚨 ~ useEffect ~ newNodes", newNodes);
+    const deletedNodes = nodesMemo.filter(
+      (t) => !nodes.map((nt) => nt.id_str).includes(t.id_str)
+    );
+    if (newNodes.length > 0) {
+      setNodesMemo((prev) => [...prev, ...newNodes]);
+    } else if (deletedNodes.length > 0) {
+      setNodesMemo((prev) =>
+        prev.filter(
+          (t) => !deletedNodes.map((nt) => nt.id_str).includes(t.id_str)
+        )
+      );
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nodes]);
+  return (
+    <>
+      {nodesMemo.map((node, idx) => {
+        return <Node key={node.id_str} node={node} />;
+      })}
+    </>
+  );
+}
+
 export function getHourOfDay() {
   const now = new Date();
   const hours = now.getHours();
   return hours;
 }
 
-function randBetween(min, max) {
-  return Math.random() * (max - min) + min;
-}
 function DebugInDev({ children }) {
   return false && process.env.NODE_ENV !== "production" ? (
     <Debug>{children}</Debug>

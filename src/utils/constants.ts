@@ -73,4 +73,6 @@ export const DISABLE_SELECTION_OF_TEXT_CSS = `
   user-select: none;
 `;
 export const NODE_RADIUS = 2;
-export const CONFIG_FADE_IN = { tension: 30, friction: 30, mass: 2 };
+export const CONFIG_FADE_IN = { tension: 16, friction: 30, mass: 2 };
+export const NODE_RADIUS_COLLISION_MULTIPLIER = 2.5;
+export const NODE_WIDTH = NODE_RADIUS * NODE_RADIUS_COLLISION_MULTIPLIER;

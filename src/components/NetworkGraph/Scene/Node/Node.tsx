@@ -20,18 +20,29 @@ import NodeBillboard from "./NodeBillboard";
 import { useGravity } from "../useGravity";
 import { useSpring, animated } from "@react-spring/three";
 import { NodeBotScoreAntenna } from "./NodeBotScoreAntenna";
-import { CONFIG_FADE_IN, NODE_RADIUS } from "utils/constants";
+import {
+  CONFIG_FADE_IN,
+  NODE_RADIUS,
+  NODE_RADIUS_COLLISION_MULTIPLIER,
+  NODE_WIDTH,
+} from "utils/constants";
 import { ScoreIncreasedPopupText } from "./ScoreIncreasedPopupText";
-import { useState } from "react";
-import { useMount } from "utils/utils";
+import { useRef, useState } from "react";
 import { ScanningAnimation } from "./ScanningAnimation";
 import { MeshWobbleMaterial } from "@react-three/drei";
 import { useControls } from "leva";
 import { useMounted, useWhyDidYouUpdate } from "utils/hooks";
-
-export const NODE_RADIUS_COLLISION_MULTIPLIER = 2.5;
+import { randBetween } from "utils/utils";
 
 const defaultNodeMaterial = new THREE.MeshPhysicalMaterial({
+  emissive: "#0b152f",
+  metalness: 0.97,
+  transmission: 1,
+  roughness: 0,
+  envMapIntensity: 4,
+  // color: "#316c83",
+});
+const opacityMaterial = new THREE.MeshPhysicalMaterial({
   emissive: "#0b152f",
   metalness: 0.97,
   transmission: 1,
@@ -76,12 +87,20 @@ const nodeGeometry = new THREE.SphereGeometry(NODE_RADIUS, 28, 28);
 export const Node = ({
   vec = new THREE.Vector3(),
   node,
-  startPosition,
 }: {
   vec?: any;
   node: UserNode;
-  startPosition: [number, number, number];
 }) => {
+  // start at ("bubble up" or "emerge from") bottom center
+  const spread = NODE_WIDTH * 2;
+  const newX = 0;
+  const newY = -NODE_WIDTH * 20;
+  const newZ = 0;
+  const x = randBetween(newX - spread, newX + spread);
+  const y = randBetween(newY - spread, newY + spread);
+  const z = randBetween(newZ - spread, newZ + spread);
+
+  const startPosition = useRef([x, y, z]).current;
   const tooltipNode = useTooltipNode();
 
   const [scanningNodeId] = useAtom(scanningNodeIdAtom);
@@ -142,7 +161,7 @@ export const Node = ({
 
   const [ref, api] = useSphere(() => ({
     mass: 1,
-    position: startPosition,
+    position: startPosition as any,
     // position: getRandomPosition(-5 * RADIUS, 5 * RADIUS),
     // type: !paused ? "Dynamic" : "Static",
     // https://threejs.org/docs/scenes/geometry-browser.html#IcosahedronBufferGeometry
@@ -289,7 +308,11 @@ export function NodeContent({
   const hasBotScore = Boolean(node.user.botScore);
   const isNotABot = node.user.isNotABot;
 
-  const material = isScanningNode
+  const [doneAnimating, setDoneAnimating] = useState(false);
+
+  const material = !doneAnimating
+    ? opacityMaterial
+    : isScanningNode
     ? null
     : isRightClickingThisNode
     ? rightClickNodeMaterial
@@ -306,6 +329,9 @@ export function NodeContent({
   // fade in on mount
   const springProps = useSpring({
     opacity: mounted ? 1 : 0,
+    onRest() {
+      setDoneAnimating(true);
+    },
     config: CONFIG_FADE_IN,
   });
 

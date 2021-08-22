@@ -72,8 +72,8 @@ export default function TagTheBotButton() {
   }
 
   function setNotABot(node: Tweet) {
-    setTweets(
-      tweets.map((t) =>
+    setTweets((prev) =>
+      prev.map((t) =>
         t.id_str === node.id_str
           ? {
               ...node,
