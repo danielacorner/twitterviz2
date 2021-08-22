@@ -22,12 +22,11 @@ export function useFetchAndReplaceNode() {
     lastTimeMonthlyTwitterApiUsageWasExceededAtom
   );
 
-  return async (tweet: Tweet): Promise<Tweet[] | null> => {
+  return async (tweet: Tweet): Promise<void> => {
     if (!tweet) {
-      return null;
+      return;
     }
     // replace with N new tweets
-    const filteredTweets = tweets.filter((t) => t.id_str !== tweet.id_str);
 
     // if we still have stream API usage remaining
     if (!lastTimeMonthlyTwitterApiUsageWasExceeded) {
@@ -35,9 +34,13 @@ export function useFetchAndReplaceNode() {
         `${SERVER_URL}/api/stream?num=${numNewTweets}&filterLevel=${FILTER_LEVELS.low}`
       );
       const responseTweets = await resp.json();
-      const newTweets = [...filteredTweets, ...responseTweets];
-      setTweets(newTweets);
-      return newTweets;
+      setTweets((p) =>
+        p
+          .map((t) => (t.id_str === tweet.id_str ? (null as any) : t))
+          .filter(Boolean)
+          .concat(responseTweets)
+      );
+      return;
     } else {
       // else fetch from the DB
 
@@ -63,10 +66,14 @@ export function useFetchAndReplaceNode() {
         0,
         numNewTweets
       );
-      const newTweets = [...filteredTweets, ...randomDedupedTweets];
-      setTweets(newTweets);
+      setTweets((p) =>
+        p
+          .map((t) => (t.id_str === tweet.id_str ? (null as any) : t))
+          .filter(Boolean)
+          .concat(randomDedupedTweets)
+      );
 
-      return randomDedupedTweets;
+      return;
     }
   };
 }

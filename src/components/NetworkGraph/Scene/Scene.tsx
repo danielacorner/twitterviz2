@@ -6,7 +6,7 @@ import { BotScoreLegendHUD } from "../../Game/GameStateHUD/BotScoreLegend";
 import { useFrame, useThree } from "@react-three/fiber";
 import { CAMERA_POSITION, NODE_RADIUS } from "utils/constants";
 import { useSpring } from "react-spring";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useMount } from "utils/utils";
 import { Stars } from "./Stars";
 import {
@@ -20,6 +20,7 @@ import { HighScores } from "components/Game/HighScores/HighScores";
 import Background from "./Background";
 import { Effects } from "./Effects/Effects";
 import { useControls } from "leva";
+import { isEqual } from "lodash";
 
 const NODE_WIDTH = NODE_RADIUS * NODE_RADIUS_COLLISION_MULTIPLIER;
 export function Scene() {
@@ -59,6 +60,29 @@ export function Scene() {
   // [GameStepsEnum.welcome, GameStepsEnum.gameOver].includes(gameState.step) ||
   // isFirstMount;
 
+  const [nodesMemo, setNodesMemo] = useState(nodes);
+  useEffect(() => {
+    const newNodes = nodes.filter(
+      (t) =>
+        !nodesMemo.map((nt) => nt.id_str).includes(t.id_str) ||
+        !nodes.map((nt) => nt.id_str).includes(t.id_str)
+    );
+    console.log("🌟🚨 ~ useEffect ~ newNodes", newNodes);
+    const deletedNodes = nodesMemo.filter(
+      (t) => !nodes.map((nt) => nt.id_str).includes(t.id_str)
+    );
+    if (newNodes.length > 0) {
+      setNodesMemo((prev) => [...prev, ...newNodes]);
+    } else if (deletedNodes.length > 0) {
+      setNodesMemo((prev) =>
+        prev.filter(
+          (t) => !deletedNodes.map((nt) => nt.id_str).includes(t.id_str)
+        )
+      );
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nodes]);
   return (
     <Suspense fallback={null}>
       {/* <ambientLight intensity={0.75} /> */}
@@ -94,7 +118,7 @@ export function Scene() {
       >
         <DebugInDev>
           <Collisions />
-          {nodes.map((node, idx) => {
+          {nodesMemo.map((node, idx) => {
             const isEven = idx % 2 === 0;
             const width = viewport.width / 8;
 

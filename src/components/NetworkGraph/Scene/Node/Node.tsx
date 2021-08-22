@@ -27,7 +27,7 @@ import { useMount } from "utils/utils";
 import { ScanningAnimation } from "./ScanningAnimation";
 import { MeshWobbleMaterial } from "@react-three/drei";
 import { useControls } from "leva";
-import { useMounted } from "utils/hooks";
+import { useMounted, useWhyDidYouUpdate } from "utils/hooks";
 
 export const NODE_RADIUS_COLLISION_MULTIPLIER = 2.5;
 
@@ -151,10 +151,7 @@ export const Node = ({
 
   useGravity(api, vec);
 
-  const [mounted, setMounted] = useState(false);
-  useMount(() => {
-    setMounted(true);
-  });
+  const mounted = useMounted();
 
   // hide nodes when the game ends
   const hide = (useAreBotsLinedUp() && !node.user.botScore) || !mounted;
@@ -281,6 +278,14 @@ export function NodeContent({
   isRightClickingThisNode: boolean;
   forceOpaque?: boolean;
 }) {
+  useWhyDidYouUpdate("NodeContent", {
+    node,
+    isTooltipNode,
+    isPointerOver,
+    isScanningNode,
+    isRightClickingThisNode,
+    forceOpaque,
+  });
   const hasBotScore = Boolean(node.user.botScore);
   const isNotABot = node.user.isNotABot;
 
