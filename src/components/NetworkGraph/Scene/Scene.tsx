@@ -4,6 +4,7 @@ import { Debug, Physics } from "@react-three/cannon";
 import { Node } from "./Node/Node";
 import { BotScoreLegendHUD } from "../../Game/GameStateHUD/BotScoreLegend";
 import { useFrame, useThree } from "@react-three/fiber";
+import { animated } from "@react-spring/three";
 import { CAMERA_POSITION } from "utils/constants";
 import { useSpring } from "react-spring";
 import { Suspense, useEffect, useState } from "react";
@@ -20,6 +21,7 @@ import { HighScores } from "components/Game/HighScores/HighScores";
 import Background from "./Background";
 import { Effects } from "./Effects/Effects";
 import { useControls } from "leva";
+import { useHoverAnimation } from "./useHoverAnimation";
 
 export function Scene() {
   // const vertices = getVertices(nodes.length);
@@ -179,8 +181,10 @@ function GLTFModel() {
   const { viewport } = useThree();
   console.log("🌟🚨 ~ GLTFModel ~ viewport", viewport);
   const { scale } = useControls({ scale: 6 });
+  const hoverAnimationRef = useHoverAnimation();
+
   return (
-    <mesh>
+    <animated.mesh ref={hoverAnimationRef}>
       <primitive
         scale={0.01 * scale}
         position={[1.09, -38.44, -6.45]}
@@ -188,6 +192,6 @@ function GLTFModel() {
         //  material={nodes.ATP___Gaussian_surface.material}
         //  geometry={nodes.ATP___Gaussian_surface.geometry}
       />
-    </mesh>
+    </animated.mesh>
   );
 }
