@@ -19,6 +19,7 @@ import { Collisions } from "./Collisions";
 import { HighScores } from "components/Game/HighScores/HighScores";
 import Background from "./Background";
 import { Effects } from "./Effects/Effects";
+import { useControls } from "leva";
 
 const NODE_WIDTH = NODE_RADIUS * NODE_RADIUS_COLLISION_MULTIPLIER;
 export function Scene() {
@@ -54,9 +55,9 @@ export function Scene() {
   useMount(() => {
     setIsFirstMount(false);
   });
-  const areNodesInRandomStartPositions =
-    [GameStepsEnum.welcome, GameStepsEnum.gameOver].includes(gameState.step) ||
-    isFirstMount;
+  const areNodesInRandomStartPositions = false;
+  // [GameStepsEnum.welcome, GameStepsEnum.gameOver].includes(gameState.step) ||
+  // isFirstMount;
 
   return (
     <Suspense fallback={null}>
@@ -185,10 +186,13 @@ function degToRad(deg) {
 
 function GLTFModel() {
   const gltf = useGLTF("/sea_life_challenge_pack/scene.gltf");
+  const { viewport } = useThree();
+  console.log("🌟🚨 ~ GLTFModel ~ viewport", viewport);
+  const { scale } = useControls({ scale: 6 });
   return (
     <mesh>
       <primitive
-        scale={0.05}
+        scale={0.01 * scale}
         position={[1.09, -38.44, -6.45]}
         object={gltf.scene}
         //  material={nodes.ATP___Gaussian_surface.material}

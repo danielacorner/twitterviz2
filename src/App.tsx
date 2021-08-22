@@ -19,9 +19,7 @@ function App() {
   return (
     <AppStyles className="App">
       {/* {process.env.NODE_ENV !== "production" && <NavBar />} */}
-      <RowDiv>
-        <NetworkGraph />
-      </RowDiv>
+      <NetworkGraph />
       {process.env.NODE_ENV !== "production" && <LeftDrawerCollapsible />}
       {/* <SelectedTweetModal /> */}
       <AppStylesHooks />

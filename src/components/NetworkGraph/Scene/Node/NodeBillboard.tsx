@@ -1,17 +1,13 @@
 import styled from "styled-components/macro";
 import { Html, Billboard } from "@react-three/drei";
-import { DISABLE_SELECTION_OF_TEXT_CSS } from "utils/constants";
+import { CONFIG_FADE_IN, DISABLE_SELECTION_OF_TEXT_CSS } from "utils/constants";
 import { UserNode } from "components/NetworkGraph/useUserNodes";
 import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
+import { animated, useSpring } from "react-spring";
+import { useMounted } from "utils/hooks";
 
-export default function NodeBillboard({
-  node,
-  hasBotScore,
-}: {
-  node: UserNode;
-  hasBotScore: boolean;
-}) {
+export default function NodeBillboard({ node }: { node: UserNode }) {
   // slowly randomly rotate the billboard content
   const delay = useRef(Math.random() * Math.PI);
   const ref = useRef(null as any);
@@ -27,6 +23,14 @@ export default function NodeBillboard({
       turnPercent;
     ref.current.rotation.y = roty;
   });
+
+  const mounted = useMounted();
+
+  // fade in on mount
+  const springOpacity = useSpring({
+    opacity: mounted ? 1 : 0,
+    config: CONFIG_FADE_IN,
+  });
   return (
     <Billboard {...({} as any)}>
       <mesh ref={ref}>
@@ -41,7 +45,7 @@ export default function NodeBillboard({
             opacity: 0.8,
           }}
         >
-          <HtmlStyles>
+          <AnimatedHtmlStyles style={springOpacity}>
             <AvatarStyles>
               <img
                 src={
@@ -52,14 +56,14 @@ export default function NodeBillboard({
               />
             </AvatarStyles>
             {/* <TweetsColumn {...{ hasBotScore, tweets, isLight, originalPoster }} /> */}
-          </HtmlStyles>
+          </AnimatedHtmlStyles>
         </Html>
       </mesh>
     </Billboard>
   );
 }
 
-const HtmlStyles = styled.div`
+const AnimatedHtmlStyles = styled(animated.div)`
   pointer-events: none;
   ${DISABLE_SELECTION_OF_TEXT_CSS}
   position: relative;

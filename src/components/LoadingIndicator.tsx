@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components/macro";
 import { useLoading } from "../providers/store/useSelectors";
 import { Canvas } from "@react-three/fiber";
@@ -6,8 +6,17 @@ import { animated, useSpring } from "@react-spring/three";
 import { useMount } from "utils/utils";
 import { LinearProgress } from "@material-ui/core";
 import { WAIT_FOR_STREAM_TIMEOUT } from "utils/constants";
+import { useInterval } from "utils/useInterval";
 
 export function LoadingIndicator() {
+  return (
+    <>
+      <LinearProgressIndicator />
+      <LoadingSpinner3D />
+    </>
+  );
+}
+function LoadingSpinner3D() {
   const isLoading = useLoading();
 
   const springProps = useSpring({
@@ -26,7 +35,8 @@ export function LoadingIndicator() {
       setStep(1);
     }, 500);
   });
-
+  const ref = useRef(null as any);
+  const [color, setColor] = useState(`hsl(0,0%,0%)`);
   const initial = (Math.PI / 180) * 30;
   const springSpin = useSpring({
     rotation:
@@ -39,31 +49,52 @@ export function LoadingIndicator() {
         : step === 3
         ? [2 * Math.PI * x2 + initial, 2 * Math.PI * y2, 2 * Math.PI * z2]
         : [2 * Math.PI * x2 + initial, 2 * Math.PI * y2, 2 * Math.PI * z2],
+    color,
     delay: 500,
     onRest: () => {
       setPos2([Math.random(), Math.random(), Math.random()]);
       const isLastStep = step === 3;
       setStep(isLastStep ? 0 : step + 1);
     },
+
     config: { tension: 300, mass: 30, friction: 170 },
   });
+  // const { color } = useControls({ color: "#5a8694" });
+
+  // change the colour every so often
+  const [intervalMs, setIntervalMs] = useState(2500);
+  useInterval({
+    callback: () => {
+      const hue = Math.floor(Math.random() * 360);
+      setColor(`hsl(${hue},100%,60%)`);
+    },
+    delay: intervalMs,
+    immediate: false,
+  });
+  // change the interval each time
+  useEffect(() => {
+    setIntervalMs(Math.random() * 8000 + 1000);
+  }, [isLoading]);
+
   return (
-    <>
-      <LinearProgressIndicator />
-      <LoadingIndicatorStyles>
-        <Canvas style={{ width: "100%", height: 180 }}>
-          <animated.mesh
-            {...(springProps as any)}
-            rotation={springSpin.rotation as any}
-          >
-            <icosahedronBufferGeometry args={[1, 0]} />
-            <meshBasicMaterial wireframe={true} color={"#5a8694"} />
-          </animated.mesh>
-        </Canvas>
-      </LoadingIndicatorStyles>
-    </>
+    <LoadingIndicatorStyles>
+      <Canvas style={{ width: "100%", height: 180 }}>
+        <animated.mesh
+          ref={ref}
+          {...(springProps as any)}
+          rotation={springSpin.rotation as any}
+        >
+          <icosahedronBufferGeometry args={[1, 0]} />
+          <animated.meshBasicMaterial
+            wireframe={true}
+            color={springSpin.color}
+          />
+        </animated.mesh>
+      </Canvas>
+    </LoadingIndicatorStyles>
   );
 }
+
 function LinearProgressIndicator() {
   const isLoading = useLoading();
 

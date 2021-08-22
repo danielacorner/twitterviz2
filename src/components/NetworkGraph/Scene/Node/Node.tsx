@@ -20,12 +20,14 @@ import NodeBillboard from "./NodeBillboard";
 import { useGravity } from "../useGravity";
 import { useSpring, animated } from "@react-spring/three";
 import { NodeBotScoreAntenna } from "./NodeBotScoreAntenna";
-import { NODE_RADIUS } from "utils/constants";
+import { CONFIG_FADE_IN, NODE_RADIUS } from "utils/constants";
 import { ScoreIncreasedPopupText } from "./ScoreIncreasedPopupText";
 import { useState } from "react";
 import { useMount } from "utils/utils";
 import { ScanningAnimation } from "./ScanningAnimation";
 import { MeshWobbleMaterial } from "@react-three/drei";
+import { useControls } from "leva";
+import { useMounted } from "utils/hooks";
 
 export const NODE_RADIUS_COLLISION_MULTIPLIER = 2.5;
 
@@ -159,7 +161,8 @@ export const Node = ({
 
   const isNotABot = node.user.isNotABot;
 
-  const scaleMult = isNotABot ? 0 : 1;
+  const { scale2 } = useControls({ scale2: 1 });
+  const scaleMult = isNotABot ? 0 : scale2;
 
   const isScanningNode = scanningNodeId === node.id_str;
 
@@ -292,14 +295,25 @@ export function NodeContent({
     : isTooltipNode
     ? tooltipNodeMaterial
     : defaultNodeMaterial;
+
+  const mounted = useMounted();
+
+  // fade in on mount
+  const springProps = useSpring({
+    opacity: mounted ? 1 : 0,
+    config: CONFIG_FADE_IN,
+  });
+
   return (
     <>
       {isScanningNode && <ScanningNodeAnimation />}
       {isScanningNode ? null : (
-        <mesh
+        <animated.mesh
           {...(material ? { material } : {})}
           geometry={nodeGeometry}
-        ></mesh>
+          material-transparent={true}
+          material-opacity={springProps.opacity}
+        ></animated.mesh>
       )}
       {node.user.botScore ? (
         <>
@@ -316,7 +330,6 @@ export function NodeContent({
         <NodeBillboard
           {...{
             node,
-            hasBotScore,
           }}
         />
       ) : null}

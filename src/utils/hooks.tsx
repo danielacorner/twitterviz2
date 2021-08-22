@@ -15,6 +15,7 @@ import { geoDistanceKm } from "./distanceFromCoords";
 import { Tweet } from "../types";
 import { getFavorites } from "../components/common/BtnFavorite";
 import { uniq } from "lodash";
+import { useMount } from "./utils";
 
 export function useFetchTweetsByIds(): (ids: string[]) => void {
   const setLoading = useSetLoading();
@@ -275,3 +276,10 @@ export const getIsRetweetLink = ({ source, target }) => {
 export const getIsTweetToRetweetLink = ({ source, target }) => {
   return !source.isUserNode && target.isOriginalNode;
 };
+export function useMounted() {
+  const [mounted, setMounted] = useState(false);
+  useMount(() => {
+    setMounted(true);
+  });
+  return mounted;
+}
