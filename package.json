@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.4.1",
+    "@craco/craco": "^6.2.0",
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.60",
@@ -71,6 +72,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.14.8",
+    "@babel/preset-env": "^7.15.0",
     "@material-ui/types": "^5.1.0",
     "@types/d3": "^5.7.2",
     "@types/lodash": "^4.14.171",
@@ -97,12 +99,12 @@
     "**/@typescript-eslint/parser": "^4.1.1"
   },
   "scripts": {
-    "client": "react-scripts start",
-    "server": "cd twit && npm run start",
+    "client": "craco start",
+    "build": "craco build",
+    "test": "craco test",
     "start": "npm run dev",
+    "server": "cd twit && npm run start",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
     "eject": "react-scripts eject",
     "generate": "node ./twit/index.js \"./src/tweets.json\"",
     "codegen": "graphql-codegen --config codegen.yml",

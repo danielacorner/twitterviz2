@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 
 import { Button, Tooltip } from "@material-ui/core";
 import { useFetchTimeline } from "../../utils/hooks";

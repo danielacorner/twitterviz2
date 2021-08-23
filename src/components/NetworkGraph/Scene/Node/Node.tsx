@@ -33,6 +33,7 @@ import { MeshWobbleMaterial } from "@react-three/drei";
 import { useControls } from "leva";
 import { useMounted, useWhyDidYouUpdate } from "utils/hooks";
 import { randBetween } from "utils/utils";
+import { useHoverAnimation } from "../useHoverAnimation";
 
 const defaultNodeMaterial = new THREE.MeshPhysicalMaterial({
   emissive: "#0b152f",
@@ -312,14 +313,14 @@ export function NodeContent({
 
   const material = !doneAnimating
     ? opacityMaterial
+    : isNotABot
+    ? notABotMaterial
     : isScanningNode
     ? null
     : isRightClickingThisNode
     ? rightClickNodeMaterial
     : isPointerOver && isTooltipNode
     ? pointerOverMaterial
-    : isNotABot
-    ? notABotMaterial
     : isTooltipNode
     ? tooltipNodeMaterial
     : defaultNodeMaterial;
@@ -333,37 +334,52 @@ export function NodeContent({
       setDoneAnimating(true);
     },
     config: CONFIG_FADE_IN,
+    clamp: true,
+  });
+  const hoverAnimationRef = useHoverAnimation({
+    deltaX: 0.5,
+    deltaY: 0.03,
+    randomize: true,
   });
 
+  // const { deltaX, deltaY } = useControls({ deltaX: 1, deltaY: 1 });
+  const hoverAnimationRefWave = useHoverAnimation({
+    deltaX: 0.7,
+    deltaY: 0.7,
+  });
   return (
     <>
       {isScanningNode && <ScanningNodeAnimation />}
-      {isScanningNode ? null : (
-        <animated.mesh
-          {...(material ? { material } : {})}
-          geometry={nodeGeometry}
-          material-transparent={true}
-          material-opacity={springProps.opacity}
-        ></animated.mesh>
-      )}
-      {node.user.botScore ? (
-        <>
-          <NodeBotScoreAntenna
-            {...{ botScore: node.user.botScore, forceOpaque }}
-          />
-          <ScoreIncreasedPopupText
-            isMounted={hasBotScore}
-            {...{ botScore: node.user.botScore }}
-          />
-        </>
-      ) : null}
-      {node ? (
-        <NodeBillboard
-          {...{
-            node,
-          }}
-        />
-      ) : null}
+      <animated.mesh ref={hoverAnimationRefWave}>
+        <animated.mesh ref={hoverAnimationRef}>
+          {isScanningNode ? null : (
+            <animated.mesh
+              {...(material ? { material } : {})}
+              geometry={nodeGeometry}
+              material-transparent={true}
+              material-opacity={springProps.opacity}
+            ></animated.mesh>
+          )}
+          {node.user.botScore ? (
+            <>
+              <NodeBotScoreAntenna
+                {...{ botScore: node.user.botScore, forceOpaque }}
+              />
+              <ScoreIncreasedPopupText
+                isMounted={hasBotScore}
+                {...{ botScore: node.user.botScore }}
+              />
+            </>
+          ) : null}
+          {node ? (
+            <NodeBillboard
+              {...{
+                node,
+              }}
+            />
+          ) : null}
+        </animated.mesh>
+      </animated.mesh>
     </>
   );
 }

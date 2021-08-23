@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import {
   Bloom,
   DepthOfField,
@@ -10,13 +10,14 @@ import {
 import { BlendFunction, Resizer, KernelSize } from "postprocessing";
 import { Sun } from "../Sun";
 import { useDetectGPU } from "@react-three/drei";
-import { extend, useLoader, useThree } from "@react-three/fiber";
+import { extend, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { LUTPass } from "three/examples/jsm/postprocessing/LUTPass";
 import { LUTCubeLoader } from "three/examples/jsm/loaders/LUTCubeLoader";
 import { useControls } from "leva";
 import { useAtom } from "jotai";
 import { scanningNodeIdAtom } from "providers/store/store";
-extend({ LUTPass });
+import { NewWaterPass } from "./NewWaterPass";
+import { WaterPassEffect } from "./WaterPass";
 
 export function Effects() {
   const sun = useRef(null);
@@ -29,13 +30,28 @@ export function Effects() {
     bokehScale: 2,
   });
   const [scanningNodeId] = useAtom(scanningNodeIdAtom);
-
+  const composer = useRef();
+  const { scene, gl, size, camera } = useThree();
+  // const waterpassRef = useRef();
+  // useEffect(() => {
+  //   if (!composer.current) {
+  //     return;
+  //   }
+  //   void composer.current.setSize(size.width, size.height);
+  // }, [size]);
+  // useFrame(() => {
+  //   if (!waterpassRef.current) {
+  //     return;
+  //   }
+  //   waterpassRef.current.factor += (1 - waterpassRef.current.factor) * 0.01;
+  //   composer.current.render();
+  // }, 2);
   const isScanning = Boolean(scanningNodeId);
   return gpuInfo.tier > 2 ? (
     <>
       <Sun ref={sun} />
       {sun.current && (
-        <EffectComposer multisampling={0} renderPriority={1}>
+        <EffectComposer ref={composer} multisampling={0} renderPriority={1}>
           {/* react-postprocessing docs https://github.com/pmndrs/react-postprocessing/blob/master/api.md */}
           {/* postprocessing docs https://vanruesc.github.io/postprocessing/public/docs/ */}
           <GodRays
@@ -65,6 +81,7 @@ export function Effects() {
             intensity={0.5}
           />
           <Vignette />
+          {/* <WaterPassEffect ref={waterpassRef} /> */}
           {/* <StereoEffect /> */}
           {/* <lUTPass attachArray="passes" lut={texture3D} /> */}
         </EffectComposer>

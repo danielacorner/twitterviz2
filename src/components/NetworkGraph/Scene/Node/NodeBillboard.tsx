@@ -30,6 +30,7 @@ export default function NodeBillboard({ node }: { node: UserNode }) {
   const springOpacity = useSpring({
     opacity: mounted ? 1 : 0,
     config: CONFIG_FADE_IN,
+    clamp: true,
   });
   return (
     <Billboard {...({} as any)}>

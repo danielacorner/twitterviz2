@@ -26,6 +26,11 @@ export function useFetchAndReplaceNode() {
     if (!tweet) {
       return;
     }
+    // set the tweet to "not a bot" immediately
+    setTweets((p) =>
+      p.map((t) => (t.id_str === tweet.id_str ? { ...t, isNotABot: true } : t))
+    );
+
     // replace with N new tweets
 
     // if we still have stream API usage remaining
@@ -66,12 +71,16 @@ export function useFetchAndReplaceNode() {
         0,
         numNewTweets
       );
-      setTweets((p) =>
-        p
-          .map((t) => (t.id_str === tweet.id_str ? (null as any) : t))
-          .filter(Boolean)
-          .concat(randomDedupedTweets)
-      );
+
+      // ? wait for animation
+      setTimeout(() => {
+        setTweets((p) =>
+          p
+            .map((t) => (t.id_str === tweet.id_str ? (null as any) : t))
+            .filter(Boolean)
+            .concat(randomDedupedTweets)
+        );
+      }, 350);
 
       return;
     }
