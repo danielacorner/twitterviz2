@@ -290,6 +290,7 @@ export function NodeContent({
   isScanningNode,
   isRightClickingThisNode,
   forceOpaque = false,
+  brightenBalls = false,
   isPopupNode = false,
 }: {
   node: UserNode;
@@ -298,16 +299,9 @@ export function NodeContent({
   isScanningNode: boolean;
   isRightClickingThisNode: boolean;
   forceOpaque?: boolean;
+  brightenBalls?: boolean;
   isPopupNode?: boolean;
 }) {
-  useWhyDidYouUpdate("NodeContent", {
-    node,
-    isTooltipNode,
-    isPointerOver,
-    isScanningNode,
-    isRightClickingThisNode,
-    forceOpaque,
-  });
   const hasBotScore = Boolean(node.user.botScore);
   const isNotABot = node.user.isNotABot;
 
@@ -338,6 +332,7 @@ export function NodeContent({
       setDoneAnimating(true);
     },
     config: CONFIG_FADE_IN,
+    immediate: isPopupNode,
     clamp: true,
   });
   const hoverAnimationRef = useHoverAnimation({
@@ -367,7 +362,11 @@ export function NodeContent({
           {node.user.botScore ? (
             <>
               <NodeBotScoreAntenna
-                {...{ botScore: node.user.botScore, forceOpaque }}
+                {...{
+                  botScore: node.user.botScore,
+                  forceOpaque,
+                  brightenBalls,
+                }}
               />
               <ScoreIncreasedPopupText
                 isMounted={hasBotScore}

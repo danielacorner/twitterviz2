@@ -1,3 +1,4 @@
+import styled from "styled-components/macro";
 import { useLatestTaggedNode } from "components/NetworkGraph/Scene/Node/useLatestTaggedNode";
 import { Box, Html, RoundedBox, Text } from "@react-three/drei";
 import { useControls } from "leva";
@@ -23,6 +24,8 @@ import { useAtom } from "jotai";
 import { useSetNodesInDbForUser } from "providers/faunaProvider";
 import { useTweets } from "providers/store/useSelectors";
 import { BOT_SCORE_POPUP_TIMEOUT } from "../TagTheBotButton";
+import { IconButton } from "@material-ui/core";
+import { Close } from "@material-ui/icons";
 
 export function BotScoreInfoCard({
   set,
@@ -51,52 +54,47 @@ export function BotScoreInfoCard({
 
   // Create a gesture that contains drag and hover, set the spring accordingly
   const { size } = useThree();
-
-  const bind = useGesture({
-    onDrag: ({ event, delta, ...rest }) => {
-      if (!lastNode) {
-        return;
-      }
-      const dy = (-delta[1] / size.height) * 25;
-      const newY = Math.min(INFO_CARD_MAX_Y, currentY.current + dy);
-      currentY.current = newY;
-      set({
-        position: [0, newY, 0],
-      });
-      if (newY <= INFO_CARD_MIN_Y) {
-        // close the popup
-        currentY.current = INFO_CARD_INITIAL_Y;
-        set({ position: [0, INFO_CARD_INITIAL_Y, 0] });
-        setCurrentYActual(INFO_CARD_INITIAL_Y);
-        clearLastNode();
-        // game over if 0 shots remaining
-        if (shotsRemaining === 0) {
-          setTimeout(endGame, BOT_SCORE_POPUP_TIMEOUT);
-        }
-      }
-    },
-    onHover: ({ hovering }) =>
-      set({ scale: hovering ? [1.05, 1.05, 1.05] : [1, 1, 1] }),
-  });
+  function handleCloseBotScoreInfoCard() {
+    // close the popup
+    currentY.current = INFO_CARD_INITIAL_Y;
+    set({ position: [0, INFO_CARD_INITIAL_Y, 0] });
+    setCurrentYActual(INFO_CARD_INITIAL_Y);
+    clearLastNode();
+    // game over if 0 shots remaining
+    if (shotsRemaining === 0) {
+      setTimeout(endGame, BOT_SCORE_POPUP_TIMEOUT);
+    }
+  }
+  // const bind = useGesture({
+  //   onDrag: ({ event, delta, ...rest }) => {
+  //     if (!lastNode) {
+  //       return;
+  //     }
+  //     const dy = (-delta[1] / size.height) * 25;
+  //     const newY = Math.min(INFO_CARD_MAX_Y, currentY.current + dy);
+  //     currentY.current = newY;
+  //     set({
+  //       position: [0, newY, 0],
+  //     });
+  //     if (newY <= INFO_CARD_MIN_Y) {
+  //       handleCloseBotScoreInfoCard();
+  //     }
+  //   },
+  //   onHover: ({ hovering }) =>
+  //     set({ scale: hovering ? [1.05, 1.05, 1.05] : [1, 1, 1] }),
+  // });
 
   const {
     x,
-    x3,
     x4,
     y,
     y2,
-    y3,
-    y4,
     z,
     sx,
     sy,
     sz,
     fontSize,
-    fontSize2,
-    fontSize3,
-    fontColor,
     metalness,
-    maxWidth,
     color,
     clearcoat,
     roughness,
@@ -110,20 +108,13 @@ export function BotScoreInfoCard({
     sy: -2.77,
     sz: 0.16,
     fontSize: 0.37,
-    fontColor: "#cbebec",
-    fontSize2: 0.24,
-    fontSize3: 0.18,
     legendHeight: 0,
     metalness: 0.36,
     roughness: 0.62,
     clearcoat: 0,
-    maxWidth: 3.2,
     color: "#000000",
-    x3: 1.15,
     x4: 2.85,
     y2: -0.42,
-    y3: -1.69,
-    y4: -2.3,
     sqRadius: 0.04,
     sqSmoothness: 4,
   });
@@ -135,15 +126,14 @@ export function BotScoreInfoCard({
     : { botTypeText: null, botTypeInfo: null };
 
   return (
-    /* !lastNode ? null : */
     <animated.mesh
       position={springProps.position as any}
       scale={springProps.scale as any}
     >
-      <Html>
+      {/* <Html>
         {createPortal(
           <div
-            {...bind()}
+            // {...bind()}
             style={{
               position: "fixed",
               bottom: currentYActual * 100,
@@ -159,7 +149,7 @@ export function BotScoreInfoCard({
           </div>,
           document.body
         )}
-      </Html>
+      </Html> */}
       {/* Card box */}
       <mesh position={[x, y, z]} receiveShadow={true}>
         <RoundedBox
@@ -177,6 +167,13 @@ export function BotScoreInfoCard({
       </mesh>
       {latestBotScore && (
         <>
+          <HtmlBotScoreInfoOverlay
+            {...{
+              botTypeText,
+              botTypeInfo,
+              handleCloseBotScoreInfoCard,
+            }}
+          />
           <Text
             position={[x4, y2, z + 0.15]}
             color={colorByBotScore}
@@ -191,36 +188,6 @@ export function BotScoreInfoCard({
           >
             +{getScoreFromBotScore(latestBotScore).scoreIncrease}
           </Text>
-          <Text
-            position={[x3, y3, z + 0.15]}
-            color={fontColor}
-            fontSize={fontSize2}
-            maxWidth={maxWidth}
-            lineHeight={1.3}
-            letterSpacing={0.02}
-            textAlign={"left"}
-            anchorX="center"
-            anchorY="middle"
-          >
-            {lastNode?.user.screen_name} {botTypeText}
-          </Text>
-          {botTypeInfo && (
-            <Text
-              position={[x3, y4, z + 0.15]}
-              color={fontColor}
-              fontSize={fontSize3}
-              maxWidth={maxWidth}
-              lineHeight={1.3}
-              letterSpacing={0.02}
-              textAlign={"left"}
-              anchorX="center"
-              anchorY="middle"
-            >
-              {"("}
-              {botTypeInfo}
-              {")"}
-            </Text>
-          )}
         </>
       )}
     </animated.mesh>
@@ -287,3 +254,79 @@ function getMostLikelyBotTypeText(botScore: BotScore) {
 
   return { botTypeText, botTypeInfo };
 }
+
+const PADDING = 20;
+const WIDTH = 350;
+const HEIGHT = 150;
+const TRANSFORM = false;
+const mu = TRANSFORM ? 0.1 : 1;
+function HtmlBotScoreInfoOverlay({
+  botTypeText,
+  botTypeInfo,
+  handleCloseBotScoreInfoCard,
+}) {
+  const { lastNode } = useLatestTaggedNode();
+  const { fx, fy, fz } = useControls({ fx: 0, fy: 0, fz: 0 });
+  return (
+    <Html
+      // occlude={[]}
+      transform={TRANSFORM}
+      position={[fx, fy, fz]}
+      calculatePosition={(group, camera, size) => {
+        return [
+          PADDING + fx,
+          size?.height - HEIGHT - PADDING,
+          camera.position.z,
+        ];
+      }}
+    >
+      <HtmlBotScoreInfoOverlayStyles {...{ botTypeText }}>
+        <div className="botScoreInfo">
+          {lastNode?.user.screen_name} {botTypeText}
+        </div>
+        {botTypeInfo && (
+          <div className="botTypeInfo">
+            {"("}
+            {botTypeInfo}
+            {")"}
+          </div>
+        )}
+        <IconButton className="btnClose" onClick={handleCloseBotScoreInfoCard}>
+          <Close />
+        </IconButton>
+      </HtmlBotScoreInfoOverlayStyles>
+    </Html>
+  );
+}
+
+const HtmlBotScoreInfoOverlayStyles = styled.div`
+  transition: transform 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+  transform: translate3d(
+    0,
+    ${({ botTypeText }) => (botTypeText ? 0 : 300)}px,
+    0
+  );
+  padding: 0.5em 1em;
+  text-align: left;
+  background: none;
+  border: ${process.env.NODE_ENV !== "production"
+    ? "1px solid limegreen"
+    : "none"};
+  font-size: ${TRANSFORM ? 4 : 24}px;
+  width: ${WIDTH * mu}px;
+  height: ${HEIGHT * mu}px;
+  position: relative;
+  .btnClose {
+    position: absolute;
+    top: -125px;
+    right: -34px;
+    border: 1px solid #ffffff7d;
+    background: #ffffff3d;
+  }
+  .MuiSvgIcon-root {
+    transform: scale(1.4);
+  }
+  .botTypeInfo {
+    font-size: ${TRANSFORM ? 3 : 16}px;
+  }
+`;

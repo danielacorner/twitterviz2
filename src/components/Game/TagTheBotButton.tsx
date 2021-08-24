@@ -24,7 +24,7 @@ import { isBotScoreExplainerUpAtom } from "./GameStateHUD/BotScoreLegend";
 // * animate a HUD-contained bot score display ?
 // * animate the selected node to the front and then back?
 const latestNodeWithBotScoreAtom = atom<Tweet | null>(null);
-export const BOT_SCORE_POPUP_TIMEOUT = 500;
+export const BOT_SCORE_POPUP_TIMEOUT = 2000;
 
 export default function TagTheBotButton() {
   const tweets = useTweets();
@@ -43,12 +43,16 @@ export default function TagTheBotButton() {
   const [, setIsRightDrawerOpen] = useAtom(isRightDrawerOpenAtom);
   const [, setIsUp] = useAtom(isBotScoreExplainerUpAtom);
 
-  function handleReceiveBotScore(botScore: BotScore) {
+  function handleReceiveBotScore(botScore: BotScore, nodeIdStr: string) {
     if (!selectedNode) {
       return;
     }
     setShotsRemaining((p) => Math.max(0, p - 1));
-    setLatestNodeWithBotScore({ ...selectedNode, botScore });
+    setLatestNodeWithBotScore({
+      ...selectedNode,
+      botScore,
+      user: { ...selectedNode.user, botScore },
+    });
     setScore((p) => p + getScoreFromBotScore(botScore).scoreIncrease);
 
     // show and then hide the bot score popup
@@ -68,7 +72,21 @@ export default function TagTheBotButton() {
 
     setScanningNodeId(null);
 
-    // rotate the camera to face the
+    setTweets(
+      tweets.map((t) =>
+        t.id_str === nodeIdStr
+          ? {
+              ...t,
+              botScore,
+              user: {
+                ...selectedNode.user,
+                botScore,
+              },
+            }
+          : t
+      )
+    );
+    // TODO: rotate the camera to face the front of the node
   }
 
   function setNotABot(node: Tweet) {
@@ -95,6 +113,7 @@ export default function TagTheBotButton() {
           variant="contained"
           color="primary"
           onClick={() => {
+            const nodeIdStr = selectedNode.id_str;
             setLoading(true);
             setIsRightDrawerOpen(false);
             setScanningNodeId(selectedNode.id_str);
@@ -108,28 +127,28 @@ export default function TagTheBotButton() {
               const newBotScore = { ...hiddenBotScore };
               setSelectedNode(null);
               setTimeout(() => {
-                setTweets(
-                  tweets.map((t) =>
-                    t.id_str === selectedNode.id_str
-                      ? {
-                          ...t,
-                          botScore: newBotScore,
-                          user: {
-                            ...selectedNode.user,
-                            botScore: newBotScore,
-                          },
-                        }
-                      : t
-                  )
-                );
-                handleReceiveBotScore(newBotScore);
+                // setTweets(
+                //   tweets.map((t) =>
+                //     t.id_str === selectedNode.id_str
+                //       ? {
+                //           ...t,
+                //           botScore: newBotScore,
+                //           user: {
+                //             ...selectedNode.user,
+                //             botScore: newBotScore,
+                //           },
+                //         }
+                //       : t
+                //   )
+                // );
+                handleReceiveBotScore(newBotScore, nodeIdStr);
               }, 1500);
             } else {
               fetchBotScoreForTweet(selectedNode).then((botScore) => {
                 setSelectedNode(null);
                 // setTooltipNode(null);
                 if (botScore) {
-                  handleReceiveBotScore(botScore);
+                  handleReceiveBotScore(botScore, nodeIdStr);
                 }
               });
             }

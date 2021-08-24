@@ -37,7 +37,7 @@ export const BOT_LABELS = {
 export const BOT_TYPE_MORE_INFO = {
   OVERALL: "Overall",
   ASTROTURF:
-    "(A.K.A. Echo-chamber bot) accounts that engage in follow back groups and share and delete political content in high volume",
+    "A.K.A. Echo-chamber bot; accounts that engage in follow back groups and share and delete political content in high volume",
   FINANCIAL: "bots that post using cashtags",
   FAKE_FOLLOWER: "bots purchased to increase follower counts",
   SPAMMER: "accounts labeled as spambots from several datasets",

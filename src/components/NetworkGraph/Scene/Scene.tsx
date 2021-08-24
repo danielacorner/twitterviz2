@@ -1,13 +1,11 @@
 import { OrbitControls, useDetectGPU, useGLTF } from "@react-three/drei";
-import { useUserNodes } from "../useUserNodes";
 import { Debug, Physics } from "@react-three/cannon";
-import { Node } from "./Node/Node";
 import { BotScoreLegendHUD } from "../../Game/GameStateHUD/BotScoreLegend";
 import { useFrame, useThree } from "@react-three/fiber";
 import { animated } from "@react-spring/three";
 import { CAMERA_POSITION } from "utils/constants";
 import { useSpring } from "react-spring";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useState } from "react";
 import { useMount } from "utils/utils";
 import { Stars } from "./Stars";
 import {
@@ -22,6 +20,7 @@ import Background from "./Background";
 import { Effects } from "./Effects/Effects";
 import { useControls } from "leva";
 import { useHoverAnimation } from "./useHoverAnimation";
+import { Nodes } from "./Nodes";
 
 export function Scene() {
   // const vertices = getVertices(nodes.length);
@@ -95,42 +94,6 @@ export function Scene() {
       <BotScoreLegendHUD />
       <Effects />
     </Suspense>
-  );
-}
-
-function Nodes() {
-  const nodes = useUserNodes();
-  const { viewport } = useThree();
-
-  const [nodesMemo, setNodesMemo] = useState(nodes);
-  useEffect(() => {
-    const newNodes = nodes.filter(
-      (t) =>
-        !nodesMemo.map((nt) => nt.id_str).includes(t.id_str) ||
-        !nodes.map((nt) => nt.id_str).includes(t.id_str)
-    );
-    console.log("🌟🚨 ~ useEffect ~ newNodes", newNodes);
-    const deletedNodes = nodesMemo.filter(
-      (t) => !nodes.map((nt) => nt.id_str).includes(t.id_str)
-    );
-    if (newNodes.length > 0) {
-      setNodesMemo((prev) => [...prev, ...newNodes]);
-    } else if (deletedNodes.length > 0) {
-      setNodesMemo((prev) =>
-        prev.filter(
-          (t) => !deletedNodes.map((nt) => nt.id_str).includes(t.id_str)
-        )
-      );
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nodes]);
-  return (
-    <>
-      {nodesMemo.map((node, idx) => {
-        return <Node key={node.id_str} node={node} />;
-      })}
-    </>
   );
 }
 
