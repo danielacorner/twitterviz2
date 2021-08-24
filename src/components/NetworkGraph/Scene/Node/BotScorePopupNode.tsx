@@ -89,6 +89,7 @@ function BotScorePopupNodeAnimation({
                 isPointerOver: false,
                 isRightClickingThisNode: false,
                 forceOpaque: true,
+                isPopupNode: true,
               }}
             />
             {nodeDisplay.user.botScore ? null : <ScanningAnimation />}

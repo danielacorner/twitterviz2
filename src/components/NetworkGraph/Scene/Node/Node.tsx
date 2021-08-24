@@ -290,6 +290,7 @@ export function NodeContent({
   isScanningNode,
   isRightClickingThisNode,
   forceOpaque = false,
+  isPopupNode = false,
 }: {
   node: UserNode;
   isTooltipNode: boolean;
@@ -297,6 +298,7 @@ export function NodeContent({
   isScanningNode: boolean;
   isRightClickingThisNode: boolean;
   forceOpaque?: boolean;
+  isPopupNode?: boolean;
 }) {
   useWhyDidYouUpdate("NodeContent", {
     node,
@@ -311,7 +313,9 @@ export function NodeContent({
 
   const [doneAnimating, setDoneAnimating] = useState(false);
 
-  const material = !doneAnimating
+  const material = isPopupNode
+    ? defaultNodeMaterial
+    : !doneAnimating
     ? opacityMaterial
     : isNotABot
     ? notABotMaterial
@@ -329,7 +333,7 @@ export function NodeContent({
 
   // fade in on mount
   const springProps = useSpring({
-    opacity: mounted ? 1 : 0,
+    opacity: mounted || isPopupNode ? 1 : 0,
     onRest() {
       setDoneAnimating(true);
     },
@@ -350,8 +354,8 @@ export function NodeContent({
   return (
     <>
       {isScanningNode && <ScanningNodeAnimation />}
-      <animated.mesh ref={hoverAnimationRefWave}>
-        <animated.mesh ref={hoverAnimationRef}>
+      <animated.mesh ref={isPopupNode ? null : hoverAnimationRefWave}>
+        <animated.mesh ref={isPopupNode ? null : hoverAnimationRef}>
           {isScanningNode ? null : (
             <animated.mesh
               {...(material ? { material } : {})}

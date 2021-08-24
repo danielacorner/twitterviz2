@@ -1,4 +1,4 @@
-import { VolumeUp, VolumeMute } from "@material-ui/icons";
+import { VolumeUp, VolumeOff } from "@material-ui/icons";
 import { IconButton, Tooltip } from "@material-ui/core";
 import ReactPlayer from "react-player";
 import styled from "styled-components/macro";
@@ -21,7 +21,7 @@ export function AudioSoundButton({ title, href }) {
         </div>
         <Tooltip title={isAudioPlaying ? "mute 🔈" : "unmute 🔊"}>
           <IconButton onClick={() => setIsAudioPlaying(!isAudioPlaying)}>
-            {isAudioPlaying ? <VolumeUp /> : <VolumeMute />}
+            {isAudioPlaying ? <VolumeUp /> : <VolumeOff />}
           </IconButton>
         </Tooltip>
       </SoundButtonStyles>
