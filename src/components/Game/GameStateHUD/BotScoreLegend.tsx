@@ -7,7 +7,7 @@ import {
   GameStepsEnum,
   isBotScoreExplainerUpAtom,
 } from "providers/store/store";
-import { atom, useAtom } from "jotai";
+import { useAtom } from "jotai";
 import { useLatestTaggedNode } from "components/NetworkGraph/Scene/Node/useLatestTaggedNode";
 import { useControls } from "leva";
 import { Circle, useTexture } from "@react-three/drei";
@@ -20,11 +20,10 @@ export function BotScoreLegendHUD() {
   const {
     size: { width, height },
   } = useThree();
-  console.log("🌟🚨 ~ BotScoreLegendHUD ~ width", width);
 
   const [isUp] = useAtom(isBotScoreExplainerUpAtom);
 
-  const { xx, yy } = useControls({ xx: 0, yy: 1.64 });
+  const { yy } = useControls({ yy: 1.64 });
   const springProps = useSpring({
     position: [0, isUp ? yy : -8, 0],
   });
@@ -38,6 +37,7 @@ export function BotScoreLegendHUD() {
         <BotScoreLegend
           {...{
             isInStartMenu: false,
+            showAvatar: false,
             position: [0, 0, 0],
             scale: [1, 1, 1],
           }}
@@ -49,10 +49,12 @@ export function BotScoreLegendHUD() {
 
 export function BotScoreLegend({
   isInStartMenu,
+  showAvatar,
   position,
   scale,
 }: {
   isInStartMenu: boolean;
+  showAvatar: boolean;
   position: number[];
   scale: number[];
 }) {
@@ -85,7 +87,7 @@ export function BotScoreLegend({
             />
             <sphereBufferGeometry args={[RADIUS * 0.007, 26, 26]} />
           </mesh>
-          {lastNode && !isInStartMenu && <AvatarCircle {...{ lastNode }} />}
+          {lastNode && showAvatar && <AvatarCircle {...{ lastNode }} />}
           <mesh castShadow={true} scale={[SCALE, SCALE, SCALE]}>
             <NodeBotScoreAntenna
               {...{
@@ -117,7 +119,7 @@ export function BotScoreLegend({
   );
 }
 function AvatarCircle({ lastNode }) {
-  const { posz, radius } = useControls({ posz: 0.18, radius: 0.2 });
+  const { posz, radius } = useControls({ posz: 0.18, radius: 0.17 });
 
   const avatarTexture = useTexture(
     lastNode.user.profile_image_url_https ||

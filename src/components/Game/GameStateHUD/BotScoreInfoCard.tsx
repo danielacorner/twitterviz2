@@ -19,6 +19,8 @@ import { Close } from "@material-ui/icons";
 import { getMostLikelyBotTypeText } from "./getMostLikelyBotTypeText";
 import { useSpring, animated } from "react-spring";
 import { BotScoreLegend } from "./BotScoreLegend";
+import { Suspense } from "react";
+import { CUSTOM_SCROLLBAR_CSS } from "components/RightDrawer/CUSTOM_SCROLLBAR_CSS";
 
 const PADDING = 20;
 const WIDTH = 350;
@@ -39,13 +41,13 @@ export function BotScoreInfoCard() {
   const { botTypeText, botTypeInfo } = latestBotScore
     ? getMostLikelyBotTypeText(latestBotScore)
     : { botTypeText: null, botTypeInfo: null };
+  const [isUp, setIsUp] = useAtom(isBotScoreExplainerUpAtom);
 
   const endGame = () => {
     setGameState((p) => ({ ...p, step: GameStepsEnum.gameOver }));
     const botTweets = tweets.filter((t) => Boolean(t.botScore));
     setNodesInDb(botTweets);
   };
-  const [isUp, setIsUp] = useAtom(isBotScoreExplainerUpAtom);
 
   function handleCloseBotScoreInfoCard() {
     // close the popup
@@ -60,9 +62,7 @@ export function BotScoreInfoCard() {
   const { fx, fy, fz } = useControls({ fx: 0, fy: 0, fz: 0 });
 
   const springUpDown = useSpring({
-    transform: `translate3d(0,${
-      latestBotScore && isDoneScanning ? 0 : HEIGHT * 2
-    }px,0)`,
+    transform: `translate3d(0,${isUp ? 0 : HEIGHT * 2}px,0)`,
   });
 
   return (
@@ -81,17 +81,34 @@ export function BotScoreInfoCard() {
       <animated.div style={springUpDown}>
         <HtmlBotScoreInfoOverlayStyles {...{ botTypeText }}>
           <div className="content">
-            <div className="botScoreLegendCanvas"></div>
-            <div className="botScoreInfo">
-              {lastNode?.user.screen_name} {botTypeText}
-            </div>
-            {botTypeInfo && (
-              <div className="botTypeInfo">
-                {"("}
-                {botTypeInfo}
-                {")"}
+            <div className="scrollContent">
+              <div className="botScoreLegendCanvas">
+                <Suspense fallback={null}>
+                  <Canvas>
+                    <mesh scale={[3, 3, 3]} position={[0, 0.4, 0]}>
+                      <BotScoreLegend
+                        {...{
+                          showAvatar: true,
+                          isInStartMenu: false,
+                          position: [0, 0, 0],
+                          scale: [1, 1, 1],
+                        }}
+                      />
+                    </mesh>
+                  </Canvas>
+                </Suspense>
               </div>
-            )}
+              <div className="botScoreInfo">
+                {lastNode?.user.screen_name} {botTypeText}
+              </div>
+              {botTypeInfo && (
+                <div className="botTypeInfo">
+                  {"("}
+                  {botTypeInfo}
+                  {")"}
+                </div>
+              )}
+            </div>
             <IconButton
               className="btnClose"
               onClick={handleCloseBotScoreInfoCard}
@@ -118,8 +135,14 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
   box-sizing: border-box;
   font-size: ${TRANSFORM ? 4 : 24}px;
   .content {
+    .scrollContent {
+      width: 100%;
+      height: 100%;
+      ${CUSTOM_SCROLLBAR_CSS}
+      padding: 0.5em 1em;
+    }
     .botScoreLegendCanvas {
-      height: 100px;
+      height: 200px;
     }
     box-shadow: 0px 1px 11px #0000009c;
     border-radius: 16px;
@@ -129,7 +152,6 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
       : "none"};
     width: ${WIDTH * mu}px;
     height: ${HEIGHT * mu}px;
-    padding: 0.5em 1em;
     margin: auto;
     position: relative;
     background: #2a3731;

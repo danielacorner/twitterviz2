@@ -51,6 +51,7 @@ export function StartPage({ startLookingAtTweets }) {
                   <OrbitControls {...({} as any)} />
                 )}
                 <BotScoreLegend
+                  showAvatar={false}
                   isInStartMenu={true}
                   position={[0, 0.2, 0]}
                   scale={[2.5, 2.5, 2.5]}

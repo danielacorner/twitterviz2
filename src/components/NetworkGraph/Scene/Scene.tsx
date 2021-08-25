@@ -1,6 +1,5 @@
 import { OrbitControls, useDetectGPU, useGLTF } from "@react-three/drei";
 import { Debug, Physics } from "@react-three/cannon";
-import { BotScoreLegendHUD } from "../../Game/GameStateHUD/BotScoreLegend";
 import { useFrame, useThree } from "@react-three/fiber";
 import { animated } from "@react-spring/three";
 import { CAMERA_POSITION } from "utils/constants";
@@ -92,7 +91,7 @@ export function Scene() {
       <HighScores />
       <Background background={true} />
       <BotScoreInfoCard />
-      <BotScoreLegendHUD />
+      {/* <BotScoreLegendHUD /> */}
       <Effects />
     </Suspense>
   );
