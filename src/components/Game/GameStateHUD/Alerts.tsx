@@ -6,7 +6,7 @@ import {
 } from "react-spring";
 import Alert from "@material-ui/lab/Alert";
 import styled from "styled-components/macro";
-import { isBotScoreExplainerUpAtom } from "./BotScoreLegend";
+import { isBotScoreExplainerUpAtom } from "providers/store/store";
 
 function Alerts() {
   const { /* latestBotScore, */ node, lastNode } = useLatestTaggedNode();

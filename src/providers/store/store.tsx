@@ -16,6 +16,7 @@ export const lastTimeMonthlyTwitterApiUsageWasExceededAtom = atom<
   number | null
 >(null);
 
+export const isBotScoreExplainerUpAtom = atom<boolean>(false);
 export const isMusicOnAtom = atom<boolean>(false);
 export const isRightDrawerOpenAtom = atom<boolean>(false);
 export const areOrbitControlsEnabledAtom = atom<boolean>(true);

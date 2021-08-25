@@ -21,6 +21,7 @@ import { Effects } from "./Effects/Effects";
 import { useControls } from "leva";
 import { useHoverAnimation } from "./useHoverAnimation";
 import { Nodes } from "./Nodes";
+import { BotScoreInfoCard } from "components/Game/GameStateHUD/BotScoreInfoCard";
 
 export function Scene() {
   // const vertices = getVertices(nodes.length);
@@ -90,7 +91,7 @@ export function Scene() {
       </Physics>
       <HighScores />
       <Background background={true} />
-
+      <BotScoreInfoCard />
       <BotScoreLegendHUD />
       <Effects />
     </Suspense>

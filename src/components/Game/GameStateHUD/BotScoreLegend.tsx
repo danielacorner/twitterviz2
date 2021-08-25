@@ -5,29 +5,26 @@ import { useSpring, animated } from "@react-spring/three";
 import {
   gameStateAtom,
   GameStepsEnum,
-  scanningNodeIdAtom,
+  isBotScoreExplainerUpAtom,
 } from "providers/store/store";
 import { atom, useAtom } from "jotai";
 import { useLatestTaggedNode } from "components/NetworkGraph/Scene/Node/useLatestTaggedNode";
 import { useControls } from "leva";
-import { BotScoreInfoCard } from "./BotScoreInfoCard";
-import { INFO_CARD_INITIAL_Y, INFO_CARD_MAX_Y } from "utils/constants";
-import { useEffect, useRef, useState } from "react";
-import { Billboard, Circle, useTexture } from "@react-three/drei";
+import { Circle, useTexture } from "@react-three/drei";
 
 const SCALE = 0.15;
 const RADIUS = 40;
-export const isBotScoreExplainerUpAtom = atom<boolean>(false);
 
 /** displays at the bottom when you get a bot score */
 export function BotScoreLegendHUD() {
   const {
     size: { width, height },
   } = useThree();
+  console.log("🌟🚨 ~ BotScoreLegendHUD ~ width", width);
 
   const [isUp] = useAtom(isBotScoreExplainerUpAtom);
 
-  const { yy } = useControls({ yy: 1.64 });
+  const { xx, yy } = useControls({ xx: 0, yy: 1.64 });
   const springProps = useSpring({
     position: [0, isUp ? yy : -8, 0],
   });
@@ -62,55 +59,20 @@ export function BotScoreLegend({
   const [gameState] = useAtom(gameStateAtom);
   const showBotScore =
     isInStartMenu || gameState.step !== GameStepsEnum.welcome;
-  const isGameOver = gameState.step === GameStepsEnum.gameOver;
 
-  const show = !isGameOver && showBotScore;
-  const scaleDisplay = show ? scale : [0, 0, 0];
+  const scaleDisplay = showBotScore ? scale : [0, 0, 0];
+  console.log("🌟🚨 ~ scaleDisplay", scaleDisplay);
   const springProps = useSpring({
     scale: scaleDisplay,
   });
   const { latestBotScore, lastNode } = useLatestTaggedNode();
-  const [scanningNodeId] = useAtom(scanningNodeIdAtom);
-  const isDoneScanning = !scanningNodeId && lastNode;
-  const [infoCardSpringProps, set] = useSpring(() => ({
-    scale: [1, 1, 1],
-    position: [0, INFO_CARD_INITIAL_Y, 0],
-    rotation: [0, 0, 0],
-  }));
-  const currentY = useRef(INFO_CARD_MAX_Y);
-  const [currentYActual, setCurrentYActual] = useState(INFO_CARD_MAX_Y);
-  // pop it up when we're done scanning
-  useEffect(() => {
-    if (isDoneScanning) {
-      set({ position: [0, INFO_CARD_MAX_Y, 0] });
-      currentY.current = INFO_CARD_MAX_Y;
-      setCurrentYActual(INFO_CARD_MAX_Y);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isDoneScanning]);
-  // when we close it, pop it back down
 
   return (
     <>
-      {!isInStartMenu && (
-        <BotScoreInfoCard
-          {...{
-            set,
-            springProps: infoCardSpringProps,
-            currentY,
-            currentYActual,
-            setCurrentYActual,
-          }}
-        />
-      )}
       <animated.mesh
         castShadow={true}
-        scale={
-          isInStartMenu ? springProps.scale : (infoCardSpringProps.scale as any)
-        }
-        position={
-          (isInStartMenu ? position : infoCardSpringProps.position) as any
-        }
+        scale={isInStartMenu ? springProps.scale : ([1, 1, 1] as any)}
+        position={(isInStartMenu ? position : [0, 0, 0]) as any}
         // position={position as any}
       >
         <group>

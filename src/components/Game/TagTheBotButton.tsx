@@ -14,13 +14,13 @@ import { atom, useAtom } from "jotai";
 import { BotScore, Tweet } from "types";
 import {
   botScorePopupNodeAtom,
+  isBotScoreExplainerUpAtom,
   isRightDrawerOpenAtom,
   scanningNodeIdAtom,
   scoreAtom,
   shotsRemainingAtom,
 } from "providers/store/store";
 import { getScoreFromBotScore } from "./getScoreFromBotScore";
-import { isBotScoreExplainerUpAtom } from "./GameStateHUD/BotScoreLegend";
 // * animate a HUD-contained bot score display ?
 // * animate the selected node to the front and then back?
 const latestNodeWithBotScoreAtom = atom<Tweet | null>(null);
@@ -199,5 +199,10 @@ const BottomButtonsStyles = styled.div`
   }
   a {
     text-decoration: none;
+  }
+  button {
+    font-family: "Poiret One", cursive;
+    font-weight: bold;
+    letter-spacing: 0.14em;
   }
 `;
