@@ -20,7 +20,7 @@ export const isBotScoreExplainerUpAtom = atom<boolean>(false);
 export const isMusicOnAtom = atom<boolean>(false);
 export const isRightDrawerOpenAtom = atom<boolean>(false);
 export const areOrbitControlsEnabledAtom = atom<boolean>(true);
-export const scanningNodeIdAtom = atom<string | null>(null);
+export const scanningUserNodeIdAtom = atom<string | null>(null);
 export const botScorePopupNodeAtom = atom<UserNode | null>(null);
 export const appUserIdAtom = atomWithStorage<string>("atoms:userId", "");
 export enum GameStepsEnum {

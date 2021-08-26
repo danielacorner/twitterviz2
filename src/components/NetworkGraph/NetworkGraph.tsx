@@ -11,7 +11,6 @@ import { useSetTooltipNode } from "providers/store/useSelectors";
 import { CAMERA_POSITION } from "utils/constants";
 import { getIsTouchDevice } from "./getIsTouchDevice";
 import { Suspense } from "react";
-import { CameraShake } from "@react-three/drei";
 
 export const GraphStyles = styled.div`
   width: 100%;

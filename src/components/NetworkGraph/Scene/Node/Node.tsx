@@ -5,7 +5,7 @@ import useStore, {
   isRightDrawerOpenAtom,
   numTooltipTweetsAtom,
   rightClickMenuAtom,
-  scanningNodeIdAtom,
+  scanningUserNodeIdAtom,
   tooltipTweetIndexAtom,
   useAreBotsLinedUp,
 } from "providers/store/store";
@@ -31,7 +31,7 @@ import { useRef, useState } from "react";
 import { ScanningAnimation } from "./ScanningAnimation";
 import { MeshWobbleMaterial } from "@react-three/drei";
 import { useControls } from "leva";
-import { useMounted, useWhyDidYouUpdate } from "utils/hooks";
+import { useMounted } from "utils/hooks";
 import { randBetween } from "utils/utils";
 import { useHoverAnimation } from "../useHoverAnimation";
 
@@ -104,7 +104,7 @@ export const Node = ({
   const startPosition = useRef([x, y, z]).current;
   const tooltipNode = useTooltipNode();
 
-  const [scanningNodeId] = useAtom(scanningNodeIdAtom);
+  const [scanningNodeId] = useAtom(scanningUserNodeIdAtom);
   const [rightClickMenu] = useAtom(rightClickMenuAtom);
   const isRightClickingThisNode = rightClickMenu.node
     ? rightClickMenu.node?.id_str === node.id_str
@@ -181,7 +181,7 @@ export const Node = ({
   const { scale2 } = useControls({ scale2: 1 });
   const scaleMult = isNotABot ? 0 : scale2;
 
-  const isScanningNode = scanningNodeId === node.id_str;
+  const isScanningNode = node.id_str === scanningNodeId;
 
   const springScale = useSpring({
     scale: hide
@@ -193,81 +193,31 @@ export const Node = ({
       : [1 * scaleMult, 1 * scaleMult, 1 * scaleMult],
   });
 
-  // -- drag to change position --
-
-  // https://codesandbox.io/s/react-three-fiber-gestures-forked-qi8xq?file=/src/App.js:351-672
-
-  // Set up a spring with values we're going to modify
-  const [{ rotation, ...rest }, set] = useSpring(() => ({
+  const [{ scale }, set] = useSpring(() => ({
     scale: isScanningNode ? [1.2, 1.2, 1.2] : [1, 1, 1],
-    position: [0, 0, 0],
-    rotation: [0, 0, 0],
     config: { mass: 3, friction: 40, tension: 800 },
   }));
-
-  // Create a gesture that contains drag and hover, set the spring accordingly
-
-  // ! when you re-enable orbit controls, it thinks there's still a mouse down? breaks future mouse events
-  // const totalDelta = useRef(0);
-  // const bind = useGesture({
-  //   onPointerDown: () => {
-  //     totalDelta.current = 0;
-  //     // setMouseMoved({ mousedown: true, mousemoved: false });
-  //     setAreOrbitControlsEnabled(false);
-  //   },
-  //   onDrag: ({ event, offset: [x, y], delta: [dx, dy], ...rest }) => {
-  //     totalDelta.current += dx + dy;
-  //     // ? could start dragging after timeout?
-  //     // event.stopPropagation();
-  //     set({
-  //       position: [(x / aspect) * meow, (-y / aspect) * meow, 0],
-  //       // rotation: [(y / aspect) * mu, (x / aspect) * mu, 0],
-  //     });
-  //   },
-  //   onDragEnd: () => {
-  //     // setMouseMoved((p) => ({ ...p, mousemoved: true }));
-  //     console.log("🌟🚨 ~ totalDelta.current", totalDelta.current);
-  //     const MAX_MOUSE_MOVE_FOR_CLICK = 5;
-  //     const shouldClick =
-  //       Math.abs(totalDelta.current) < MAX_MOUSE_MOVE_FOR_CLICK &&
-  //       !isRightDrawerOpen;
-  //     console.log("🌟🚨 ~ shouldClick", shouldClick);
-
-  //     if (shouldClick) {
-  //       onClick();
-  //     }
-  //     setAreOrbitControlsEnabled(true);
-  //     // setMouseMoved({ mousedown: false, mousemoved: false });
-  //   },
-  //   onPointerUp: () => {},
-  //   onHover: ({ hovering }) =>
-  //     set({ scale: hovering ? [1.2, 1.2, 1.2] : [1, 1, 1] }),
-  // });
 
   // TODO: check out name stays after submit
 
   const hasBotScore = Boolean(node.user.botScore);
 
   return (
-    <animated.mesh
-      rotation={rotation as any}
-      // {...(bind() as any)}
-      renderOrder={2}
-    >
-      <animated.mesh
-        ref={ref}
-        scale={springScale.scale as any}
-        {...(hasBotScore
-          ? {}
-          : {
-              onPointerEnter,
-              onPointerLeave,
-              onContextMenu,
-              onClick,
-              onWheel: onScroll,
-            })}
-      >
-        <animated.group {...(rest as any)}>
+    <animated.group scale={scale as any}>
+      <animated.mesh renderOrder={2}>
+        <animated.mesh
+          ref={ref}
+          scale={springScale.scale as any}
+          {...(hasBotScore
+            ? {}
+            : {
+                onPointerEnter,
+                onPointerLeave,
+                onContextMenu,
+                onClick,
+                onWheel: onScroll,
+              })}
+        >
           <NodeContent
             {...{
               node,
@@ -278,9 +228,9 @@ export const Node = ({
             }}
           />
           {isScanningNode ? <ScanningAnimation /> : null}
-        </animated.group>
+        </animated.mesh>
       </animated.mesh>
-    </animated.mesh>
+    </animated.group>
   );
 };
 export function NodeContent({
@@ -348,7 +298,6 @@ export function NodeContent({
   });
   return (
     <>
-      {isScanningNode && <ScanningNodeAnimation />}
       <animated.mesh ref={isPopupNode ? null : hoverAnimationRefWave}>
         <animated.mesh ref={isPopupNode ? null : hoverAnimationRef}>
           {isScanningNode ? null : (
@@ -381,6 +330,7 @@ export function NodeContent({
               }}
             />
           ) : null}
+          {isScanningNode && <ScanningNodeAnimation />}
         </animated.mesh>
       </animated.mesh>
     </>

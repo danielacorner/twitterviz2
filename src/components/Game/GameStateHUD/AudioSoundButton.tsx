@@ -7,9 +7,7 @@ import { isMusicOnAtom } from "providers/store/store";
 
 /** Mute button with hidden a <ReactPlayer/> */
 export function AudioSoundButton({ title, href }) {
-  console.log("🌟🚨 ~ AudioSoundButton ~ href", href);
   const [isAudioPlaying, setIsAudioPlaying] = useAtom(isMusicOnAtom);
-  console.log("🌟🚨 ~ AudioSoundButton ~ isAudioPlaying", isAudioPlaying);
 
   return (
     <>

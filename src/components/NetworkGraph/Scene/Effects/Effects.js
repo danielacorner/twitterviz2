@@ -15,7 +15,7 @@ import { LUTPass } from "three/examples/jsm/postprocessing/LUTPass";
 import { LUTCubeLoader } from "three/examples/jsm/loaders/LUTCubeLoader";
 import { useControls } from "leva";
 import { useAtom } from "jotai";
-import { scanningNodeIdAtom } from "providers/store/store";
+import { scanningUserNodeIdAtom } from "providers/store/store";
 import { NewWaterPass } from "./NewWaterPass";
 import { WaterPassEffect } from "./WaterPass";
 
@@ -29,7 +29,7 @@ export function Effects() {
     focusDistance: 0.2,
     bokehScale: 2,
   });
-  const [scanningNodeId] = useAtom(scanningNodeIdAtom);
+  const [scanningNodeId] = useAtom(scanningUserNodeIdAtom);
   const composer = useRef();
   const { scene, gl, size, camera } = useThree();
   // const waterpassRef = useRef();

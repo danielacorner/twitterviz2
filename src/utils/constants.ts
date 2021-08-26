@@ -3,7 +3,7 @@ export const WAIT_FOR_STREAM_TIMEOUT =
 
 const finalZ = window.innerWidth < 768 ? 130 : 100; // zoom out for smaller screen widths
 export const CAMERA_POSITION = {
-  initial: [0, 0, 350],
+  initial: [0, 350, 350],
   final: [0, 0, finalZ],
   gameOver: [0, 0, 500],
 };

@@ -16,7 +16,7 @@ import {
   botScorePopupNodeAtom,
   isBotScoreExplainerUpAtom,
   isRightDrawerOpenAtom,
-  scanningNodeIdAtom,
+  scanningUserNodeIdAtom,
   scoreAtom,
   shotsRemainingAtom,
 } from "providers/store/store";
@@ -39,7 +39,7 @@ export default function TagTheBotButton() {
   const [shotsRemaining, setShotsRemaining] = useAtom(shotsRemainingAtom);
   const [, setScore] = useAtom(scoreAtom);
   const [, setBotScorePopupNode] = useAtom(botScorePopupNodeAtom);
-  const [scanningNodeId, setScanningNodeId] = useAtom(scanningNodeIdAtom);
+  const [, setScanningUserNodeId] = useAtom(scanningUserNodeIdAtom);
   const [, setIsRightDrawerOpen] = useAtom(isRightDrawerOpenAtom);
   const [, setIsUp] = useAtom(isBotScoreExplainerUpAtom);
 
@@ -70,7 +70,7 @@ export default function TagTheBotButton() {
 
     setLoading(false);
 
-    setScanningNodeId(null);
+    setScanningUserNodeId(null);
 
     setTweets(
       tweets.map((t) =>
@@ -116,7 +116,7 @@ export default function TagTheBotButton() {
             const nodeIdStr = selectedNode.id_str;
             setLoading(true);
             setIsRightDrawerOpen(false);
-            setScanningNodeId(selectedNode.id_str);
+            setScanningUserNodeId(selectedNode.user.id_str);
             setBotScorePopupNode({
               user: selectedNode.user,
               tweets: [selectedNode],
@@ -203,6 +203,6 @@ const BottomButtonsStyles = styled.div`
   button {
     font-family: "Poiret One", cursive;
     font-weight: bold;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.1em;
   }
 `;

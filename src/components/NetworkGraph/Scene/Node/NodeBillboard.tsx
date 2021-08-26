@@ -33,7 +33,7 @@ export default function NodeBillboard({ node }: { node: UserNode }) {
     clamp: true,
   });
   return (
-    <Billboard {...({} as any)}>
+    <Billboard {...({} as any)} args={[0, 0, 0]}>
       <mesh ref={ref}>
         <Html
           transform={true}

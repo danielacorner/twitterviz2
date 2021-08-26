@@ -78,7 +78,7 @@ export function useStreamNewTweets() {
       );
 
       const data = await resp.json();
-      console.log("🌟🚨 ~ useStreamNewTweets ~ data", data);
+      console.log("🌟 ~ useStreamNewTweets ~ data", data);
 
       // const tweetsFromData = data.map((d) => {
       //   const userId = d.user.id_str || d.user.id;

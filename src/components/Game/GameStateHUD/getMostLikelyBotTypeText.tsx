@@ -4,6 +4,7 @@ import { BOT_LABELS, BOT_TYPE_MORE_INFO } from "utils/constants";
 export function getMostLikelyBotTypeText(botScore: BotScore) {
   let botTypeText = "";
   let botTypeInfo = "";
+  let botType = "";
 
   const {
     // overall,
@@ -23,7 +24,7 @@ export function getMostLikelyBotTypeText(botScore: BotScore) {
     spammer
   );
 
-  const scorePercent = `(${(maxScore * 100).toFixed(0)}%)`;
+  const scorePercent = (maxScore * 100).toFixed(0);
 
   if (maxScore > 0.8) {
     botTypeText += "is very likely ";
@@ -32,33 +33,35 @@ export function getMostLikelyBotTypeText(botScore: BotScore) {
   } else if (maxScore > 0.4) {
     botTypeText += "could be ";
   } else {
-    botTypeText += `is probably not a bot ${scorePercent}`;
-    return { botTypeText, botTypeInfo };
+    botTypeText += `is probably not a`;
+    return { botTypeText, botTypeInfo, scorePercent };
   }
 
-  /*  if (maxScore === overall) {
-      botTypeText += BOT_LABELS.OVERALL;
-    } else */ if (maxScore === fake_follower) {
-    botTypeText += "a " + BOT_LABELS.FAKE_FOLLOWER;
+  if (maxScore === fake_follower) {
+    botTypeText += "a";
+    botType = BOT_LABELS.FAKE_FOLLOWER;
     botTypeInfo += BOT_TYPE_MORE_INFO.FAKE_FOLLOWER;
   } else if (maxScore === astroturf) {
-    botTypeText += "an " + BOT_LABELS.ASTROTURF;
+    botTypeText += "an";
+    botType = BOT_LABELS.ASTROTURF;
     botTypeInfo += BOT_TYPE_MORE_INFO.ASTROTURF;
   } else if (maxScore === financial) {
-    botTypeText += "a " + BOT_LABELS.FINANCIAL;
+    botTypeText += "a";
+    botType = BOT_LABELS.FINANCIAL;
     botTypeInfo += BOT_TYPE_MORE_INFO.FINANCIAL;
   } else if (maxScore === other) {
-    botTypeText += "an " + BOT_LABELS.OTHER;
+    botTypeText += "an";
+    botType = BOT_LABELS.OTHER;
     botTypeInfo += BOT_TYPE_MORE_INFO.OTHER;
   } else if (maxScore === self_declared) {
-    botTypeText += "a " + BOT_LABELS.SELF_DECLARED;
+    botTypeText += "a";
+    botType = BOT_LABELS.SELF_DECLARED;
     botTypeInfo += BOT_TYPE_MORE_INFO.SELF_DECLARED;
   } else if (maxScore === spammer) {
-    botTypeText += "a " + BOT_LABELS.SPAMMER;
+    botTypeText += "a";
+    botType = BOT_LABELS.SPAMMER;
     botTypeInfo += BOT_TYPE_MORE_INFO.SPAMMER;
   }
 
-  botTypeText += ` bot ${scorePercent}`;
-
-  return { botTypeText, botTypeInfo };
+  return { botTypeText, botTypeInfo, botType, scorePercent };
 }

@@ -22,7 +22,7 @@ export function useFetchBotScoreForTweet() {
     // const tweetsByUser = tweets.filter(
     //   (t) => t.user.id_str === tweet.user.id_str
     // );
-    console.log("🌟🚨 ~ return ~ tweets", tweets);
+    console.log("🌟 ~ return ~ tweets", tweets);
     const resp = await fetch(`${SERVER_URL}/api/generate_bot_score`, {
       headers: { "content-type": "application/json" },
       method: "POST",

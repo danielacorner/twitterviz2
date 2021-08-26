@@ -7,7 +7,7 @@ import {
   gameStateAtom,
   GameStepsEnum,
   isBotScoreExplainerUpAtom,
-  scanningNodeIdAtom,
+  scanningUserNodeIdAtom,
   shotsRemainingAtom,
 } from "providers/store/store";
 import { useAtom } from "jotai";
@@ -31,7 +31,7 @@ const mu = TRANSFORM ? 0.1 : 1;
 
 /** pops up from the bottom when we receive a bot score */
 export function BotScoreInfoCard() {
-  const [scanningNodeId] = useAtom(scanningNodeIdAtom);
+  const [scanningNodeId] = useAtom(scanningUserNodeIdAtom);
   const tweets = useTweets();
   const setNodesInDb = useSetNodesInDbForUser();
   const [, setGameState] = useAtom(gameStateAtom);
@@ -39,9 +39,14 @@ export function BotScoreInfoCard() {
   const { latestBotScore, node, lastNode, clearLastNode } =
     useLatestTaggedNode();
   const isDoneScanning = !scanningNodeId && lastNode;
-  const { botTypeText, botTypeInfo } = latestBotScore
+  const { botTypeText, botTypeInfo, botType, scorePercent } = latestBotScore
     ? getMostLikelyBotTypeText(latestBotScore)
-    : { botTypeText: null, botTypeInfo: null };
+    : {
+        botTypeText: null,
+        botTypeInfo: null,
+        botType: null,
+        scorePercent: null,
+      };
   const [isUp, setIsUp] = useAtom(isBotScoreExplainerUpAtom);
 
   const endGame = () => {
@@ -78,6 +83,7 @@ export function BotScoreInfoCard() {
           camera.position.z,
         ];
       }}
+      style={{ pointerEvents: isUp ? "auto" : "none" }}
     >
       <animated.div style={springUpDown}>
         <HtmlBotScoreInfoOverlayStyles {...{ botTypeText }}>
@@ -100,7 +106,9 @@ export function BotScoreInfoCard() {
                 </Suspense>
               </div>
               <div className="botScoreInfo">
-                {lastNode?.user.screen_name} {botTypeText}
+                <span className="screenName">{lastNode?.user.screen_name}</span>{" "}
+                {botTypeText} <span className="botType">{botType}</span> bot (
+                {scorePercent}%)
               </div>
               {botTypeInfo && (
                 <div className="botTypeInfo">
@@ -124,7 +132,7 @@ export function BotScoreInfoCard() {
 }
 
 const HtmlBotScoreInfoOverlayStyles = styled.div`
-  font-family: "Poiret One", cursive;
+  font-family: "Roboto", sans-serif;
   transition: transform 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
   transform: translate3d(-20px, 18px, 0px);
   width: 100vw;
@@ -168,5 +176,9 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
   }
   .botTypeInfo {
     font-size: ${TRANSFORM ? 3 : 16}px;
+  }
+  .screenName,
+  .botType {
+    font-family: "Poiret One", cursive;
   }
 `;

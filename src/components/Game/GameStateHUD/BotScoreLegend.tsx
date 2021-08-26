@@ -63,7 +63,6 @@ export function BotScoreLegend({
     isInStartMenu || gameState.step !== GameStepsEnum.welcome;
 
   const scaleDisplay = showBotScore ? scale : [0, 0, 0];
-  console.log("🌟🚨 ~ scaleDisplay", scaleDisplay);
   const springProps = useSpring({
     scale: scaleDisplay,
   });

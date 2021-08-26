@@ -20,7 +20,7 @@ export function StartPage({ startLookingAtTweets }) {
   return (
     <StartPageStyles>
       <div className="content">
-        <h1 className="title">Plenty of Bots 🤖🎣</h1>
+        <h1 className="title">🎣 Plenty of Bots 🤖</h1>
         {step === 0 && (
           <>
             <p>Twitter is full of bots.</p>
@@ -73,6 +73,7 @@ export function StartPage({ startLookingAtTweets }) {
         )}
         {step === 1 && (
           <>
+            <p>With practice, you might get better at identifying bots!</p>
             <ol>
               <li>
                 <p>
@@ -108,7 +109,7 @@ export function StartPage({ startLookingAtTweets }) {
             </ol>
             <div className="takeYourShot">
               <p>Take your shot,</p>
-              <p>guess which one is a bot!</p>
+              <p>guess which one's a bot!</p>
             </div>
             <div className="buttonsRow">
               <Button
@@ -199,7 +200,10 @@ const StartPageStyles = styled.div`
   li {
     line-height: 1.5em;
     p {
-      margin-bottom: 1em;
+      margin-bottom: 0.5em;
+    }
+    &:first-child p {
+      margin-bottom: 0.2em;
     }
   }
   a {
