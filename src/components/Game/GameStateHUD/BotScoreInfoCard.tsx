@@ -159,13 +159,12 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
   }
   .btnClose {
     position: absolute;
-    top: -24px;
-    right: -24px;
-    border: 1px solid #ffffff7d;
-    background: #ffffff3d;
+    top: 0px;
+    right: 0px;
+    /* background: #ffffff3d; */
   }
   .MuiSvgIcon-root {
-    transform: scale(1.4);
+    /* transform: scale(1.4); */
   }
   .botTypeInfo {
     font-size: ${TRANSFORM ? 3 : 16}px;
