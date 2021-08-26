@@ -1,4 +1,4 @@
-# Twitter Botsketball 🤖🏀
+# Plenty of Bots 🤖🎣
 
 # Setup
 

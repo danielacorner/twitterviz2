@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Poiret+One&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap");
 
 body {
   margin: 0;
@@ -21,9 +22,8 @@ code {
 .MuiDrawer-paper {
   background: none !important;
 }
-.MuiButton-containedSecondary {
-  background-color: #9e1840 !important;
-}
-.MuiButton-containedPrimary {
-  background-color: #1b90f0 !important;
+.MuiButton-containedPrimary .MuiButton-label {
+  font-size: 18px;
+  font-weight: bold;
+  color: #000 !important;
 }

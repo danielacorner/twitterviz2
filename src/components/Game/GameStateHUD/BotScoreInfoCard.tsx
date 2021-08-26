@@ -21,6 +21,7 @@ import { useSpring, animated } from "react-spring";
 import { BotScoreLegend } from "./BotScoreLegend";
 import { Suspense } from "react";
 import { CUSTOM_SCROLLBAR_CSS } from "components/RightDrawer/CUSTOM_SCROLLBAR_CSS";
+import { darkBackground } from "utils/colors";
 
 const PADDING = 20;
 const WIDTH = 350;
@@ -154,7 +155,7 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
     height: ${HEIGHT * mu}px;
     margin: auto;
     position: relative;
-    background: #2a3731;
+    background: ${darkBackground};
   }
   .btnClose {
     position: absolute;

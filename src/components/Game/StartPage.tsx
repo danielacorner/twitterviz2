@@ -10,6 +10,7 @@ import { getIsMobileDevice } from "./Game";
 import { useState } from "react";
 import { ChevronLeft } from "@material-ui/icons";
 import COVIDSVG from "./COVIDSVG";
+import { colorLink, colorSecondary } from "utils/colors";
 
 export function StartPage({ startLookingAtTweets }) {
   const isLoading = useLoading();
@@ -19,11 +20,11 @@ export function StartPage({ startLookingAtTweets }) {
   return (
     <StartPageStyles>
       <div className="content">
-        <h3>Twitter Botsketball 🤖🏀</h3>
+        <h1 className="title">Plenty of Bots 🤖🎣</h1>
         {step === 0 && (
           <>
             <p>Twitter is full of bots.</p>
-            <p style={{ marginTop: 16 }}>
+            <p>
               In 2020 for example,{" "}
               <a
                 href="https://www.npr.org/sections/coronavirus-live-updates/2020/05/20/859814085/researchers-nearly-half-of-accounts-tweeting-about-coronavirus-are-likely-bots"
@@ -42,8 +43,8 @@ export function StartPage({ startLookingAtTweets }) {
               </a>{" "}
               were bots.
             </p>
-            <p style={{ marginTop: 16 }}>There are different kinds of bot:</p>
-            <div style={{ display: "flex", justifyContent: "center" }}>
+            <p>There are different kinds of bot:</p>
+            <div className="canvasContainer">
               <Canvas style={{ width: 300, height: 240 }}>
                 {getIsMobileDevice() ? (
                   <DeviceOrientationOrbitControls />
@@ -74,7 +75,7 @@ export function StartPage({ startLookingAtTweets }) {
           <>
             <ol>
               <li>
-                <p style={{ marginBottom: 2 }}>
+                <p>
                   🕵️‍♀️ Inspect 10 recent tweets about COVID{" "}
                   <span style={{ verticalAlign: "middle" }}>
                     <COVIDSVG />
@@ -105,46 +106,35 @@ export function StartPage({ startLookingAtTweets }) {
                 </p>
               </li>
             </ol>
-            <div style={{ fontSize: 14, marginTop: 12 }}>
-              + bot score 🤖 = + points ⭐
-            </div>
-            <div
-              style={{
-                fontStyle: "italic",
-                fontSize: 14,
-                marginBottom: 0,
-                marginTop: 16,
-              }}
-            >
-              <p style={{ marginBottom: 0 }}>Take your shot,</p>
+            <div className="takeYourShot">
+              <p>Take your shot,</p>
               <p>guess which one is a bot!</p>
             </div>
-
-            <Button
-              disabled={isLoading}
-              variant="contained"
-              color={"primary"}
-              onClick={() => {
-                setStep(0);
-                startLookingAtTweets();
-              }}
-            >
-              Play
-            </Button>
-
-            <Button
-              className="btnPrev"
-              disabled={isLoading}
-              color={"primary"}
-              size="small"
-              style={{ textTransform: "none" }}
-              onClick={() => {
-                setStep(0);
-              }}
-              startIcon={<ChevronLeft />}
-            >
-              Prev
-            </Button>
+            <div className="buttonsRow">
+              <Button
+                className="btnPrev"
+                variant="outlined"
+                disabled={isLoading}
+                color={"primary"}
+                onClick={() => {
+                  setStep(0);
+                }}
+                startIcon={<ChevronLeft />}
+              >
+                Prev
+              </Button>
+              <Button
+                disabled={isLoading}
+                variant="contained"
+                color={"primary"}
+                onClick={() => {
+                  setStep(0);
+                  startLookingAtTweets();
+                }}
+              >
+                Play
+              </Button>
+            </div>
           </>
         )}
         <div className="numSteps">{step + 1}/2</div>
@@ -153,12 +143,18 @@ export function StartPage({ startLookingAtTweets }) {
   );
 }
 const StartPageStyles = styled.div`
+  font-family: "Roboto", sans-serif;
+  .title {
+    font-family: "Poiret One", cursive;
+    margin: 0.5em 0 1.4em;
+  }
   position: fixed;
   inset: 0;
   display: grid;
   justify-items: center;
-  box-shadow: 0px 2px 30px 8px hsla(0, 0%, 0%, 0.3);
   .content {
+    line-height: 1.4em;
+    box-shadow: 0px 2px 30px 8px #00000068;
     position: relative;
     margin-top: 72px;
     max-height: calc(100vh - 72px - 16px);
@@ -169,41 +165,55 @@ const StartPageStyles = styled.div`
       max-width: 600px;
     }
   }
+  .canvasContainer {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1em;
+  }
   p {
     text-align: center;
-    margin-bottom: 0.5em;
+    margin-bottom: 1.4em;
   }
   ol p {
     text-align: left;
   }
-  h3 {
-    margin-bottom: 1em;
-  }
   button {
     margin-top: 1em;
+    width: 100%;
   }
   .btnPrev {
-    position: absolute;
-    left: 5px;
-    bottom: 5px;
     text-transform: none;
-    * {
-      color: rgba(255, 255, 255, 0.6) !important;
-    }
   }
   .numSteps {
     position: absolute;
+    bottom: 0;
     right: 13px;
-    color: gray;
+    color: ${colorSecondary};
+    display: none;
+  }
+  .buttonsRow {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-gap: 10px;
   }
   li {
     line-height: 1.5em;
+    p {
+      margin-bottom: 1em;
+    }
   }
   a {
     text-decoration: none;
-    color: #91b6ff !important;
+    color: ${colorLink} !important;
     &:visited {
-      color: #91b6ff !important;
+      color: ${colorLink} !important;
     }
+  }
+  .takeYourShot {
+    margin-top: 3em;
+    margin-bottom: 2.5em;
+    font-style: italic;
+    font-size: 14px;
+    line-height: 0;
   }
 `;

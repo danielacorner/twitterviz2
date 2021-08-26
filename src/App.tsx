@@ -6,13 +6,11 @@ import { useIsLight } from "./providers/ThemeManager";
 import "./video-react.css"; // import video-react css
 import AppFunctionalHooks from "./components/AppFunctionalHooks";
 import LeftDrawerCollapsible from "components/LeftDrawer";
-import { RowDiv } from "components/common/styledComponents";
 // import { NavBar } from "components/NavBar/NavBar";
 import NetworkGraph from "components/NetworkGraph/NetworkGraph";
 import { RightDrawer } from "./components/RightDrawer/RightDrawer";
 import { Game } from "./components/Game/Game";
 import { LoadingIndicator } from "./components/LoadingIndicator";
-import { BotScorePopupNode } from "components/NetworkGraph/Scene/Node/BotScorePopupNode";
 import { Leva } from "leva";
 
 function App() {
@@ -28,7 +26,7 @@ function App() {
       <RightDrawer />
       <Game />
       <LoadingIndicator />
-      <BotScorePopupNode />
+      {/* <BotScorePopupNode /> */}
       <Leva
         // fill             // default = false,  true makes the pane fill the parent dom node it's rendered in
         // flat             // default = false,  true removes border radius and shadow

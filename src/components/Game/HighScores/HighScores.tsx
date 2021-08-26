@@ -21,7 +21,7 @@ import { useSpring, animated } from "react-spring";
 import { useMount } from "utils/utils";
 import { Html } from "@react-three/drei";
 import { useInterval } from "utils/useInterval";
-import { darkBlueBackground } from "utils/colors";
+import { darkBackground } from "utils/colors";
 import { useLoading } from "providers/store/useSelectors";
 import { usePlayAgain, useStartLookingAtTweets } from "../Game";
 
@@ -327,7 +327,7 @@ const HighScoresStyles = styled.div`
     margin: 0 auto;
     /* width: fit-content; */
     width: ${DIV_WIDTH}px;
-    background: ${darkBlueBackground};
+    background: ${darkBackground};
     padding: 14px 14px 38px;
     border-radius: 16px;
     box-shadow: 1px 2px 3px rgba(0, 0, 0, 50%);
