@@ -75,12 +75,19 @@ export function NodeBotScoreAntennae({
       rotation: [0, 0, Math.PI],
     },
   ];
+
+  const [mouseOverIdx, setMouseOverIdx] = useState<number | null>(null);
+
   return (
     <mesh>
       {antennae.map(({ rotation, color, score, label, tooltipText }, idx) => (
         <mesh key={color} rotation={rotation as any} scale={[1, 1, 1]}>
           <Antenna
             {...{
+              isMouseOver: mouseOverIdx === idx,
+              handleMouseOver: () => {
+                setMouseOverIdx(idx);
+              },
               color,
               forceOpaque,
               isInStartMenu,
@@ -114,6 +121,8 @@ function Antenna({
   forceOpaque,
   showTooltips,
   isInStartMenu,
+  isMouseOver,
+  handleMouseOver,
   brightenText,
   brightenBalls,
 }) {
@@ -139,7 +148,6 @@ function Antenna({
   });
   const brightnessPct = 0;
   const textLightness = 1 - brightnessPct;
-  const [isMouseOver, setIsMouseOver] = useState(false);
   const showTooltip = showTooltips && isMouseOver;
   return (
     <mesh>
@@ -163,20 +171,6 @@ function Antenna({
         />
       </animated.mesh>
 
-      <animated.mesh position={springProps.textPosition as any}>
-        {/* text */}
-        <TextBillboard
-          {...{
-            brightenText,
-            textLightness,
-            brightnessPct,
-            isBottom,
-            showLabels,
-            score,
-            label,
-          }}
-        />
-      </animated.mesh>
       <animated.mesh
         position={springProps.spherePosition as any}
         castShadow={true}
@@ -201,26 +195,27 @@ function Antenna({
       </animated.mesh>
       {/* mouseover detector ball */}
       <animated.mesh
-        onClick={() => {
-          setIsMouseOver(true);
-        }}
-        onPointerEnter={() => {
-          setIsMouseOver(true);
-        }}
-        onPointerLeave={() => {
-          setIsMouseOver(false);
-        }}
-        onPointerOut={() => {
-          setIsMouseOver(false);
-        }}
+        onClick={handleMouseOver}
+        onPointerEnter={handleMouseOver}
         position={springProps.textPosition as any}
+        material-transparent={true}
+        material-opacity={0}
+        renderOrder={2}
       >
         <sphereBufferGeometry args={[3, 0]} />
-        <meshBasicMaterial
-          color={"#1e2847"}
-          wireframe={true}
-          transparent={true}
-          opacity={process.env.NODE_ENV !== "production" ? 0.2 : 0}
+      </animated.mesh>
+      <animated.mesh position={springProps.textPosition as any}>
+        {/* text */}
+        <TextBillboard
+          {...{
+            brightenText,
+            textLightness,
+            brightnessPct,
+            isBottom,
+            showLabels,
+            score,
+            label,
+          }}
         />
       </animated.mesh>
     </mesh>
