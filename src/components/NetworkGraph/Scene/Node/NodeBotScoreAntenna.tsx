@@ -180,7 +180,6 @@ function Antenna({
         castShadow={true}
       >
         {/* ball */}
-        {showTooltip && <MouseoverTooltip {...{ tooltipText }} />}
 
         <sphereBufferGeometry args={[SPHERE_RADIUS, 26, 26]} />
         <meshPhysicalMaterial
@@ -206,6 +205,7 @@ function Antenna({
         material-opacity={0}
         renderOrder={2}
       >
+        {showTooltip && <MouseoverTooltip {...{ tooltipText }} />}
         <sphereBufferGeometry args={[3, 0]} />
       </animated.mesh>
       <animated.mesh position={springProps.textPosition as any}>
