@@ -201,23 +201,27 @@ function Antenna({
       </animated.mesh>
       {/* mouseover detector ball */}
       <animated.mesh
+        onClick={() => {
+          setIsMouseOver(true);
+        }}
         onPointerEnter={() => {
           setIsMouseOver(true);
         }}
         onPointerLeave={() => {
           setIsMouseOver(false);
         }}
+        onPointerOut={() => {
+          setIsMouseOver(false);
+        }}
         position={springProps.textPosition as any}
       >
         <sphereBufferGeometry args={[3, 0]} />
-        {process.env.NODE_ENV !== "production" && (
-          <meshBasicMaterial
-            color={"#1e2847"}
-            wireframe={true}
-            transparent={true}
-            opacity={0.2}
-          />
-        )}
+        <meshBasicMaterial
+          color={"#1e2847"}
+          wireframe={true}
+          transparent={true}
+          opacity={process.env.NODE_ENV !== "production" ? 0.2 : 0}
+        />
       </animated.mesh>
     </mesh>
   );
