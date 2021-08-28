@@ -47,6 +47,7 @@ export function StartPage({ startLookingAtTweets }) {
             <div className="canvasContainer">
               <Canvas style={{ width: 300, height: 240 }}>
                 <BotScoreLegend
+                  showScorePercents={false}
                   showTooltips={true}
                   showAvatar={false}
                   isInStartMenu={true}

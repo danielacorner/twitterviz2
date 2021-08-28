@@ -25,7 +25,7 @@ import { darkBackground } from "utils/colors";
 
 const PADDING = 20;
 const WIDTH = 350;
-const HEIGHT = 280;
+const HEIGHT = 480;
 const TRANSFORM = false;
 const mu = TRANSFORM ? 0.1 : 1;
 
@@ -92,10 +92,11 @@ export function BotScoreInfoCard() {
               <div className="botScoreLegendCanvas">
                 <Suspense fallback={null}>
                   <Canvas>
-                    <mesh scale={[3, 3, 3]} position={[0, 0.4, 0]}>
+                    <mesh scale={[2.5, 2.5, 2.5]} position={[0, 0.4, 0]}>
                       <BotScoreLegend
                         {...{
                           showTooltips: true,
+                          showScorePercents: true,
                           showAvatar: true,
                           isInStartMenu: false,
                           position: [0, 0, 0],
@@ -152,7 +153,8 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
       padding: 0.5em 1em;
     }
     .botScoreLegendCanvas {
-      height: 200px;
+      padding: 20px 0;
+      height: 320px;
     }
     box-shadow: 0px 1px 11px #0000009c;
     border-radius: 16px;
@@ -175,7 +177,13 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
   .MuiSvgIcon-root {
     /* transform: scale(1.4); */
   }
+  .botScoreInfo {
+    text-align: center;
+    margin-bottom: 0.5em;
+  }
   .botTypeInfo {
+    text-align: center;
+    line-height: 1.6em;
     font-size: ${TRANSFORM ? 3 : 16}px;
   }
   .screenName,

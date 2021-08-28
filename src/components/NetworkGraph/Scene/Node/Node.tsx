@@ -1,6 +1,7 @@
 import { useSphere } from "@react-three/cannon";
 import * as THREE from "three";
 import useStore, {
+  isBotScoreExplainerUpAtom,
   isPointerOverAtom,
   isRightDrawerOpenAtom,
   numTooltipTweetsAtom,

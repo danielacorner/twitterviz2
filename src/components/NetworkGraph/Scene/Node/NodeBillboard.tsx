@@ -6,6 +6,8 @@ import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
 import { animated, useSpring } from "react-spring";
 import { useMounted } from "utils/hooks";
+import { useAtom } from "jotai";
+import { isBotScoreExplainerUpAtom } from "providers/store/store";
 
 export default function NodeBillboard({ node }: { node: UserNode }) {
   // slowly randomly rotate the billboard content
@@ -32,6 +34,8 @@ export default function NodeBillboard({ node }: { node: UserNode }) {
     config: CONFIG_FADE_IN,
     clamp: true,
   });
+  const [isUp] = useAtom(isBotScoreExplainerUpAtom);
+
   return (
     <Billboard {...({} as any)} args={[0, 0, 0]}>
       <mesh ref={ref}>
@@ -43,7 +47,7 @@ export default function NodeBillboard({ node }: { node: UserNode }) {
             height: 0,
             marginLeft: -100,
             marginTop: -100,
-            opacity: 0.8,
+            opacity: isUp ? 0.4 : 0.8,
           }}
         >
           <AnimatedHtmlStyles style={springOpacity}>

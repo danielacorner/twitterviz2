@@ -18,6 +18,7 @@ export function NodeBotScoreAntennae({
   brightenText = false,
   brightenBalls = false,
   showTooltips = false,
+  showScorePercents = false,
 }) {
   const antennae = [
     // top
@@ -94,6 +95,7 @@ export function NodeBotScoreAntennae({
               color,
               forceOpaque,
               isInStartMenu,
+              showScorePercents,
               tooltipText,
               score,
               label,
@@ -125,6 +127,7 @@ function Antenna({
   showTooltips,
   isInStartMenu,
   isMouseOver,
+  showScorePercents,
   handleMouseOver,
   handleMouseLeave,
   brightenText,
@@ -214,6 +217,7 @@ function Antenna({
           {...{
             brightenText,
             textLightness,
+            showScorePercents,
             brightnessPct,
             isBottom,
             showLabels,
@@ -228,6 +232,7 @@ function Antenna({
 function TextBillboard({
   brightenText,
   textLightness,
+  showScorePercents,
   brightnessPct,
   isBottom,
   showLabels,
@@ -236,19 +241,29 @@ function TextBillboard({
 }) {
   return (
     <Billboard {...({} as any)} args={[0, 0]}>
+      {/* score percent */}
+      {showScorePercents && (
+        <Text
+          {...({} as any)}
+          color={"#c0c0c0"}
+          textAlign={"center"}
+          // anchorY={isBottom ? "bottom" : "top"}
+          maxWidth={0.5}
+          position={[0, isBottom ? -4.2 : 3, 0]}
+          fontSize={1}
+          fillOpacity={1}
+        >
+          {(score * 100).toFixed(0) + "%"}
+        </Text>
+      )}
+      {/* bot type label */}
       <Text
         {...({} as any)}
         color={
           brightenText
-            ? "white"
+            ? "#fff"
             : `hsl(0,0%,${(textLightness * 100).toFixed(0)}%)`
         }
-        outlineColor={`hsl(0,0%,${(brightnessPct * 100).toFixed(0)}%)`}
-        outlineWidth={0.000001}
-        outlineBlur={0.2}
-        outlineOpacity={0.4}
-        outlineOffsetY={0.05}
-        outlineOffsetX={0}
         textAlign={"center"}
         anchorY={isBottom ? "top" : "bottom"}
         maxWidth={0.5}
