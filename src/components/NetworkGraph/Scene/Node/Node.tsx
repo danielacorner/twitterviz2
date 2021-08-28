@@ -19,7 +19,7 @@ import { useHandleOpenRightClickMenu } from "../../GraphRightClickMenu";
 import NodeBillboard from "./NodeBillboard";
 import { useGravity } from "../useGravity";
 import { useSpring, animated } from "@react-spring/three";
-import { NodeBotScoreAntenna } from "./NodeBotScoreAntenna";
+import { NodeBotScoreAntennae } from "./NodeBotScoreAntenna";
 import {
   CONFIG_FADE_IN,
   NODE_RADIUS,
@@ -310,7 +310,7 @@ export function NodeContent({
           )}
           {node.user.botScore ? (
             <>
-              <NodeBotScoreAntenna
+              <NodeBotScoreAntennae
                 {...{
                   botScore: node.user.botScore,
                   forceOpaque,

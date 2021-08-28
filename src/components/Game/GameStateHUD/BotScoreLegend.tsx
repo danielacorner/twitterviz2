@@ -1,6 +1,6 @@
 import HUD from "../../NetworkGraph/Scene/HUD";
 import { useThree } from "@react-three/fiber";
-import { NodeBotScoreAntenna } from "../../NetworkGraph/Scene/Node/NodeBotScoreAntenna";
+import { NodeBotScoreAntennae } from "../../NetworkGraph/Scene/Node/NodeBotScoreAntenna";
 import { useSpring, animated } from "@react-spring/three";
 import {
   gameStateAtom,
@@ -91,7 +91,7 @@ export function BotScoreLegend({
           </mesh>
           {lastNode && showAvatar && <AvatarCircle {...{ lastNode }} />}
           <mesh castShadow={true} scale={[SCALE, SCALE, SCALE]}>
-            <NodeBotScoreAntenna
+            <NodeBotScoreAntennae
               {...{
                 showLabels: true,
                 forceOpaque: true,

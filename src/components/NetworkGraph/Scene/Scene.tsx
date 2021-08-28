@@ -4,8 +4,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { animated } from "@react-spring/three";
 import { CAMERA_POSITION } from "utils/constants";
 import { useSpring } from "react-spring";
-import { Suspense, useRef, useState } from "react";
-import { useMount } from "utils/utils";
+import { Suspense, useRef } from "react";
 import { Stars } from "./Stars";
 import {
   areOrbitControlsEnabledAtom,
@@ -21,6 +20,7 @@ import { useControls } from "leva";
 import { useHoverAnimation } from "./useHoverAnimation";
 import { Nodes } from "./Nodes";
 import { BotScoreInfoCard } from "components/Game/GameStateHUD/BotScoreInfoCard";
+import { useIsMounted } from "./useIsMounted";
 
 export function Scene() {
   // const vertices = getVertices(nodes.length);
@@ -113,14 +113,6 @@ function DebugInDev({ children }) {
   ) : (
     <>{children}</>
   );
-}
-
-function useIsMounted() {
-  const [isMounted, setIsMounted] = useState(false);
-  useMount(() => {
-    setIsMounted(true);
-  });
-  return isMounted;
 }
 
 function degToRad(deg) {

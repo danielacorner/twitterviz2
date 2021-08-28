@@ -1,4 +1,9 @@
+import styled from "styled-components/macro";
 import { useSpring, animated } from "@react-spring/three";
+import {
+  useSpring as useSpringDom,
+  animated as animatedDom,
+} from "@react-spring/web";
 import { Text, Billboard, Html } from "@react-three/drei";
 import { useState } from "react";
 import { BOT_TYPES, NODE_RADIUS } from "utils/constants";
@@ -6,10 +11,11 @@ import { useMount } from "utils/utils";
 import { scaleOrdinal } from "d3-scale";
 import { schemeCategory10 } from "d3-scale-chromatic";
 import * as THREE from "three";
+import { useIsMounted } from "../useIsMounted";
 
 const colors = scaleOrdinal(schemeCategory10);
 
-export function NodeBotScoreAntenna({
+export function NodeBotScoreAntennae({
   showLabels = false,
   botScore,
   forceOpaque = false,
@@ -135,12 +141,9 @@ function Antenna({
   const textLightness = 1 - brightnessPct;
   const [isMouseOver, setIsMouseOver] = useState(false);
   const showTooltip = showTooltips && isMouseOver;
-  console.log("🌟🚨 ~ showTooltip", showTooltip);
   return (
     <mesh>
       {/* big ol ball for mouseover */}
-
-      {showTooltip && <MouseoverTooltip {...{ tooltipText }} />}
 
       {/* stick */}
       <animated.mesh
@@ -193,6 +196,8 @@ function Antenna({
           </Text>
         </Billboard>
         {/* ball */}
+        {showTooltip && <MouseoverTooltip {...{ tooltipText }} />}
+
         <sphereBufferGeometry args={[SPHERE_RADIUS, 26, 26]} />
         <meshPhysicalMaterial
           metalness={0.8}
@@ -232,9 +237,27 @@ function Antenna({
 }
 
 function MouseoverTooltip({ tooltipText }) {
+  const isMounted = useIsMounted();
+  const springOnMount = useSpringDom({
+    transform: `translate3d(0,${isMounted ? -30 : -20}px,0)`,
+    opacity: isMounted ? 1 : 0,
+    config: { tension: 400, mass: 1, friction: 27 },
+    clamp: true,
+  });
   return (
     <>
-      <Html>{tooltipText}</Html>
+      <Html center={true} style={{ pointerEvents: "none" }}>
+        <AnimatedTooltipStyles style={springOnMount}>
+          {tooltipText}
+        </AnimatedTooltipStyles>
+      </Html>
     </>
   );
 }
+const AnimatedTooltipStyles = styled(animatedDom.div)`
+  font-size: 12px;
+  padding: 0.4em 0.8em;
+  color: white;
+  background: #444;
+  border-radius: 8px;
+`;
