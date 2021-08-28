@@ -27,26 +27,35 @@ export const FILTER_LEVELS = {
 };
 
 export const BOT_TYPES = {
-  OVERALL: { name: "Overall", tooltipText: "stuff" },
-  OTHER: { name: "Other", tooltipText: "stuff" },
-  ASTROTURF: { name: "Astroturf", tooltipText: "stuff2" },
-  FINANCIAL: { name: "Financial", tooltipText: "stuff3" },
-  FAKE_FOLLOWER: { name: "Fake Follower", tooltipText: "stuff" },
-  SPAMMER: { name: "Spammer", tooltipText: "stuff" },
-  SELF_DECLARED: { name: "Self Declared", tooltipText: "stuff" },
+  OVERALL: { name: "Overall", tooltipText: "Overall" },
+  OTHER: {
+    name: "Other",
+    tooltipText:
+      "miscellaneous other bots obtained from manual annotation, user feedback, etc.",
+  },
+  ASTROTURF: {
+    name: "Echo-chamber",
+    tooltipText:
+      "A.K.A. Astroturf bot; accounts that engage in follow back groups and share and delete political content in high volume",
+  },
+  FINANCIAL: {
+    name: "Financial",
+    tooltipText: "bots that post using cashtags",
+  },
+  FAKE_FOLLOWER: {
+    name: "Fake Follower",
+    tooltipText: "bots purchased to increase follower counts",
+  },
+  SPAMMER: {
+    name: "Spammer",
+    tooltipText: "accounts labeled as spambots from several datasets",
+  },
+  SELF_DECLARED: {
+    name: "Self Declared",
+    tooltipText: "bots that say they are a bot, bots from botwiki.org",
+  },
 };
 
-export const BOT_TYPE_MORE_INFO = {
-  OVERALL: "Overall",
-  ASTROTURF:
-    "A.K.A. Echo-chamber bot; accounts that engage in follow back groups and share and delete political content in high volume",
-  FINANCIAL: "bots that post using cashtags",
-  FAKE_FOLLOWER: "bots purchased to increase follower counts",
-  SPAMMER: "accounts labeled as spambots from several datasets",
-  SELF_DECLARED: "bots from botwiki.org",
-  OTHER:
-    "miscellaneous other bots obtained from manual annotation, user feedback, etc.",
-};
 export const CONTROLS_WIDTH = 220;
 export const TABS_HEIGHT = 48;
 export const NAV_HEIGHT = 64;
