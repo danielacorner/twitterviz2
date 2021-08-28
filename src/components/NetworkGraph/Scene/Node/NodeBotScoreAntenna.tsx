@@ -88,6 +88,9 @@ export function NodeBotScoreAntennae({
               handleMouseOver: () => {
                 setMouseOverIdx(idx);
               },
+              handleMouseLeave: () => {
+                setMouseOverIdx(null);
+              },
               color,
               forceOpaque,
               isInStartMenu,
@@ -123,6 +126,7 @@ function Antenna({
   isInStartMenu,
   isMouseOver,
   handleMouseOver,
+  handleMouseLeave,
   brightenText,
   brightenBalls,
 }) {
@@ -195,8 +199,8 @@ function Antenna({
       </animated.mesh>
       {/* mouseover detector ball */}
       <animated.mesh
-        onClick={handleMouseOver}
-        onPointerEnter={handleMouseOver}
+        onClick={isMouseOver ? handleMouseLeave : handleMouseOver}
+        onPointerEnter={isMouseOver ? handleMouseLeave : handleMouseOver}
         position={springProps.textPosition as any}
         material-transparent={true}
         material-opacity={0}
