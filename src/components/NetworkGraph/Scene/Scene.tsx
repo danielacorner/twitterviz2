@@ -50,7 +50,7 @@ export function Scene() {
       orbitControlsRef.current.target.set(0, state.value.y, 0);
       camera.position.set(state.value.x, state.value.y, state.value.z);
     },
-    config: { tension: 28, mass: 6, friction: 20 },
+    config: { tension: 28, mass: 6, friction: 28 },
   });
 
   const gpuInfo = useDetectGPU();

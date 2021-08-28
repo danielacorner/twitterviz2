@@ -131,6 +131,11 @@ function Antenna({
       mounted ? NODE_RADIUS + stickHeightActual + SPHERE_RADIUS : 0,
       0,
     ],
+    textPosition: [
+      0,
+      mounted ? NODE_RADIUS + STICK_HEIGHT * STICK_SCALE + SPHERE_RADIUS : 0,
+      0,
+    ],
   });
   const brightnessPct = 0;
   const textLightness = 1 - brightnessPct;
@@ -157,39 +162,25 @@ function Antenna({
           roughness={0.05}
         />
       </animated.mesh>
+
+      <animated.mesh position={springProps.textPosition as any}>
+        {/* text */}
+        <TextBillboard
+          {...{
+            brightenText,
+            textLightness,
+            brightnessPct,
+            isBottom,
+            showLabels,
+            score,
+            label,
+          }}
+        />
+      </animated.mesh>
       <animated.mesh
         position={springProps.spherePosition as any}
         castShadow={true}
       >
-        {/* text */}
-        <Billboard {...({} as any)} args={[0, 0]}>
-          <Text
-            {...({} as any)}
-            color={
-              brightenText
-                ? "white"
-                : `hsl(0,0%,${(textLightness * 100).toFixed(0)}%)`
-            }
-            outlineColor={`hsl(0,0%,${(brightnessPct * 100).toFixed(0)}%)`}
-            outlineWidth={0.000001}
-            outlineBlur={0.2}
-            outlineOpacity={0.4}
-            outlineOffsetY={0.05}
-            outlineOffsetX={0}
-            textAlign={"center"}
-            anchorY={isBottom ? "top" : "bottom"}
-            maxWidth={0.5}
-            position={[
-              showLabels ? 0 : 0.3,
-              (isBottom ? -1.2 : 1.2) * (showLabels ? 1 : 0.7),
-              0,
-            ]}
-            fontSize={1}
-            fillOpacity={brightenText ? 1 : score ** 0.1}
-          >
-            {showLabels ? label : (score * 100).toFixed(0) + "%"}
-          </Text>
-        </Billboard>
         {/* ball */}
         {showTooltip && <MouseoverTooltip {...{ tooltipText }} />}
 
@@ -208,6 +199,7 @@ function Antenna({
           opacity={forceOpaque ? 1 : showLabels ? 0.5 : score ** 0.5}
         />
       </animated.mesh>
+      {/* mouseover detector ball */}
       <animated.mesh
         onPointerEnter={() => {
           setIsMouseOver(true);
@@ -215,7 +207,7 @@ function Antenna({
         onPointerLeave={() => {
           setIsMouseOver(false);
         }}
-        position={springProps.spherePosition as any}
+        position={springProps.textPosition as any}
       >
         <sphereBufferGeometry args={[3, 0]} />
         {process.env.NODE_ENV !== "production" && (
@@ -228,5 +220,45 @@ function Antenna({
         )}
       </animated.mesh>
     </mesh>
+  );
+}
+function TextBillboard({
+  brightenText,
+  textLightness,
+  brightnessPct,
+  isBottom,
+  showLabels,
+  score,
+  label,
+}) {
+  return (
+    <Billboard {...({} as any)} args={[0, 0]}>
+      <Text
+        {...({} as any)}
+        color={
+          brightenText
+            ? "white"
+            : `hsl(0,0%,${(textLightness * 100).toFixed(0)}%)`
+        }
+        outlineColor={`hsl(0,0%,${(brightnessPct * 100).toFixed(0)}%)`}
+        outlineWidth={0.000001}
+        outlineBlur={0.2}
+        outlineOpacity={0.4}
+        outlineOffsetY={0.05}
+        outlineOffsetX={0}
+        textAlign={"center"}
+        anchorY={isBottom ? "top" : "bottom"}
+        maxWidth={0.5}
+        position={[
+          showLabels ? 0 : 0.3,
+          (isBottom ? -1.2 : 1.2) * (showLabels ? 1 : 0.7),
+          0,
+        ]}
+        fontSize={1}
+        fillOpacity={brightenText ? 1 : score ** 0.1}
+      >
+        {showLabels ? label : (score * 100).toFixed(0) + "%"}
+      </Text>
+    </Billboard>
   );
 }
