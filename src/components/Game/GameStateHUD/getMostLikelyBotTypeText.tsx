@@ -1,5 +1,5 @@
 import { BotScore } from "types";
-import { BOT_LABELS, BOT_TYPE_MORE_INFO } from "utils/constants";
+import { BOT_TYPES, BOT_TYPE_MORE_INFO } from "utils/constants";
 
 export function getMostLikelyBotTypeText(botScore: BotScore) {
   let botTypeText = "";
@@ -39,27 +39,27 @@ export function getMostLikelyBotTypeText(botScore: BotScore) {
 
   if (maxScore === fake_follower) {
     botTypeText += "a";
-    botType = BOT_LABELS.FAKE_FOLLOWER;
+    botType = BOT_TYPES.FAKE_FOLLOWER.name;
     botTypeInfo += BOT_TYPE_MORE_INFO.FAKE_FOLLOWER;
   } else if (maxScore === astroturf) {
     botTypeText += "an";
-    botType = BOT_LABELS.ASTROTURF;
+    botType = BOT_TYPES.ASTROTURF.name;
     botTypeInfo += BOT_TYPE_MORE_INFO.ASTROTURF;
   } else if (maxScore === financial) {
     botTypeText += "a";
-    botType = BOT_LABELS.FINANCIAL;
+    botType = BOT_TYPES.FINANCIAL.name;
     botTypeInfo += BOT_TYPE_MORE_INFO.FINANCIAL;
   } else if (maxScore === other) {
     botTypeText += "an";
-    botType = BOT_LABELS.OTHER;
+    botType = BOT_TYPES.OTHER.name;
     botTypeInfo += BOT_TYPE_MORE_INFO.OTHER;
   } else if (maxScore === self_declared) {
     botTypeText += "a";
-    botType = BOT_LABELS.SELF_DECLARED;
+    botType = BOT_TYPES.SELF_DECLARED.name;
     botTypeInfo += BOT_TYPE_MORE_INFO.SELF_DECLARED;
   } else if (maxScore === spammer) {
     botTypeText += "a";
-    botType = BOT_LABELS.SPAMMER;
+    botType = BOT_TYPES.SPAMMER.name;
     botTypeInfo += BOT_TYPE_MORE_INFO.SPAMMER;
   }
 

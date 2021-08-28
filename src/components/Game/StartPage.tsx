@@ -46,12 +46,8 @@ export function StartPage({ startLookingAtTweets }) {
             <p>There are different kinds of bot:</p>
             <div className="canvasContainer">
               <Canvas style={{ width: 300, height: 240 }}>
-                {getIsMobileDevice() ? (
-                  <DeviceOrientationOrbitControls />
-                ) : (
-                  <OrbitControls {...({} as any)} />
-                )}
                 <BotScoreLegend
+                  showTooltips={true}
                   showAvatar={false}
                   isInStartMenu={true}
                   position={[0, 0.2, 0]}

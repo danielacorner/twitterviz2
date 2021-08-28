@@ -36,6 +36,7 @@ export function BotScoreLegendHUD() {
       >
         <BotScoreLegend
           {...{
+            showTooltips: false,
             isInStartMenu: false,
             showAvatar: false,
             position: [0, 0, 0],
@@ -50,11 +51,13 @@ export function BotScoreLegendHUD() {
 export function BotScoreLegend({
   isInStartMenu,
   showAvatar,
+  showTooltips,
   position,
   scale,
 }: {
   isInStartMenu: boolean;
   showAvatar: boolean;
+  showTooltips: boolean;
   position: number[];
   scale: number[];
 }) {
@@ -92,6 +95,7 @@ export function BotScoreLegend({
               {...{
                 showLabels: true,
                 forceOpaque: true,
+                showTooltips,
                 isInStartMenu,
                 brightenText: true,
                 brightenBalls: true,

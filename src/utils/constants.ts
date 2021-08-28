@@ -25,15 +25,17 @@ export const FILTER_LEVELS = {
   low: "low",
   none: "none",
 };
-export const BOT_LABELS = {
-  OVERALL: "Overall",
-  OTHER: "Other",
-  ASTROTURF: "Astroturf",
-  FINANCIAL: "Financial",
-  FAKE_FOLLOWER: "Fake Follower",
-  SPAMMER: "Spammer",
-  SELF_DECLARED: "Self Declared",
+
+export const BOT_TYPES = {
+  OVERALL: { name: "Overall", tooltipText: "stuff" },
+  OTHER: { name: "Other", tooltipText: "stuff" },
+  ASTROTURF: { name: "Astroturf", tooltipText: "stuff2" },
+  FINANCIAL: { name: "Financial", tooltipText: "stuff3" },
+  FAKE_FOLLOWER: { name: "Fake Follower", tooltipText: "stuff" },
+  SPAMMER: { name: "Spammer", tooltipText: "stuff" },
+  SELF_DECLARED: { name: "Self Declared", tooltipText: "stuff" },
 };
+
 export const BOT_TYPE_MORE_INFO = {
   OVERALL: "Overall",
   ASTROTURF:

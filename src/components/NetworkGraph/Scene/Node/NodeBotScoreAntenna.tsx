@@ -1,7 +1,7 @@
 import { useSpring, animated } from "@react-spring/three";
-import { Text, Billboard } from "@react-three/drei";
+import { Text, Billboard, Html } from "@react-three/drei";
 import { useState } from "react";
-import { BOT_LABELS, NODE_RADIUS } from "utils/constants";
+import { BOT_TYPES, NODE_RADIUS } from "utils/constants";
 import { useMount } from "utils/utils";
 import { scaleOrdinal } from "d3-scale";
 import { schemeCategory10 } from "d3-scale-chromatic";
@@ -16,52 +16,59 @@ export function NodeBotScoreAntenna({
   isInStartMenu = false,
   brightenText = false,
   brightenBalls = false,
+  showTooltips = false,
 }) {
   const antennae = [
     // top
     {
-      label: BOT_LABELS.OVERALL,
       score: botScore.overall,
+      label: BOT_TYPES.OVERALL.name,
+      tooltipText: BOT_TYPES.OVERALL.tooltipText,
       color: colors("0"),
       // color: "#ff0000",
       rotation: [0, 0, 0],
     },
     // top right
     {
-      label: BOT_LABELS.ASTROTURF,
       score: botScore.astroturf,
+      label: BOT_TYPES.ASTROTURF.name,
+      tooltipText: BOT_TYPES.ASTROTURF.tooltipText,
       color: colors("1"),
       // color: "#09ff00",
       rotation: [0, 0, -Math.PI / 3],
     },
     // top left
     {
-      label: BOT_LABELS.FINANCIAL,
       score: botScore.financial,
+      label: BOT_TYPES.FINANCIAL.name,
+      tooltipText: BOT_TYPES.FINANCIAL.tooltipText,
       color: colors("2"),
       // color: "#75d87a",
       rotation: [0, 0, Math.PI / 3],
     },
     // bottom right
     {
-      label: BOT_LABELS.FAKE_FOLLOWER,
       score: botScore.fake_follower,
+      label: BOT_TYPES.FAKE_FOLLOWER.name,
+      tooltipText: BOT_TYPES.FAKE_FOLLOWER.tooltipText,
       color: colors("3"),
       // color: "#de70f1",
       rotation: [0, 0, (-Math.PI / 3) * 2],
     },
     // bottom left
     {
-      label: BOT_LABELS.SPAMMER,
       score: botScore.spammer,
+      label: BOT_TYPES.SPAMMER.name,
+      tooltipText: BOT_TYPES.SPAMMER.tooltipText,
       color: colors("4"),
       // color: "#f19244",
       rotation: [0, 0, (Math.PI / 3) * 2],
     },
     // bottom
     {
-      label: BOT_LABELS.SELF_DECLARED,
       score: botScore.self_declared,
+      label: BOT_TYPES.SELF_DECLARED.name,
+      tooltipText: BOT_TYPES.SELF_DECLARED.tooltipText,
       color: colors("5"),
       // color: "#dadada",
       rotation: [0, 0, Math.PI],
@@ -69,17 +76,19 @@ export function NodeBotScoreAntenna({
   ];
   return (
     <mesh>
-      {antennae.map(({ rotation, color, score, label }, idx) => (
+      {antennae.map(({ rotation, color, score, label, tooltipText }, idx) => (
         <mesh key={color} rotation={rotation as any} scale={[1, 1, 1]}>
           <Antenna
             {...{
               color,
               forceOpaque,
               isInStartMenu,
+              tooltipText,
               score,
               label,
               showLabels,
               brightenText,
+              showTooltips,
               brightenBalls,
               isBottom: idx > 2,
             }}
@@ -98,9 +107,11 @@ function Antenna({
   color,
   score,
   label,
+  tooltipText,
   showLabels,
   isBottom,
   forceOpaque,
+  showTooltips,
   isInStartMenu,
   brightenText,
   brightenBalls,
@@ -122,8 +133,15 @@ function Antenna({
   });
   const brightnessPct = 0;
   const textLightness = 1 - brightnessPct;
+  const [isMouseOver, setIsMouseOver] = useState(false);
+  const showTooltip = showTooltips && isMouseOver;
+  console.log("🌟🚨 ~ showTooltip", showTooltip);
   return (
-    <>
+    <mesh>
+      {/* big ol ball for mouseover */}
+
+      {showTooltip && <MouseoverTooltip {...{ tooltipText }} />}
+
       {/* stick */}
       <animated.mesh
         castShadow={true}
@@ -190,6 +208,33 @@ function Antenna({
           opacity={forceOpaque ? 1 : showLabels ? 0.5 : score ** 0.5}
         />
       </animated.mesh>
+      <animated.mesh
+        onPointerEnter={() => {
+          setIsMouseOver(true);
+        }}
+        onPointerLeave={() => {
+          setIsMouseOver(false);
+        }}
+        position={springProps.spherePosition as any}
+      >
+        <sphereBufferGeometry args={[3, 0]} />
+        {process.env.NODE_ENV !== "production" && (
+          <meshBasicMaterial
+            color={"#1e2847"}
+            wireframe={true}
+            transparent={true}
+            opacity={0.2}
+          />
+        )}
+      </animated.mesh>
+    </mesh>
+  );
+}
+
+function MouseoverTooltip({ tooltipText }) {
+  return (
+    <>
+      <Html>{tooltipText}</Html>
     </>
   );
 }

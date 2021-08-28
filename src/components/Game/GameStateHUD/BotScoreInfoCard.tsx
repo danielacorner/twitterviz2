@@ -95,6 +95,7 @@ export function BotScoreInfoCard() {
                     <mesh scale={[3, 3, 3]} position={[0, 0.4, 0]}>
                       <BotScoreLegend
                         {...{
+                          showTooltips: true,
                           showAvatar: true,
                           isInStartMenu: false,
                           position: [0, 0, 0],
@@ -138,9 +139,9 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
   width: 100vw;
   text-align: left;
   background: none;
-  border: ${process.env.NODE_ENV !== "production"
+  /* border: ${process.env.NODE_ENV !== "production"
     ? "1px solid limegreen"
-    : "none"};
+    : "none"}; */
   box-sizing: border-box;
   font-size: ${TRANSFORM ? 4 : 24}px;
   .content {
@@ -156,9 +157,9 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
     box-shadow: 0px 1px 11px #0000009c;
     border-radius: 16px;
     box-sizing: border-box;
-    border: ${process.env.NODE_ENV !== "production"
+    /* border: ${process.env.NODE_ENV !== "production"
       ? "1px solid limegreen"
-      : "none"};
+      : "none"}; */
     width: ${WIDTH * mu}px;
     height: ${HEIGHT * mu}px;
     margin: auto;
