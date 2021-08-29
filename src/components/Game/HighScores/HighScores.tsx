@@ -21,7 +21,13 @@ import { useSpring, animated } from "react-spring";
 import { useMount } from "utils/utils";
 import { Html } from "@react-three/drei";
 import { useInterval } from "utils/useInterval";
-import { colorSecondary, colorPrimary, darkBackground } from "utils/colors";
+import {
+  colorSecondary,
+  colorPrimary,
+  darkBackground,
+  textPrimaryColor,
+  textSecondaryColor,
+} from "utils/colors";
 import { useLoading } from "providers/store/useSelectors";
 import { usePlayAgain, useStartLookingAtTweets } from "../Game";
 import { LearnMoreResources } from "./LearnMoreResources";
@@ -138,9 +144,9 @@ export function HighScores() {
         <div className="buttonsRow">
           <Button
             className="btnLearnMore"
-            color="primary"
-            style={{ background: colorPrimary }}
             variant="contained"
+            style={{ background: colorPrimary }}
+            color="primary"
             onClick={() => {
               setIsLearnMoreOpen(true);
             }}
@@ -149,10 +155,9 @@ export function HighScores() {
           </Button>
           <Button
             className="btnPlayAgain"
-            disabled={loading}
+            variant="outlined"
             color="secondary"
-            style={{ background: colorSecondary }}
-            variant="contained"
+            disabled={loading}
             onClick={() => {
               resetScoreAndFetchNewTweets();
               startLookingAtTweets();
@@ -395,16 +400,20 @@ const HighScoresStyles = styled.div`
     grid-auto-flow: column;
     grid-gap: 0.5em;
     button {
-      box-shadow: 0px 2px 0px 0 #000000bf;
+      box-shadow: 0px 2px 3px 0px #00000065;
     }
     button,
     .MuiButton-label {
       font-weight: bold;
       letter-spacing: 0.1em;
-      color: white !important;
       font-size: 10px;
     }
   }
   .btnPlayAgain {
+    background: #3b363668;
+    .MuiButton-label {
+    }
+  }
+  .btnLearnMore {
   }
 `;

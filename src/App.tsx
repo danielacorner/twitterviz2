@@ -57,6 +57,9 @@ const AppStyles = styled.div`
       color: hsl(250, 50%, 60%);
     }
   }
+  .MuiButton-outlinedSecondary {
+    border: 1px solid #ffffff7d !important;
+  }
 `;
 
 function AppStylesHooks() {
