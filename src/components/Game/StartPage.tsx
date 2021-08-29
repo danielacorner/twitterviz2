@@ -3,10 +3,7 @@ import { useLoading } from "providers/store/useSelectors";
 import styled from "styled-components/macro";
 import { Canvas } from "@react-three/fiber";
 import { BotScoreLegend } from "components/Game/GameStateHUD/BotScoreLegend";
-import { DeviceOrientationOrbitControls } from "./DeviceOrientationOrbitControls";
-import { OrbitControls } from "@react-three/drei";
 import { POPUP_BASE_CSS } from "./popupBaseCss";
-import { getIsMobileDevice } from "./Game";
 import { useState } from "react";
 import { ChevronLeft } from "@material-ui/icons";
 import COVIDSVG from "./COVIDSVG";
@@ -20,10 +17,10 @@ export function StartPage({ startLookingAtTweets }) {
   return (
     <StartPageStyles>
       <div className="content">
-        <h1 className="title">🎣 Plenty of Bots 🤖</h1>
+        <h1 className="title">Plenty of Bots 🎣</h1>
         {step === 0 && (
           <>
-            <p>Twitter is full of bots.</p>
+            <p>Twitter is full of bots 🤖</p>
             <p>
               In 2020 for example,{" "}
               <a

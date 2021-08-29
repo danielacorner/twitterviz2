@@ -93,16 +93,7 @@ export const Node = ({
   vec?: any;
   node: UserNode;
 }) => {
-  // start at ("bubble up" or "emerge from") bottom center
-  const spread = NODE_WIDTH * 2;
-  const newX = 0;
-  const newY = -NODE_WIDTH * 20;
-  const newZ = 0;
-  const x = randBetween(newX - spread, newX + spread);
-  const y = randBetween(newY - spread, newY + spread);
-  const z = randBetween(newZ - spread, newZ + spread);
-
-  const startPosition = useRef([x, y, z]).current;
+  const startPosition = useStartPosition();
   const tooltipNode = useTooltipNode();
 
   const [scanningNodeId] = useAtom(scanningUserNodeIdAtom);
@@ -234,6 +225,21 @@ export const Node = ({
     </animated.group>
   );
 };
+const SPREAD = NODE_WIDTH * 2;
+/** start at ("bubble up" or "emerge from") bottom center  */
+function useStartPosition() {
+  // start position
+  function getStartPosition(val: number) {
+    return randBetween(val - SPREAD, val + SPREAD);
+  }
+  const x = getStartPosition(0);
+  const y = getStartPosition(-NODE_WIDTH * 12);
+  const z = getStartPosition(0);
+
+  const startPosition = useRef([x, y, z]).current;
+  return startPosition;
+}
+
 export function NodeContent({
   node,
   isTooltipNode,

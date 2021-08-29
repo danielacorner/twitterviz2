@@ -26,12 +26,15 @@ export function useGravity(api: PublicApi, vec: any) {
         position.current
       );
       const gravityForce = getInverseGravityForce(distanceFromCenter, G);
+      // lower upward force, stronger downward force
+      const vy = velocity.current[1];
+      const gravityModified = gravityForce * (vy > 0 ? 0.2 : 1);
 
       api.applyForce(
         vec
           .set(...position.current)
           .normalize()
-          .multiplyScalar(-gravityForce)
+          .multiplyScalar(-gravityModified)
           .toArray(),
         [0, 0, 0]
       );

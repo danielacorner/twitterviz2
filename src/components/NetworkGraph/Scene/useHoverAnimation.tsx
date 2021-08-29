@@ -1,7 +1,7 @@
 import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
 
-// const JITTER_EVERY_N_SECONDS = 1;
+const JITTER_EVERY_N_SECONDS = 3;
 const mu = 0.5;
 export function useHoverAnimation({
   deltaX = 0.01,
@@ -29,10 +29,10 @@ export function useHoverAnimation({
       ref.current.rotation.z =
         Math.sin(mu * rand.current * clock.getElapsedTime() + 1000) * 0.01;
     }
-    // if (Math.floor(clock.getElapsedTime()) % JITTER_EVERY_N_SECONDS === 0) {
-    const randNum = Math.random() - 0.5;
-    rand.current = rand.current + (randomize ? 0.0003 * randNum : 0);
-    // }
+    if (Math.floor(clock.getElapsedTime()) % JITTER_EVERY_N_SECONDS === 0) {
+      const randNum = Math.random() - 0.5;
+      rand.current = rand.current + (randomize ? 0.0003 * randNum : 0);
+    }
   });
   return ref;
 }

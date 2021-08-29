@@ -145,10 +145,21 @@ export function HighScores() {
         >
           Play again
         </Button>
+        {/* TODO: learn more page? */}
       </HighScoresStyles>
     </Html>
   );
 }
+
+const LEARN_MORE_RESOURCES = [
+  {
+    title: "Secrets of Social Media PsyOps - BiaSciLab",
+    description: `Psychological Warfare through social media is one of the most powerful weapons in today's political battlefield. PsyOps groups have figured out how to sharpen the blade through algorithms and targeted advertising. Nation states are using PsyOps to influence the citizens of their enemies, fighting battles from behind the keyboard.
+
+In this talk, BiaSciLab with cover a brief history of PsyOps and how it has been used both on the battlefield and the political stage. Followed by a dive deep into how it works on the mind and how PsyOps groups are using social media to influence the political climate and elections worldwide.`,
+    url: "https://www.youtube.com/watch?v=6pse_lOyT14",
+  },
+];
 
 function HighScore({
   name,

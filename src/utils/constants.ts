@@ -1,10 +1,12 @@
 export const WAIT_FOR_STREAM_TIMEOUT =
   (process.env.NODE_ENV !== "production" ? 2 : 12) * 1000;
 
-const finalZ = window.innerWidth < 768 ? 130 : 100; // zoom out for smaller screen widths
+const Z_MOBILE = 100;
+const Z_DESKTOP = 100;
+const FINAL_Z = window.innerWidth < 768 ? Z_MOBILE : Z_DESKTOP; // zoom out for smaller screen widths
 export const CAMERA_POSITION = {
   initial: [0, 350, 350],
-  final: [0, 0, finalZ],
+  final: [0, 0, FINAL_Z], // during gameplay
   gameOver: [0, 0, 500],
 };
 export const AVATAR_WIDTH = 46;
