@@ -68,12 +68,12 @@ export function Effects() {
             kernelSize={KernelSize.SMALL}
             blur={0.1}
           />
-          <Bloom
+          {/* <Bloom
             kernelSize={2}
             luminanceThreshold={0}
             luminanceSmoothing={0.4}
             intensity={0.6}
-          />
+          /> */}
           <Bloom
             kernelSize={KernelSize.VERY_LARGE}
             luminanceThreshold={0.4} // only bloom the centermost nodes

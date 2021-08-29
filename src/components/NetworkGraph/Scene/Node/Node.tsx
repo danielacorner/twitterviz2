@@ -1,7 +1,6 @@
 import { useSphere } from "@react-three/cannon";
 import * as THREE from "three";
 import useStore, {
-  isBotScoreExplainerUpAtom,
   isPointerOverAtom,
   isRightDrawerOpenAtom,
   numTooltipTweetsAtom,
@@ -38,7 +37,7 @@ import { useHoverAnimation } from "../useHoverAnimation";
 
 const defaultNodeMaterial = new THREE.MeshPhysicalMaterial({
   emissive: "#0b152f",
-  metalness: 0.97,
+  metalness: 0.5,
   transmission: 1,
   roughness: 0,
   envMapIntensity: 4,
@@ -70,7 +69,7 @@ const notABotMaterial = new THREE.MeshPhysicalMaterial({
 });
 const pointerOverMaterial = new THREE.MeshPhysicalMaterial({
   // emissive: "#002741",
-  metalness: 0.94,
+  metalness: -1.5,
   roughness: 0.1,
   transmission: 1,
   envMapIntensity: 4,
@@ -303,6 +302,7 @@ export function NodeContent({
     deltaX: 0.7,
     deltaY: 0.7,
   });
+  const { metalness } = useControls({ metalness: 0 });
   return (
     <>
       <animated.mesh ref={isPopupNode ? null : hoverAnimationRefWave}>
@@ -313,6 +313,7 @@ export function NodeContent({
               geometry={nodeGeometry}
               material-transparent={true}
               material-opacity={springProps.opacity}
+              // material-metalness={metalness}
             ></animated.mesh>
           )}
           {node.user.botScore ? (
