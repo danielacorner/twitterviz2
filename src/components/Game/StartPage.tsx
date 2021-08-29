@@ -8,11 +8,14 @@ import { useState } from "react";
 import { ChevronLeft } from "@material-ui/icons";
 import COVIDSVG from "./COVIDSVG";
 import { colorLink, colorSecondary } from "utils/colors";
+import { useAtom } from "jotai";
+import { isMusicOnAtom } from "providers/store/store";
 
 export function StartPage({ startLookingAtTweets }) {
   const isLoading = useLoading();
 
   const [step, setStep] = useState(0);
+  const [isAudioPlaying, setIsAudioPlaying] = useAtom(isMusicOnAtom);
 
   return (
     <StartPageStyles>
@@ -125,6 +128,9 @@ export function StartPage({ startLookingAtTweets }) {
                 onClick={() => {
                   setStep(0);
                   startLookingAtTweets();
+                  if (!isAudioPlaying) {
+                    setIsAudioPlaying(true);
+                  }
                 }}
               >
                 Play
