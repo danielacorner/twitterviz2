@@ -259,7 +259,7 @@ const V1 = 0.001;
 const BUBBLE_RADIUS_MULT = 0.2;
 function AnimatingBubble({ handleUnmount }) {
   const [ref, api] = useSphere(() => ({
-    mass: 0.1,
+    mass: 0.07,
     position: getRandomPosition(-1.5 * NODE_RADIUS, 1.5 * NODE_RADIUS) as any,
     velocity: [
       0,
