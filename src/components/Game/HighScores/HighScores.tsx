@@ -21,9 +21,10 @@ import { useSpring, animated } from "react-spring";
 import { useMount } from "utils/utils";
 import { Html } from "@react-three/drei";
 import { useInterval } from "utils/useInterval";
-import { darkBackground } from "utils/colors";
+import { colorSecondary, colorPrimary, darkBackground } from "utils/colors";
 import { useLoading } from "providers/store/useSelectors";
 import { usePlayAgain, useStartLookingAtTweets } from "../Game";
+import { LearnMoreResources } from "./LearnMoreResources";
 
 const DIV_WIDTH = 280;
 export function HighScores() {
@@ -81,6 +82,7 @@ export function HighScores() {
   const deleteAllHighScores = useDeleteAllHighScores();
   const loading = useLoading();
   const [submittedName, setSubmittedName] = useState("");
+  const [isLearnMoreOpen, setIsLearnMoreOpen] = useState(false);
   const resetScoreAndFetchNewTweets = usePlayAgain();
   const startLookingAtTweets = useStartLookingAtTweets();
   return !isGameOver ? null : (
@@ -133,33 +135,40 @@ export function HighScores() {
             <Restore />
           </IconButton>
         )}
-        <Button
-          className="btnPlayAgain"
-          color="secondary"
-          disabled={loading}
-          variant="contained"
-          onClick={() => {
-            resetScoreAndFetchNewTweets();
-            startLookingAtTweets();
-          }}
-        >
-          Play again
-        </Button>
+        <div className="buttonsRow">
+          <Button
+            className="btnLearnMore"
+            color="primary"
+            style={{ background: colorPrimary }}
+            variant="contained"
+            onClick={() => {
+              setIsLearnMoreOpen(true);
+            }}
+          >
+            Learn more
+          </Button>
+          <Button
+            className="btnPlayAgain"
+            disabled={loading}
+            color="secondary"
+            style={{ background: colorSecondary }}
+            variant="contained"
+            onClick={() => {
+              resetScoreAndFetchNewTweets();
+              startLookingAtTweets();
+            }}
+          >
+            Play again
+          </Button>
+        </div>
+        <LearnMoreResources
+          {...{ handleClose: () => setIsLearnMoreOpen(false), isLearnMoreOpen }}
+        />
         {/* TODO: learn more page? */}
       </HighScoresStyles>
     </Html>
   );
 }
-
-const LEARN_MORE_RESOURCES = [
-  {
-    title: "Secrets of Social Media PsyOps - BiaSciLab",
-    description: `Psychological Warfare through social media is one of the most powerful weapons in today's political battlefield. PsyOps groups have figured out how to sharpen the blade through algorithms and targeted advertising. Nation states are using PsyOps to influence the citizens of their enemies, fighting battles from behind the keyboard.
-
-In this talk, BiaSciLab with cover a brief history of PsyOps and how it has been used both on the battlefield and the political stage. Followed by a dive deep into how it works on the mind and how PsyOps groups are using social media to influence the political climate and elections worldwide.`,
-    url: "https://www.youtube.com/watch?v=6pse_lOyT14",
-  },
-];
 
 function HighScore({
   name,
@@ -375,12 +384,27 @@ const HighScoresStyles = styled.div`
   .MuiInput-input {
     box-shadow: 0px 2px 0px 0 #000000bf;
   }
-  .btnPlayAgain {
+  .buttonsRow {
     position: absolute;
-    bottom: -18px;
+    bottom: -14px;
     left: 0;
     right: 0;
     margin: auto;
     width: fit-content;
+    display: grid;
+    grid-auto-flow: column;
+    grid-gap: 0.5em;
+    button {
+      box-shadow: 0px 2px 0px 0 #000000bf;
+    }
+    button,
+    .MuiButton-label {
+      font-weight: bold;
+      letter-spacing: 0.1em;
+      color: white !important;
+      font-size: 10px;
+    }
+  }
+  .btnPlayAgain {
   }
 `;

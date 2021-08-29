@@ -342,7 +342,6 @@ export function NodeContent({
 }) {
   const hasBotScore = Boolean(node.user.botScore);
   const isNotABot = node.user.isNotABot;
-  console.log("🌟🚨 ~ isNotABot", isNotABot);
 
   const [doneAnimating, setDoneAnimating] = useState(false);
 
