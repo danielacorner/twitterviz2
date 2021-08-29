@@ -22,6 +22,7 @@ import { useSpring, animated } from "@react-spring/three";
 import { NodeBotScoreAntennae } from "./NodeBotScoreAntenna";
 import {
   CONFIG_FADE_IN,
+  CONFIG_POP_OUT,
   NODE_RADIUS,
   NODE_RADIUS_COLLISION_MULTIPLIER,
   NODE_WIDTH,
@@ -32,15 +33,17 @@ import { ScanningAnimation } from "./ScanningAnimation";
 import { MeshWobbleMaterial } from "@react-three/drei";
 import { useControls } from "leva";
 import { useMounted } from "utils/hooks";
-import { randBetween } from "utils/utils";
+import { randBetween, useMount } from "utils/utils";
 import { useHoverAnimation } from "../useHoverAnimation";
+import { useIsMounted } from "../useIsMounted";
 
 const defaultNodeMaterial = new THREE.MeshPhysicalMaterial({
   emissive: "#0b152f",
-  metalness: 0.5,
+  metalness: 0.4,
   transmission: 1,
   roughness: 0,
   envMapIntensity: 4,
+  transparent: true,
   // color: "#316c83",
 });
 const opacityMaterial = new THREE.MeshPhysicalMaterial({
@@ -60,11 +63,13 @@ const rightClickNodeMaterial = new THREE.MeshPhysicalMaterial({
   // color: "#be5626",
 });
 const notABotMaterial = new THREE.MeshPhysicalMaterial({
-  // emissive: "#471111",
-  metalness: 0,
+  emissive: "#0b152f",
+  metalness: 0.4,
   transmission: 1,
   roughness: 0,
   envMapIntensity: 4,
+  transparent: true,
+  // opacity: 0,
   // color: "#be5626",
 });
 const pointerOverMaterial = new THREE.MeshPhysicalMaterial({
@@ -92,7 +97,7 @@ export const Node = ({
   vec?: any;
   node: UserNode;
 }) => {
-  const startPosition = useStartPosition();
+  const startPosition = getStartPosition();
   const tooltipNode = useTooltipNode();
 
   const [scanningNodeId] = useAtom(scanningUserNodeIdAtom);
@@ -170,7 +175,9 @@ export const Node = ({
   const isNotABot = node.user.isNotABot;
 
   const { scale2 } = useControls({ scale2: 1 });
-  const scaleMult = isNotABot ? 0 : scale2;
+  const shouldPop = true;
+  // const shouldPop = useRef(Math.random() > 0.3);
+  const scaleMult = isNotABot ? (shouldPop ? 2 : 0) : scale2;
 
   const isScanningNode = node.id_str === scanningNodeId;
 
@@ -184,21 +191,18 @@ export const Node = ({
       : [1 * scaleMult, 1 * scaleMult, 1 * scaleMult],
   });
 
-  const [{ scale }, set] = useSpring(() => ({
-    scale: isScanningNode ? [1.2, 1.2, 1.2] : [1, 1, 1],
-    config: { mass: 3, friction: 40, tension: 800 },
-  }));
-
   // TODO: check out name stays after submit
 
   const hasBotScore = Boolean(node.user.botScore);
 
   return (
-    <animated.group scale={scale as any}>
+    <animated.group>
       <animated.mesh renderOrder={2}>
         <animated.mesh
           ref={ref}
           scale={springScale.scale as any}
+          // material-transparent={true}
+          // material-opacity={springScale.opacity}
           {...(hasBotScore
             ? {}
             : {
@@ -215,28 +219,106 @@ export const Node = ({
               isTooltipNode,
               isPointerOver,
               isScanningNode,
+
               isRightClickingThisNode,
             }}
           />
+          {isNotABot && shouldPop && <PopAnimation />}
           {isScanningNode ? <ScanningAnimation /> : null}
         </animated.mesh>
       </animated.mesh>
     </animated.group>
   );
 };
-const SPREAD = NODE_WIDTH * 2;
-/** start at ("bubble up" or "emerge from") bottom center  */
-function useStartPosition() {
-  // start position
-  function getStartPosition(val: number) {
-    return randBetween(val - SPREAD, val + SPREAD);
-  }
-  const x = getStartPosition(0);
-  const y = getStartPosition(-NODE_WIDTH * 12);
-  const z = getStartPosition(0);
+function PopAnimation() {
+  const numBubbles = Math.round(Math.random() * 7) + 1;
+  const [bubblesIds, setBubblesIds] = useState(
+    [...new Array(numBubbles)].map((_) => Math.random())
+  );
+  return (
+    <>
+      {bubblesIds.map((bubbleId) => (
+        <AnimatingBubble
+          key={bubbleId}
+          handleUnmount={() => {
+            setBubblesIds((p) => p.filter((id) => id !== bubbleId));
+          }}
+        />
+      ))}
+    </>
+  );
+}
+function getRandomPosition(min, max) {
+  return [
+    Math.random() * (max - min) + min,
+    Math.random() * (max - min) + min,
+    Math.random() * (max - min) + min,
+  ];
+}
+const V1 = 0.001;
+const BUBBLE_RADIUS_MULT = 0.2;
+function AnimatingBubble({ handleUnmount }) {
+  const [ref, api] = useSphere(() => ({
+    mass: 0.1,
+    position: getRandomPosition(-1.5 * NODE_RADIUS, 1.5 * NODE_RADIUS) as any,
+    velocity: [
+      0,
+      // Math.random() * V1 - V1 / 2,
+      Math.random() * V1,
+      0,
+      // Math.random() * V1 - V1 / 2,
+    ],
+    // onRest: handleUnmount,
+  }));
+  // useFrame(()=>{
+  //   ref.current.velocity
+  // })
+  // usespring
+  const [isOpaque, setIsOpaque] = useState(true);
+  // useMount(() => {
+  //   setIsOpaque(true);
+  // });
+  useMount(() => {
+    window.setTimeout(() => {
+      setIsOpaque(false);
+    }, Math.random() * 300 + 100);
+  });
+  const { opacity } = useSpring({
+    opacity: isOpaque ? 1 : 0,
+    config: CONFIG_POP_OUT,
+  });
+  return (
+    <mesh ref={ref} material={notABotMaterial}>
+      <sphereBufferGeometry
+        attach="geometry"
+        args={[NODE_RADIUS * Math.random() * BUBBLE_RADIUS_MULT, 32, 32]}
+      />
+      <animated.meshPhysicalMaterial
+        {...{
+          metalness: 0.4,
+          transmission: 1,
+          roughness: 0,
+          envMapIntensity: 4,
+          transparent: true,
+        }}
+        opacity={opacity}
+      />
+    </mesh>
+  );
+}
 
-  const startPosition = useRef([x, y, z]).current;
-  return startPosition;
+/** start at ("bubble up" or "emerge from") bottom center  */
+function getStartPosition() {
+  // start position
+  function addSpread(val: number, spread: number) {
+    return randBetween(val - spread, val + spread);
+  }
+  const x = addSpread(0, NODE_WIDTH * 2);
+  const y = addSpread(-NODE_WIDTH * 10, NODE_WIDTH * 4);
+  const z = addSpread(0, NODE_WIDTH * 2);
+
+  // const startPosition = useRef([x, y, z]).current;
+  return [x, y, z];
 }
 
 export function NodeContent({
@@ -260,15 +342,16 @@ export function NodeContent({
 }) {
   const hasBotScore = Boolean(node.user.botScore);
   const isNotABot = node.user.isNotABot;
+  console.log("🌟🚨 ~ isNotABot", isNotABot);
 
   const [doneAnimating, setDoneAnimating] = useState(false);
 
-  const material = isPopupNode
+  const material = isNotABot
+    ? notABotMaterial
+    : isPopupNode
     ? defaultNodeMaterial
     : !doneAnimating
     ? opacityMaterial
-    : isNotABot
-    ? notABotMaterial
     : isScanningNode
     ? null
     : isRightClickingThisNode
@@ -283,30 +366,31 @@ export function NodeContent({
 
   // fade in on mount
   const springProps = useSpring({
-    opacity: mounted || isPopupNode ? 1 : 0,
+    opacity: isNotABot ? 0 : mounted || isPopupNode ? 1 : 0,
     onRest() {
       setDoneAnimating(true);
     },
-    config: CONFIG_FADE_IN,
+    config: isNotABot ? CONFIG_POP_OUT : CONFIG_FADE_IN,
     immediate: isPopupNode,
     clamp: true,
   });
-  const hoverAnimationRef = useHoverAnimation({
-    deltaX: 0.5,
-    deltaY: 0.03,
-    randomize: true,
-  });
+  // const hoverAnimationRef = useHoverAnimation({
+  //   deltaX: 0.5,
+  //   deltaY: 0.03,
+  //   randomize: true,
+  // });
 
   // const { deltaX, deltaY } = useControls({ deltaX: 1, deltaY: 1 });
   const hoverAnimationRefWave = useHoverAnimation({
     deltaX: 0.7,
     deltaY: 0.7,
+    randomize: true,
   });
   const { metalness } = useControls({ metalness: 0 });
   return (
     <>
       <animated.mesh ref={isPopupNode ? null : hoverAnimationRefWave}>
-        <animated.mesh ref={isPopupNode ? null : hoverAnimationRef}>
+        <animated.mesh ref={isPopupNode ? null : null}>
           {isScanningNode ? null : (
             <animated.mesh
               {...(material ? { material } : {})}

@@ -5,7 +5,7 @@ const Z_MOBILE = 100;
 const Z_DESKTOP = 100;
 const FINAL_Z = window.innerWidth < 768 ? Z_MOBILE : Z_DESKTOP; // zoom out for smaller screen widths
 export const CAMERA_POSITION = {
-  initial: [0, 350, 350],
+  initial: [0, process.env.NODE_ENV === "production" ? 350 : 0, 350],
   final: [0, 0, FINAL_Z], // during gameplay
   gameOver: [0, 0, 500],
 };
@@ -87,5 +87,6 @@ export const DISABLE_SELECTION_OF_TEXT_CSS = `
 `;
 export const NODE_RADIUS = 2;
 export const CONFIG_FADE_IN = { tension: 20, friction: 30, mass: 2 };
+export const CONFIG_POP_OUT = { tension: 170, friction: 17, mass: 1 };
 export const NODE_RADIUS_COLLISION_MULTIPLIER = 2.5;
 export const NODE_WIDTH = NODE_RADIUS * NODE_RADIUS_COLLISION_MULTIPLIER;

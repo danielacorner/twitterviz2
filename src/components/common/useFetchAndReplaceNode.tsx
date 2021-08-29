@@ -14,7 +14,8 @@ import { uniqBy } from "lodash";
  * 500 per day https://rapidapi.com/OSoMe/api/botometer-pro/pricing
  */
 export function useFetchAndReplaceNode() {
-  const numNewTweets = shuffle([1, 2, 3])[0];
+  const numNewTweets = 1;
+  // const numNewTweets = Math.round(Math.random() * 2);
   const tweets = useTweets();
   const setTweets = useSetTweets();
   // const [selectedNodeId] = useAtom(selectedNodeIdAtom);

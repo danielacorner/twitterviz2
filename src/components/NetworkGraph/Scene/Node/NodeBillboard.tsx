@@ -1,6 +1,10 @@
 import styled from "styled-components/macro";
 import { Html, Billboard } from "@react-three/drei";
-import { CONFIG_FADE_IN, DISABLE_SELECTION_OF_TEXT_CSS } from "utils/constants";
+import {
+  CONFIG_FADE_IN,
+  CONFIG_POP_OUT,
+  DISABLE_SELECTION_OF_TEXT_CSS,
+} from "utils/constants";
 import { UserNode } from "components/NetworkGraph/useUserNodes";
 import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
@@ -28,10 +32,11 @@ export default function NodeBillboard({ node }: { node: UserNode }) {
 
   const mounted = useMounted();
 
+  const isNotABot = node.user.isNotABot;
   // fade in on mount
   const springOpacity = useSpring({
-    opacity: mounted ? 1 : 0,
-    config: CONFIG_FADE_IN,
+    opacity: isNotABot ? 0 : mounted ? 1 : 0,
+    config: isNotABot ? CONFIG_POP_OUT : CONFIG_FADE_IN,
     clamp: true,
   });
   const [isUp] = useAtom(isBotScoreExplainerUpAtom);
