@@ -4,7 +4,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { animated } from "@react-spring/three";
 import { CAMERA_POSITION } from "utils/constants";
 import { useSpring } from "react-spring";
-import { Suspense, useRef } from "react";
+import { Suspense, useRef, useState } from "react";
 import { Stars } from "./Stars";
 import {
   areOrbitControlsEnabledAtom,
@@ -21,6 +21,7 @@ import { useHoverAnimation } from "./useHoverAnimation";
 import { Nodes } from "./Nodes";
 import { BotScoreInfoCard } from "components/Game/GameStateHUD/BotScoreInfoCard";
 import { useIsMounted } from "./useIsMounted";
+import { useInterval } from "utils/useInterval";
 
 export function Scene() {
   // const vertices = getVertices(nodes.length);
@@ -37,7 +38,24 @@ export function Scene() {
   // we must explicitly render the scene with a specified priority in its own useFrame
   // https://github.com/pmndrs/react-three-fiber/blob/master/markdown/api.md#useframe
   useFrame(({ gl, scene, camera }) => gl.render(scene, camera), 1);
-
+  // const [autoRotateDirection, setAutoRotateDirection] = useState("left");
+  // useInterval({
+  //   callback: () => {
+  //     setAutoRotateDirection((p) =>
+  //       p === "one"
+  //         ? "two"
+  //         : p === "two"
+  //         ? "three"
+  //         : p === "three"
+  //         ? "four"
+  //         : p === "four"
+  //         ? "one"
+  //         : "one"
+  //     );
+  //   },
+  //   delay: 4 * 1000,
+  //   immediate: false,
+  // });
   return (
     <Suspense fallback={null}>
       {/* <ambientLight intensity={0.75} /> */}
@@ -60,6 +78,9 @@ export function Scene() {
         maxDistance={500}
         enablePan={!isMountAnimationEnabled}
         enabled={areOrbitControlsEnabled}
+        autoRotate={true}
+        // autoRotate={["one", "three"].includes(autoRotateDirection)} // camera's too bouncy
+        autoRotateSpeed={0.08}
       />
       <Physics
         {...{ gravity: [0, 0, 0] }}
@@ -97,6 +118,7 @@ function useMountAnimation() {
     x: cameraPosition[0],
     y: cameraPosition[1],
     z: cameraPosition[2],
+    position: { t: Date.now() },
     onChange(state) {
       if (!orbitControlsRef.current) {
         return;
@@ -107,6 +129,7 @@ function useMountAnimation() {
     },
     config: { tension: 28, mass: 6, friction: 28 },
   });
+
   return orbitControlsRef;
 }
 

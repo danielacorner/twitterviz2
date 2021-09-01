@@ -21,14 +21,15 @@ export function Collisions() {
     rotation: [0, Math.PI / 2, 0],
   }));
 
-  // top, bottom
-  usePlane(() => ({
-    position: [0, -height, 0],
-    rotation: [-Math.PI / 2, 0, 0],
-  }));
+  // top
   usePlane(() => ({
     position: [0, height, 0],
     rotation: [Math.PI / 2, 0, 0],
+  }));
+  // bottom
+  usePlane(() => ({
+    position: [0, -height * 20, 0],
+    rotation: [-Math.PI / 2, 0, 0],
   }));
   return null;
 }

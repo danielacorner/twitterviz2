@@ -8,7 +8,7 @@ import GraphRightClickMenu, {
 import { Canvas } from "@react-three/fiber";
 import { Scene } from "./Scene/Scene";
 import { useSetTooltipNode } from "providers/store/useSelectors";
-import { CAMERA_POSITION } from "utils/constants";
+import { CAMERA_POSITION, CAMERA_ROTATION } from "utils/constants";
 import { getIsTouchDevice } from "./getIsTouchDevice";
 import { Suspense } from "react";
 

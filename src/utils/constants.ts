@@ -1,3 +1,5 @@
+import { degToRad } from "three/src/math/MathUtils";
+
 export const WAIT_FOR_STREAM_TIMEOUT =
   (process.env.NODE_ENV !== "production" ? 2 : 12) * 1000;
 
@@ -8,6 +10,9 @@ export const CAMERA_POSITION = {
   initial: [0, process.env.NODE_ENV === "production" ? 350 : 0, 350],
   final: [0, 0, FINAL_Z], // during gameplay
   gameOver: [0, 0, 500],
+};
+export const CAMERA_ROTATION = {
+  initial: [0, degToRad(30), 0],
 };
 export const AVATAR_WIDTH = 46;
 export const TOOLTIP_WIDTH = 380;
