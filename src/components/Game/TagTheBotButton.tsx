@@ -109,7 +109,7 @@ export default function TagTheBotButton() {
     <BottomButtonsStyles>
       <Tooltip title={"Take your shot! Higher bot scores = more points"}>
         <Button
-          disabled={isLoading}
+          // disabled={isLoading}
           variant="contained"
           color="primary"
           onClick={() => {
@@ -154,7 +154,7 @@ export default function TagTheBotButton() {
             }
           }}
         >
-          It's a bot! 🎯
+          🎣 It's a bot! 🤖
         </Button>
       </Tooltip>
       <Tooltip title={"check out user stats on Botometer"}>
@@ -173,7 +173,7 @@ export default function TagTheBotButton() {
             setIsRightDrawerOpen(false);
           }}
         >
-          Not a bot...
+          It's a human 👪
         </Button>
       </Tooltip>
     </BottomButtonsStyles>
@@ -182,6 +182,7 @@ export default function TagTheBotButton() {
 
 const BottomButtonsStyles = styled.div`
   position: absolute;
+  z-index: 99999999999999999;
   bottom: 64px;
   @media (min-width: 768px) {
     bottom: 32px;

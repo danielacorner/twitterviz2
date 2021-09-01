@@ -6,7 +6,7 @@ import { useMount } from "utils/utils";
 import { scaleOrdinal } from "d3-scale";
 import { schemeCategory10 } from "d3-scale-chromatic";
 import * as THREE from "three";
-import { MouseoverTooltip } from "./MouseoverTooltip";
+import { MouseoverTooltipContent } from "./MouseoverTooltipContent";
 
 const colors = scaleOrdinal(schemeCategory10);
 
@@ -208,7 +208,7 @@ function Antenna({
         material-opacity={0}
         renderOrder={2}
       >
-        {showTooltip && <MouseoverTooltip {...{ tooltipText }} />}
+        {showTooltip && <MouseoverTooltipContent {...{ tooltipText }} />}
         <sphereBufferGeometry args={[3, 0]} />
       </animated.mesh>
       <animated.mesh position={springProps.textPosition as any}>

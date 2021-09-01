@@ -2,12 +2,15 @@ import { useSpring, animated } from "@react-spring/three";
 import { useState } from "react";
 import { Text } from "@react-three/drei";
 import { getScoreFromBotScore } from "components/Game/getScoreFromBotScore";
+import { MouseoverTooltipContent } from "./MouseoverTooltipContent";
 
 export function ScoreIncreasedPopupText({ isMounted, botScore }) {
-  const { scoreIncrease, color } = getScoreFromBotScore(botScore);
+  const { scoreIncrease, color, maxBotScore, maxBotType } =
+    getScoreFromBotScore(botScore);
+  console.log("🌟🚨 ~ ScoreIncreasedPopupText ~ maxBotType", maxBotType);
 
   const [isAnimationComplete, setIsAnimationComplete] = useState(false);
-  const springProps = useSpring({
+  const { position, opacity } = useSpring({
     position: [0, isMounted ? 10 : 0, 0],
     opacity: isAnimationComplete ? 0 : isMounted ? 1 : 0,
     delay: 200,
@@ -18,19 +21,30 @@ export function ScoreIncreasedPopupText({ isMounted, botScore }) {
     },
   });
   return (
-    <animated.mesh position={springProps.position as any}>
-      <AnimatedText
-        {...({} as any)}
-        color={color}
-        textAlign={"center"}
-        anchorY={"top"}
-        maxWidth={0.5}
-        fontSize={2}
-        fillOpacity={springProps.opacity}
-      >
-        +{scoreIncrease.toFixed(0)}
-      </AnimatedText>
+    <animated.mesh position={position as any}>
+      <MouseoverTooltipContent
+        {...{
+          tooltipText: (
+            <>
+              <div>
+                {maxBotScore}
+                {maxBotType}
+              </div>
+              <div>+{scoreIncrease.toFixed(0)}</div>
+            </>
+          ),
+          customCss: `
+          .tooltipContent{
+            color: ${color};
+            border-radius: 99999px;
+            background: #0000007b;
+            font-size: 2em;
+            padding: 0.3em 0.6em;
+
+          }
+          `,
+        }}
+      />
     </animated.mesh>
   );
 }
-const AnimatedText = animated(Text);
