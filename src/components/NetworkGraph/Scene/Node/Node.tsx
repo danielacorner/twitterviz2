@@ -231,7 +231,8 @@ export const Node = ({
   );
 };
 function PopAnimation() {
-  const numBubbles = Math.round(Math.random() * 7) + 1;
+  const numBubbles =
+    Math.round(Math.random() * 7) + (Math.random() > 0.9 ? 50 : 7);
   const [bubblesIds, setBubblesIds] = useState(
     [...new Array(numBubbles)].map((_) => Math.random())
   );
