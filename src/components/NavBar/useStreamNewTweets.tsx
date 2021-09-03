@@ -12,6 +12,7 @@ import { query as q } from "faunadb";
 import {
   INITIAL_NUM_TWEETS,
   lastTimeMonthlyTwitterApiUsageWasExceededAtom,
+  serverErrorAtom,
 } from "providers/store/store";
 import { useAtom } from "jotai";
 import { useRef } from "react";
@@ -19,10 +20,12 @@ import { uniqBy } from "lodash";
 import { Tweet } from "types";
 
 export function useStreamNewTweets() {
+  let msUntilRateLimitResetRet = null;
   const [
     lastTimeMonthlyTwitterApiUsageWasExceeded,
     setLastTimeMonthlyTwitterApiUsageWasExceeded,
   ] = useAtom(lastTimeMonthlyTwitterApiUsageWasExceededAtom);
+  const [, setServerError] = useAtom(serverErrorAtom);
 
   const { lang, countryCode, numTweets, filterLevel } = useConfig();
   const allowedMediaTypesStrings = useAllowedMediaTypes();
@@ -36,7 +39,11 @@ export function useStreamNewTweets() {
 
   const timerRef = useRef(null as number | null);
 
-  const fetchNewTweetsFromTwitterApi = (): Promise<Tweet[]> => {
+  const fetchNewTweetsFromTwitterApi = (): Promise<{
+    data: Tweet[];
+    error: any;
+    msUntilRateLimitReset: number | null;
+  }> => {
     //   if (lastTimeMonthlyTwitterApiUsageWasExceeded) {
     //     const timeSinceLastExcession =
     //       Date.now() - lastTimeMonthlyTwitterApiUsageWasExceeded;
@@ -54,7 +61,10 @@ export function useStreamNewTweets() {
         );
         setLastTimeMonthlyTwitterApiUsageWasExceeded(Date.now());
         fetchOldTweetsWithBotScoresFromDB().then((tweetsFromDB) => {
-          resolve(tweetsFromDB);
+          resolve({
+            ...tweetsFromDB,
+            msUntilRateLimitReset: msUntilRateLimitResetRet,
+          });
         });
       }, WAIT_FOR_STREAM_TIMEOUT); // TODO: add linearprogress bar
 
@@ -77,8 +87,13 @@ export function useStreamNewTweets() {
         `${SERVER_URL}/api/stream?num=${numTweets}&filterLevel=${filterLevel}${allowedMediaParam}${countryParam}${langParam}`
       );
 
-      const data = await resp.json();
-      console.log("🌟 ~ useStreamNewTweets ~ data", data);
+      const { data, error, msUntilRateLimitReset } = await resp.json();
+      console.log(
+        "🌟🚨 ~ returnnewPromise ~ msUntilRateLimitReset",
+        msUntilRateLimitReset
+      );
+      msUntilRateLimitResetRet = msUntilRateLimitReset;
+      console.log("🌟 ~ useStreamNewTweets ~ {data,error}", { data, error });
 
       // const tweetsFromData = data.map((d) => {
       //   const userId = d.user.id_str || d.user.id;
@@ -87,13 +102,21 @@ export function useStreamNewTweets() {
       //   };
       // });
       setTweets(data);
+      setServerError(
+        error || msUntilRateLimitReset
+          ? {
+              ...error,
+              ...(msUntilRateLimitReset ? { msUntilRateLimitReset } : {}),
+            }
+          : null
+      );
 
       setLoading(false);
       if (timerRef.current) {
         window.clearTimeout(timerRef.current);
         timerRef.current = null;
       }
-      resolve(data);
+      resolve({ data, error, msUntilRateLimitReset });
     });
   };
 
@@ -115,13 +138,17 @@ export function useStreamNewTweets() {
     const randomDedupedTweets = shuffle([...dedupedTweets]).slice(
       0,
       INITIAL_NUM_TWEETS
-    );
+    ) as Tweet[];
 
     setTweets(randomDedupedTweets);
 
     setLoading(false);
 
-    return randomDedupedTweets;
+    return {
+      data: randomDedupedTweets,
+      error: null,
+      msUntilRateLimitReset: msUntilRateLimitResetRet,
+    };
   };
 
   return {

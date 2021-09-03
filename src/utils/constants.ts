@@ -1,7 +1,7 @@
 import { degToRad } from "three/src/math/MathUtils";
 
 export const WAIT_FOR_STREAM_TIMEOUT =
-  (process.env.NODE_ENV !== "production" ? 2 : 12) * 1000;
+  (process.env.NODE_ENV !== "production" ? 6 : 12) * 1000;
 
 const Z_MOBILE = 100;
 const Z_DESKTOP = 100;

@@ -13,7 +13,7 @@ export const isLoadingFromTwitterApiAtom = atom<boolean>(false);
 
 export const useTweets = (): Tweet[] => {
   const [tweetsFromServer] = useAtom(tweetsFromServerAtom);
-  return tweetsFromServer;
+  return tweetsFromServer || [];
   // useStore((state) => state.tweetsFromServer);
 };
 export const useSelectedNode = () => {
@@ -70,7 +70,7 @@ export const useAddTweets = () => {
 
   return (tweets: Tweet[]) => {
     const newTweets = uniqBy([...tweetsFromServer, ...tweets], (t) => t.id_str);
-    setTweetsFromServer(newTweets);
+    setTweetsFromServer(newTweets || []);
   };
 };
 /** delete a tweet from store */
@@ -80,7 +80,7 @@ export const useDeleteTweet = () => {
   return useCallback(
     (tweetId: string) => {
       const newTweets = tweetsFromServer.filter((t) => t.id_str !== tweetId);
-      setTweetsFromServer(newTweets);
+      setTweetsFromServer(newTweets || []);
     },
     [tweetsFromServer, setTweetsFromServer]
   );

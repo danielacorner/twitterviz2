@@ -5,7 +5,7 @@ import { Canvas } from "@react-three/fiber";
 import { BotScoreLegend } from "components/Game/GameStateHUD/BotScoreLegend";
 import { POPUP_BASE_CSS } from "./popupBaseCss";
 import { useState } from "react";
-import { ChevronLeft } from "@material-ui/icons";
+import { ChevronLeft, ChevronRight } from "@material-ui/icons";
 import COVIDSVG from "./COVIDSVG";
 import { colorLink, colorSecondary } from "utils/colors";
 import { useAtom } from "jotai";
@@ -20,7 +20,7 @@ export function StartPage({ startLookingAtTweets }) {
   return (
     <StartPageStyles>
       <div className="content">
-        <h1 className="title">Plenty of Bots 🎣</h1>
+        <h1 className="title font-effect-shadow-multiple">Plenty of Bots 🎣</h1>
         {step === 0 && (
           <>
             <p>Twitter is full of bots 🤖</p>
@@ -43,6 +43,24 @@ export function StartPage({ startLookingAtTweets }) {
               </a>{" "}
               were bots.
             </p>
+
+            <Button
+              disabled={isLoading}
+              variant="contained"
+              color={"primary"}
+              onClick={() => {
+                if (!isAudioPlaying) {
+                  setIsAudioPlaying(true);
+                }
+                setStep((p) => p + 1);
+              }}
+            >
+              Next
+            </Button>
+          </>
+        )}
+        {step === 1 && (
+          <>
             <p>There are different kinds of bot:</p>
             <div className="canvasContainer">
               <Canvas style={{ width: 300, height: 240 }}>
@@ -56,19 +74,34 @@ export function StartPage({ startLookingAtTweets }) {
                 />
               </Canvas>
             </div>
-            <Button
-              disabled={isLoading}
-              variant="contained"
-              color={"primary"}
-              onClick={() => {
-                setStep(1);
-              }}
-            >
-              Next
-            </Button>
+            <div className="buttonsRow">
+              <Button
+                className="btnPrev"
+                variant="outlined"
+                disabled={isLoading}
+                color={"primary"}
+                onClick={() => {
+                  setStep((p) => p - 1);
+                }}
+                startIcon={<ChevronLeft />}
+              >
+                Prev
+              </Button>
+              <Button
+                disabled={isLoading}
+                variant="contained"
+                color={"primary"}
+                onClick={() => {
+                  setStep((p) => p + 1);
+                }}
+                endIcon={<ChevronRight />}
+              >
+                Next
+              </Button>
+            </div>
           </>
         )}
-        {step === 1 && (
+        {step === 2 && (
           <>
             <p>With practice, you might get better at identifying bots!</p>
             <ol>
@@ -115,7 +148,7 @@ export function StartPage({ startLookingAtTweets }) {
                 disabled={isLoading}
                 color={"primary"}
                 onClick={() => {
-                  setStep(0);
+                  setStep((p) => p - 1);
                 }}
                 startIcon={<ChevronLeft />}
               >
@@ -145,16 +178,19 @@ export function StartPage({ startLookingAtTweets }) {
 }
 const StartPageStyles = styled.div`
   font-family: "Roboto", sans-serif;
+  font-size: 1.5rem;
   .title {
-    font-family: "Poiret One", cursive;
-    margin: 0.5em 0 1.4em;
+    font-family: "Rancho", cursive;
+    font-size: 5rem;
+    margin: 64px 0 64px;
+    line-height: 1em;
   }
   position: fixed;
   inset: 0;
   display: grid;
   justify-items: center;
   .content {
-    line-height: 1.4em;
+    line-height: 1.5em;
     box-shadow: 0px 2px 30px 8px #00000068;
     position: relative;
     margin-top: 72px;
@@ -163,7 +199,7 @@ const StartPageStyles = styled.div`
     ${POPUP_BASE_CSS}
     max-width: calc(100vw - 32px);
     @media (min-width: 768px) {
-      max-width: 600px;
+      max-width: 640px;
     }
   }
   .canvasContainer {
@@ -173,7 +209,7 @@ const StartPageStyles = styled.div`
   }
   p {
     text-align: center;
-    margin-bottom: 1.4em;
+    margin-bottom: 1.5em;
   }
   ol p {
     text-align: left;

@@ -1,8 +1,10 @@
+import { useAtom } from "jotai";
 import { shuffle } from "lodash";
+import { serverErrorAtom } from "providers/store/store";
 import Score from "../Score";
 import { AudioSoundButton } from "./AudioSoundButton";
 import { ShotsRemaining } from "./ShotsRemaining";
-
+import styled from "styled-components/macro";
 export function GameStateHUD() {
   const song = shuffle(trackList)[0];
 
@@ -10,6 +12,7 @@ export function GameStateHUD() {
     <>
       <Score />
       <ShotsRemaining />
+      <ServerError />
       <AudioSoundButton
         {...{
           title: song.title,
@@ -19,7 +22,28 @@ export function GameStateHUD() {
     </>
   );
 }
-
+function ServerError() {
+  const [serverError] = useAtom(serverErrorAtom);
+  const msUntilRateLimitReset = serverError?.msUntilRateLimitReset;
+  return serverError ? (
+    <ServerErrorStyles>
+      {Object.entries(serverError || {}).length >
+        (msUntilRateLimitReset ? 1 : 0) && JSON.stringify(serverError)}
+      {msUntilRateLimitReset && process.env.NODE_ENV !== "production" ? (
+        <div className="msUntilReset">
+          {((msUntilRateLimitReset as number) / 1000 / 60 / 60 / 24).toFixed(2)}{" "}
+          days until rate limit reset
+        </div>
+      ) : null}
+    </ServerErrorStyles>
+  ) : null;
+}
+const ServerErrorStyles = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+`;
 function getHrefFromTimeQuery(timeQuery: string) {
   return `https://www.youtube.com/watch?v=JIznHcm9TSU&t=${timeQuery}`;
 }

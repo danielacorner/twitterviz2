@@ -4,14 +4,21 @@ import ReactPlayer from "react-player";
 import styled from "styled-components/macro";
 import { useAtom } from "jotai";
 import { isMusicOnAtom } from "providers/store/store";
+import { useState } from "react";
 
 /** Mute button with hidden a <ReactPlayer/> */
 export function AudioSoundButton({ title, href }) {
   const [isAudioPlaying, setIsAudioPlaying] = useAtom(isMusicOnAtom);
 
+  const [isHovered, setIsHovered] = useState(false);
+  const [volume, setVolume] = useState(1);
   return (
     <>
-      <SoundButtonStyles {...{ isAudioPlaying }}>
+      <SoundButtonStyles
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        {...{ isAudioPlaying }}
+      >
         <div className="soundInfo">
           <a href={href} target="_blank" rel="noopener noreferrer">
             {title}
@@ -22,10 +29,12 @@ export function AudioSoundButton({ title, href }) {
             {isAudioPlaying ? <VolumeUp /> : <VolumeOff />}
           </IconButton>
         </Tooltip>
+        {isHovered && <VolumeControls {...{ volume, setVolume }} />}
       </SoundButtonStyles>
       <ReactPlayer
         style={{ visibility: "hidden", position: "fixed" }}
         playing={isAudioPlaying}
+        volume={0.5}
         url={href}
       />
     </>
@@ -56,3 +65,7 @@ const SoundButtonStyles = styled.div`
     }
   }
 `;
+function VolumeControls({ volume, setVolume }) {
+  return <VolumeControlsStyles>{volume}</VolumeControlsStyles>;
+}
+const VolumeControlsStyles = styled.div``;

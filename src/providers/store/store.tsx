@@ -45,6 +45,7 @@ export const shotsRemainingAtom = atomWithStorage(
   SHOTS_REMAINING
 );
 
+export const serverErrorAtom = atom<Record<string, unknown> | null>(null);
 export const numTooltipTweetsAtom = atom<number>(1);
 export const tooltipTweetIndexAtom = atom<number>(0);
 export const isPointerOverAtom = atom<boolean>(false);

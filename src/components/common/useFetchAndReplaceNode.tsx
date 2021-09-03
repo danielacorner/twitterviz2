@@ -1,5 +1,8 @@
 import { useAtom } from "jotai";
-import { lastTimeMonthlyTwitterApiUsageWasExceededAtom } from "providers/store/store";
+import {
+  lastTimeMonthlyTwitterApiUsageWasExceededAtom,
+  serverErrorAtom,
+} from "providers/store/store";
 import { useSetTweets, useTweets } from "providers/store/useSelectors";
 import { Tweet } from "types";
 import { FILTER_LEVELS, SERVER_URL } from "utils/constants";
@@ -22,10 +25,21 @@ export function useFetchAndReplaceNode() {
   const [lastTimeMonthlyTwitterApiUsageWasExceeded] = useAtom(
     lastTimeMonthlyTwitterApiUsageWasExceededAtom
   );
+  const [, setServerError] = useAtom(serverErrorAtom);
 
-  return async (tweet: Tweet): Promise<void> => {
+  return async (
+    tweet: Tweet
+  ): Promise<{
+    data: Tweet[];
+    error: any;
+    msUntilRateLimitReset: number | null;
+  }> => {
     if (!tweet) {
-      return;
+      return {
+        data: [],
+        error: "no tweet passed!",
+        msUntilRateLimitReset: null,
+      };
     }
     // set the tweet to "not a bot" immediately
     setTweets((p) =>
@@ -39,14 +53,24 @@ export function useFetchAndReplaceNode() {
       const resp = await fetch(
         `${SERVER_URL}/api/stream?num=${numNewTweets}&filterLevel=${FILTER_LEVELS.low}`
       );
-      const responseTweets = await resp.json();
+      const {
+        data: responseTweets,
+        error,
+        msUntilRateLimitReset,
+      } = await resp.json();
       setTweets((p) =>
         p
           .map((t) => (t.id_str === tweet.id_str ? (null as any) : t))
           .filter(Boolean)
           .concat(responseTweets)
       );
-      return;
+      console.log("🌟🚨 ~ return ~ error", error);
+      console.log(
+        "🌟🚨 ~ return ~ msUntilRateLimitReset",
+        msUntilRateLimitReset
+      );
+      setServerError(error);
+      return { data: responseTweets, error, msUntilRateLimitReset };
     } else {
       // else fetch from the DB
 
@@ -83,7 +107,11 @@ export function useFetchAndReplaceNode() {
         );
       }, 350);
 
-      return;
+      return {
+        data: tweetsWithBotScores,
+        error: null,
+        msUntilRateLimitReset: null,
+      };
     }
   };
 }

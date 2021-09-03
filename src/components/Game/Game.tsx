@@ -3,6 +3,7 @@ import {
   gameStateAtom,
   GameStepsEnum,
   scoreAtom,
+  serverErrorAtom,
   shotsRemainingAtom,
   SHOTS_REMAINING,
 } from "providers/store/store";
@@ -38,20 +39,34 @@ export const usePlayAgain = () => {
   const setLoading = useSetLoading();
   const [, setScore] = useAtom(scoreAtom);
   const [, setShotsRemaining] = useAtom(shotsRemainingAtom);
-
+  const [, setServerError] = useAtom(serverErrorAtom);
   return () => {
     setLoading(true);
     deleteAllTweets().then((ret) => {
-      fetchNewTweets().then((newTweets) => {
-        if (!newTweets) {
-          return;
+      fetchNewTweets().then(
+        ({ error, data: newTweets, msUntilRateLimitReset }) => {
+          if (error) {
+            console.log(error);
+            setServerError(
+              error || msUntilRateLimitReset
+                ? {
+                    ...error,
+                    ...(msUntilRateLimitReset ? { msUntilRateLimitReset } : {}),
+                  }
+                : null
+            );
+            return;
+          }
+          if (!newTweets) {
+            return;
+          }
+          replaceNodesInDbForUser(newTweets);
+          setTweets(newTweets);
+          setScore(0);
+          setShotsRemaining(SHOTS_REMAINING);
+          setLoading(false);
         }
-        replaceNodesInDbForUser(newTweets);
-        setTweets(newTweets);
-        setScore(0);
-        setShotsRemaining(SHOTS_REMAINING);
-        setLoading(false);
-      });
+      );
     });
   };
 };

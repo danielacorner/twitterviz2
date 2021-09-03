@@ -18,6 +18,7 @@ import {
   isRightDrawerOpenAtom,
   scanningUserNodeIdAtom,
   scoreAtom,
+  serverErrorAtom,
   shotsRemainingAtom,
 } from "providers/store/store";
 import { getScoreFromBotScore } from "./getScoreFromBotScore";
@@ -41,6 +42,7 @@ export default function TagTheBotButton() {
   const [, setBotScorePopupNode] = useAtom(botScorePopupNodeAtom);
   const [, setScanningUserNodeId] = useAtom(scanningUserNodeIdAtom);
   const [, setIsRightDrawerOpen] = useAtom(isRightDrawerOpenAtom);
+  const [, setServerError] = useAtom(serverErrorAtom);
   const [, setIsUp] = useAtom(isBotScoreExplainerUpAtom);
 
   function handleReceiveBotScore(botScore: BotScore, nodeIdStr: string) {
@@ -166,10 +168,22 @@ export default function TagTheBotButton() {
             setLoading(true);
             setNotABot(selectedNode);
             // fetch new nodes & replace on click
-            fetchAndReplaceNode(selectedNode).then(() => {
-              setLoading(false);
-              setSelectedNode(null);
-            });
+            fetchAndReplaceNode(selectedNode).then(
+              ({ data, error, msUntilRateLimitReset }) => {
+                setServerError(
+                  error || msUntilRateLimitReset
+                    ? {
+                        ...error,
+                        ...(msUntilRateLimitReset
+                          ? { msUntilRateLimitReset }
+                          : {}),
+                      }
+                    : null
+                );
+                setLoading(false);
+                setSelectedNode(null);
+              }
+            );
             setIsRightDrawerOpen(false);
           }}
         >
