@@ -1,37 +1,18 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import {
   Bloom,
-  DepthOfField,
   EffectComposer,
   GodRays,
-  Scanline,
   Vignette,
 } from "@react-three/postprocessing";
 import { BlendFunction, Resizer, KernelSize } from "postprocessing";
 import { Sun } from "../Sun";
 import { useDetectGPU } from "@react-three/drei";
-import { extend, useFrame, useLoader, useThree } from "@react-three/fiber";
-import { LUTPass } from "three/examples/jsm/postprocessing/LUTPass";
-import { LUTCubeLoader } from "three/examples/jsm/loaders/LUTCubeLoader";
-import { useControls } from "leva";
-import { useAtom } from "jotai";
-import { scanningUserNodeIdAtom } from "providers/store/store";
-import { NewWaterPass } from "./NewWaterPass";
-import { WaterPassEffect } from "./WaterPass";
 
 export function Effects() {
   const sun = useRef(null);
   const gpuInfo = useDetectGPU();
-  const { viewport: { width, height } } = useThree() // prettier-ignore
-  const { texture3D } = useLoader(LUTCubeLoader, "/cubemap/cubicle-99.CUBE");
-  const { focalLength, focusDistance, bokehScale } = useControls({
-    focalLength: 1,
-    focusDistance: 0.2,
-    bokehScale: 2,
-  });
-  const [scanningNodeId] = useAtom(scanningUserNodeIdAtom);
   const composer = useRef();
-  const { scene, gl, size, camera } = useThree();
   // const waterpassRef = useRef();
   // useEffect(() => {
   //   if (!composer.current) {
@@ -46,7 +27,6 @@ export function Effects() {
   //   waterpassRef.current.factor += (1 - waterpassRef.current.factor) * 0.01;
   //   composer.current.render();
   // }, 2);
-  const isScanning = Boolean(scanningNodeId);
   return gpuInfo.tier > 2 ? (
     <>
       <Sun ref={sun} />

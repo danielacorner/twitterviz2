@@ -23,15 +23,13 @@ import {
   NODE_RADIUS_COLLISION_MULTIPLIER,
   NODE_WIDTH,
 } from "utils/constants";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { ScanningAnimation } from "./ScanningAnimation";
 import { useControls } from "leva";
 import { useMounted } from "utils/hooks";
 import { randBetween } from "utils/utils";
-import { useIsMounted } from "../useIsMounted";
 import { NodeContent } from "./NodeContent";
 import { AnimatingBubble } from "./AnimatingBubble";
-import { useHoverAnimation } from "../useHoverAnimation";
 
 export const defaultNodeMaterial = new THREE.MeshPhysicalMaterial({
   emissive: "#0b152f",

@@ -1,6 +1,5 @@
 import { useSpring, animated } from "@react-spring/three";
 import { useState } from "react";
-import { Text } from "@react-three/drei";
 import { getScoreFromBotScore } from "components/Game/getScoreFromBotScore";
 import { MouseoverTooltipContent } from "./MouseoverTooltipContent";
 import { startCase } from "lodash";
@@ -11,7 +10,7 @@ export function ScoreIncreasedPopupText({ isMounted, botScore }) {
   console.log("🌟🚨 ~ ScoreIncreasedPopupText ~ maxBotType", maxBotType);
 
   const [isAnimationComplete, setIsAnimationComplete] = useState(false);
-  const { position, opacity } = useSpring({
+  const { position } = useSpring({
     position: [0, isMounted ? 10 : 0, 0],
     opacity: isAnimationComplete ? 0 : isMounted ? 1 : 0,
     delay: 200,

@@ -8,7 +8,7 @@ import { getRandomPosition, notABotMaterial } from "./Node";
 const V1 = 0.001;
 const BUBBLE_RADIUS_MULT = 0.18;
 export function AnimatingBubble({ handleUnmount }) {
-  const [sphereRef, api] = useSphere(() => ({
+  const [sphereRef /*, api */] = useSphere(() => ({
     mass: 0.007,
     position: getRandomPosition(-1.5 * NODE_RADIUS, 1.5 * NODE_RADIUS) as any,
     velocity: [

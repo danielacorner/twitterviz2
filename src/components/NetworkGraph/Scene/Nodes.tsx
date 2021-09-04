@@ -1,12 +1,9 @@
 import { useUserNodes } from "../useUserNodes";
 import { Node } from "./Node/Node";
-import { useThree } from "@react-three/fiber";
-import { useEffect, useState } from "react";
 import { useHoverAnimation } from "./useHoverAnimation";
 
 export function Nodes() {
   const nodes = useUserNodes();
-  const { viewport } = useThree();
 
   // const [nodesMemo, setNodesMemo] = useState(nodes);
   // useEffect(() => {

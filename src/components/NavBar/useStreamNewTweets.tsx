@@ -6,7 +6,7 @@ import {
   isLoadingFromTwitterApiAtom,
 } from "../../providers/store/useSelectors";
 import { useConfig } from "../../providers/store/useConfig";
-import { SERVER_URL, WAIT_FOR_STREAM_TIMEOUT } from "../../utils/constants";
+import { SERVER_URL } from "../../utils/constants";
 import { faunaClient } from "providers/faunaProvider";
 import { query as q } from "faunadb";
 import {
@@ -15,13 +15,12 @@ import {
   serverErrorAtom,
 } from "providers/store/store";
 import { useAtom } from "jotai";
-import { useRef } from "react";
 import { uniqBy } from "lodash";
 import { Tweet } from "types";
 
 export function useStreamNewTweets() {
   let msUntilRateLimitResetRet = null;
-  const [isTwitterApiUsageExceeded, setisTwitterApiUsageExceeded] = useAtom(
+  const [, setisTwitterApiUsageExceeded] = useAtom(
     isTwitterApiUsageExceededAtom
   );
   const [, setServerError] = useAtom(serverErrorAtom);
@@ -34,38 +33,16 @@ export function useStreamNewTweets() {
     isLoadingFromTwitterApiAtom
   );
   const setTweets = useSetTweets();
-  // const addTweets = useAddTweets();
-
-  // const timerRef = useRef(null as number | null);
 
   const fetchNewTweetsFromTwitterApi = (): Promise<{
     data: Tweet[];
     error: any;
     msUntilRateLimitReset: number | null;
   }> => {
-    //   if (isTwitterApiUsageExceeded) {
-    //     const timeSinceLastExcession =
-    //       Date.now() - isTwitterApiUsageExceeded;
-    //   }
     return new Promise(async (resolve, reject) => {
       console.log("🤖... fetching from twitter stream API");
       setLoading(true);
       setLoadingFromTwitterApi(true);
-
-      // set isMonthlyTwitterApiUsageExceeded to true if we don't get a response from stream within 10 seconds,
-      // so subsequent requests will come from the DB instead
-      // timerRef.current = window.setTimeout(() => {
-      //   console.log(
-      //     "🤖💣 no response from twitter stream API -- fetching from DB instead"
-      //   );
-      //   setisTwitterApiUsageExceeded(Date.now());
-      //   fetchOldTweetsWithBotScoresFromDB().then((tweetsFromDB) => {
-      //     resolve({
-      //       ...tweetsFromDB,
-      //       msUntilRateLimitReset: msUntilRateLimitResetRet,
-      //     });
-      //   });
-      // }, WAIT_FOR_STREAM_TIMEOUT); // TODO: add linearprogress bar
 
       const langParam = lang !== "All" ? `&lang=${lang}` : "";
       const allowedMediaParam =
@@ -75,14 +52,7 @@ export function useStreamNewTweets() {
       const countryParam =
         countryCode !== "All" ? `&countryCode=${countryCode}` : "";
 
-      // const locations = geolocation
-      //   ? `${geolocation.latitude.left},${geolocation.longitude.left},${geolocation.latitude.right},${geolocation.longitude.right}`
-      //   : "";
-
       const resp = await fetch(
-        // geolocation
-        // ? `${SERVER_URL}/api/filter?num=${numTweets}&locations=${locations}${allowedMediaParam}`
-        // :
         `${SERVER_URL}/api/stream?num=${numTweets}&filterLevel=${filterLevel}${allowedMediaParam}${countryParam}${langParam}`
       );
 
@@ -97,12 +67,6 @@ export function useStreamNewTweets() {
         msUntilRateLimitReset,
       });
 
-      // const tweetsFromData = data.map((d) => {
-      //   const userId = d.user.id_str || d.user.id;
-      //   return {
-      //     ...d,
-      //   };
-      // });
       setTweets(data);
       setServerError(
         error || msUntilRateLimitReset

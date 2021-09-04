@@ -16,6 +16,7 @@ import { GameStateHUD } from "./GameStateHUD/GameStateHUD";
 import { BtnStartOver } from "./BtnStartOver";
 import { StartPage } from "./StartPage";
 import { useMount } from "utils/utils";
+import { WAIT_FOR_STREAM_TIMEOUT } from "utils/constants";
 
 /** renders controls and instructions to play the game */
 export function Game() {
@@ -41,11 +42,38 @@ export const usePlayAgain = () => {
   const [, setScore] = useAtom(scoreAtom);
   const [, setShotsRemaining] = useAtom(shotsRemainingAtom);
   const [, setServerError] = useAtom(serverErrorAtom);
+
+  const fetchFromDB = () => {
+    fetchNewTweetsFromDB().then(
+      ({
+        error: dbError,
+        data: newTweetsFromDb,
+        msUntilRateLimitReset: msUntilRateLimitResetFromDb,
+      }) => {
+        console.log(
+          "🌟🚨 ~ deleteAllTweets ~ msUntilRateLimitResetFromDb",
+          msUntilRateLimitResetFromDb
+        );
+        setTweets(newTweetsFromDb);
+
+        return;
+      }
+    );
+  };
+
   return () => {
     setLoading(true);
     deleteAllTweets().then((ret) => {
+      // try to fetch new tweets from API;
+      // if it doesn't respond quickly, then try to fetch from DB
+
+      const timer = window.setTimeout(fetchFromDB, WAIT_FOR_STREAM_TIMEOUT);
+
       fetchNewTweetsFromTwitterApi().then(
         ({ error, data: newTweets, msUntilRateLimitReset }) => {
+          // cancel the DB fetch
+          window.clearTimeout(timer);
+
           if (error || msUntilRateLimitReset) {
             replaceNodesInDbForUser(newTweets);
             setTweets(newTweets);
@@ -61,22 +89,8 @@ export const usePlayAgain = () => {
                   }
                 : null
             );
-
-            fetchNewTweetsFromDB().then(
-              ({
-                error: dbError,
-                data: newTweetsFromDb,
-                msUntilRateLimitReset: msUntilRateLimitResetFromDb,
-              }) => {
-                console.log(
-                  "🌟🚨 ~ deleteAllTweets ~ msUntilRateLimitResetFromDb",
-                  msUntilRateLimitResetFromDb
-                );
-                setTweets(newTweetsFromDb);
-
-                return;
-              }
-            );
+            // on error, fetch from DB immediately
+            fetchFromDB();
             return;
           }
         }

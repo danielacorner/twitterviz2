@@ -153,7 +153,6 @@ function degToRad(deg) {
 
 function GLTFModel() {
   const gltf = useGLTF("/sea_life_challenge_pack/scene.gltf");
-  const { viewport } = useThree();
   // TODO: ensure wide to cover entire floor enough on mobile
   const { scale } = useControls({ scale: 6 });
   const hoverAnimationRef = useHoverAnimation();

@@ -21,13 +21,7 @@ import { useSpring, animated } from "react-spring";
 import { useMount } from "utils/utils";
 import { Html } from "@react-three/drei";
 import { useInterval } from "utils/useInterval";
-import {
-  colorSecondary,
-  colorPrimary,
-  darkBackground,
-  textPrimaryColor,
-  textSecondaryColor,
-} from "utils/colors";
+import { colorPrimary, darkBackground } from "utils/colors";
 import { useLoading } from "providers/store/useSelectors";
 import { usePlayAgain, useStartLookingAtTweets } from "../Game";
 import { LearnMoreResources } from "./LearnMoreResources";

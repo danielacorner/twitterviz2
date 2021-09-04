@@ -1,5 +1,4 @@
 import { Environment } from "@react-three/drei";
-import { shuffle } from "lodash";
 import { Suspense } from "react";
 
 const Background = ({ background }: { background: boolean }) => {

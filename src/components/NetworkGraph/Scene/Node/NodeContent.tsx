@@ -6,9 +6,7 @@ import { CONFIG_FADE_IN, CONFIG_POP_OUT } from "utils/constants";
 import { ScoreIncreasedPopupText } from "./ScoreIncreasedPopupText";
 import { useState } from "react";
 import { MeshWobbleMaterial } from "@react-three/drei";
-import { useControls } from "leva";
 import { useMounted } from "utils/hooks";
-import { useHoverAnimation } from "../useHoverAnimation";
 import {
   notABotMaterial,
   defaultNodeMaterial,
@@ -71,7 +69,6 @@ export function NodeContent({
     immediate: isPopupNode,
     clamp: true,
   });
-  const { metalness } = useControls({ metalness: 0 });
   return (
     <>
       <animated.mesh>

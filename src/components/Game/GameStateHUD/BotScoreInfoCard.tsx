@@ -7,7 +7,6 @@ import {
   gameStateAtom,
   GameStepsEnum,
   isBotScoreExplainerUpAtom,
-  scanningUserNodeIdAtom,
   shotsRemainingAtom,
 } from "providers/store/store";
 import { useAtom } from "jotai";
@@ -25,7 +24,6 @@ import { BotScoreLegend } from "./BotScoreLegend";
 import { Suspense, useEffect, useState } from "react";
 import { CUSTOM_SCROLLBAR_CSS } from "components/RightDrawer/CUSTOM_SCROLLBAR_CSS";
 import {
-  colorPrimary,
   colorSecondary,
   textSecondaryColor,
   darkBackground,
@@ -36,7 +34,6 @@ const PADDING = 20;
 const WIDTH = 420;
 const HEIGHT = 480;
 const TRANSFORM = false;
-const mu = TRANSFORM ? 0.1 : 1;
 
 /** pops up from the bottom when we receive a bot score */
 export function BotScoreInfoCard() {
@@ -45,14 +42,11 @@ export function BotScoreInfoCard() {
     "🌟🚨 ~ BotScoreInfoCard ~ latestNodeWithBotScore",
     latestNodeWithBotScore
   );
-  const [scanningNodeId] = useAtom(scanningUserNodeIdAtom);
   const tweets = useTweets();
   const setNodesInDb = useSetNodesInDbForUser();
   const [, setGameState] = useAtom(gameStateAtom);
   const [shotsRemaining] = useAtom(shotsRemainingAtom);
-  const { latestBotScore, node, lastNode, clearLastNode } =
-    useLatestTaggedNode();
-  const isDoneScanning = !scanningNodeId && lastNode;
+  const { latestBotScore, lastNode, clearLastNode } = useLatestTaggedNode();
   const { botTypeText, botTypeInfo, botType, scorePercent } = latestBotScore
     ? getMostLikelyBotTypeText(latestBotScore)
     : {
