@@ -9,7 +9,6 @@ export type UserNode = {
 /** preprocess tweets to add links & user nodes */
 export function useUserNodes(): UserNode[] {
   const tweets = useTweets();
-  console.log("🌟🚨 ~ useUserNodes ~ tweets", tweets);
   return tweets.filter(Boolean).map(getUserNodeFromTweet);
 }
 

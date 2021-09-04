@@ -87,7 +87,7 @@ export function BotScoreInfoCard() {
         ];
       }}
       style={{
-        pointerEvents: isUp ? "auto" : "none",
+        pointerEvents: "none",
         zIndex: 9999999999999999,
       }}
     >
@@ -152,6 +152,7 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
   box-sizing: border-box;
   font-size: ${TRANSFORM ? 4 : 24}px;
   .content {
+    pointer-events: auto;
     .scrollContent {
       width: 100%;
       height: fit-content;
@@ -216,8 +217,10 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
       font-size: 2em;
     }
     .content {
-      box-sizing: border-box;
+      padding: 0 0.5em;
+      box-sizing: content-box;
       .scrollContent {
+        box-sizing: border-box;
         padding: 0.5em 2em 2em;
       }
     }
