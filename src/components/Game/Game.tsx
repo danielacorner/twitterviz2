@@ -47,6 +47,11 @@ export const usePlayAgain = () => {
       fetchNewTweetsFromTwitterApi().then(
         ({ error, data: newTweets, msUntilRateLimitReset }) => {
           if (error || msUntilRateLimitReset) {
+            replaceNodesInDbForUser(newTweets);
+            setTweets(newTweets);
+            setScore(0);
+            setShotsRemaining(SHOTS_REMAINING);
+            setLoading(false);
             console.log("🌟🚨🌟🚨🌟🚨🌟🚨 ~ deleteAllTweets ~ error", error);
             setServerError(
               error || msUntilRateLimitReset
@@ -74,14 +79,6 @@ export const usePlayAgain = () => {
             );
             return;
           }
-          if (!newTweets) {
-            return;
-          }
-          replaceNodesInDbForUser(newTweets);
-          setTweets(newTweets);
-          setScore(0);
-          setShotsRemaining(SHOTS_REMAINING);
-          setLoading(false);
         }
       );
     });

@@ -196,10 +196,9 @@ export const Node = ({
   const hasBotScore = Boolean(node.user.botScore);
 
   return (
-    <animated.group ref={hoverAnimationRefWave}>
-      <animated.mesh renderOrder={2}>
+    <animated.group ref={sphereRef}>
+      <animated.mesh renderOrder={2} ref={sphereRef}>
         <animated.mesh
-          ref={sphereRef}
           scale={springScale.scale as any}
           // material-transparent={true}
           // material-opacity={springScale.opacity}

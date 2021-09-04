@@ -71,17 +71,6 @@ export function NodeContent({
     immediate: isPopupNode,
     clamp: true,
   });
-  // const hoverAnimationRef = useHoverAnimation({
-  //   deltaX: 0.5,
-  //   deltaY: 0.03,
-  //   randomize: true,
-  // });
-  // const { deltaX, deltaY } = useControls({ deltaX: 1, deltaY: 1 });
-  // const hoverAnimationRefWave = useHoverAnimation({
-  //   deltaX: 0.7,
-  //   deltaY: 0.7,
-  //   randomize: true,
-  // });
   const { metalness } = useControls({ metalness: 0 });
   return (
     <>
