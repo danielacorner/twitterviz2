@@ -56,8 +56,6 @@ export function getMostLikelyBotTypeText(botScore: BotScore) {
     botTypeText = " is very likely " + botTypeText;
   } else if (maxScore > 0.6) {
     botTypeText = " is likely " + botTypeText;
-    console.log("🌟🚨 ~ getMostLikelyBotTypeText ~ botTypeText", botTypeText);
-    console.log("🌟🚨 ~ getMostLikelyBotTypeText ~ botType", botType);
   } else if (maxScore > 0.4) {
     botTypeText = " could be " + botTypeText;
   } else {

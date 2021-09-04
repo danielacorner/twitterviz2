@@ -27,6 +27,7 @@ export const COLOR_BY = {
   sentiment: "sentiment",
   profilePhoto: "profilePhoto",
 };
+export const NUM_VOLUME_STEPS = 10;
 export const FILTER_LEVELS = {
   medium: "medium",
   low: "low",

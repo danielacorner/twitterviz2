@@ -3,15 +3,16 @@ import { IconButton, Tooltip } from "@material-ui/core";
 import ReactPlayer from "react-player";
 import styled from "styled-components/macro";
 import { useAtom } from "jotai";
-import { isMusicOnAtom } from "providers/store/store";
+import { isMusicOnAtom, volumeAtom } from "providers/store/store";
 import { useState } from "react";
+import { NUM_VOLUME_STEPS } from "utils/constants";
 
 /** Mute button with hidden a <ReactPlayer/> */
 export function AudioSoundButton({ title, href }) {
   const [isAudioPlaying, setIsAudioPlaying] = useAtom(isMusicOnAtom);
 
   const [isHovered, setIsHovered] = useState(false);
-  const [volume, setVolume] = useState(1);
+  const [volume, setVolume] = useAtom(volumeAtom);
   return (
     <>
       <SoundButtonStyles
@@ -34,7 +35,7 @@ export function AudioSoundButton({ title, href }) {
       <ReactPlayer
         style={{ visibility: "hidden", position: "fixed" }}
         playing={isAudioPlaying}
-        volume={0.5}
+        volume={volume / NUM_VOLUME_STEPS}
         url={href}
       />
     </>
@@ -47,6 +48,7 @@ const SoundButtonStyles = styled.div`
   position: fixed;
   top: 54px;
   right: 8px;
+  padding-bottom: 16px;
   align-items: center;
   .MuiButtonBase-root {
     color: hsla(0, 100%, 100%, 1);
@@ -66,6 +68,38 @@ const SoundButtonStyles = styled.div`
   }
 `;
 function VolumeControls({ volume, setVolume }) {
-  return <VolumeControlsStyles>{volume}</VolumeControlsStyles>;
+  return (
+    <VolumeControlsStyles>
+      <div className="volumeControlsContent">
+        {[...Array(NUM_VOLUME_STEPS)].map((_, idx) => (
+          <div
+            className={`volumeTick${volume >= idx ? " active" : ""}`}
+            onClick={() => {
+              setVolume(idx);
+            }}
+          ></div>
+        ))}
+      </div>
+    </VolumeControlsStyles>
+  );
 }
-const VolumeControlsStyles = styled.div``;
+const VolumeControlsStyles = styled.div`
+  position: relative;
+  .volumeControlsContent {
+    cursor: pointer;
+    display: flex;
+    gap: 1px;
+    position: absolute;
+    bottom: -36px;
+    right: 0px;
+  }
+  .volumeTick {
+    width: 8px;
+    height: 12px;
+    box-sizing: border-box;
+    background: #2c2c2c;
+    &.active {
+      background: #fff;
+    }
+  }
+`;
