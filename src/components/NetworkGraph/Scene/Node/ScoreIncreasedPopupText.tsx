@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Text } from "@react-three/drei";
 import { getScoreFromBotScore } from "components/Game/getScoreFromBotScore";
 import { MouseoverTooltipContent } from "./MouseoverTooltipContent";
+import { startCase } from "lodash";
 
 export function ScoreIncreasedPopupText({ isMounted, botScore }) {
   const { scoreIncrease, color, maxBotScore, maxBotType } =
@@ -26,22 +27,50 @@ export function ScoreIncreasedPopupText({ isMounted, botScore }) {
         {...{
           tooltipText: (
             <>
-              <div>
-                {maxBotScore}
-                {maxBotType}
+              <div className="popupTextPercent">
+                {startCase(maxBotType)} – {maxBotScore * 100}%
               </div>
-              <div>+{scoreIncrease.toFixed(0)}</div>
+              <div className="popupTextBotType"></div>
+              <div className="popupTextScoreIncrease">
+                <div className="popupTextScoreIcon">
+                  <img src="humanoid.png" alt="" />
+                </div>
+                +{scoreIncrease.toFixed(0)}{" "}
+              </div>
             </>
           ),
           customCss: `
-          .tooltipContent{
-            color: ${color};
-            border-radius: 99999px;
-            background: #0000007b;
-            font-size: 2em;
-            padding: 0.3em 0.6em;
-
-          }
+            width: fit-content;
+            white-space: nowrap;
+            .tooltipContent {
+              color: ${color};
+              border-radius: 99999px;
+              background: #0000007b;
+              padding: 12px 12px 18px;
+              position: relative;
+              .popupTextPercent {
+                font-size: 2em;
+              }
+              .popupTextBotType {
+              }
+              .popupTextScoreIncrease {
+                display: flex;
+                gap: 4px;
+                position: absolute;
+                top: -0.6em;
+                right: 1em;
+                font-size: 1.5em;
+                white-space: nowrap;
+              }
+              .popupTextScoreIcon {
+                width: 24px;
+                height: 24px;
+                img {
+                  width: 100%;
+                  height: 100%;
+                }
+              }
+            }
           `,
         }}
       />
