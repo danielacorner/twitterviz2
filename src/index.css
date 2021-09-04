@@ -26,3 +26,11 @@ code {
 .MuiButton-outlinedPrimary {
   border: 1px solid rgba(255, 255, 255, 0.335) !important;
 }
+#root
+  > div
+  > [class*="NetworkGraph__GraphStyles"]
+  > div
+  > div
+  > div:nth-child(2) {
+  z-index: 9999999999999999999999999999999999999 !important;
+}

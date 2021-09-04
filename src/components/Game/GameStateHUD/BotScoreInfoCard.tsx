@@ -69,6 +69,8 @@ export function BotScoreInfoCard() {
 
   const springUpDown = useSpring({
     transform: `translate3d(0,${isUp ? 0 : HEIGHT * 2}px,0)`,
+    position: "fixed" as any,
+    zIndex: 9999999999999999,
   });
 
   return (
@@ -83,7 +85,10 @@ export function BotScoreInfoCard() {
           camera.position.z,
         ];
       }}
-      style={{ pointerEvents: isUp ? "auto" : "none" }}
+      style={{
+        pointerEvents: isUp ? "auto" : "none",
+        zIndex: 9999999999999999,
+      }}
     >
       <animated.div style={springUpDown}>
         <HtmlBotScoreInfoOverlayStyles {...{ botTypeText }}>
@@ -91,6 +96,7 @@ export function BotScoreInfoCard() {
             <div className="scrollContent">
               <div className="botScoreLegendCanvas">
                 <Suspense fallback={null}>
+                  <div className="screenName">{lastNode?.user.screen_name}</div>
                   <Canvas>
                     <mesh scale={[2.5, 2.5, 2.5]} position={[0, 0.4, 0]}>
                       <BotScoreLegend
@@ -108,7 +114,6 @@ export function BotScoreInfoCard() {
                 </Suspense>
               </div>
               <div className="botScoreInfo">
-                <span className="screenName">{lastNode?.user.screen_name}</span>{" "}
                 {botTypeText} <span className="botType">{botType}</span> bot (
                 {scorePercent}%)
               </div>
@@ -148,9 +153,9 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
   .content {
     .scrollContent {
       width: 100%;
-      height: 100%;
+      height: fit-content;
       ${CUSTOM_SCROLLBAR_CSS}
-      padding: 0.5em 1em;
+      padding: 0.5em 1em 1rem;
     }
     .botScoreLegendCanvas {
       padding: 20px 0;
@@ -163,7 +168,12 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
       ? "1px solid limegreen"
       : "none"}; */
     width: ${WIDTH * mu}px;
-    height: ${HEIGHT * mu}px;
+    max-width: calc(100vw - 24px);
+    height: fit-content;
+    @media (min-width: 768px) {
+      width: ${WIDTH * 2}px;
+      height: ${HEIGHT * mu}px;
+    }
     margin: auto;
     position: relative;
     background: ${darkBackground};
@@ -189,5 +199,6 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
   .screenName,
   .botType {
     font-family: "Poiret One", cursive;
+    text-align: center;
   }
 `;
