@@ -7,7 +7,6 @@ import { Drawer, IconButton } from "@material-ui/core";
 import { Timeline, Tweet as TweetWidget } from "react-twitter-widgets";
 import { NodeTooltipContent } from "../NetworkGraph/NodeTooltip";
 import { CUSTOM_SCROLLBAR_CSS } from "components/common/styledComponents";
-import TagTheBotButton from "components/Game/TagTheBotButton";
 import { Close } from "@material-ui/icons";
 import { isRightDrawerOpenAtom } from "providers/store/store";
 import { useAtom } from "jotai";
@@ -101,7 +100,6 @@ export function RightDrawer() {
               />
             </div>
           )}
-          {selectedNode && <TagTheBotButton />}
         </DrawerStyles>
       </Drawer>
     </>
@@ -110,7 +108,7 @@ export function RightDrawer() {
 const DrawerStyles = styled.div`
   position: relative;
   width: 378px;
-  max-width: calc(100vw - 64px);
+  max-width: calc(100vw - 48px);
   height: 100vh;
   background: #15232e9f !important;
   .pinnedTweet {

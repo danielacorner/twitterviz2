@@ -9,7 +9,8 @@ export type UserNode = {
 /** preprocess tweets to add links & user nodes */
 export function useUserNodes(): UserNode[] {
   const tweets = useTweets();
-  return tweets.map(getUserNodeFromTweet);
+  console.log("🌟🚨 ~ useUserNodes ~ tweets", tweets);
+  return tweets.filter(Boolean).map(getUserNodeFromTweet);
 }
 
 // map new api to old api (compatibly with nodes from old api)

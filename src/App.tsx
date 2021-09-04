@@ -12,6 +12,7 @@ import { RightDrawer } from "./components/RightDrawer/RightDrawer";
 import { Game } from "./components/Game/Game";
 import { LoadingIndicator } from "./components/LoadingIndicator";
 import { Leva } from "leva";
+import TagTheBotButton from "components/Game/TagTheBotButton";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
       <AppStylesHooks />
       <AppFunctionalHooks />
       {/* <SelectedTweetHistory /> */}
+      <TagTheBotButton />
       <RightDrawer />
       <Game />
       <LoadingIndicator />

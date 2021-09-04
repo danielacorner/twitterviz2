@@ -22,6 +22,8 @@ import {
   shotsRemainingAtom,
 } from "providers/store/store";
 import { getScoreFromBotScore } from "./getScoreFromBotScore";
+import { animated, useSpring } from "react-spring";
+import { useIsMounted } from "components/NetworkGraph/Scene/useIsMounted";
 // * animate a HUD-contained bot score display ?
 // * animate the selected node to the front and then back?
 const latestNodeWithBotScoreAtom = atom<Tweet | null>(null);
@@ -92,8 +94,9 @@ export default function TagTheBotButton() {
   }
 
   function setNotABot(node: Tweet) {
-    setTweets((prev) =>
-      prev.map((t) =>
+    setTweets((prev) => {
+      console.log("🌟🚨 ~ setNotABot ~ prev", prev);
+      return prev.filter(Boolean).map((t) =>
         t.id_str === node.id_str
           ? {
               ...node,
@@ -101,14 +104,23 @@ export default function TagTheBotButton() {
               user: { ...node.user, isNotABot: true },
             }
           : t
-      )
-    );
+      );
+    });
   }
 
-  return selectedNode &&
+  const isMounted = useIsMounted();
+  const isUp =
+    selectedNode && shotsRemaining > 0 && !Boolean(selectedNode.botScore);
+  const springUpOnMount = useSpring({
+    transform: `translateY(${isMounted && isUp && !isLoading ? 0 : 128}px)`,
+    opacity: isMounted && isUp && !isLoading ? 1 : 0,
+  });
+
+  return isUp &&
+    selectedNode &&
     shotsRemaining > 0 &&
     !Boolean(selectedNode.botScore) ? (
-    <BottomButtonsStyles>
+    <AnimatedBottomButtonsStyles style={springUpOnMount}>
       <Tooltip title={"Take your shot! Higher bot scores = more points"}>
         <Button
           // disabled={isLoading}
@@ -190,27 +202,28 @@ export default function TagTheBotButton() {
           It's a human 👪
         </Button>
       </Tooltip>
-    </BottomButtonsStyles>
+    </AnimatedBottomButtonsStyles>
   ) : null;
 }
 
-const BottomButtonsStyles = styled.div`
-  position: absolute;
+const AnimatedBottomButtonsStyles = styled(animated.div)`
+  position: fixed;
   z-index: 99999999999999999;
+  left: 0px;
+  right: 0px;
   bottom: 64px;
   @media (min-width: 768px) {
     bottom: 32px;
   }
-  left: 0;
-  right: 0;
   margin: auto;
   display: flex;
   justify-content: center;
-  gap: 12px;
+  gap: 0.5em;
   pointer-events: none;
   a,
   button {
     pointer-events: auto;
+    padding: 0.5em 1em;
   }
   a {
     text-decoration: none;

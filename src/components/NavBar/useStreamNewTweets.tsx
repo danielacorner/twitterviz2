@@ -11,7 +11,7 @@ import { faunaClient } from "providers/faunaProvider";
 import { query as q } from "faunadb";
 import {
   INITIAL_NUM_TWEETS,
-  lastTimeMonthlyTwitterApiUsageWasExceededAtom,
+  isTwitterApiUsageExceededAtom,
   serverErrorAtom,
 } from "providers/store/store";
 import { useAtom } from "jotai";
@@ -21,10 +21,9 @@ import { Tweet } from "types";
 
 export function useStreamNewTweets() {
   let msUntilRateLimitResetRet = null;
-  const [
-    lastTimeMonthlyTwitterApiUsageWasExceeded,
-    setLastTimeMonthlyTwitterApiUsageWasExceeded,
-  ] = useAtom(lastTimeMonthlyTwitterApiUsageWasExceededAtom);
+  const [isTwitterApiUsageExceeded, setisTwitterApiUsageExceeded] = useAtom(
+    isTwitterApiUsageExceededAtom
+  );
   const [, setServerError] = useAtom(serverErrorAtom);
 
   const { lang, countryCode, numTweets, filterLevel } = useConfig();
@@ -44,9 +43,9 @@ export function useStreamNewTweets() {
     error: any;
     msUntilRateLimitReset: number | null;
   }> => {
-    //   if (lastTimeMonthlyTwitterApiUsageWasExceeded) {
+    //   if (isTwitterApiUsageExceeded) {
     //     const timeSinceLastExcession =
-    //       Date.now() - lastTimeMonthlyTwitterApiUsageWasExceeded;
+    //       Date.now() - isTwitterApiUsageExceeded;
     //   }
     return new Promise(async (resolve, reject) => {
       console.log("🤖... fetching from twitter stream API");
@@ -59,7 +58,7 @@ export function useStreamNewTweets() {
       //   console.log(
       //     "🤖💣 no response from twitter stream API -- fetching from DB instead"
       //   );
-      //   setLastTimeMonthlyTwitterApiUsageWasExceeded(Date.now());
+      //   setisTwitterApiUsageExceeded(Date.now());
       //   fetchOldTweetsWithBotScoresFromDB().then((tweetsFromDB) => {
       //     resolve({
       //       ...tweetsFromDB,
@@ -88,6 +87,9 @@ export function useStreamNewTweets() {
       );
 
       const { data, error, msUntilRateLimitReset } = await resp.json();
+      if (msUntilRateLimitReset) {
+        setisTwitterApiUsageExceeded(Date.now());
+      }
       msUntilRateLimitResetRet = msUntilRateLimitReset;
       console.log("🌟 ~ useStreamNewTweets ~ {data,error}", {
         data,

@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import {
-  lastTimeMonthlyTwitterApiUsageWasExceededAtom,
+  isTwitterApiUsageExceededAtom,
   serverErrorAtom,
 } from "providers/store/store";
 import { useSetTweets, useTweets } from "providers/store/useSelectors";
@@ -22,9 +22,7 @@ export function useFetchAndReplaceNode() {
   const tweets = useTweets();
   const setTweets = useSetTweets();
   // const [selectedNodeId] = useAtom(selectedNodeIdAtom);
-  const [lastTimeMonthlyTwitterApiUsageWasExceeded] = useAtom(
-    lastTimeMonthlyTwitterApiUsageWasExceededAtom
-  );
+  const [isTwitterApiUsageExceeded] = useAtom(isTwitterApiUsageExceededAtom);
   const [, setServerError] = useAtom(serverErrorAtom);
 
   return async (
@@ -49,7 +47,7 @@ export function useFetchAndReplaceNode() {
     // replace with N new tweets
 
     // if we still have stream API usage remaining
-    if (!lastTimeMonthlyTwitterApiUsageWasExceeded) {
+    if (!isTwitterApiUsageExceeded) {
       const resp = await fetch(
         `${SERVER_URL}/api/stream?num=${numNewTweets}&filterLevel=${FILTER_LEVELS.low}`
       );

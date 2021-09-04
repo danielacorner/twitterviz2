@@ -18,13 +18,16 @@ export const useTweets = (): Tweet[] => {
 };
 export const useSelectedNode = () => {
   const tweets = useTweets();
+  console.log("🌟🚨 ~ useSelectedNode ~ tweets", tweets);
   const [selectedNodeId] = useAtom(selectedNodeIdAtom);
   const selectedNode = selectedNodeId
-    ? tweets.find((t) =>
-        [t.id_str, t.id, t.user.id, t.user.id_str]
-          .map(String)
-          .includes(selectedNodeId)
-      )
+    ? tweets
+        .filter(Boolean)
+        .find((t) =>
+          [t.id_str, t.id, t.user.id, t.user.id_str]
+            .map(String)
+            .includes(selectedNodeId)
+        )
     : null;
   return selectedNode;
 };

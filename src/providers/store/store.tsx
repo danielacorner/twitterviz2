@@ -12,9 +12,7 @@ import { UserNode } from "components/NetworkGraph/useUserNodes";
 export const SHOTS_REMAINING = process.env.NODE_ENV === "development" ? 2 : 3;
 export const INITIAL_NUM_TWEETS = 10;
 
-export const lastTimeMonthlyTwitterApiUsageWasExceededAtom = atom<
-  number | null
->(null);
+export const isTwitterApiUsageExceededAtom = atom<number | null>(null);
 
 export const isBotScoreExplainerUpAtom = atom<boolean>(false);
 export const isMusicOnAtom = atom<boolean>(false);
