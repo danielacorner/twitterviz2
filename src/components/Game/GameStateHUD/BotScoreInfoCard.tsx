@@ -94,10 +94,10 @@ export function BotScoreInfoCard() {
         <HtmlBotScoreInfoOverlayStyles {...{ botTypeText }}>
           <div className="content">
             <div className="scrollContent">
+              <div className="screenName">{lastNode?.user.screen_name}</div>
               <div className="botScoreLegendCanvas">
                 <Suspense fallback={null}>
-                  <div className="screenName">{lastNode?.user.screen_name}</div>
-                  <Canvas>
+                  <Canvas style={{ overflow: "visible" }}>
                     <mesh scale={[2.5, 2.5, 2.5]} position={[0, 0.4, 0]}>
                       <BotScoreLegend
                         {...{
@@ -158,7 +158,6 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
       padding: 0.5em 1em 1rem;
     }
     .botScoreLegendCanvas {
-      padding: 20px 0;
       height: 320px;
     }
     box-shadow: 0px 1px 11px #0000009c;
@@ -170,10 +169,7 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
     width: ${WIDTH * mu}px;
     max-width: calc(100vw - 24px);
     height: fit-content;
-    @media (min-width: 768px) {
-      width: ${WIDTH * 2}px;
-      height: ${HEIGHT * mu}px;
-    }
+
     margin: auto;
     position: relative;
     background: ${darkBackground};
@@ -189,16 +185,39 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
   }
   .botScoreInfo {
     text-align: center;
-    margin-bottom: 0.5em;
+    margin-top: 2em;
   }
   .botTypeInfo {
     text-align: center;
     line-height: 1.6em;
     font-size: ${TRANSFORM ? 3 : 16}px;
   }
+  .screenName {
+    font-size: 1.5em;
+    margin: 0.5em 0;
+  }
   .screenName,
   .botType {
     font-family: "Poiret One", cursive;
     text-align: center;
+  }
+  @media (min-width: 768px) {
+    transform: translate3d(-20px, -160px, 0px);
+    .botTypeInfo {
+      margin-top: 0.5em;
+      font-size: 18px;
+    }
+    .botScoreInfo {
+      margin-top: 1em;
+    }
+    .screenName {
+      font-size: 2em;
+    }
+    .content {
+      box-sizing: border-box;
+      .scrollContent {
+        padding: 0.5em 2em 2em;
+      }
+    }
   }
 `;
