@@ -4,7 +4,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { animated } from "@react-spring/three";
 import { CAMERA_POSITION } from "utils/constants";
 import { useSpring } from "react-spring";
-import { Suspense, useRef, useState } from "react";
+import { Suspense, useRef } from "react";
 import { Stars } from "./Stars";
 import {
   areOrbitControlsEnabledAtom,
@@ -21,7 +21,6 @@ import { useHoverAnimation } from "./useHoverAnimation";
 import { Nodes } from "./Nodes";
 import { BotScoreInfoCard } from "components/Game/GameStateHUD/BotScoreInfoCard";
 import { useIsMounted } from "./useIsMounted";
-import { useInterval } from "utils/useInterval";
 
 export function Scene() {
   // const vertices = getVertices(nodes.length);
@@ -56,7 +55,6 @@ export function Scene() {
   //   delay: 4 * 1000,
   //   immediate: false,
   // });
-  const [gameState] = useAtom(gameStateAtom);
   return (
     <Suspense fallback={null}>
       {/* <ambientLight intensity={0.75} /> */}

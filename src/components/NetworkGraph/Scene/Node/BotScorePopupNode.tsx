@@ -1,6 +1,6 @@
 import { animated, useSpring } from "@react-spring/three";
 
-import { NodeContent } from "components/NetworkGraph/Scene/Node/Node";
+import { NodeContent } from "components/NetworkGraph/Scene/Node/NodeContent";
 import { Canvas } from "@react-three/fiber";
 
 import styled from "styled-components/macro";
@@ -9,6 +9,7 @@ import Background from "../Background";
 import { ScanningAnimation } from "./ScanningAnimation";
 import { useLatestTaggedNode } from "./useLatestTaggedNode";
 import { useWindowSize } from "utils/hooks";
+import { useHoverAnimation } from "../useHoverAnimation";
 /** pops up and animates when you get a new bot score */
 export function BotScorePopupNode() {
   const { latestBotScore, node, lastNode } = useLatestTaggedNode();
@@ -59,6 +60,11 @@ function BotScorePopupNodeAnimation({
   nodeDisplay: UserNode | null;
   springProps;
 }) {
+  const hoverAnimationRefWave = useHoverAnimation({
+    deltaX: 0.7,
+    deltaY: 0.7,
+    randomize: true,
+  });
   return (
     <Canvas
       style={{
@@ -78,7 +84,11 @@ function BotScorePopupNodeAnimation({
           />
         </>
       ) : null}
-      <animated.mesh scale={springProps.scale as any} position={[0, 0, -2]}>
+      <animated.mesh
+        scale={springProps.scale as any}
+        position={[0, 0, -2]}
+        ref={hoverAnimationRefWave}
+      >
         {nodeDisplay ? (
           <>
             <NodeContent
