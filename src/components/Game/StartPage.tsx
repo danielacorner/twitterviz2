@@ -276,7 +276,7 @@ const StartPageStyles = styled.div`
   .buttonsRow {
     display: grid;
     grid-template-columns: auto 1fr;
-    grid-gap: 10px;
+    grid-gap: 0.5em;
   }
   li {
     margin-bottom: 1em;
@@ -306,6 +306,9 @@ const StartPageStyles = styled.div`
     }
   }
   @media (min-width: 768px) {
+    .buttonsRow {
+      grid-gap: 2em;
+    }
     button {
       font-size: 1.5em;
     }

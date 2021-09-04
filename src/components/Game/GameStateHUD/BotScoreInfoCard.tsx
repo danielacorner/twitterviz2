@@ -20,11 +20,16 @@ import {
 import { IconButton } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 import { getMostLikelyBotTypeText } from "./getMostLikelyBotTypeText";
-import { useSpring, animated } from "react-spring";
+import { useSpring, animated, config } from "react-spring";
 import { BotScoreLegend } from "./BotScoreLegend";
 import { Suspense } from "react";
 import { CUSTOM_SCROLLBAR_CSS } from "components/RightDrawer/CUSTOM_SCROLLBAR_CSS";
-import { colorSecondary, darkBackground } from "utils/colors";
+import {
+  colorPrimary,
+  colorSecondary,
+  textSecondaryColor,
+  darkBackground,
+} from "utils/colors";
 import { AvatarStyles } from "components/NetworkGraph/NodeTooltip";
 
 const PADDING = 20;
@@ -84,6 +89,11 @@ export function BotScoreInfoCard() {
   });
 
   const AVATAR_WIDTH = 92;
+  const springExpandOnMount = useSpring({
+    width: `${latestNodeWithBotScore ? scorePercent : 0}%`,
+    config: config.molasses,
+    delay: 1000,
+  });
 
   return (
     <Html
@@ -103,30 +113,35 @@ export function BotScoreInfoCard() {
       }}
     >
       <animated.div style={springUpDown}>
-        <HtmlBotScoreInfoOverlayStyles {...{ botTypeText }}>
-          <AvatarStyles
-            customCss={`
+        <HtmlBotScoreInfoOverlayStyles {...{ botTypeText, scorePercent, isUp }}>
+          <div className="content">
+            <AvatarStyles
+              customCss={`
               z-index: 9999999999999;
               position: absolute;
               top: -${AVATAR_WIDTH / 2}px;
-              height:${AVATAR_WIDTH}px;
-              width:${AVATAR_WIDTH}px;
-              left: calc(50vw - ${AVATAR_WIDTH / 2}px);
-              right: calc(50vw - ${AVATAR_WIDTH / 2}px);
+              left: calc(1.2em + 4px);
+              height: ${AVATAR_WIDTH}px;
+              width: ${AVATAR_WIDTH}px;
               img{width:100%;height:100%;}
               box-shadow: 0px 2px 3px rgba(0,0,0,0.5);
               border: 4px solid ${darkBackground};
           `}
-          >
-            <img
-              src={latestNodeWithBotScore?.user?.profile_image_url_https}
-              alt=""
-            />
-          </AvatarStyles>
-          <div className="content">
+            >
+              <img
+                src={latestNodeWithBotScore?.user?.profile_image_url_https}
+                alt=""
+              />
+            </AvatarStyles>
             <div className="scrollContent">
+              <div className="displayName">{lastNode?.user.name}</div>
               <div className="screenName">{lastNode?.user.screen_name}</div>
               <div className="botType">
+                <animated.div
+                  style={springExpandOnMount}
+                  className="percentWidth"
+                ></animated.div>
+                <div className="percentWidthOutline"></div>
                 {botType}
                 <span className="scorePercent"> — {scorePercent}%</span>
               </div>
@@ -172,6 +187,7 @@ export function BotScoreInfoCard() {
 }
 
 const HtmlBotScoreInfoOverlayStyles = styled.div`
+  position: relative;
   font-family: "Roboto", sans-serif;
   transition: transform 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
   transform: translate3d(-20px, 18px, 0px);
@@ -184,7 +200,7 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
   box-sizing: border-box;
   font-size: ${TRANSFORM ? 4 : 24}px;
   .content {
-    pointer-events: auto;
+    pointer-events: ${(p) => (p.isUp ? "auto" : "none")};
     .scrollContent {
       width: 100%;
       height: fit-content;
@@ -219,40 +235,73 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
     /* transform: scale(1.4); */
   }
   .botScoreInfo {
-    text-align: center;
     margin-top: 1em;
   }
   .botTypeInfo {
-    text-align: center;
     line-height: 1.6em;
     font-size: 16px;
     color: ${colorSecondary};
     margin-bottom: 1em;
   }
+  .displayName {
+    font-size: 1.2em;
+    margin: 1.2em 0 0.2em;
+    text-align: left;
+  }
   .screenName {
-    font-size: 1.5em;
-    margin: 0.5em 0 0.2em;
+    color: ${textSecondaryColor};
+    font-size: 1em;
+    margin: 0em 1em 0.5em;
+    text-align: left;
+    position: relative;
+    width: fit-content;
+    &:before {
+      position: absolute;
+      left: -1em;
+      content: "@";
+    }
   }
   .screenName,
   .botType {
     font-family: "Poiret One", cursive;
-    text-align: center;
   }
   .botType {
+    position: relative;
+    left: 6px;
+    .percentWidth {
+      position: absolute;
+      height: 32px;
+      background: ${colorSecondary};
+      opacity: 0.2;
+      padding: 20px;
+      border-radius: 6px;
+      top: -6px;
+      left: -6px;
+    }
+    .percentWidthOutline {
+      position: absolute;
+      height: 32px;
+      width: 100%;
+      padding: 20px;
+      left: -6px;
+      right: -6px;
+      top: -6px;
+      border: 1px solid ${colorPrimary};
+      margin: -0.5px;
+    }
+    font-size: 1em;
+    /* text-align: center; */
     color: ${colorSecondary};
     .scorePercent {
       font-family: "Roboto", sans-serif;
     }
   }
   @media (min-width: 768px) {
-    transform: translate3d(-20px, -160px, 0px);
+    transform: translate3d(-20px, -200px, 0px);
     .botTypeInfo {
       margin-top: 0.5em;
       font-size: 18px;
       line-height: 1.4em;
-    }
-    .screenName {
-      font-size: 2em;
     }
     .content {
       padding: 0 0.5em;

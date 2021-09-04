@@ -53,13 +53,13 @@ export function getMostLikelyBotTypeText(botScore: BotScore) {
   }
 
   if (maxScore > 0.8) {
-    botTypeText = "very likely " + botTypeText;
+    botTypeText = " is very likely " + botTypeText;
   } else if (maxScore > 0.6) {
-    botTypeText = "likely " + botTypeText;
+    botTypeText = " is likely " + botTypeText;
   } else if (maxScore > 0.4) {
-    botTypeText = "could be " + botTypeText;
+    botTypeText = " could be " + botTypeText;
   } else {
-    botTypeText = `probably not ` + botTypeText;
+    botTypeText = " is probably not " + botTypeText;
   }
 
   return { botTypeText, botTypeInfo, botType, scorePercent };
