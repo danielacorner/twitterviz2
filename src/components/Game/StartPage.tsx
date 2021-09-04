@@ -42,10 +42,10 @@ export function StartPage({ startLookingAtTweets }) {
                       50%
                     </span>{" "}
                     <span style={{ fontSize: "0.8em", color: colorLink }}>
-                      of all accounts spreading messages about COVID-19
+                      of all accounts spreading messages about COVID-19 were
+                      bots
                     </span>
                   </a>
-                  , and{" "}
                 </li>
                 <li>
                   <a
@@ -57,13 +57,12 @@ export function StartPage({ startLookingAtTweets }) {
                       82%
                     </span>{" "}
                     <span style={{ fontSize: "0.8em", color: colorLink }}>
-                      of the most influential COVID-19 retweeters
+                      of the most influential COVID-19 retweeters were bots
                     </span>
-                  </a>{" "}
+                  </a>
                 </li>
               </ul>
             </p>
-            <p style={{ marginTop: "0.5em", textAlign: "right" }}>were bots.</p>
 
             <Button
               disabled={isLoading}
