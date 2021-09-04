@@ -68,8 +68,10 @@ const SoundButtonStyles = styled.div`
   }
 `;
 function VolumeControls({ volume, setVolume }) {
+  const [isAudioPlaying] = useAtom(isMusicOnAtom);
+
   return (
-    <VolumeControlsStyles>
+    <VolumeControlsStyles {...{ isAudioPlaying }}>
       <div className="volumeControlsContent">
         {[...Array(NUM_VOLUME_STEPS)].map((_, idx) => (
           <div
@@ -99,7 +101,7 @@ const VolumeControlsStyles = styled.div`
     box-sizing: border-box;
     background: #2c2c2c;
     &.active {
-      background: #fff;
+      background: ${(p) => (p.isAudioPlaying ? "#fff" : "#555")};
     }
   }
 `;

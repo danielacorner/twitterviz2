@@ -248,7 +248,7 @@ function TextBillboard({
           color={"#c0c0c0"}
           textAlign={"center"}
           maxWidth={0.5}
-          position={[0, isBottom ? -4.2 : 3, 0]}
+          position={[0, isBottom ? -1.2 : 3, 0]}
           fontSize={1}
           fillOpacity={1}
           anchorY={"middle"}
@@ -265,11 +265,11 @@ function TextBillboard({
             : `hsl(0,0%,${(textLightness * 100).toFixed(0)}%)`
         }
         textAlign={"center"}
-        anchorY={isBottom ? "top" : "middle"}
+        anchorY={"top"}
         maxWidth={0.5}
         position={[
           showLabels ? 0 : 0.3,
-          (isBottom ? -1.2 : 1.2) * (showLabels ? 1 : 0.7),
+          (isBottom ? -2 : 2.2) * (showLabels ? 1 : 0.7),
           0,
         ]}
         fontSize={1}
