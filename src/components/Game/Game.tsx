@@ -32,7 +32,8 @@ export function Game() {
 const GameStyles = styled.div``;
 
 export const usePlayAgain = () => {
-  const { fetchNewTweets } = useStreamNewTweets();
+  const { fetchNewTweetsFromTwitterApi, fetchNewTweetsFromDB } =
+    useStreamNewTweets();
   const deleteAllTweets = useDeleteAllTweets();
   const replaceNodesInDbForUser = useReplaceNodesInDbForUser();
   const setTweets = useSetTweets();
@@ -43,10 +44,10 @@ export const usePlayAgain = () => {
   return () => {
     setLoading(true);
     deleteAllTweets().then((ret) => {
-      fetchNewTweets().then(
+      fetchNewTweetsFromTwitterApi().then(
         ({ error, data: newTweets, msUntilRateLimitReset }) => {
-          if (error) {
-            console.log(error);
+          if (error || msUntilRateLimitReset) {
+            console.log("🌟🚨🌟🚨🌟🚨🌟🚨 ~ deleteAllTweets ~ error", error);
             setServerError(
               error || msUntilRateLimitReset
                 ? {
@@ -54,6 +55,22 @@ export const usePlayAgain = () => {
                     ...(msUntilRateLimitReset ? { msUntilRateLimitReset } : {}),
                   }
                 : null
+            );
+
+            fetchNewTweetsFromDB().then(
+              ({
+                error: dbError,
+                data: newTweetsFromDb,
+                msUntilRateLimitReset: msUntilRateLimitResetFromDb,
+              }) => {
+                console.log(
+                  "🌟🚨 ~ deleteAllTweets ~ msUntilRateLimitResetFromDb",
+                  msUntilRateLimitResetFromDb
+                );
+                setTweets(newTweetsFromDb);
+
+                return;
+              }
             );
             return;
           }

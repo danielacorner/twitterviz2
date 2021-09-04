@@ -37,7 +37,7 @@ export function useStreamNewTweets() {
   const setTweets = useSetTweets();
   // const addTweets = useAddTweets();
 
-  const timerRef = useRef(null as number | null);
+  // const timerRef = useRef(null as number | null);
 
   const fetchNewTweetsFromTwitterApi = (): Promise<{
     data: Tweet[];
@@ -55,18 +55,18 @@ export function useStreamNewTweets() {
 
       // set isMonthlyTwitterApiUsageExceeded to true if we don't get a response from stream within 10 seconds,
       // so subsequent requests will come from the DB instead
-      timerRef.current = window.setTimeout(() => {
-        console.log(
-          "🤖💣 no response from twitter stream API -- fetching from DB instead"
-        );
-        setLastTimeMonthlyTwitterApiUsageWasExceeded(Date.now());
-        fetchOldTweetsWithBotScoresFromDB().then((tweetsFromDB) => {
-          resolve({
-            ...tweetsFromDB,
-            msUntilRateLimitReset: msUntilRateLimitResetRet,
-          });
-        });
-      }, WAIT_FOR_STREAM_TIMEOUT); // TODO: add linearprogress bar
+      // timerRef.current = window.setTimeout(() => {
+      //   console.log(
+      //     "🤖💣 no response from twitter stream API -- fetching from DB instead"
+      //   );
+      //   setLastTimeMonthlyTwitterApiUsageWasExceeded(Date.now());
+      //   fetchOldTweetsWithBotScoresFromDB().then((tweetsFromDB) => {
+      //     resolve({
+      //       ...tweetsFromDB,
+      //       msUntilRateLimitReset: msUntilRateLimitResetRet,
+      //     });
+      //   });
+      // }, WAIT_FOR_STREAM_TIMEOUT); // TODO: add linearprogress bar
 
       const langParam = lang !== "All" ? `&lang=${lang}` : "";
       const allowedMediaParam =
@@ -88,12 +88,12 @@ export function useStreamNewTweets() {
       );
 
       const { data, error, msUntilRateLimitReset } = await resp.json();
-      console.log(
-        "🌟🚨 ~ returnnewPromise ~ msUntilRateLimitReset",
-        msUntilRateLimitReset
-      );
       msUntilRateLimitResetRet = msUntilRateLimitReset;
-      console.log("🌟 ~ useStreamNewTweets ~ {data,error}", { data, error });
+      console.log("🌟 ~ useStreamNewTweets ~ {data,error}", {
+        data,
+        error,
+        msUntilRateLimitReset,
+      });
 
       // const tweetsFromData = data.map((d) => {
       //   const userId = d.user.id_str || d.user.id;
@@ -112,11 +112,13 @@ export function useStreamNewTweets() {
       );
 
       setLoading(false);
-      if (timerRef.current) {
-        window.clearTimeout(timerRef.current);
-        timerRef.current = null;
-      }
-      resolve({ data, error, msUntilRateLimitReset });
+      // if (timerRef.current) {
+      //   window.clearTimeout(timerRef.current);
+      //   timerRef.current = null;
+      // }
+      console.log("🌟🌟🌟🌟 ~ resolve");
+
+      return resolve({ data, error, msUntilRateLimitReset });
     });
   };
 
@@ -153,9 +155,8 @@ export function useStreamNewTweets() {
 
   return {
     loading,
-    fetchNewTweets: lastTimeMonthlyTwitterApiUsageWasExceeded
-      ? fetchOldTweetsWithBotScoresFromDB
-      : fetchNewTweetsFromTwitterApi,
+    fetchNewTweetsFromDB: fetchOldTweetsWithBotScoresFromDB,
+    fetchNewTweetsFromTwitterApi,
   };
 }
 
