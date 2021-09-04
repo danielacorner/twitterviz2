@@ -27,28 +27,28 @@ export function getMostLikelyBotTypeText(botScore: BotScore) {
   const scorePercent = (maxScore * 100).toFixed(0);
 
   if (maxScore === fake_follower) {
-    botTypeText += "a";
     botType = BOT_TYPES.FAKE_FOLLOWER.name;
+    botTypeText += "a " + botType;
     botTypeInfo += BOT_TYPES.FAKE_FOLLOWER.tooltipText;
   } else if (maxScore === astroturf) {
-    botTypeText += "an";
     botType = BOT_TYPES.ASTROTURF.name;
+    botTypeText += "an ";
     botTypeInfo += BOT_TYPES.ASTROTURF.tooltipText;
   } else if (maxScore === financial) {
-    botTypeText += "a";
     botType = BOT_TYPES.FINANCIAL.name;
+    botTypeText += "a " + botType;
     botTypeInfo += BOT_TYPES.FINANCIAL.tooltipText;
   } else if (maxScore === other) {
-    botTypeText += "an";
     botType = BOT_TYPES.OTHER.name;
+    botTypeText += "an " + botType;
     botTypeInfo += BOT_TYPES.OTHER.tooltipText;
   } else if (maxScore === self_declared) {
-    botTypeText += "a";
     botType = BOT_TYPES.SELF_DECLARED.name;
+    botTypeText += "a " + botType;
     botTypeInfo += BOT_TYPES.SELF_DECLARED.tooltipText;
   } else if (maxScore === spammer) {
-    botTypeText += "a";
     botType = BOT_TYPES.SPAMMER.name;
+    botTypeText += "a " + botType;
     botTypeInfo += BOT_TYPES.SPAMMER.tooltipText;
   }
 
@@ -56,6 +56,8 @@ export function getMostLikelyBotTypeText(botScore: BotScore) {
     botTypeText = " is very likely " + botTypeText;
   } else if (maxScore > 0.6) {
     botTypeText = " is likely " + botTypeText;
+    console.log("🌟🚨 ~ getMostLikelyBotTypeText ~ botTypeText", botTypeText);
+    console.log("🌟🚨 ~ getMostLikelyBotTypeText ~ botType", botType);
   } else if (maxScore > 0.4) {
     botTypeText = " could be " + botTypeText;
   } else {
