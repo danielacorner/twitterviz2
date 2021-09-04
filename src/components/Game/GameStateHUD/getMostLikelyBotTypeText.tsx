@@ -59,7 +59,7 @@ export function getMostLikelyBotTypeText(botScore: BotScore) {
   } else if (maxScore > 0.4) {
     botTypeText = " could be " + botTypeText;
   } else {
-    botTypeText = " is probably not " + botTypeText;
+    botTypeText = " is probably not a ";
   }
 
   return { botTypeText, botTypeInfo, botType, scorePercent };

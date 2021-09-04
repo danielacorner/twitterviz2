@@ -188,7 +188,12 @@ export function BotScoreInfoCard() {
                 </Suspense>
               </div>
 
-              <div className="botScoreInfo">{botTypeText} bot</div>
+              <div className="botScoreInfo">
+                <span className="screenName" style={{ marginRight: 4 }}>
+                  {latestNodeWithBotScore?.user.screen_name}
+                </span>
+                {botTypeText} bot
+              </div>
             </div>
             <IconButton
               className="btnClose"
