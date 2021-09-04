@@ -22,7 +22,7 @@ import { Close } from "@material-ui/icons";
 import { getMostLikelyBotTypeText } from "./getMostLikelyBotTypeText";
 import { useSpring, animated, config } from "react-spring";
 import { BotScoreLegend } from "./BotScoreLegend";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { CUSTOM_SCROLLBAR_CSS } from "components/RightDrawer/CUSTOM_SCROLLBAR_CSS";
 import {
   colorPrimary,
@@ -81,19 +81,32 @@ export function BotScoreInfoCard() {
 
   const { fx, fy, fz } = useControls({ fx: 0, fy: 0, fz: 0 });
 
+  const [isDoneAnimating, setIsDoneAnimating] = useState(false);
   const springUpDown = useSpring({
     transform: `translate3d(0,${isUp ? 0 : HEIGHT * 0.75}px,0)`,
     opacity: isUp ? 1 : 0,
     position: "fixed" as any,
     zIndex: 9999999999999999,
+    onRest: () => {
+      if (isUp && latestNodeWithBotScore) {
+        setIsDoneAnimating(true);
+      }
+    },
   });
 
   const AVATAR_WIDTH = 92;
   const springExpandOnMount = useSpring({
-    width: `${latestNodeWithBotScore ? scorePercent : 0}%`,
+    width: `calc(${
+      isUp && latestNodeWithBotScore && isDoneAnimating ? scorePercent : 0
+    }% - 12px)`,
+    immediate: !isUp,
     config: config.molasses,
-    delay: 1000,
   });
+  useEffect(() => {
+    if (!isUp) {
+      setIsDoneAnimating(false);
+    }
+  }, [isUp]);
 
   return (
     <Html
@@ -109,6 +122,8 @@ export function BotScoreInfoCard() {
       }}
       style={{
         pointerEvents: "none",
+        position: "fixed",
+        top: 0,
         zIndex: 9999999999999999,
       }}
     >
@@ -138,7 +153,9 @@ export function BotScoreInfoCard() {
               <div className="screenName">{lastNode?.user.screen_name}</div>
               <div className="botType">
                 <animated.div
-                  style={springExpandOnMount}
+                  style={{
+                    ...springExpandOnMount,
+                  }}
                   className="percentWidth"
                 ></animated.div>
                 <div className="percentWidthOutline"></div>
@@ -187,7 +204,6 @@ export function BotScoreInfoCard() {
 }
 
 const HtmlBotScoreInfoOverlayStyles = styled.div`
-  position: relative;
   font-family: "Roboto", sans-serif;
   transition: transform 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
   transform: translate3d(-20px, 18px, 0px);
@@ -270,15 +286,16 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
     left: 6px;
     .percentWidth {
       position: absolute;
-      height: 32px;
+      height: 40px;
       background: ${colorSecondary};
       opacity: 0.2;
-      padding: 20px;
       border-radius: 6px;
       top: -6px;
+      bottom: -6px;
       left: -6px;
     }
     .percentWidthOutline {
+      border-radius: 6px;
       position: absolute;
       height: 32px;
       width: 100%;
@@ -286,7 +303,7 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
       left: -6px;
       right: -6px;
       top: -6px;
-      border: 1px solid ${colorPrimary};
+      border: 1px solid #ffffff30;
       margin: -0.5px;
     }
     font-size: 1em;
