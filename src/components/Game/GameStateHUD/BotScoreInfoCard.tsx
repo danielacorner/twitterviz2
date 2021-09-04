@@ -154,6 +154,7 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
     .scrollContent {
       width: 100%;
       height: fit-content;
+      max-height: calc(100vh - 96px);
       ${CUSTOM_SCROLLBAR_CSS}
       padding: 0.5em 1em 1rem;
     }
