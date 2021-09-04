@@ -10,6 +10,7 @@ import COVIDSVG from "./COVIDSVG";
 import { colorLink, colorSecondary } from "utils/colors";
 import { useAtom } from "jotai";
 import { isMusicOnAtom } from "providers/store/store";
+import { CUSTOM_SCROLLBAR_CSS } from "components/common/styledComponents";
 
 export function StartPage({ startLookingAtTweets }) {
   const isLoading = useLoading();
@@ -24,25 +25,41 @@ export function StartPage({ startLookingAtTweets }) {
         {step === 0 && (
           <>
             <p>Twitter is full of bots 🤖</p>
-            <p>
-              In 2020 for example,{" "}
-              <a
-                href="https://www.npr.org/sections/coronavirus-live-updates/2020/05/20/859814085/researchers-nearly-half-of-accounts-tweeting-about-coronavirus-are-likely-bots"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                50% of all accounts spreading messages about COVID-19
-              </a>{" "}
-              and{" "}
-              <a
-                href="https://www.marketwatch.com/story/about-half-of-the-twitter-accounts-calling-for-reopening-america-are-probably-bots-report-2020-05-26"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                82% of the most influential COVID-19 retweeters
-              </a>{" "}
-              were bots.
+            <p>In 2020 for example, </p>
+            <p style={{ marginBottom: 0 }}>
+              <ul style={{ textAlign: "left" }}>
+                <li>
+                  <a
+                    href="https://www.npr.org/sections/coronavirus-live-updates/2020/05/20/859814085/researchers-nearly-half-of-accounts-tweeting-about-coronavirus-are-likely-bots"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span style={{ fontWeight: "bold", color: colorLink }}>
+                      50%
+                    </span>{" "}
+                    <span style={{ fontSize: "0.8em", color: colorLink }}>
+                      of all accounts spreading messages about COVID-19
+                    </span>
+                  </a>
+                  , and{" "}
+                </li>
+                <li>
+                  <a
+                    href="https://www.marketwatch.com/story/about-half-of-the-twitter-accounts-calling-for-reopening-america-are-probably-bots-report-2020-05-26"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span style={{ fontWeight: "bold", color: colorLink }}>
+                      82%
+                    </span>{" "}
+                    <span style={{ fontSize: "0.8em", color: colorLink }}>
+                      of the most influential COVID-19 retweeters
+                    </span>
+                  </a>{" "}
+                </li>
+              </ul>
             </p>
+            <p style={{ marginTop: "0.5em" }}>were bots.</p>
 
             <Button
               disabled={isLoading}
@@ -63,7 +80,7 @@ export function StartPage({ startLookingAtTweets }) {
           <>
             <p>There are different kinds of bot:</p>
             <div className="canvasContainer">
-              <Canvas style={{ width: 300, height: 240 }}>
+              <Canvas style={{ width: 480, height: 360 }}>
                 <BotScoreLegend
                   showScorePercents={false}
                   showTooltips={true}
@@ -181,15 +198,17 @@ const StartPageStyles = styled.div`
   font-size: 1.5rem;
   .title {
     font-family: "Rancho", cursive;
-    font-size: 5rem;
-    margin: 64px 0 64px;
+    font-size: 6em;
+    margin: 0.5em 0 64px;
     line-height: 1em;
   }
+
   position: fixed;
   inset: 0;
   display: grid;
   justify-items: center;
   .content {
+    ${CUSTOM_SCROLLBAR_CSS}
     line-height: 1.5em;
     box-shadow: 0px 2px 30px 8px #00000068;
     position: relative;
@@ -209,7 +228,7 @@ const StartPageStyles = styled.div`
   }
   p {
     text-align: center;
-    margin-bottom: 1.5em;
+    margin: 1em;
   }
   ol p {
     text-align: left;
@@ -234,7 +253,8 @@ const StartPageStyles = styled.div`
     grid-gap: 10px;
   }
   li {
-    line-height: 1.5em;
+    margin-bottom: 0.5em;
+    line-height: 1.1em;
     p {
       margin-bottom: 0.5em;
     }
@@ -255,5 +275,17 @@ const StartPageStyles = styled.div`
     font-style: italic;
     font-size: 14px;
     line-height: 0;
+  }
+  @media (min-width: 768px) {
+    .content {
+      padding: 3em;
+    }
+    .title {
+      font-size: 6em;
+    }
+    p {
+      font-size: 1.5em;
+      line-height: 1.2em;
+    }
   }
 `;
