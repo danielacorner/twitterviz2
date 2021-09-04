@@ -26,17 +26,6 @@ export function getMostLikelyBotTypeText(botScore: BotScore) {
 
   const scorePercent = (maxScore * 100).toFixed(0);
 
-  if (maxScore > 0.8) {
-    botTypeText += "is very likely ";
-  } else if (maxScore > 0.6) {
-    botTypeText += "is likely ";
-  } else if (maxScore > 0.4) {
-    botTypeText += "could be ";
-  } else {
-    botTypeText += `is probably not a`;
-    return { botTypeText, botTypeInfo, scorePercent };
-  }
-
   if (maxScore === fake_follower) {
     botTypeText += "a";
     botType = BOT_TYPES.FAKE_FOLLOWER.name;
@@ -61,6 +50,16 @@ export function getMostLikelyBotTypeText(botScore: BotScore) {
     botTypeText += "a";
     botType = BOT_TYPES.SPAMMER.name;
     botTypeInfo += BOT_TYPES.SPAMMER.tooltipText;
+  }
+
+  if (maxScore > 0.8) {
+    botTypeText = "very likely " + botTypeText;
+  } else if (maxScore > 0.6) {
+    botTypeText = "likely " + botTypeText;
+  } else if (maxScore > 0.4) {
+    botTypeText = "could be " + botTypeText;
+  } else {
+    botTypeText = `probably not ` + botTypeText;
   }
 
   return { botTypeText, botTypeInfo, botType, scorePercent };

@@ -41,7 +41,7 @@ export const BOT_TYPES = {
       "miscellaneous other bots obtained from manual annotation, user feedback, etc.",
   },
   ASTROTURF: {
-    name: "Echo-chamber",
+    name: "Echo Chamber",
     tooltipText:
       "A.K.A. Astroturf bot; accounts that engage in follow back groups and share and delete political content in high volume",
   },
@@ -58,7 +58,7 @@ export const BOT_TYPES = {
     tooltipText: "accounts labeled as spambots from several datasets",
   },
   SELF_DECLARED: {
-    name: "Self Declared",
+    name: "Self-Declared",
     tooltipText: "bots that say they are a bot, bots from botwiki.org",
   },
 };

@@ -26,7 +26,7 @@ import { animated, useSpring } from "react-spring";
 import { useIsMounted } from "components/NetworkGraph/Scene/useIsMounted";
 // * animate a HUD-contained bot score display ?
 // * animate the selected node to the front and then back?
-const latestNodeWithBotScoreAtom = atom<Tweet | null>(null);
+export const latestNodeWithBotScoreAtom = atom<Tweet | null>(null);
 export const BOT_SCORE_POPUP_TIMEOUT = 2000;
 
 export default function TagTheBotButton() {

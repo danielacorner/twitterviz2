@@ -232,9 +232,10 @@ export const TooltipStyles = styled.div`
   ${(p) => p.tooltipCss}
 `;
 
-const AvatarStyles = styled.div`
+export const AvatarStyles = styled.div`
   width: ${AVATAR_WIDTH}px;
   height: ${AVATAR_WIDTH}px;
   border-radius: 50%;
   overflow: hidden;
+  ${(p) => p.customCss || ""}
 `;

@@ -13,7 +13,10 @@ import {
 import { useAtom } from "jotai";
 import { useSetNodesInDbForUser } from "providers/faunaProvider";
 import { useTweets } from "providers/store/useSelectors";
-import { BOT_SCORE_POPUP_TIMEOUT } from "../TagTheBotButton";
+import {
+  BOT_SCORE_POPUP_TIMEOUT,
+  latestNodeWithBotScoreAtom,
+} from "../TagTheBotButton";
 import { IconButton } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 import { getMostLikelyBotTypeText } from "./getMostLikelyBotTypeText";
@@ -21,16 +24,22 @@ import { useSpring, animated } from "react-spring";
 import { BotScoreLegend } from "./BotScoreLegend";
 import { Suspense } from "react";
 import { CUSTOM_SCROLLBAR_CSS } from "components/RightDrawer/CUSTOM_SCROLLBAR_CSS";
-import { darkBackground } from "utils/colors";
+import { colorSecondary, darkBackground } from "utils/colors";
+import { AvatarStyles } from "components/NetworkGraph/NodeTooltip";
 
 const PADDING = 20;
-const WIDTH = 350;
+const WIDTH = 420;
 const HEIGHT = 480;
 const TRANSFORM = false;
 const mu = TRANSFORM ? 0.1 : 1;
 
 /** pops up from the bottom when we receive a bot score */
 export function BotScoreInfoCard() {
+  const [latestNodeWithBotScore] = useAtom(latestNodeWithBotScoreAtom);
+  console.log(
+    "🌟🚨 ~ BotScoreInfoCard ~ latestNodeWithBotScore",
+    latestNodeWithBotScore
+  );
   const [scanningNodeId] = useAtom(scanningUserNodeIdAtom);
   const tweets = useTweets();
   const setNodesInDb = useSetNodesInDbForUser();
@@ -74,6 +83,8 @@ export function BotScoreInfoCard() {
     zIndex: 9999999999999999,
   });
 
+  const AVATAR_WIDTH = 92;
+
   return (
     <Html
       // occlude={[]}
@@ -93,9 +104,39 @@ export function BotScoreInfoCard() {
     >
       <animated.div style={springUpDown}>
         <HtmlBotScoreInfoOverlayStyles {...{ botTypeText }}>
+          <AvatarStyles
+            customCss={`
+              z-index: 9999999999999;
+              position: absolute;
+              top: -${AVATAR_WIDTH / 2}px;
+              height:${AVATAR_WIDTH}px;
+              width:${AVATAR_WIDTH}px;
+              left: calc(50vw - ${AVATAR_WIDTH / 2}px);
+              right: calc(50vw - ${AVATAR_WIDTH / 2}px);
+              img{width:100%;height:100%;}
+              box-shadow: 0px 2px 3px rgba(0,0,0,0.5);
+              border: 4px solid ${darkBackground};
+          `}
+          >
+            <img
+              src={latestNodeWithBotScore?.user?.profile_image_url_https}
+              alt=""
+            />
+          </AvatarStyles>
           <div className="content">
             <div className="scrollContent">
               <div className="screenName">{lastNode?.user.screen_name}</div>
+              <div className="botType">
+                {botType}
+                <span className="scorePercent"> — {scorePercent}%</span>
+              </div>
+              {botTypeInfo && (
+                <div className="botTypeInfo">
+                  {"("}
+                  {botTypeInfo}
+                  {")"}
+                </div>
+              )}
               <div className="botScoreLegendCanvas">
                 <Suspense fallback={null}>
                   <Canvas style={{ overflow: "visible" }}>
@@ -114,17 +155,8 @@ export function BotScoreInfoCard() {
                   </Canvas>
                 </Suspense>
               </div>
-              <div className="botScoreInfo">
-                {botTypeText} <span className="botType">{botType}</span> bot (
-                {scorePercent}%)
-              </div>
-              {botTypeInfo && (
-                <div className="botTypeInfo">
-                  {"("}
-                  {botTypeInfo}
-                  {")"}
-                </div>
-              )}
+
+              <div className="botScoreInfo">{botTypeText} bot</div>
             </div>
             <IconButton
               className="btnClose"
@@ -169,7 +201,7 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
     /* border: ${process.env.NODE_ENV !== "production"
       ? "1px solid limegreen"
       : "none"}; */
-    width: ${WIDTH * mu}px;
+    width: ${WIDTH}px;
     max-width: calc(100vw - 24px);
     height: fit-content;
 
@@ -188,30 +220,36 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
   }
   .botScoreInfo {
     text-align: center;
-    margin-top: 2em;
+    margin-top: 1em;
   }
   .botTypeInfo {
     text-align: center;
     line-height: 1.6em;
-    font-size: ${TRANSFORM ? 3 : 16}px;
+    font-size: 16px;
+    color: ${colorSecondary};
+    margin-bottom: 1em;
   }
   .screenName {
     font-size: 1.5em;
-    margin: 0.5em 0;
+    margin: 0.5em 0 0.2em;
   }
   .screenName,
   .botType {
     font-family: "Poiret One", cursive;
     text-align: center;
   }
+  .botType {
+    color: ${colorSecondary};
+    .scorePercent {
+      font-family: "Roboto", sans-serif;
+    }
+  }
   @media (min-width: 768px) {
     transform: translate3d(-20px, -160px, 0px);
     .botTypeInfo {
       margin-top: 0.5em;
       font-size: 18px;
-    }
-    .botScoreInfo {
-      margin-top: 1em;
+      line-height: 1.4em;
     }
     .screenName {
       font-size: 2em;
@@ -221,7 +259,7 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
       box-sizing: content-box;
       .scrollContent {
         box-sizing: border-box;
-        padding: 0.5em 2em 2em;
+        padding: 0.5em 1.2em 2em;
       }
     }
   }
