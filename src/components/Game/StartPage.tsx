@@ -1,4 +1,4 @@
-import { Button } from "@material-ui/core";
+import { Button, useMediaQuery } from "@material-ui/core";
 import { useLoading } from "providers/store/useSelectors";
 import styled from "styled-components/macro";
 import { Canvas } from "@react-three/fiber";
@@ -17,14 +17,18 @@ export function StartPage({ startLookingAtTweets }) {
 
   const [step, setStep] = useState(0);
   const [isAudioPlaying, setIsAudioPlaying] = useAtom(isMusicOnAtom);
+  const isTabletOrLarger = useMediaQuery(`(min-width: ${768}px)`);
 
   return (
     <StartPageStyles>
+      <div className="topEmoji">🎣</div>
       <div className="content">
-        <h1 className="title font-effect-shadow-multiple">Plenty of Bots 🎣</h1>
+        <h1 className="title font-effect-shadow-multiple">Plenty of Bots</h1>
         {step === 0 && (
           <>
-            <p>Twitter is full of bots 🤖</p>
+            <p style={{ textAlign: "center", marginBottom: "2em" }}>
+              Twitter is full of bots 🤖
+            </p>
             <p>In 2020 for example, </p>
             <p style={{ marginBottom: 0 }}>
               <ul style={{ textAlign: "left" }}>
@@ -59,7 +63,7 @@ export function StartPage({ startLookingAtTweets }) {
                 </li>
               </ul>
             </p>
-            <p style={{ marginTop: "0.5em" }}>were bots.</p>
+            <p style={{ marginTop: "0.5em", textAlign: "right" }}>were bots.</p>
 
             <Button
               disabled={isLoading}
@@ -80,7 +84,12 @@ export function StartPage({ startLookingAtTweets }) {
           <>
             <p>There are different kinds of bot:</p>
             <div className="canvasContainer">
-              <Canvas style={{ width: 480, height: 360 }}>
+              <Canvas
+                style={{
+                  width: isTabletOrLarger ? 480 : 360,
+                  height: isTabletOrLarger ? 360 : 240,
+                }}
+              >
                 <BotScoreLegend
                   showScorePercents={false}
                   showTooltips={true}
@@ -193,32 +202,46 @@ export function StartPage({ startLookingAtTweets }) {
     </StartPageStyles>
   );
 }
+const MARGIN_TOP = 48;
 const StartPageStyles = styled.div`
+  position: relative;
   font-family: "Roboto", sans-serif;
   font-size: 1.5rem;
-  .title {
-    font-family: "Rancho", cursive;
-    font-size: 6em;
-    margin: 0.5em 0 64px;
-    line-height: 1em;
-  }
 
   position: fixed;
   inset: 0;
   display: grid;
   justify-items: center;
+  .topEmoji {
+    position: absolute;
+    font-size: 2em;
+    top: ${MARGIN_TOP / 4}px;
+    z-index: 99999;
+    text-shadow: 0 2px 5px black;
+  }
   .content {
+    font-size: 1rem;
+    margin-top: ${MARGIN_TOP}px;
     ${CUSTOM_SCROLLBAR_CSS}
     line-height: 1.5em;
     box-shadow: 0px 2px 30px 8px #00000068;
     position: relative;
-    margin-top: 72px;
-    max-height: calc(100vh - 72px - 16px);
+    max-height: calc(100vh - ${MARGIN_TOP}px);
     overflow: auto;
     ${POPUP_BASE_CSS}
     max-width: calc(100vw - 32px);
-    @media (min-width: 768px) {
-      max-width: 640px;
+    .title {
+      font-family: "Rancho", cursive;
+      font-size: 3em;
+      margin: 0em 0 32px;
+      line-height: 1em;
+    }
+    ul,
+    ol {
+      padding-left: 20px;
+    }
+    li::marker {
+      font-size: 1em;
     }
   }
   .canvasContainer {
@@ -227,16 +250,20 @@ const StartPageStyles = styled.div`
     margin-bottom: 1em;
   }
   p {
-    text-align: center;
-    margin: 1em;
-  }
-  ol p {
     text-align: left;
+    margin-bottom: 1em;
+    line-height: 1.5em;
+  }
+  ol p,
+  li p {
+    text-align: left;
+    line-height: 1.2em;
   }
   button {
     margin-top: 1em;
     width: 100%;
   }
+
   .btnPrev {
     text-transform: none;
   }
@@ -253,7 +280,7 @@ const StartPageStyles = styled.div`
     grid-gap: 10px;
   }
   li {
-    margin-bottom: 0.5em;
+    margin-bottom: 1em;
     line-height: 1.1em;
     p {
       margin-bottom: 0.5em;
@@ -270,22 +297,48 @@ const StartPageStyles = styled.div`
     }
   }
   .takeYourShot {
-    margin-top: 3em;
-    margin-bottom: 2.5em;
+    margin: 1em 0 0.5em;
     font-style: italic;
     font-size: 14px;
     line-height: 0;
+    p {
+      text-align: center;
+      margin: 0;
+    }
   }
   @media (min-width: 768px) {
+    button {
+      font-size: 1.5em;
+    }
+    .MuiSvgIcon-root {
+      width: 1.5em;
+      height: 1.5em;
+    }
+    .topEmoji {
+      font-size: 4em;
+      top: ${MARGIN_TOP / 2}px;
+    }
     .content {
       padding: 3em;
-    }
-    .title {
-      font-size: 6em;
+      max-width: 640px;
+      margin-top: ${MARGIN_TOP * 2}px;
+
+      .title {
+        font-size: 6em;
+        margin: 0.1em 0 0.4em;
+      }
+      li::marker {
+        font-size: 1.5em;
+      }
     }
     p {
       font-size: 1.5em;
-      line-height: 1.2em;
+      line-height: 1.5em;
+      margin: 1em;
+    }
+    ul,
+    ol {
+      padding-left: 40px;
     }
   }
 `;

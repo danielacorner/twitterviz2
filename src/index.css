@@ -23,3 +23,6 @@ code {
 .MuiDrawer-paper {
   background: none !important;
 }
+.MuiButton-outlinedPrimary {
+  border: 1px solid rgba(255, 255, 255, 0.335) !important;
+}
