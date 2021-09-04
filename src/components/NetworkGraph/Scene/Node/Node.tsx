@@ -257,7 +257,7 @@ function getRandomPosition(min, max) {
   ];
 }
 const V1 = 0.001;
-const BUBBLE_RADIUS_MULT = 0.2;
+const BUBBLE_RADIUS_MULT = 0.18;
 function AnimatingBubble({ handleUnmount }) {
   const [ref, api] = useSphere(() => ({
     mass: 0.007,

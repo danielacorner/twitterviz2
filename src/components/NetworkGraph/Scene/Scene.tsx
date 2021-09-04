@@ -56,6 +56,7 @@ export function Scene() {
   //   delay: 4 * 1000,
   //   immediate: false,
   // });
+  const [gameState] = useAtom(gameStateAtom);
   return (
     <Suspense fallback={null}>
       {/* <ambientLight intensity={0.75} /> */}
@@ -78,7 +79,8 @@ export function Scene() {
         maxDistance={500}
         enablePan={!isMountAnimationEnabled}
         enabled={areOrbitControlsEnabled}
-        autoRotate={true}
+        autoRotate={false}
+        // autoRotate={gameState.step !== "lookingAtTweetsWithBotScores"}
         // autoRotate={["one", "three"].includes(autoRotateDirection)} // camera's too bouncy
         autoRotateSpeed={0.08}
       />
