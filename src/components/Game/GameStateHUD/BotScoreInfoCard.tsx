@@ -68,7 +68,8 @@ export function BotScoreInfoCard() {
   const { fx, fy, fz } = useControls({ fx: 0, fy: 0, fz: 0 });
 
   const springUpDown = useSpring({
-    transform: `translate3d(0,${isUp ? 0 : HEIGHT * 2}px,0)`,
+    transform: `translate3d(0,${isUp ? 0 : HEIGHT * 0.75}px,0)`,
+    opacity: isUp ? 1 : 0,
     position: "fixed" as any,
     zIndex: 9999999999999999,
   });

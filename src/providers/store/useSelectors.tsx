@@ -18,7 +18,6 @@ export const useTweets = (): Tweet[] => {
 };
 export const useSelectedNode = () => {
   const tweets = useTweets();
-  console.log("🌟🚨 ~ useSelectedNode ~ tweets", tweets);
   const [selectedNodeId] = useAtom(selectedNodeIdAtom);
   const selectedNode = selectedNodeId
     ? tweets

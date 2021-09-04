@@ -186,11 +186,11 @@ export const Node = ({
       ? [1.8 * scaleMult, 1.8 * scaleMult, 1.8 * scaleMult]
       : [1 * scaleMult, 1 * scaleMult, 1 * scaleMult],
   });
-  const hoverAnimationRefWave = useHoverAnimation({
-    deltaX: 0.7,
-    deltaY: 0.7,
-    randomize: true,
-  });
+  // const hoverAnimationRefWave = useHoverAnimation({
+  //   deltaX: 0.7,
+  //   deltaY: 0.7,
+  //   randomize: true,
+  // });
   // TODO: check out name stays after submit
 
   const hasBotScore = Boolean(node.user.botScore);

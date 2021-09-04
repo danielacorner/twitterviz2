@@ -74,9 +74,7 @@ export function NodeContent({
   const { metalness } = useControls({ metalness: 0 });
   return (
     <>
-      <animated.mesh
-      //  ref={isPopupNode ? null : hoverAnimationRefWave}
-      >
+      <animated.mesh>
         <animated.mesh ref={isPopupNode ? null : null}>
           {isScanningNode ? null : (
             <animated.mesh
