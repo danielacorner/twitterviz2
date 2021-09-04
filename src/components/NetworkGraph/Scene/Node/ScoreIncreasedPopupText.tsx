@@ -7,7 +7,6 @@ import { startCase } from "lodash";
 export function ScoreIncreasedPopupText({ isMounted, botScore }) {
   const { scoreIncrease, color, maxBotScore, maxBotType } =
     getScoreFromBotScore(botScore);
-  console.log("🌟🚨 ~ ScoreIncreasedPopupText ~ maxBotType", maxBotType);
 
   const [isAnimationComplete, setIsAnimationComplete] = useState(false);
   const { position } = useSpring({
@@ -27,7 +26,7 @@ export function ScoreIncreasedPopupText({ isMounted, botScore }) {
           tooltipText: (
             <>
               <div className="popupTextPercent">
-                {startCase(maxBotType)} – {maxBotScore * 100}%
+                {startCase(maxBotType)} – {(maxBotScore * 100).toFixed(0)}%
               </div>
               <div className="popupTextBotType"></div>
               <div className="popupTextScoreIncrease">

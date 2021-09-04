@@ -247,11 +247,11 @@ function TextBillboard({
           {...({} as any)}
           color={"#c0c0c0"}
           textAlign={"center"}
-          // anchorY={isBottom ? "bottom" : "top"}
           maxWidth={0.5}
           position={[0, isBottom ? -4.2 : 3, 0]}
           fontSize={1}
           fillOpacity={1}
+          anchorY={"middle"}
         >
           {(score * 100).toFixed(0) + "%"}
         </Text>
@@ -265,7 +265,7 @@ function TextBillboard({
             : `hsl(0,0%,${(textLightness * 100).toFixed(0)}%)`
         }
         textAlign={"center"}
-        anchorY={isBottom ? "top" : "bottom"}
+        anchorY={isBottom ? "top" : "middle"}
         maxWidth={0.5}
         position={[
           showLabels ? 0 : 0.3,

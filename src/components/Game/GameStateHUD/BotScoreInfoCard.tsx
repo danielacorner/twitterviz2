@@ -38,10 +38,6 @@ const TRANSFORM = false;
 /** pops up from the bottom when we receive a bot score */
 export function BotScoreInfoCard() {
   const [latestNodeWithBotScore] = useAtom(latestNodeWithBotScoreAtom);
-  console.log(
-    "🌟🚨 ~ BotScoreInfoCard ~ latestNodeWithBotScore",
-    latestNodeWithBotScore
-  );
   const tweets = useTweets();
   const setNodesInDb = useSetNodesInDbForUser();
   const [, setGameState] = useAtom(gameStateAtom);
@@ -156,13 +152,7 @@ export function BotScoreInfoCard() {
                 {botType}
                 <span className="scorePercent"> — {scorePercent}%</span>
               </div>
-              {botTypeInfo && (
-                <div className="botTypeInfo">
-                  {"("}
-                  {botTypeInfo}
-                  {")"}
-                </div>
-              )}
+              {botTypeInfo && <div className="botTypeInfo">{botTypeInfo}</div>}
               <div className="botScoreLegendCanvas">
                 <Suspense fallback={null}>
                   <Canvas style={{ overflow: "visible" }}>
@@ -253,6 +243,7 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
     margin-top: 1em;
   }
   .botTypeInfo {
+    font-style: italic;
     line-height: 1.6em;
     font-size: 16px;
     color: ${colorSecondary};
