@@ -91,6 +91,8 @@ export function Scene() {
       <GLTFModelgreatwhite />
       {/* 5MB */}
       <GLTFModelballena />
+      {/* 0.5MB */}
+      <GLTFModelsailfish />
       <mesh scale={[20, 20, 20]}></mesh>
       <directionalLight position={[-2.15, 5, 0.1]} intensity={4} />
       <OrbitControls
@@ -283,7 +285,7 @@ const INITIAL_ROTATION_Y = -1;
 
 // swims in a circle
 function GLTFModelGuppy() {
-  const { x, y, z } = { x: -50, y: -2, z: 0 };
+  const { x, y, z } = { x: -50, y: 20, z: 0 };
 
   const swimAnimationRef = useRef(null as any);
 
@@ -726,7 +728,7 @@ function GLTFModelballena() {
     ballena_SECONDS_PER_ROTATION,
     ballena_SECONDS_PER_UP_DOWN_WAVE,
     ballenaScale,
-  } = useControls({
+  } = {
     x: 0,
     y: 60,
     z: 380,
@@ -735,7 +737,7 @@ function GLTFModelballena() {
     ballena_SECONDS_PER_ROTATION: 100,
     ballena_SECONDS_PER_UP_DOWN_WAVE: 21,
     ballenaScale: 1.8,
-  });
+  };
 
   const swimAnimationRef = useRef(null as any);
 
@@ -788,6 +790,86 @@ function GLTFModelballena() {
     <animated.mesh ref={swimAnimationRef}>
       <primitive
         scale={ballenaScale}
+        position={[x, y, z]}
+        object={model.scene}
+      />
+    </animated.mesh>
+  );
+}
+
+// swims in a circle
+function GLTFModelsailfish() {
+  const {
+    x,
+    y,
+    z,
+    sailfish_WAVE_DY,
+    sailfish_INITIAL_ROTATION_Y,
+    sailfish_SECONDS_PER_ROTATION,
+    sailfish_SECONDS_PER_UP_DOWN_WAVE,
+    sailfishScale,
+  } = useControls({
+    x: 91,
+    y: 6,
+    z: 0,
+    sailfish_WAVE_DY: -9,
+    sailfish_INITIAL_ROTATION_Y: -3.6,
+    sailfish_SECONDS_PER_ROTATION: 106,
+    sailfish_SECONDS_PER_UP_DOWN_WAVE: 21,
+    sailfishScale: 1.7,
+  });
+
+  const swimAnimationRef = useRef(null as any);
+
+  useFrame(({ clock }) => {
+    if (!swimAnimationRef.current) {
+      return;
+    }
+    const rotY =
+      -(Math.PI * clock.getElapsedTime()) / sailfish_SECONDS_PER_ROTATION;
+    swimAnimationRef.current.rotation.set(
+      0,
+      rotY + sailfish_INITIAL_ROTATION_Y,
+      0
+    );
+
+    const deltaY =
+      Math.sin(clock.getElapsedTime() / sailfish_SECONDS_PER_UP_DOWN_WAVE) *
+      sailfish_WAVE_DY;
+    swimAnimationRef.current.position.set(-deltaY / 2, deltaY, 0);
+  });
+
+  const model = useGLTF("/sailfish/scene.gltf");
+  // const hoverAnimationRef = useHoverAnimation();
+
+  // Here's the animation part
+  // *************************
+  let mixer;
+  if (model.animations.length) {
+    mixer = new THREE.AnimationMixer(model.scene);
+    model.animations.forEach((clip) => {
+      const action = mixer.clipAction(clip);
+      action.play();
+    });
+  }
+
+  useFrame((state, delta) => {
+    mixer?.update(delta);
+  });
+  // *************************
+
+  model.scene.traverse((child) => {
+    if ((child as any).isMesh) {
+      child.castShadow = true;
+      child.receiveShadow = true;
+      (child as any).material.side = THREE.FrontSide;
+    }
+  });
+
+  return (
+    <animated.mesh ref={swimAnimationRef}>
+      <primitive
+        scale={sailfishScale}
         position={[x, y, z]}
         object={model.scene}
       />
