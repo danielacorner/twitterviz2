@@ -195,38 +195,58 @@ export const Node = ({
 
   return (
     <animated.group ref={sphereRef}>
-      <animated.mesh renderOrder={2} ref={sphereRef}>
-        <animated.mesh
-          scale={springScale.scale as any}
-          // material-transparent={true}
-          // material-opacity={springScale.opacity}
-          {...(hasBotScore
-            ? {}
-            : {
-                onPointerEnter,
-                onPointerLeave,
-                onContextMenu,
-                onClick,
-                onWheel: onScroll,
-              })}
-        >
-          <NodeContent
-            {...{
-              node,
-              isTooltipNode,
-              isPointerOver,
-              isScanningNode,
+      <ScaleOnHover>
+        <animated.mesh renderOrder={2} ref={sphereRef}>
+          <animated.mesh
+            scale={springScale.scale as any}
+            // material-transparent={true}
+            // material-opacity={springScale.opacity}
+            {...(hasBotScore
+              ? {}
+              : {
+                  onPointerEnter,
+                  onPointerLeave,
+                  onContextMenu,
+                  onClick,
+                  onWheel: onScroll,
+                })}
+          >
+            <NodeContent
+              {...{
+                node,
+                isTooltipNode,
+                isPointerOver,
+                isScanningNode,
 
-              isRightClickingThisNode,
-            }}
-          />
-          {isNotABot && shouldPop && <PopAnimation />}
-          {isScanningNode ? <ScanningAnimation /> : null}
+                isRightClickingThisNode,
+              }}
+            />
+            {isNotABot && shouldPop && <PopAnimation />}
+            {isScanningNode ? <ScanningAnimation /> : null}
+          </animated.mesh>
         </animated.mesh>
-      </animated.mesh>
+      </ScaleOnHover>
     </animated.group>
   );
 };
+function ScaleOnHover({ children }: { children: React.ReactNode }) {
+  const [isHovering, setIsHovering] = useState(false);
+
+  const springScale = useSpring({
+    scale: isHovering ? [1.2, 1.2, 1.2] : [1, 1, 1],
+  });
+
+  return (
+    <animated.group
+      scale={springScale.scale as any}
+      onPointerEnter={() => setIsHovering(true)}
+      onPointerLeave={() => setIsHovering(false)}
+    >
+      {children}
+    </animated.group>
+  );
+}
+
 function PopAnimation() {
   const numBubbles =
     Math.round(Math.random() * 7) + (Math.random() > 0.9 ? 50 : 7);
