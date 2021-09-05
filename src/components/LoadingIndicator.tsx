@@ -7,12 +7,14 @@ import { useMount } from "utils/utils";
 import { LinearProgress } from "@material-ui/core";
 import { WAIT_FOR_STREAM_TIMEOUT } from "utils/constants";
 import { useInterval } from "utils/useInterval";
+import { Loader } from "@react-three/drei";
 
 export function LoadingIndicator() {
   return (
     <>
       <LinearProgressIndicator />
       <LoadingSpinner3D />
+      <Loader />
     </>
   );
 }

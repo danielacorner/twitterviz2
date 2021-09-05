@@ -58,11 +58,21 @@ export function Scene() {
   //   immediate: false,
   // });
 
-  const gltfModelBackground = shuffle([
-    <GLTFModelCoral />,
-    // <GLTFModelFish />,
-    <GLTFModelTerrain />,
-  ])[0];
+  const showMany = gpuInfo.tier > 2;
+
+  const gltfModelBackground = shuffle(
+    showMany
+      ? [
+          // 61MB
+          <GLTFModelCoral />,
+          // 73MB
+          <GLTFModelTerrain />,
+        ]
+      : [
+          // 10MB
+          <GLTFModelFishTreasureBackground />,
+        ]
+  )[0];
 
   return (
     <Suspense fallback={null}>
@@ -76,11 +86,11 @@ export function Scene() {
       <Stars count={gpuInfo.tier > 2 ? 2000 : 1000} />
       {gltfModelBackground}
       {/* 5MB */}
-      <GLTFModelLeviathan />
+      {showMany && <GLTFModelLeviathan />}
       {/* 5MB */}
-      <GLTFModelGuppy />
+      {showMany && <GLTFModelGuppy />}
       {/* 5MB */}
-      <GLTFModelclownfish />
+      {showMany && <GLTFModelclownfish />}
       {/* 1MB */}
       <GLTFModelschooloffish />
       {/* 1MB */}
@@ -90,7 +100,7 @@ export function Scene() {
       {/* 2MB */}
       <GLTFModelgreatwhite />
       {/* 5MB */}
-      <GLTFModelballena />
+      {showMany && <GLTFModelballena />}
       {/* 0.5MB */}
       <GLTFModelsailfish />
       <mesh scale={[20, 20, 20]}></mesh>
@@ -113,10 +123,10 @@ export function Scene() {
         {...{ gravity: [0, 0, 0] }}
         defaultContactMaterial={{ friction: 10, restitution: 0.8 }}
       >
-        <DebugInDev>
-          <Collisions />
-          <Nodes />
-        </DebugInDev>
+        {/* <DebugInDev> */}
+        <Collisions />
+        <Nodes />
+        {/* </DebugInDev> */}
       </Physics>
       <HighScores />
       <Background background={true} />
@@ -178,7 +188,7 @@ function degToRad(deg) {
   return (deg * Math.PI) / 180;
 }
 
-function GLTFModelFish() {
+function GLTFModelFishTreasureBackground() {
   const gltf = useGLTF("/sea_life_challenge_pack/scene.gltf");
   // TODO: ensure wide to cover entire floor enough on mobile
   const { scale } = useControls({ scale: 6 });
