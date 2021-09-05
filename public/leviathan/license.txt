@@ -1,0 +1,11 @@
+Model Information:
+* title:	Reaper Leviathan
+* source:	https://sketchfab.com/3d-models/reaper-leviathan-dfbe936f6fcb40f79bef4d0de6d83a27
+* author:	patrat623 (https://sketchfab.com/patrat623)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Reaper Leviathan" (https://sketchfab.com/3d-models/reaper-leviathan-dfbe936f6fcb40f79bef4d0de6d83a27) by patrat623 (https://sketchfab.com/patrat623) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

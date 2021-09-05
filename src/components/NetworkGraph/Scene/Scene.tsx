@@ -21,6 +21,8 @@ import { useHoverAnimation } from "./useHoverAnimation";
 import { Nodes } from "./Nodes";
 import { BotScoreInfoCard } from "components/Game/GameStateHUD/BotScoreInfoCard";
 import { useIsMounted } from "./useIsMounted";
+import { shuffle } from "lodash";
+import * as THREE from "three";
 
 export function Scene() {
   // const vertices = getVertices(nodes.length);
@@ -55,6 +57,13 @@ export function Scene() {
   //   delay: 4 * 1000,
   //   immediate: false,
   // });
+
+  const gltfModel = shuffle([
+    // <GLTFModelCoral />,
+    // <GLTFModelFish />,
+    <GLTFModelTerrain />,
+  ])[0];
+
   return (
     <Suspense fallback={null}>
       {/* <ambientLight intensity={0.75} /> */}
@@ -65,7 +74,9 @@ export function Scene() {
         color="blue"
       /> */}
       <Stars count={gpuInfo.tier > 2 ? 2000 : 1000} />
-      <GLTFModel />
+      {gltfModel}
+      <GLTFModelLeviathan />
+      <GLTFModelGuppy />
       <mesh scale={[20, 20, 20]}></mesh>
       <directionalLight position={[-2.15, 5, 0.1]} intensity={4} />
       <OrbitControls
@@ -151,7 +162,7 @@ function degToRad(deg) {
   return (deg * Math.PI) / 180;
 }
 
-function GLTFModel() {
+function GLTFModelFish() {
   const gltf = useGLTF("/sea_life_challenge_pack/scene.gltf");
   // TODO: ensure wide to cover entire floor enough on mobile
   const { scale } = useControls({ scale: 6 });
@@ -162,6 +173,171 @@ function GLTFModel() {
       <primitive
         scale={0.01 * scale}
         position={[1.09, -38.44, -6.45]}
+        object={gltf.scene}
+        //  material={nodes.ATP___Gaussian_surface.material}
+        //  geometry={nodes.ATP___Gaussian_surface.geometry}
+      />
+    </animated.mesh>
+  );
+}
+
+function GLTFModelCoral() {
+  const gltf = useGLTF("/coral/scene.gltf");
+  // const hoverAnimationRef = useHoverAnimation();
+  return (
+    <animated.mesh>
+      <primitive scale={6} position={[-19, -55, 16]} object={gltf.scene} />
+    </animated.mesh>
+  );
+}
+
+function GLTFModelTerrain() {
+  const model = useGLTF("/terrain/scene.gltf");
+
+  return (
+    <animated.mesh>
+      <primitive scale={24} position={[2, -41, 33]} object={model.scene} />
+    </animated.mesh>
+  );
+}
+
+const SECONDS_PER_ROTATION = 240;
+const SECONDS_PER_UP_DOWN_WAVE = 20;
+const WAVE_DY = 60;
+
+// swims in a circle
+function GLTFModelLeviathan() {
+  const INITIAL_POSITION = [-937, 216, -316];
+  const { x, y, z } = { x: -900, y: 216, z: -316 };
+  const { scaleKelp } = { scaleKelp: 89 };
+  const { rx, ry, rz } = useControls({ rx: 0, ry: 0, rz: 0 });
+  const { x: x1, y: y1, z: z1 } = { x: -937, y: 216, z: -316 };
+
+  const swimAnimationRef = useRef(null as any);
+
+  useFrame(({ clock }) => {
+    if (!swimAnimationRef.current) {
+      return;
+    }
+    const rotY = (Math.PI * clock.getElapsedTime()) / SECONDS_PER_ROTATION;
+    swimAnimationRef.current.rotation.set(0, rotY, 0);
+
+    const deltaY =
+      Math.sin(clock.getElapsedTime() / SECONDS_PER_UP_DOWN_WAVE) * WAVE_DY;
+    console.log("🌟🚨 ~ useFrame ~ deltaY", deltaY);
+    swimAnimationRef.current.position.set(0, deltaY, 0);
+  });
+
+  const model = useGLTF("/leviathan/scene.gltf");
+  // const hoverAnimationRef = useHoverAnimation();
+
+  // Here's the animation part
+  // *************************
+  let mixer;
+  if (model.animations.length) {
+    mixer = new THREE.AnimationMixer(model.scene);
+    model.animations.forEach((clip) => {
+      const action = mixer.clipAction(clip);
+      action.play();
+    });
+  }
+
+  useFrame((state, delta) => {
+    mixer?.update(delta);
+  });
+  // *************************
+
+  model.scene.traverse((child) => {
+    if ((child as any).isMesh) {
+      child.castShadow = true;
+      child.receiveShadow = true;
+      (child as any).material.side = THREE.FrontSide;
+    }
+  });
+
+  return (
+    <animated.mesh ref={swimAnimationRef}>
+      <primitive
+        scale={10 * scaleKelp}
+        position={[x, y, z]}
+        object={model.scene}
+      />
+    </animated.mesh>
+  );
+}
+
+const guppy_SECONDS_PER_ROTATION = 180;
+const guppy_SECONDS_PER_UP_DOWN_WAVE = 20;
+const guppy_WAVE_DY = 12;
+const INITIAL_ROTATION_Y = -1;
+
+// swims in a circle
+function GLTFModelGuppy() {
+  const INITIAL_POSITION = [-937, 216, -316];
+  const { x, y, z } = useControls({ x: -50, y: 9, z: 0 });
+  const { rx, ry, rz } = useControls({ rx: 0, ry: 0, rz: 0 });
+  const { x: x1, y: y1, z: z1 } = { x: -937, y: 216, z: -316 };
+
+  const swimAnimationRef = useRef(null as any);
+
+  useFrame(({ clock }) => {
+    if (!swimAnimationRef.current) {
+      return;
+    }
+    const rotY =
+      -(Math.PI * clock.getElapsedTime()) / guppy_SECONDS_PER_ROTATION;
+    swimAnimationRef.current.rotation.set(0, rotY + INITIAL_ROTATION_Y, 0);
+
+    const deltaY =
+      Math.sin(clock.getElapsedTime() / guppy_SECONDS_PER_UP_DOWN_WAVE) *
+      guppy_WAVE_DY;
+    swimAnimationRef.current.position.set(deltaY / 2, deltaY, 0);
+  });
+
+  const model = useGLTF("/guppy/scene.gltf");
+  // const hoverAnimationRef = useHoverAnimation();
+
+  // Here's the animation part
+  // *************************
+  let mixer;
+  if (model.animations.length) {
+    mixer = new THREE.AnimationMixer(model.scene);
+    model.animations.forEach((clip) => {
+      const action = mixer.clipAction(clip);
+      action.play();
+    });
+  }
+
+  useFrame((state, delta) => {
+    mixer?.update(delta);
+  });
+  // *************************
+
+  model.scene.traverse((child) => {
+    if ((child as any).isMesh) {
+      child.castShadow = true;
+      child.receiveShadow = true;
+      (child as any).material.side = THREE.FrontSide;
+    }
+  });
+
+  return (
+    <animated.mesh ref={swimAnimationRef}>
+      <primitive scale={1} position={[x, y, z]} object={model.scene} />
+    </animated.mesh>
+  );
+}
+function GLTFModelX() {
+  const { x, y, z } = useControls({ x: -19, y: -55, z: 16 });
+
+  const gltf = useGLTF("/terrain/scene.gltf");
+  const { scaleKelp } = useControls({ scaleKelp: 0.6 });
+  // const hoverAnimationRef = useHoverAnimation();
+  return (
+    <animated.mesh>
+      <primitive
+        scale={10 * scaleKelp}
+        position={[x, y, z]}
         object={gltf.scene}
         //  material={nodes.ATP___Gaussian_surface.material}
         //  geometry={nodes.ATP___Gaussian_surface.geometry}

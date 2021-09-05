@@ -37,7 +37,7 @@ export function Effects() {
           <GodRays
             sun={sun.current}
             blendFunction={BlendFunction.Screen}
-            samples={30}
+            samples={20}
             density={0.95}
             decay={1.0}
             weight={0.24}

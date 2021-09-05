@@ -36,8 +36,7 @@ function App() {
         // hideTitleBar     // default = false, hides the GUI header
         // collapsed        // default = false, when true the GUI is collpased
         // hidden={true}
-        hidden={true}
-        // hidden={process.env.NODE_ENV === "production"} // default = false, when true the GUI is hidden
+        hidden={process.env.NODE_ENV === "production"} // default = false, when true the GUI is hidden
       />
     </AppStyles>
   );

@@ -1,0 +1,11 @@
+Model Information:
+* title:	Starfish & Sarcophyton - #AgisoftNatureChallenge
+* source:	https://sketchfab.com/3d-models/starfish-sarcophyton-agisoftnaturechallenge-4fa1e45a5e7446908bb85d363e3ac5ad
+* author:	yuma.jp (https://sketchfab.com/YYouzhen)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Starfish & Sarcophyton - #AgisoftNatureChallenge" (https://sketchfab.com/3d-models/starfish-sarcophyton-agisoftnaturechallenge-4fa1e45a5e7446908bb85d363e3ac5ad) by yuma.jp (https://sketchfab.com/YYouzhen) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
