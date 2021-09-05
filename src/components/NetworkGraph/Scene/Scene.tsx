@@ -59,7 +59,7 @@ export function Scene() {
   // });
 
   const gltfModelBackground = shuffle([
-    // <GLTFModelCoral />,
+    <GLTFModelCoral />,
     // <GLTFModelFish />,
     <GLTFModelTerrain />,
   ])[0];
@@ -212,7 +212,7 @@ function GLTFModelTerrain() {
 
   return (
     <animated.mesh>
-      <primitive scale={24} position={[2, -41, 33]} object={model.scene} />
+      <primitive scale={22} position={[2, -41, 33]} object={model.scene} />
     </animated.mesh>
   );
 }
