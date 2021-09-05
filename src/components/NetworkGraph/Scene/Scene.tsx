@@ -86,7 +86,7 @@ export function Scene() {
       {/* 1MB */}
       <GLTFModelyellowfish />
       {/* 18MB */}
-      <GLTFModelhammerhead />
+      {/* <GLTFModelhammerhead /> */}
       {/* 2MB */}
       <GLTFModelgreatwhite />
       {/* 5MB */}
