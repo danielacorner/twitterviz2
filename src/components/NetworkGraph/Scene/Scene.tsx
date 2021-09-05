@@ -1,11 +1,16 @@
-import { OrbitControls, Stats, useDetectGPU, useGLTF } from "@react-three/drei";
+import {
+  OrbitControls,
+  Stats,
+  useDetectGPU,
+  useGLTF,
+  Stars,
+} from "@react-three/drei";
 import { Debug, Physics } from "@react-three/cannon";
 import { useFrame, useThree } from "@react-three/fiber";
 import { animated } from "@react-spring/three";
 import { CAMERA_POSITION } from "utils/constants";
 import { useSpring } from "react-spring";
 import { Suspense, useRef } from "react";
-import { Stars } from "./Stars";
 import {
   areOrbitControlsEnabledAtom,
   gameStateAtom,
@@ -23,6 +28,7 @@ import { BotScoreInfoCard } from "components/Game/GameStateHUD/BotScoreInfoCard"
 import { useIsMounted } from "./useIsMounted";
 import { shuffle } from "lodash";
 import * as THREE from "three";
+import { Bubbles } from "./Bubbles";
 
 export function Scene() {
   // const vertices = getVertices(nodes.length);
@@ -83,7 +89,8 @@ export function Scene() {
         angle={0.2}
         color="blue"
       /> */}
-      <Stars count={gpuInfo.tier > 2 ? 2000 : 1000} />
+      <Bubbles count={gpuInfo.tier > 2 ? 2000 : 1000} />
+      <Stars count={2000} />
       {gltfModelBackground}
       {/* 5MB */}
       {showMany && <GLTFModelLeviathan />}
@@ -99,6 +106,7 @@ export function Scene() {
       {/* <GLTFModelhammerhead /> */}
       {/* 2MB */}
       <GLTFModelgreatwhite />
+      {/* <Stars /> */}
       {/* 5MB */}
       {showMany && <GLTFModelballena />}
       {/* 0.5MB */}

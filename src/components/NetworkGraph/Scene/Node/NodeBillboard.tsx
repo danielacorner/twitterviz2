@@ -86,6 +86,7 @@ export const AvatarStyles = styled.div`
   border-radius: 50%;
   overflow: hidden;
   pointer-events: none;
+  opacity: 0.7;
   img {
     width: 100%;
     height: auto;
