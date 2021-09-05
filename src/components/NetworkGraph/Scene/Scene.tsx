@@ -79,6 +79,7 @@ export function Scene() {
       <GLTFModelGuppy />
       <GLTFModelclownfish />
       <GLTFModelschooloffish />
+      <GLTFModelyellowfish />
       <mesh scale={[20, 20, 20]}></mesh>
       <directionalLight position={[-2.15, 5, 0.1]} intensity={4} />
       <OrbitControls
@@ -395,14 +396,13 @@ const schooloffish_WAVE_DY = 5;
 
 // swims in a circle
 function GLTFModelschooloffish() {
-  const { x, y, z, schooloffish_INITIAL_ROTATION_Y, schooloffishScale } =
-    useControls({
-      x: -27,
-      y: -6,
-      z: 0,
-      schooloffish_INITIAL_ROTATION_Y: -0.8,
-      schooloffishScale: 2.8,
-    });
+  const { x, y, z, schooloffish_INITIAL_ROTATION_Y, schooloffishScale } = {
+    x: -27,
+    y: -6,
+    z: 0,
+    schooloffish_INITIAL_ROTATION_Y: -0.8,
+    schooloffishScale: 2.8,
+  };
 
   const swimAnimationRef = useRef(null as any);
 
@@ -455,6 +455,86 @@ function GLTFModelschooloffish() {
     <animated.mesh ref={swimAnimationRef}>
       <primitive
         scale={schooloffishScale}
+        position={[x, y, z]}
+        object={model.scene}
+      />
+    </animated.mesh>
+  );
+}
+
+// swims in a circle
+function GLTFModelyellowfish() {
+  const {
+    x,
+    y,
+    z,
+    yellowfish_WAVE_DY,
+    yellowfish_INITIAL_ROTATION_Y,
+    yellowfish_SECONDS_PER_ROTATION,
+    yellowfish_SECONDS_PER_UP_DOWN_WAVE,
+    yellowfishScale,
+  } = useControls({
+    x: 34,
+    y: -4,
+    z: 0,
+    yellowfish_WAVE_DY: 10,
+    yellowfish_INITIAL_ROTATION_Y: 3.2,
+    yellowfish_SECONDS_PER_ROTATION: 25,
+    yellowfish_SECONDS_PER_UP_DOWN_WAVE: 21,
+    yellowfishScale: 0.02,
+  });
+
+  const swimAnimationRef = useRef(null as any);
+
+  useFrame(({ clock }) => {
+    if (!swimAnimationRef.current) {
+      return;
+    }
+    const rotY =
+      -(Math.PI * clock.getElapsedTime()) / yellowfish_SECONDS_PER_ROTATION;
+    swimAnimationRef.current.rotation.set(
+      0,
+      rotY + yellowfish_INITIAL_ROTATION_Y,
+      0
+    );
+
+    const deltaY =
+      Math.sin(clock.getElapsedTime() / yellowfish_SECONDS_PER_UP_DOWN_WAVE) *
+      yellowfish_WAVE_DY;
+    swimAnimationRef.current.position.set(-deltaY / 2, deltaY, 0);
+  });
+
+  const model = useGLTF("/yellowfish/scene.gltf");
+  // const hoverAnimationRef = useHoverAnimation();
+
+  // Here's the animation part
+  // *************************
+  let mixer;
+  if (model.animations.length) {
+    mixer = new THREE.AnimationMixer(model.scene);
+    model.animations.forEach((clip) => {
+      const action = mixer.clipAction(clip);
+      action.play();
+    });
+  }
+
+  useFrame((state, delta) => {
+    mixer?.update(delta);
+  });
+  // *************************
+
+  model.scene.traverse((child) => {
+    if ((child as any).isMesh) {
+      child.castShadow = true;
+      child.receiveShadow = true;
+      (child as any).material.side = THREE.FrontSide;
+    }
+  });
+
+  return (
+    <animated.mesh ref={swimAnimationRef}>
+      <primitive
+        scale={yellowfishScale}
         position={[x, y, z]}
         object={model.scene}
       />
