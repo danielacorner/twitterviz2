@@ -75,13 +75,22 @@ export function Scene() {
       /> */}
       <Stars count={gpuInfo.tier > 2 ? 2000 : 1000} />
       {gltfModelBackground}
+      {/* 5MB */}
       <GLTFModelLeviathan />
+      {/* 5MB */}
       <GLTFModelGuppy />
+      {/* 5MB */}
       <GLTFModelclownfish />
+      {/* 1MB */}
       <GLTFModelschooloffish />
+      {/* 1MB */}
       <GLTFModelyellowfish />
+      {/* 18MB */}
       <GLTFModelhammerhead />
+      {/* 2MB */}
       <GLTFModelgreatwhite />
+      {/* 5MB */}
+      <GLTFModelballena />
       <mesh scale={[20, 20, 20]}></mesh>
       <directionalLight position={[-2.15, 5, 0.1]} intensity={4} />
       <OrbitControls
@@ -638,7 +647,7 @@ function GLTFModelgreatwhite() {
     greatwhite_SECONDS_PER_ROTATION,
     greatwhite_SECONDS_PER_UP_DOWN_WAVE,
     greatwhiteScale,
-  } = useControls({
+  } = {
     x: 213,
     y: 26,
     z: 0,
@@ -647,7 +656,7 @@ function GLTFModelgreatwhite() {
     greatwhite_SECONDS_PER_ROTATION: 91,
     greatwhite_SECONDS_PER_UP_DOWN_WAVE: 21,
     greatwhiteScale: 4.1,
-  });
+  };
 
   const swimAnimationRef = useRef(null as any);
 
@@ -700,6 +709,85 @@ function GLTFModelgreatwhite() {
     <animated.mesh ref={swimAnimationRef}>
       <primitive
         scale={greatwhiteScale}
+        position={[x, y, z]}
+        object={model.scene}
+      />
+    </animated.mesh>
+  );
+}
+// swims in a circle
+function GLTFModelballena() {
+  const {
+    x,
+    y,
+    z,
+    ballena_WAVE_DY,
+    ballena_INITIAL_ROTATION_Y,
+    ballena_SECONDS_PER_ROTATION,
+    ballena_SECONDS_PER_UP_DOWN_WAVE,
+    ballenaScale,
+  } = useControls({
+    x: 0,
+    y: 60,
+    z: 380,
+    ballena_WAVE_DY: 24,
+    ballena_INITIAL_ROTATION_Y: 1.2,
+    ballena_SECONDS_PER_ROTATION: 100,
+    ballena_SECONDS_PER_UP_DOWN_WAVE: 21,
+    ballenaScale: 1.8,
+  });
+
+  const swimAnimationRef = useRef(null as any);
+
+  useFrame(({ clock }) => {
+    if (!swimAnimationRef.current) {
+      return;
+    }
+    const rotY =
+      -(Math.PI * clock.getElapsedTime()) / ballena_SECONDS_PER_ROTATION;
+    swimAnimationRef.current.rotation.set(
+      0,
+      rotY + ballena_INITIAL_ROTATION_Y,
+      0
+    );
+
+    const deltaY =
+      Math.sin(clock.getElapsedTime() / ballena_SECONDS_PER_UP_DOWN_WAVE) *
+      ballena_WAVE_DY;
+    swimAnimationRef.current.position.set(-deltaY / 2, deltaY, 0);
+  });
+
+  const model = useGLTF("/ballena/scene.gltf");
+  // const hoverAnimationRef = useHoverAnimation();
+
+  // Here's the animation part
+  // *************************
+  let mixer;
+  if (model.animations.length) {
+    mixer = new THREE.AnimationMixer(model.scene);
+    model.animations.forEach((clip) => {
+      const action = mixer.clipAction(clip);
+      action.play();
+    });
+  }
+
+  useFrame((state, delta) => {
+    mixer?.update(delta);
+  });
+  // *************************
+
+  model.scene.traverse((child) => {
+    if ((child as any).isMesh) {
+      child.castShadow = true;
+      child.receiveShadow = true;
+      (child as any).material.side = THREE.FrontSide;
+    }
+  });
+
+  return (
+    <animated.mesh ref={swimAnimationRef}>
+      <primitive
+        scale={ballenaScale}
         position={[x, y, z]}
         object={model.scene}
       />
