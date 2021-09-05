@@ -80,6 +80,7 @@ export function Scene() {
       <GLTFModelclownfish />
       <GLTFModelschooloffish />
       <GLTFModelyellowfish />
+      <GLTFModelhammerhead />
       <mesh scale={[20, 20, 20]}></mesh>
       <directionalLight position={[-2.15, 5, 0.1]} intensity={4} />
       <OrbitControls
@@ -224,7 +225,6 @@ function GLTFModelLeviathan() {
 
     const deltaY =
       Math.sin(clock.getElapsedTime() / SECONDS_PER_UP_DOWN_WAVE) * WAVE_DY;
-    console.log("🌟🚨 ~ useFrame ~ deltaY", deltaY);
     swimAnimationRef.current.position.set(0, deltaY, 0);
   });
 
@@ -327,7 +327,7 @@ function GLTFModelGuppy() {
 const clownfish_SECONDS_PER_ROTATION = 60;
 const clownfish_SECONDS_PER_UP_DOWN_WAVE = 20;
 const clownfish_WAVE_DY = 3;
-
+const clownfishScale = 0.4;
 // swims in a circle
 function GLTFModelclownfish() {
   const { x, y, z, clownfish_INITIAL_ROTATION_Y } = {
@@ -386,7 +386,11 @@ function GLTFModelclownfish() {
 
   return (
     <animated.mesh ref={swimAnimationRef}>
-      <primitive scale={1} position={[x, y, z]} object={model.scene} />
+      <primitive
+        scale={clownfishScale}
+        position={[x, y, z]}
+        object={model.scene}
+      />
     </animated.mesh>
   );
 }
@@ -473,7 +477,7 @@ function GLTFModelyellowfish() {
     yellowfish_SECONDS_PER_ROTATION,
     yellowfish_SECONDS_PER_UP_DOWN_WAVE,
     yellowfishScale,
-  } = useControls({
+  } = {
     x: 34,
     y: -4,
     z: 0,
@@ -482,7 +486,7 @@ function GLTFModelyellowfish() {
     yellowfish_SECONDS_PER_ROTATION: 25,
     yellowfish_SECONDS_PER_UP_DOWN_WAVE: 21,
     yellowfishScale: 0.02,
-  });
+  };
 
   const swimAnimationRef = useRef(null as any);
 
@@ -541,6 +545,87 @@ function GLTFModelyellowfish() {
     </animated.mesh>
   );
 }
+
+// swims in a circle
+function GLTFModelhammerhead() {
+  const {
+    x,
+    y,
+    z,
+    hammerhead_WAVE_DY,
+    hammerhead_INITIAL_ROTATION_Y,
+    hammerhead_SECONDS_PER_ROTATION,
+    hammerhead_SECONDS_PER_UP_DOWN_WAVE,
+    hammerheadScale,
+  } = useControls({
+    x: 89,
+    y: 18,
+    z: 0,
+    hammerhead_WAVE_DY: 10,
+    hammerhead_INITIAL_ROTATION_Y: 2.2,
+    hammerhead_SECONDS_PER_ROTATION: 76,
+    hammerhead_SECONDS_PER_UP_DOWN_WAVE: 21,
+    hammerheadScale: 7,
+  });
+
+  const swimAnimationRef = useRef(null as any);
+
+  useFrame(({ clock }) => {
+    if (!swimAnimationRef.current) {
+      return;
+    }
+    const rotY =
+      -(Math.PI * clock.getElapsedTime()) / hammerhead_SECONDS_PER_ROTATION;
+    swimAnimationRef.current.rotation.set(
+      0,
+      rotY + hammerhead_INITIAL_ROTATION_Y,
+      0
+    );
+
+    const deltaY =
+      Math.sin(clock.getElapsedTime() / hammerhead_SECONDS_PER_UP_DOWN_WAVE) *
+      hammerhead_WAVE_DY;
+    swimAnimationRef.current.position.set(-deltaY / 2, deltaY, 0);
+  });
+
+  const model = useGLTF("/hammerhead/scene.gltf");
+  // const hoverAnimationRef = useHoverAnimation();
+
+  // Here's the animation part
+  // *************************
+  let mixer;
+  if (model.animations.length) {
+    mixer = new THREE.AnimationMixer(model.scene);
+    model.animations.forEach((clip) => {
+      const action = mixer.clipAction(clip);
+      action.play();
+    });
+  }
+
+  useFrame((state, delta) => {
+    mixer?.update(delta);
+  });
+  // *************************
+
+  model.scene.traverse((child) => {
+    if ((child as any).isMesh) {
+      child.castShadow = true;
+      child.receiveShadow = true;
+      (child as any).material.side = THREE.FrontSide;
+    }
+  });
+
+  return (
+    <animated.mesh ref={swimAnimationRef}>
+      <primitive
+        scale={hammerheadScale}
+        position={[x, y, z]}
+        object={model.scene}
+      />
+    </animated.mesh>
+  );
+}
+
 function GLTFModelX() {
   const { x, y, z } = useControls({ x: -19, y: -55, z: 16 });
 
