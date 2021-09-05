@@ -31,6 +31,8 @@ import * as THREE from "three";
 import { Bubbles } from "./Bubbles";
 
 export function Scene() {
+  const isDorky = useRef(Math.random() > 0.5).current;
+
   // const vertices = getVertices(nodes.length);
   const [areOrbitControlsEnabled] = useAtom(areOrbitControlsEnabledAtom);
 
@@ -73,13 +75,15 @@ export function Scene() {
           <GLTFModelCoral />,
           // 73MB
           <GLTFModelTerrain />,
+          // 10MB
+          <GLTFModelFishTreasureBackground />,
         ]
       : [
           // 10MB
           <GLTFModelFishTreasureBackground />,
         ]
   )[0];
-
+  const { px, py, pz } = useControls({ px: -2.15, py: 5, pz: 0.1 });
   return (
     <Suspense fallback={null}>
       {/* <ambientLight intensity={0.75} /> */}
@@ -93,7 +97,7 @@ export function Scene() {
       <Stars count={2000} />
       {gltfModelBackground}
       {/* 5MB */}
-      {showMany && <GLTFModelLeviathan />}
+      {/* {showMany && <GLTFModelLeviathan />} */}
       {/* 5MB */}
       {showMany && <GLTFModelGuppy />}
       {/* 5MB */}
@@ -112,7 +116,7 @@ export function Scene() {
       {/* 0.5MB */}
       <GLTFModelsailfish />
       <mesh scale={[20, 20, 20]}></mesh>
-      <directionalLight position={[-2.15, 5, 0.1]} intensity={4} />
+      <directionalLight position={[px, py, pz]} intensity={4} />
       <OrbitControls
         ref={isMountAnimationEnabled ? orbitControlsRef : null}
         {...{}}
@@ -198,8 +202,7 @@ function degToRad(deg) {
 
 function GLTFModelFishTreasureBackground() {
   const gltf = useGLTF("/sea_life_challenge_pack/scene.gltf");
-  // TODO: ensure wide to cover entire floor enough on mobile
-  const { scale } = useControls({ scale: 6 });
+  const { scale } = { scale: 4.5 };
   const hoverAnimationRef = useHoverAnimation();
 
   return (
@@ -220,7 +223,7 @@ function GLTFModelCoral() {
   // const hoverAnimationRef = useHoverAnimation();
   return (
     <animated.mesh>
-      <primitive scale={6} position={[-19, -55, 16]} object={gltf.scene} />
+      <primitive scale={2} position={[-0, -35, 16]} object={gltf.scene} />
     </animated.mesh>
   );
 }
@@ -230,7 +233,7 @@ function GLTFModelTerrain() {
 
   return (
     <animated.mesh>
-      <primitive scale={22} position={[2, -41, 33]} object={model.scene} />
+      <primitive scale={14} position={[2, -51, 33]} object={model.scene} />
     </animated.mesh>
   );
 }
@@ -299,7 +302,7 @@ function GLTFModelLeviathan() {
 const guppy_SECONDS_PER_ROTATION = 180;
 const guppy_SECONDS_PER_UP_DOWN_WAVE = 20;
 const guppy_WAVE_DY = 12;
-const INITIAL_ROTATION_Y = -1;
+const INITIAL_ROTATION_Y = Math.random() * Math.PI;
 
 // swims in a circle
 function GLTFModelGuppy() {
@@ -364,7 +367,7 @@ function GLTFModelclownfish() {
     x: -27,
     y: -2,
     z: 0,
-    clownfish_INITIAL_ROTATION_Y: -3.8,
+    clownfish_INITIAL_ROTATION_Y: Math.random() * Math.PI,
   };
 
   const swimAnimationRef = useRef(null as any);
@@ -434,7 +437,7 @@ function GLTFModelschooloffish() {
     x: -27,
     y: -6,
     z: 0,
-    schooloffish_INITIAL_ROTATION_Y: -0.8,
+    schooloffish_INITIAL_ROTATION_Y: Math.random() * Math.PI,
     schooloffishScale: 2.8,
   };
 
@@ -512,7 +515,7 @@ function GLTFModelyellowfish() {
     y: -4,
     z: 0,
     yellowfish_WAVE_DY: 10,
-    yellowfish_INITIAL_ROTATION_Y: 3.2,
+    yellowfish_INITIAL_ROTATION_Y: Math.random() * Math.PI,
     yellowfish_SECONDS_PER_ROTATION: 25,
     yellowfish_SECONDS_PER_UP_DOWN_WAVE: 21,
     yellowfishScale: 0.02,
@@ -592,7 +595,7 @@ function GLTFModelhammerhead() {
     y: 18,
     z: 0,
     hammerhead_WAVE_DY: 10,
-    hammerhead_INITIAL_ROTATION_Y: 2.2,
+    hammerhead_INITIAL_ROTATION_Y: Math.random() * Math.PI,
     hammerhead_SECONDS_PER_ROTATION: 76,
     hammerhead_SECONDS_PER_UP_DOWN_WAVE: 21,
     hammerheadScale: 7,
@@ -668,11 +671,11 @@ function GLTFModelgreatwhite() {
     greatwhite_SECONDS_PER_UP_DOWN_WAVE,
     greatwhiteScale,
   } = {
-    x: 213,
+    x: 413,
     y: 26,
     z: 0,
     greatwhite_WAVE_DY: 24,
-    greatwhite_INITIAL_ROTATION_Y: 1.2,
+    greatwhite_INITIAL_ROTATION_Y: Math.random() * Math.PI,
     greatwhite_SECONDS_PER_ROTATION: 91,
     greatwhite_SECONDS_PER_UP_DOWN_WAVE: 21,
     greatwhiteScale: 4.1,
@@ -749,9 +752,9 @@ function GLTFModelballena() {
   } = {
     x: 0,
     y: 60,
-    z: 380,
+    z: 980,
     ballena_WAVE_DY: 24,
-    ballena_INITIAL_ROTATION_Y: 1.2,
+    ballena_INITIAL_ROTATION_Y: Math.random() * Math.PI,
     ballena_SECONDS_PER_ROTATION: 100,
     ballena_SECONDS_PER_UP_DOWN_WAVE: 21,
     ballenaScale: 1.8,
@@ -831,7 +834,7 @@ function GLTFModelsailfish() {
     y: 6,
     z: 0,
     sailfish_WAVE_DY: -9,
-    sailfish_INITIAL_ROTATION_Y: -3.6,
+    sailfish_INITIAL_ROTATION_Y: Math.random() * Math.PI,
     sailfish_SECONDS_PER_ROTATION: 106,
     sailfish_SECONDS_PER_UP_DOWN_WAVE: 21,
     sailfishScale: 1.7,

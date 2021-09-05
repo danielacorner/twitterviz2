@@ -173,9 +173,7 @@ const [useStore] = create<GlobalStateType>(
         animated_gif: process.env.NODE_ENV === "development",
       },
       replace: false,
-      filterLevel: FILTER_LEVELS[
-        process.env.NODE_ENV === "production" ? "medium" : "none"
-      ] as keyof typeof FILTER_LEVELS,
+      filterLevel: FILTER_LEVELS.medium as keyof typeof FILTER_LEVELS,
       searchTerm: "",
       numTweets: INITIAL_NUM_TWEETS,
       // numTweets: 50,
