@@ -81,6 +81,7 @@ export function Scene() {
       <GLTFModelschooloffish />
       <GLTFModelyellowfish />
       <GLTFModelhammerhead />
+      <GLTFModelgreatwhite />
       <mesh scale={[20, 20, 20]}></mesh>
       <directionalLight position={[-2.15, 5, 0.1]} intensity={4} />
       <OrbitControls
@@ -557,7 +558,7 @@ function GLTFModelhammerhead() {
     hammerhead_SECONDS_PER_ROTATION,
     hammerhead_SECONDS_PER_UP_DOWN_WAVE,
     hammerheadScale,
-  } = useControls({
+  } = {
     x: 89,
     y: 18,
     z: 0,
@@ -566,7 +567,7 @@ function GLTFModelhammerhead() {
     hammerhead_SECONDS_PER_ROTATION: 76,
     hammerhead_SECONDS_PER_UP_DOWN_WAVE: 21,
     hammerheadScale: 7,
-  });
+  };
 
   const swimAnimationRef = useRef(null as any);
 
@@ -626,7 +627,87 @@ function GLTFModelhammerhead() {
   );
 }
 
-function GLTFModelX() {
+// swims in a circle
+function GLTFModelgreatwhite() {
+  const {
+    x,
+    y,
+    z,
+    greatwhite_WAVE_DY,
+    greatwhite_INITIAL_ROTATION_Y,
+    greatwhite_SECONDS_PER_ROTATION,
+    greatwhite_SECONDS_PER_UP_DOWN_WAVE,
+    greatwhiteScale,
+  } = useControls({
+    x: 213,
+    y: 26,
+    z: 0,
+    greatwhite_WAVE_DY: 24,
+    greatwhite_INITIAL_ROTATION_Y: 1.2,
+    greatwhite_SECONDS_PER_ROTATION: 91,
+    greatwhite_SECONDS_PER_UP_DOWN_WAVE: 21,
+    greatwhiteScale: 4.1,
+  });
+
+  const swimAnimationRef = useRef(null as any);
+
+  useFrame(({ clock }) => {
+    if (!swimAnimationRef.current) {
+      return;
+    }
+    const rotY =
+      -(Math.PI * clock.getElapsedTime()) / greatwhite_SECONDS_PER_ROTATION;
+    swimAnimationRef.current.rotation.set(
+      0,
+      rotY + greatwhite_INITIAL_ROTATION_Y,
+      0
+    );
+
+    const deltaY =
+      Math.sin(clock.getElapsedTime() / greatwhite_SECONDS_PER_UP_DOWN_WAVE) *
+      greatwhite_WAVE_DY;
+    swimAnimationRef.current.position.set(-deltaY / 2, deltaY, 0);
+  });
+
+  const model = useGLTF("/greatwhite/scene.gltf");
+  // const hoverAnimationRef = useHoverAnimation();
+
+  // Here's the animation part
+  // *************************
+  let mixer;
+  if (model.animations.length) {
+    mixer = new THREE.AnimationMixer(model.scene);
+    model.animations.forEach((clip) => {
+      const action = mixer.clipAction(clip);
+      action.play();
+    });
+  }
+
+  useFrame((state, delta) => {
+    mixer?.update(delta);
+  });
+  // *************************
+
+  model.scene.traverse((child) => {
+    if ((child as any).isMesh) {
+      child.castShadow = true;
+      child.receiveShadow = true;
+      (child as any).material.side = THREE.FrontSide;
+    }
+  });
+
+  return (
+    <animated.mesh ref={swimAnimationRef}>
+      <primitive
+        scale={greatwhiteScale}
+        position={[x, y, z]}
+        object={model.scene}
+      />
+    </animated.mesh>
+  );
+}
+
+function GLTFModelXNoAnimations() {
   const { x, y, z } = useControls({ x: -19, y: -55, z: 16 });
 
   const gltf = useGLTF("/terrain/scene.gltf");
