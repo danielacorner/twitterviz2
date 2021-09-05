@@ -29,7 +29,7 @@ export function Effects() {
   // }, 2);
   return gpuInfo.tier > 2 ? (
     <>
-      <Sun ref={sun} />
+      <Sun renderOrder={10} ref={sun} />
       {sun.current && (
         <EffectComposer ref={composer} multisampling={0} renderPriority={1}>
           {/* react-postprocessing docs https://github.com/pmndrs/react-postprocessing/blob/master/api.md */}

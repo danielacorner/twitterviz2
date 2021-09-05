@@ -223,7 +223,7 @@ function GLTFModelCoral() {
   // const hoverAnimationRef = useHoverAnimation();
   return (
     <animated.mesh>
-      <primitive scale={2} position={[-0, -35, 16]} object={gltf.scene} />
+      <primitive scale={2} position={[-0, -35, 0]} object={gltf.scene} />
     </animated.mesh>
   );
 }
@@ -755,7 +755,7 @@ function GLTFModelballena() {
     z: 980,
     ballena_WAVE_DY: 24,
     ballena_INITIAL_ROTATION_Y: Math.random() * Math.PI,
-    ballena_SECONDS_PER_ROTATION: 100,
+    ballena_SECONDS_PER_ROTATION: 180,
     ballena_SECONDS_PER_UP_DOWN_WAVE: 21,
     ballenaScale: 1.8,
   };
@@ -835,7 +835,7 @@ function GLTFModelsailfish() {
     z: 0,
     sailfish_WAVE_DY: -9,
     sailfish_INITIAL_ROTATION_Y: Math.random() * Math.PI,
-    sailfish_SECONDS_PER_ROTATION: 106,
+    sailfish_SECONDS_PER_ROTATION: 96,
     sailfish_SECONDS_PER_UP_DOWN_WAVE: 21,
     sailfishScale: 1.7,
   });

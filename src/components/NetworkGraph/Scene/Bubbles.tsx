@@ -56,7 +56,7 @@ export function Bubbles({ count }) {
     //     />
     //   </sphereBufferGeometry>
     // </points>
-    <group ref={group} renderOrder={0}>
+    <group ref={group} renderOrder={1}>
       <Instances>
         <sphereBufferGeometry args={[1, 10, 10]} />
 

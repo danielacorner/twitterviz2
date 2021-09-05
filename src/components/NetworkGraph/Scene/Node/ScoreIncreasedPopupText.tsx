@@ -47,7 +47,7 @@ export function ScoreIncreasedPopupText({ isMounted, botScore }) {
               padding: 12px 12px 18px;
               position: relative;
               .popupTextPercent {
-                font-size: 2em;
+                font-size: 1.5em;
               }
               .popupTextBotType {
               }
