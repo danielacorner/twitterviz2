@@ -69,8 +69,6 @@ export function BotScoreInfoCard() {
     }
   }
 
-  const { fx, fy, fz } = useControls({ fx: 0, fy: 0, fz: 0 });
-
   const [isDoneAnimating, setIsDoneAnimating] = useState(false);
   const springUpDown = useSpring({
     transform: `translate3d(0,${isUp ? 0 : HEIGHT * 0.75}px,0)`,
@@ -102,13 +100,9 @@ export function BotScoreInfoCard() {
     <Html
       // occlude={[]}
       transform={TRANSFORM}
-      position={[fx, fy, fz]}
+      position={[0, 0, 0]}
       calculatePosition={(group, camera, size) => {
-        return [
-          PADDING + fx,
-          size?.height - HEIGHT - PADDING,
-          camera.position.z,
-        ];
+        return [PADDING, size?.height - HEIGHT - PADDING, camera.position.z];
       }}
       style={{
         pointerEvents: "none",
