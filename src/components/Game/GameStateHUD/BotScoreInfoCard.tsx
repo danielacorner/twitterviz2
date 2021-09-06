@@ -191,7 +191,7 @@ export function BotScoreInfoCard() {
   );
 }
 
-const BOTTYPE_PADDING_INNER = 10;
+const BOTTYPE_PADDING_INNER = 8;
 const CARD_BORDER_WIDTH = 12;
 
 const HtmlBotScoreInfoOverlayStyles = styled.div`
@@ -209,7 +209,7 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
   .topRow {
     display: flex;
     gap: 16px;
-    margin-bottom: -6px;
+    margin-bottom: -18px;
     height: 64px;
     margin-top: ${CARD_BORDER_WIDTH / 2}px;
     margin-left: ${-CARD_BORDER_WIDTH / 2}px;
@@ -278,6 +278,7 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
     padding: 2.2em 0.7em 1em;
     margin-top: ${-26}px;
     margin-bottom: ${CARD_BORDER_WIDTH * 0.75}px;
+    background: #1e1f20;
     position: relative;
     font-size: 0.8em;
     height: 200px;
@@ -371,14 +372,15 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
       height: 40px;
       background: ${colorSecondary};
       opacity: 0.2;
-      border-radius: 6px;
+      border-bottom-left-radius: 36px;
+      border-top-left-radius: 36px;
       top: -6px;
       bottom: -6px;
       left: -${BOTTYPE_PADDING_INNER}px;
       right: -${BOTTYPE_PADDING_INNER}px;
     }
     .percentWidthOutline {
-      border-radius: 6px;
+      border-radius: 36px;
       position: absolute;
       height: 32px;
       padding: 20px;
