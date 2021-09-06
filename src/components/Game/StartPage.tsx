@@ -307,7 +307,7 @@ const StartPageStyles = styled.div`
   }
   li {
     margin-bottom: 1em;
-    line-height: 1.1em;
+    line-height: 1.3em;
     p {
       margin-bottom: 0.5em;
     }

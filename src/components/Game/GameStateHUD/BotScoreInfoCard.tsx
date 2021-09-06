@@ -71,7 +71,7 @@ export function BotScoreInfoCard() {
 
   const [isDoneAnimating, setIsDoneAnimating] = useState(false);
   const springUpDown = useSpring({
-    // transform: `translate3d(0,${isUp ? -HEIGHT / 2 : HEIGHT}px,0)`,
+    transform: `translate3d(0,${isUp ? -HEIGHT / 6 : HEIGHT / 2}px,0)`,
     opacity: isUp ? 1 : 0,
     position: "fixed" as any,
     zIndex: 9999999999999999,
