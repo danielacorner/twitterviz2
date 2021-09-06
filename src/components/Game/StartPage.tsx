@@ -269,7 +269,7 @@ export function StartPage({ startLookingAtTweets }) {
     </StartPageStyles>
   );
 }
-const MARGIN_TOP = 48;
+const MARGIN_TOP = 92;
 const StartPageStyles = styled.div`
   position: relative;
   font-family: "Roboto", sans-serif;
@@ -282,7 +282,7 @@ const StartPageStyles = styled.div`
   .topEmoji {
     position: absolute;
     font-size: 2em;
-    top: ${MARGIN_TOP / 4}px;
+    top: calc(${MARGIN_TOP + 8}px - 1em);
     z-index: 99999;
     text-shadow: 0 2px 5px black;
   }
@@ -293,13 +293,13 @@ const StartPageStyles = styled.div`
     line-height: 1.5em;
     box-shadow: 0px 2px 30px 8px #00000068;
     position: relative;
-    max-height: calc(100vh - ${MARGIN_TOP}px);
+    max-height: calc(100vh - ${MARGIN_TOP + 16}px);
     overflow: auto;
     ${POPUP_BASE_CSS}
     max-width: calc(100vw - 32px);
     .title {
       font-family: "Rancho", cursive;
-      font-size: 3em;
+      font-size: 4em;
       margin: 0em 0 32px;
       line-height: 1em;
     }
@@ -408,7 +408,7 @@ const StartPageStyles = styled.div`
       top: ${MARGIN_TOP / 2}px;
     }
     .content {
-      padding: 3em;
+      padding: 3em 3.5em;
       max-width: 640px;
       margin-top: ${MARGIN_TOP * 2}px;
 

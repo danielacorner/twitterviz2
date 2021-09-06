@@ -62,7 +62,7 @@ const SoundButtonStyles = styled.div`
     a {
       color: white;
     }
-    opacity: ${(p) => (p.isAudioPlaying ? 0.3 : 0)};
+    opacity: ${(p) => (p.isAudioPlaying ? 0.1 : 0)};
     margin-top: -6px;
   }
   &:hover,
