@@ -5,7 +5,7 @@ import styled from "styled-components/macro";
 import { useAtom } from "jotai";
 import { isMusicOnAtom, volumeAtom } from "providers/store/store";
 import { useState } from "react";
-import { NUM_VOLUME_STEPS } from "utils/constants";
+const NUM_VOLUME_STEPS = 20;
 
 /** Mute button with hidden a <ReactPlayer/> */
 export function AudioSoundButton({ title, href }) {
@@ -50,6 +50,11 @@ const SoundButtonStyles = styled.div`
   right: 8px;
   padding-bottom: 16px;
   align-items: center;
+  z-index: 9;
+  &&&&&&&&&&&&& {
+    padding-right: 16px;
+    margin-right: -16px;
+  }
   .MuiButtonBase-root {
     color: hsla(0, 100%, 100%, 1);
   }
@@ -73,13 +78,19 @@ function VolumeControls({ volume, setVolume }) {
   return (
     <VolumeControlsStyles {...{ isAudioPlaying }}>
       <div className="volumeControlsContent">
-        {[...Array(NUM_VOLUME_STEPS)].map((_, idx) => (
+        {[...Array(NUM_VOLUME_STEPS + 1)].map((_, idx) => (
           <div
-            className={`volumeTick${volume >= idx ? " active" : ""}`}
+            className={`volumeTick${volume > idx ? " active" : ""}${
+              volume === idx ? " current" : ""
+            }`}
             onClick={() => {
               setVolume(idx);
             }}
-          ></div>
+          >
+            <Tooltip title={`${(idx * 100) / NUM_VOLUME_STEPS}%`}>
+              <div className="tickBackground"></div>
+            </Tooltip>
+          </div>
         ))}
       </div>
     </VolumeControlsStyles>
@@ -90,18 +101,38 @@ const VolumeControlsStyles = styled.div`
   .volumeControlsContent {
     cursor: pointer;
     display: flex;
-    gap: 1px;
     position: absolute;
     bottom: -36px;
-    right: 0px;
+    right: 12px;
   }
   .volumeTick {
-    width: 8px;
-    height: 12px;
+    padding: 12px 0;
+    margin: -12px 0;
+    width: 4px;
+    height: 6px;
     box-sizing: border-box;
-    background: #2c2c2c;
+    .tickBackground {
+      margin-top: -12px;
+      height: 6px;
+      background: #2c2c2c;
+    }
     &.active {
-      background: ${(p) => (p.isAudioPlaying ? "#fff" : "#555")};
+      .tickBackground {
+        background: ${(p) => (p.isAudioPlaying ? "#fff" : "#555")};
+      }
+    }
+    &.current {
+      position: relative;
+      &:after {
+        position: absolute;
+        content: "";
+        top: -3.5px;
+        left: -6px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #a8a8a8;
+      }
     }
   }
 `;
