@@ -1,6 +1,7 @@
 import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Instance, Instances } from "./Instances";
+import { useDetectGPU } from "@react-three/drei";
 
 // https://codesandbox.io/s/9y8vkjykyy?file=/src/index.js
 const WIDTH = 200;
@@ -40,7 +41,7 @@ export function Bubbles({ count }) {
       ]);
     return [nCoords];
   }, [count]);
-
+  const gpuInfo = useDetectGPU();
   return (
     // <points
     //   ref={group}
@@ -58,7 +59,9 @@ export function Bubbles({ count }) {
     // </points>
     <group ref={group} renderOrder={1}>
       <Instances>
-        <sphereBufferGeometry args={[1, 10, 10]} />
+        <sphereBufferGeometry
+          args={[1, gpuInfo.tier > 2 ? 26 : 10, gpuInfo.tier > 2 ? 26 : 10]}
+        />
 
         <meshPhysicalMaterial
           {...{
