@@ -1,7 +1,6 @@
 import styled from "styled-components/macro";
 import { useLatestTaggedNode } from "components/NetworkGraph/Scene/Node/useLatestTaggedNode";
 import { Html } from "@react-three/drei";
-import { useControls } from "leva";
 import { Canvas } from "@react-three/fiber";
 import {
   gameStateAtom,
@@ -353,7 +352,6 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
       position: absolute;
       left: -52px;
       right: ${CARD_BORDER_WIDTH / 2}px;
-
       border-bottom-right-radius: 26px;
       bottom: 0;
       top: 0;

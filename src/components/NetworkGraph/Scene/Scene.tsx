@@ -31,8 +31,6 @@ import * as THREE from "three";
 import { Bubbles } from "./Bubbles";
 
 export function Scene() {
-  const isDorky = useRef(Math.random() > 0.5).current;
-
   // const vertices = getVertices(nodes.length);
   const [areOrbitControlsEnabled] = useAtom(areOrbitControlsEnabledAtom);
 
@@ -135,10 +133,10 @@ export function Scene() {
         {...{ gravity: [0, 0, 0] }}
         defaultContactMaterial={{ friction: 10, restitution: 0.8 }}
       >
-        {/* <DebugInDev> */}
-        <Collisions />
-        <Nodes />
-        {/* </DebugInDev> */}
+        <DebugInDev>
+          <Collisions />
+          <Nodes />
+        </DebugInDev>
       </Physics>
       <HighScores />
       <Background background={true} />
@@ -189,7 +187,7 @@ export function getHourOfDay() {
 }
 
 function DebugInDev({ children }) {
-  return process.env.NODE_ENV !== "production" ? (
+  return false && process.env.NODE_ENV !== "production" ? (
     <Debug>{children}</Debug>
   ) : (
     <>{children}</>
@@ -238,66 +236,66 @@ function GLTFModelTerrain() {
   );
 }
 
-const SECONDS_PER_ROTATION = 240;
-const SECONDS_PER_UP_DOWN_WAVE = 20;
-const WAVE_DY = 60;
+// const SECONDS_PER_ROTATION = 240;
+// const SECONDS_PER_UP_DOWN_WAVE = 20;
+// const WAVE_DY = 60;
 
 // swims in a circle
-function GLTFModelLeviathan() {
-  const { x, y, z } = { x: -900, y: 216, z: -316 };
-  const { scaleKelp } = { scaleKelp: 89 };
+// function GLTFModelLeviathan() {
+//   const { x, y, z } = { x: -900, y: 216, z: -316 };
+//   const { scaleKelp } = { scaleKelp: 89 };
 
-  const swimAnimationRef = useRef(null as any);
+//   const swimAnimationRef = useRef(null as any);
 
-  useFrame(({ clock }) => {
-    if (!swimAnimationRef.current) {
-      return;
-    }
-    const rotY = (Math.PI * clock.getElapsedTime()) / SECONDS_PER_ROTATION;
-    swimAnimationRef.current.rotation.set(0, rotY, 0);
+//   useFrame(({ clock }) => {
+//     if (!swimAnimationRef.current) {
+//       return;
+//     }
+//     const rotY = (Math.PI * clock.getElapsedTime()) / SECONDS_PER_ROTATION;
+//     swimAnimationRef.current.rotation.set(0, rotY, 0);
 
-    const deltaY =
-      Math.sin(clock.getElapsedTime() / SECONDS_PER_UP_DOWN_WAVE) * WAVE_DY;
-    swimAnimationRef.current.position.set(0, deltaY, 0);
-  });
+//     const deltaY =
+//       Math.sin(clock.getElapsedTime() / SECONDS_PER_UP_DOWN_WAVE) * WAVE_DY;
+//     swimAnimationRef.current.position.set(0, deltaY, 0);
+//   });
 
-  const model = useGLTF("/leviathan/scene.gltf");
-  // const hoverAnimationRef = useHoverAnimation();
+//   const model = useGLTF("/leviathan/scene.gltf");
+//   // const hoverAnimationRef = useHoverAnimation();
 
-  // Here's the animation part
-  // *************************
-  let mixer;
-  if (model.animations.length) {
-    mixer = new THREE.AnimationMixer(model.scene);
-    model.animations.forEach((clip) => {
-      const action = mixer.clipAction(clip);
-      action.play();
-    });
-  }
+//   // Here's the animation part
+//   // *************************
+//   let mixer;
+//   if (model.animations.length) {
+//     mixer = new THREE.AnimationMixer(model.scene);
+//     model.animations.forEach((clip) => {
+//       const action = mixer.clipAction(clip);
+//       action.play();
+//     });
+//   }
 
-  useFrame((state, delta) => {
-    mixer?.update(delta);
-  });
-  // *************************
+//   useFrame((state, delta) => {
+//     mixer?.update(delta);
+//   });
+//   // *************************
 
-  model.scene.traverse((child) => {
-    if ((child as any).isMesh) {
-      child.castShadow = true;
-      child.receiveShadow = true;
-      (child as any).material.side = THREE.FrontSide;
-    }
-  });
+//   model.scene.traverse((child) => {
+//     if ((child as any).isMesh) {
+//       child.castShadow = true;
+//       child.receiveShadow = true;
+//       (child as any).material.side = THREE.FrontSide;
+//     }
+//   });
 
-  return (
-    <animated.mesh ref={swimAnimationRef}>
-      <primitive
-        scale={10 * scaleKelp}
-        position={[x, y, z]}
-        object={model.scene}
-      />
-    </animated.mesh>
-  );
-}
+//   return (
+//     <animated.mesh ref={swimAnimationRef}>
+//       <primitive
+//         scale={10 * scaleKelp}
+//         position={[x, y, z]}
+//         object={model.scene}
+//       />
+//     </animated.mesh>
+//   );
+// }
 
 const guppy_SECONDS_PER_ROTATION = 180;
 const guppy_SECONDS_PER_UP_DOWN_WAVE = 20;
@@ -579,85 +577,85 @@ function GLTFModelyellowfish() {
   );
 }
 
-// swims in a circle
-function GLTFModelhammerhead() {
-  const {
-    x,
-    y,
-    z,
-    hammerhead_WAVE_DY,
-    hammerhead_INITIAL_ROTATION_Y,
-    hammerhead_SECONDS_PER_ROTATION,
-    hammerhead_SECONDS_PER_UP_DOWN_WAVE,
-    hammerheadScale,
-  } = {
-    x: 89,
-    y: 18,
-    z: 0,
-    hammerhead_WAVE_DY: 10,
-    hammerhead_INITIAL_ROTATION_Y: Math.random() * Math.PI,
-    hammerhead_SECONDS_PER_ROTATION: 76,
-    hammerhead_SECONDS_PER_UP_DOWN_WAVE: 21,
-    hammerheadScale: 7,
-  };
+// // swims in a circle
+// function GLTFModelhammerhead() {
+//   const {
+//     x,
+//     y,
+//     z,
+//     hammerhead_WAVE_DY,
+//     hammerhead_INITIAL_ROTATION_Y,
+//     hammerhead_SECONDS_PER_ROTATION,
+//     hammerhead_SECONDS_PER_UP_DOWN_WAVE,
+//     hammerheadScale,
+//   } = {
+//     x: 89,
+//     y: 18,
+//     z: 0,
+//     hammerhead_WAVE_DY: 10,
+//     hammerhead_INITIAL_ROTATION_Y: Math.random() * Math.PI,
+//     hammerhead_SECONDS_PER_ROTATION: 76,
+//     hammerhead_SECONDS_PER_UP_DOWN_WAVE: 21,
+//     hammerheadScale: 7,
+//   };
 
-  const swimAnimationRef = useRef(null as any);
+//   const swimAnimationRef = useRef(null as any);
 
-  useFrame(({ clock }) => {
-    if (!swimAnimationRef.current) {
-      return;
-    }
-    const rotY =
-      -(Math.PI * clock.getElapsedTime()) / hammerhead_SECONDS_PER_ROTATION;
-    swimAnimationRef.current.rotation.set(
-      0,
-      rotY + hammerhead_INITIAL_ROTATION_Y,
-      0
-    );
+//   useFrame(({ clock }) => {
+//     if (!swimAnimationRef.current) {
+//       return;
+//     }
+//     const rotY =
+//       -(Math.PI * clock.getElapsedTime()) / hammerhead_SECONDS_PER_ROTATION;
+//     swimAnimationRef.current.rotation.set(
+//       0,
+//       rotY + hammerhead_INITIAL_ROTATION_Y,
+//       0
+//     );
 
-    const deltaY =
-      Math.sin(clock.getElapsedTime() / hammerhead_SECONDS_PER_UP_DOWN_WAVE) *
-      hammerhead_WAVE_DY;
-    swimAnimationRef.current.position.set(-deltaY / 2, deltaY, 0);
-  });
+//     const deltaY =
+//       Math.sin(clock.getElapsedTime() / hammerhead_SECONDS_PER_UP_DOWN_WAVE) *
+//       hammerhead_WAVE_DY;
+//     swimAnimationRef.current.position.set(-deltaY / 2, deltaY, 0);
+//   });
 
-  const model = useGLTF("/hammerhead/scene.gltf");
-  // const hoverAnimationRef = useHoverAnimation();
+//   const model = useGLTF("/hammerhead/scene.gltf");
+//   // const hoverAnimationRef = useHoverAnimation();
 
-  // Here's the animation part
-  // *************************
-  let mixer;
-  if (model.animations.length) {
-    mixer = new THREE.AnimationMixer(model.scene);
-    model.animations.forEach((clip) => {
-      const action = mixer.clipAction(clip);
-      action.play();
-    });
-  }
+//   // Here's the animation part
+//   // *************************
+//   let mixer;
+//   if (model.animations.length) {
+//     mixer = new THREE.AnimationMixer(model.scene);
+//     model.animations.forEach((clip) => {
+//       const action = mixer.clipAction(clip);
+//       action.play();
+//     });
+//   }
 
-  useFrame((state, delta) => {
-    mixer?.update(delta);
-  });
-  // *************************
+//   useFrame((state, delta) => {
+//     mixer?.update(delta);
+//   });
+//   // *************************
 
-  model.scene.traverse((child) => {
-    if ((child as any).isMesh) {
-      child.castShadow = true;
-      child.receiveShadow = true;
-      (child as any).material.side = THREE.FrontSide;
-    }
-  });
+//   model.scene.traverse((child) => {
+//     if ((child as any).isMesh) {
+//       child.castShadow = true;
+//       child.receiveShadow = true;
+//       (child as any).material.side = THREE.FrontSide;
+//     }
+//   });
 
-  return (
-    <animated.mesh ref={swimAnimationRef}>
-      <primitive
-        scale={hammerheadScale}
-        position={[x, y, z]}
-        object={model.scene}
-      />
-    </animated.mesh>
-  );
-}
+//   return (
+//     <animated.mesh ref={swimAnimationRef}>
+//       <primitive
+//         scale={hammerheadScale}
+//         position={[x, y, z]}
+//         object={model.scene}
+//       />
+//     </animated.mesh>
+//   );
+// }
 
 // swims in a circle
 function GLTFModelgreatwhite() {
@@ -898,21 +896,21 @@ function GLTFModelsailfish() {
   );
 }
 
-function GLTFModelXNoAnimations() {
-  const { x, y, z } = useControls({ x: -19, y: -55, z: 16 });
+// function GLTFModelXNoAnimations() {
+//   const { x, y, z } = useControls({ x: -19, y: -55, z: 16 });
 
-  const gltf = useGLTF("/terrain/scene.gltf");
-  const { scaleKelp } = useControls({ scaleKelp: 0.6 });
-  // const hoverAnimationRef = useHoverAnimation();
-  return (
-    <animated.mesh>
-      <primitive
-        scale={10 * scaleKelp}
-        position={[x, y, z]}
-        object={gltf.scene}
-        //  material={nodes.ATP___Gaussian_surface.material}
-        //  geometry={nodes.ATP___Gaussian_surface.geometry}
-      />
-    </animated.mesh>
-  );
-}
+//   const gltf = useGLTF("/terrain/scene.gltf");
+//   const { scaleKelp } = useControls({ scaleKelp: 0.6 });
+//   // const hoverAnimationRef = useHoverAnimation();
+//   return (
+//     <animated.mesh>
+//       <primitive
+//         scale={10 * scaleKelp}
+//         position={[x, y, z]}
+//         object={gltf.scene}
+//         //  material={nodes.ATP___Gaussian_surface.material}
+//         //  geometry={nodes.ATP___Gaussian_surface.geometry}
+//       />
+//     </animated.mesh>
+//   );
+// }

@@ -1,4 +1,3 @@
-import { MeshWobbleMaterial } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
 
@@ -11,6 +10,7 @@ export function ScanningAnimation() {
   const ref4 = useRef<any>(null);
   const ref5 = useRef<any>(null);
   const ref6 = useRef<any>(null);
+  const spinRef = useRef<any>(null);
 
   useFrame(({ clock }) => {
     const seconds = clock.getElapsedTime();
@@ -30,65 +30,46 @@ export function ScanningAnimation() {
       ref2.current.rotation.y += 0.01;
       ref2.current.rotation.z += y / 128;
 
-      ref2.current.scale.x = y / 16 + 1;
-      ref2.current.scale.y = y / 16 + 1;
-      ref2.current.scale.z = y / 16 + 1;
+      ref2.current.scale.x = y / 16 + 1.2;
+      ref2.current.scale.y = y / 16 + 1.2;
+      ref2.current.scale.z = y / 16 + 1.2;
 
-      const opacity = (1 - (Math.round((y % 1) * 100) / 100 + 1) / 2) * 0.5;
-      ref4.current.opacity = opacity;
+      ref4.current.opacity = 0.8 - y / 3;
+
+      ref5.current.opacity = y * 0.5;
+      ref6.current.opacity = y * 0.5;
+
+      spinRef.current.rotation.y += 0.01;
+      spinRef.current.rotation.x += 0.01;
     }
   });
 
   return (
     <mesh>
       {/* scanning box */}
-      <mesh ref={ref}>
-        <boxBufferGeometry args={[WIDTH, 0.02 * WIDTH, WIDTH]} />
-        <MeshWobbleMaterial
-          skinning={true}
-          factor={0.6}
-          speed={8}
-          ref={ref5}
-          {...{
-            metalness: 0.94,
-            roughness: 0.1,
-            color: "#1fd5db",
-            transparent: true,
-            opacity: 0.8,
-          }}
-        />
-        {/* <meshPhysicalMaterial
-              transparent={true}
-              ref={ref5}
-              color={"#99dffa"}
-              transmission={0.98}
-              roughness={0.05}
-            /> */}
-      </mesh>
+      <mesh ref={spinRef}>
+        <mesh ref={ref}>
+          <boxBufferGeometry args={[WIDTH, 0.02 * WIDTH, WIDTH]} />
+          <meshPhysicalMaterial
+            metalness={0.4}
+            ref={ref5}
+            color={"#99dffa"}
+            transmission={0.98}
+            roughness={0.05}
+          />
+        </mesh>
 
-      {/* scanning box 2 */}
-      <mesh ref={ref3}>
-        <boxBufferGeometry args={[0.02 * WIDTH, WIDTH, WIDTH]} />
-        {/* <MeshWobbleMaterial
-          skinning={true}
-          factor={0.6}
-          speed={8}
-          ref={ref6}
-          {...{
-            metalness: 0.94,
-            roughness: 0.1,
-            color: "#1fd5db",
-            transparent: true,
-            opacity: 0.8,
-          }}
-        /> */}
-        <meshPhysicalMaterial
-          transparent={true}
-          ref={ref6}
-          color={"#99dffa"}
-          transmission={0.98}
-          roughness={0.05}
-        />
+        {/* scanning box 2 */}
+        <mesh ref={ref3}>
+          <boxBufferGeometry args={[0.02 * WIDTH, WIDTH, WIDTH]} />
+          <meshPhysicalMaterial
+            metalness={0.4}
+            ref={ref6}
+            color={"#99dffa"}
+            transmission={0.98}
+            roughness={0.05}
+          />
+        </mesh>
       </mesh>
 
       {/* Background plane w. scanning effect?  */}

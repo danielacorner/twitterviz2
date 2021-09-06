@@ -222,6 +222,7 @@ export const Node = ({
               }}
             />
             {isNotABot && shouldPop && <PopAnimation />}
+            {/* <ScanningAnimation /> */}
             {isScanningNode ? <ScanningAnimation /> : null}
           </animated.mesh>
         </animated.mesh>
