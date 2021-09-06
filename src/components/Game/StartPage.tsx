@@ -85,14 +85,17 @@ export function StartPage({ startLookingAtTweets }) {
         )}
         {step === 1 && (
           <>
-            <p>
-              These days, it's easier than ever to create a realistic fake
-              avatar with AI:
-            </p>
+            <p>These days, AI generates realistic fake avatars:</p>
             <div className="thisPersonDoesNotExist">
-              <div className="person">
-                <ReloadingIframe delay={2500} />
-              </div>
+              <a
+                href="https://thispersondoesnotexist.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <div className="person" style={{ pointerEvents: "none" }}>
+                  <ReloadingIframe delay={2500} />
+                </div>
+              </a>
             </div>
             <a
               href="https://thispersondoesnotexist.com/"
@@ -131,7 +134,9 @@ export function StartPage({ startLookingAtTweets }) {
         )}
         {step === 2 && (
           <>
-            <p style={{ marginBottom: 0 }}>There are different kinds of bot:</p>
+            <p style={{ marginBottom: 0, marginTop: -18 }}>
+              There are different kinds of bot:
+            </p>
             <div className="canvasContainer">
               <Canvas
                 style={{
@@ -300,7 +305,7 @@ const StartPageStyles = styled.div`
     }
     ul,
     ol {
-      padding-left: 20px;
+      padding-left: 16px;
     }
     li::marker {
       font-size: 1em;
@@ -418,11 +423,13 @@ const StartPageStyles = styled.div`
     p {
       font-size: 1.5em;
       line-height: 1.5em;
-      margin: 1em;
+      margin: 1em 0;
     }
-    ul,
-    ol {
-      padding-left: 40px;
+    &&&&&&&&&& {
+      ul,
+      ol {
+        padding-left: 24px;
+      }
     }
   }
 `;
