@@ -7,12 +7,14 @@ import { POPUP_BASE_CSS } from "./popupBaseCss";
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "@material-ui/icons";
 import COVIDSVG from "./COVIDSVG";
-import { colorLink, colorSecondary } from "utils/colors";
+import { colorLink, colorSecondary, darkBackground } from "utils/colors";
 import { useAtom } from "jotai";
 import { isMusicOnAtom } from "providers/store/store";
 import { CUSTOM_SCROLLBAR_CSS } from "components/common/styledComponents";
 import { SOCIAL_MEDIA_PSYOPS } from "./HighScores/LearnMoreResources";
 import { BOT_TYPES } from "utils/constants";
+import { useMount } from "utils/utils";
+import { useInterval } from "utils/useInterval";
 
 export function StartPage({ startLookingAtTweets }) {
   const isLoading = useLoading();
@@ -83,6 +85,52 @@ export function StartPage({ startLookingAtTweets }) {
         )}
         {step === 1 && (
           <>
+            <p>
+              These days, it's easier than ever to create a realistic fake
+              avatar with AI:
+            </p>
+            <div className="thisPersonDoesNotExist">
+              <div className="person">
+                <ReloadingIframe delay={2500} />
+              </div>
+            </div>
+            <a
+              href="https://thispersondoesnotexist.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              ThisPersonDoesNotExist.com
+            </a>
+            <div style={{ marginBottom: "1em" }}></div>
+            <div className="buttonsRow">
+              <Button
+                className="btnPrev"
+                variant="outlined"
+                disabled={isLoading}
+                color={"primary"}
+                onClick={() => {
+                  setStep((p) => p - 1);
+                }}
+                startIcon={<ChevronLeft />}
+              >
+                Prev
+              </Button>
+              <Button
+                disabled={isLoading}
+                variant="contained"
+                color={"primary"}
+                onClick={() => {
+                  setStep((p) => p + 1);
+                }}
+                endIcon={<ChevronRight />}
+              >
+                Next
+              </Button>
+            </div>
+          </>
+        )}
+        {step === 2 && (
+          <>
             <p style={{ marginBottom: 0 }}>There are different kinds of bot:</p>
             <div className="canvasContainer">
               <Canvas
@@ -114,18 +162,6 @@ export function StartPage({ startLookingAtTweets }) {
                 {BOT_TYPES.ASTROTURF.tooltipText}
               </li>
             </ul>
-            {/* <p>
-              Stay vigilant when browsing social media.{" "}
-              <Tooltip title={SOCIAL_MEDIA_PSYOPS.title}>
-                <a
-                  href={SOCIAL_MEDIA_PSYOPS.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Learn more about PsyOps
-                </a>
-              </Tooltip>
-            </p> */}
             <div className="buttonsRow">
               <Button
                 className="btnPrev"
@@ -153,7 +189,7 @@ export function StartPage({ startLookingAtTweets }) {
             </div>
           </>
         )}
-        {step === 2 && (
+        {step === 3 && (
           <>
             <p>With practice, you might get better at identifying bots!</p>
             <ol>
@@ -332,6 +368,25 @@ const StartPageStyles = styled.div`
       margin: 0;
     }
   }
+  .thisPersonDoesNotExist {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5em;
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    .person {
+      width: 256px;
+      height: 256px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 4px solid ${darkBackground};
+      iframe {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
   @media (min-width: 768px) {
     .buttonsRow {
       grid-gap: 2em;
@@ -371,3 +426,22 @@ const StartPageStyles = styled.div`
     }
   }
 `;
+
+function ReloadingIframe({ delay }) {
+  const [randKey, setRandKey] = useState(0);
+  useInterval({
+    callback: () => {
+      setRandKey(Math.random());
+    },
+    delay,
+    immediate: false,
+  });
+  return (
+    <iframe
+      key={randKey}
+      title="This Person Does Not Exist"
+      src="https://thispersondoesnotexist.com/"
+      frameBorder="0"
+    ></iframe>
+  );
+}
