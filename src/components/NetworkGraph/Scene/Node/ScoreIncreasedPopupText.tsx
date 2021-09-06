@@ -10,6 +10,7 @@ import { MouseoverTooltipContent } from "./MouseoverTooltipContent";
 import { startCase } from "lodash";
 import styled from "styled-components/macro";
 import { colorSecondary } from "utils/colors";
+import { getMostLikelyBotTypeText } from "components/Game/GameStateHUD/getMostLikelyBotTypeText";
 
 export function ScoreIncreasedPopupText({ isMounted, botScore }) {
   const { scoreIncrease, color, maxBotScore, maxBotType } =
@@ -32,7 +33,9 @@ export function ScoreIncreasedPopupText({ isMounted, botScore }) {
     config: config.molasses,
   });
 
-  return maxBotType && maxBotScore ? (
+  const { botType, scorePercent } = getMostLikelyBotTypeText(botScore);
+
+  return botType && maxBotScore ? (
     <animated.mesh position={position as any}>
       <MouseoverTooltipContent
         {...{
@@ -47,10 +50,8 @@ export function ScoreIncreasedPopupText({ isMounted, botScore }) {
                     className="percentWidth"
                   ></animatedDom.div>
                   <div className="percentWidthOutline"></div>
-                  <div className="botTypeText">{startCase(maxBotType)}</div>
-                  <span className="scorePercent">
-                    {Math.round(maxBotScore * 100)}%
-                  </span>
+                  <div className="botTypeText">{startCase(botType)}</div>
+                  <span className="scorePercent">{scorePercent}%</span>
                 </BotTypePercentStyles>
               </div>
               <div className="popupTextScoreIncrease">
@@ -105,7 +106,7 @@ const HEIGHT = 32;
 const BotTypePercentStyles = styled.div`
   font-family: "Poiret One", cursive;
   position: relative;
-  width: 120px;
+  width: 160px;
   height: ${HEIGHT}px;
   .botTypeText {
     position: absolute;

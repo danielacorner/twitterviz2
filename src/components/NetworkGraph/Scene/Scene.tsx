@@ -24,7 +24,6 @@ import { Effects } from "./Effects/Effects";
 import { useControls } from "leva";
 import { useHoverAnimation } from "./useHoverAnimation";
 import { Nodes } from "./Nodes";
-import { BotScoreInfoCard } from "components/Game/GameStateHUD/BotScoreInfoCard";
 import { useIsMounted } from "./useIsMounted";
 import { shuffle } from "lodash";
 import * as THREE from "three";
