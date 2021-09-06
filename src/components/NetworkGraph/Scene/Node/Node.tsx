@@ -1,8 +1,11 @@
 import { useSphere } from "@react-three/cannon";
 import * as THREE from "three";
 import useStore, {
+  botScorePopupNodeAtom,
+  isBotScoreExplainerUpAtom,
   isPointerOverAtom,
   isRightDrawerOpenAtom,
+  latestNodeWithBotScoreAtom,
   numTooltipTweetsAtom,
   rightClickMenuAtom,
   scanningUserNodeIdAtom,
@@ -86,10 +89,10 @@ export const nodeGeometry = new THREE.SphereGeometry(NODE_RADIUS, 28, 28);
 
 export const Node = ({
   vec = new THREE.Vector3(),
-  node,
+  userNode,
 }: {
   vec?: any;
-  node: UserNode;
+  userNode: UserNode;
 }) => {
   const startPosition = getStartPosition();
   const tooltipNode = useTooltipNode();
@@ -97,10 +100,10 @@ export const Node = ({
   const [scanningNodeId] = useAtom(scanningUserNodeIdAtom);
   const [rightClickMenu] = useAtom(rightClickMenuAtom);
   const isRightClickingThisNode = rightClickMenu.node
-    ? rightClickMenu.node?.id_str === node.id_str
+    ? rightClickMenu.node?.id_str === userNode.id_str
     : false;
   const isTooltipNode = tooltipNode
-    ? tooltipNode?.id_str === node.id_str
+    ? tooltipNode?.id_str === userNode.id_str
     : false;
   const setTooltipNode = useStore((state) => state.setTooltipNode);
   const setSelectedNode = useSetSelectedNode();
@@ -111,15 +114,15 @@ export const Node = ({
   const [, setIsRightDrawerOpen] = useAtom(isRightDrawerOpenAtom);
   const [, setNumTooltipTweets] = useAtom(numTooltipTweetsAtom);
 
-  const handleRightClick = useHandleOpenRightClickMenu(node.tweets[0]);
+  const handleRightClick = useHandleOpenRightClickMenu(userNode.tweets[0]);
   const onContextMenu = (event) => {
     handleRightClick(event.nativeEvent);
   };
   const onPointerEnter = () => {
     setIsPointerOver(true);
     setTooltipTweetIndex(0);
-    setNumTooltipTweets(node.tweets.length);
-    setTooltipNode(node.tweets[0]);
+    setNumTooltipTweets(userNode.tweets.length);
+    setTooltipNode(userNode.tweets[0]);
   };
   const onScroll = (event) => {
     event.stopPropagation();
@@ -128,19 +131,22 @@ export const Node = ({
     const isDown = event.deltaY > 0;
     const nextTooltipTweetIdx = Math.max(
       0,
-      Math.min(tooltipTweetIndex + (isDown ? 1 : -1), node.tweets.length - 1)
+      Math.min(
+        tooltipTweetIndex + (isDown ? 1 : -1),
+        userNode.tweets.length - 1
+      )
     );
     setTooltipTweetIndex(nextTooltipTweetIdx);
-    setTooltipNode(node.tweets[nextTooltipTweetIdx]);
+    setTooltipNode(userNode.tweets[nextTooltipTweetIdx]);
   };
   const onPointerLeave = () => {
     setIsPointerOver(false);
   };
   const onClick = () => {
     const newSelectedNode = {
-      ...node.tweets[0],
-      user: node.user,
-      id_str: node.user.id_str,
+      ...userNode.tweets[0],
+      user: userNode.user,
+      id_str: userNode.user.id_str,
     };
     if (newSelectedNode.user) {
       setTimeout(() => {
@@ -164,16 +170,16 @@ export const Node = ({
   const mounted = useMounted();
 
   // hide nodes when the game ends
-  const hide = (useAreBotsLinedUp() && !node.user.botScore) || !mounted;
+  const hide = (useAreBotsLinedUp() && !userNode.user.botScore) || !mounted;
 
-  const isNotABot = node.user.isNotABot;
+  const isNotABot = userNode.user.isNotABot;
 
   const { scale2 } = useControls({ scale2: 1 });
   const shouldPop = true;
   // const shouldPop = useRef(Math.random() > 0.3);
   const scaleMult = isNotABot ? (shouldPop ? 2 : 0) : scale2;
 
-  const isScanningNode = node.id_str === scanningNodeId;
+  const isScanningNode = userNode.id_str === scanningNodeId;
 
   const springScale = useSpring({
     scale: hide
@@ -184,15 +190,18 @@ export const Node = ({
       ? [1.8 * scaleMult, 1.8 * scaleMult, 1.8 * scaleMult]
       : [1 * scaleMult, 1 * scaleMult, 1 * scaleMult],
   });
-  // const hoverAnimationRefWave = useHoverAnimation({
-  //   deltaX: 0.7,
-  //   deltaY: 0.7,
-  //   randomize: true,
-  // });
-  // TODO: check out name stays after submit
 
-  const hasBotScore = Boolean(node.user.botScore);
+  const hasBotScore = Boolean(userNode.user.botScore);
 
+  const [, setIsUp] = useAtom(isBotScoreExplainerUpAtom);
+  const [, setLatestNodeWithBotScore] = useAtom(latestNodeWithBotScoreAtom);
+  const [, setBotScorePopupNode] = useAtom(botScorePopupNodeAtom);
+
+  function handleShowBotScoreInfoCard() {
+    setIsUp(true);
+    setLatestNodeWithBotScore(userNode.tweets[0]);
+    setBotScorePopupNode(userNode);
+  }
   return (
     <animated.group ref={sphereRef}>
       <ScaleOnHover>
@@ -202,7 +211,7 @@ export const Node = ({
             // material-transparent={true}
             // material-opacity={springScale.opacity}
             {...(hasBotScore
-              ? {}
+              ? { onClick: handleShowBotScoreInfoCard }
               : {
                   onPointerEnter,
                   onPointerLeave,
@@ -213,7 +222,7 @@ export const Node = ({
           >
             <NodeContent
               {...{
-                node,
+                node: userNode,
                 isTooltipNode,
                 isPointerOver,
                 isScanningNode,

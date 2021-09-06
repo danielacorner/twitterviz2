@@ -6,7 +6,7 @@ import {
 import { Html } from "@react-three/drei";
 import { useIsMounted } from "../useIsMounted";
 
-export function MouseoverTooltipContent({ tooltipText, customCss = "" }) {
+export function MouseoverTooltipContent({ tooltipText, customcss = "" }) {
   const isMounted = useIsMounted();
   const springOnMount = useSpringDom({
     transform: `translate3d(0,${isMounted ? -30 : -20}px,0)`,
@@ -17,7 +17,7 @@ export function MouseoverTooltipContent({ tooltipText, customCss = "" }) {
   return (
     <>
       <Html center={true} style={{ pointerEvents: "none" }}>
-        <AnimatedTooltipStyles style={springOnMount} {...{ customCss }}>
+        <AnimatedTooltipStyles style={springOnMount} {...{ customcss }}>
           <div className="tooltipContent">{tooltipText}</div>
         </AnimatedTooltipStyles>
       </Html>
@@ -36,5 +36,5 @@ const AnimatedTooltipStyles = styled(animatedDom.div)`
     background: #444;
     border-radius: 8px;
   }
-  ${(p) => p.customCss || ""}
+  ${(p) => p.customcss || ""}
 `;

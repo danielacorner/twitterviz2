@@ -10,12 +10,13 @@ import {
 import { Button, Tooltip } from "@material-ui/core";
 import { useFetchBotScoreForTweet } from "components/common/useFetchBotScoreForTweet";
 import { useFetchAndReplaceNode } from "components/common/useFetchAndReplaceNode";
-import { atom, useAtom } from "jotai";
+import { useAtom } from "jotai";
 import { BotScore, Tweet } from "types";
 import {
   botScorePopupNodeAtom,
   isBotScoreExplainerUpAtom,
   isRightDrawerOpenAtom,
+  latestNodeWithBotScoreAtom,
   scanningUserNodeIdAtom,
   scoreAtom,
   serverErrorAtom,
@@ -26,7 +27,6 @@ import { animated, useSpring } from "react-spring";
 import { useIsMounted } from "components/NetworkGraph/Scene/useIsMounted";
 // * animate a HUD-contained bot score display ?
 // * animate the selected node to the front and then back?
-export const latestNodeWithBotScoreAtom = atom<Tweet | null>(null);
 export const BOT_SCORE_POPUP_TIMEOUT = 2000;
 
 export default function TagTheBotButton() {
@@ -65,9 +65,6 @@ export default function TagTheBotButton() {
       tweets: [{ ...selectedNode, botScore }],
       id_str: selectedNode.user.id_str,
     });
-    setTimeout(() => {
-      setBotScorePopupNode(null);
-    }, BOT_SCORE_POPUP_TIMEOUT);
 
     // raise the info card
     setIsUp(true);

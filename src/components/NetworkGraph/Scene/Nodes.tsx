@@ -3,7 +3,7 @@ import { Node } from "./Node/Node";
 import { useHoverAnimation } from "./useHoverAnimation";
 
 export function Nodes() {
-  const nodes = useUserNodes();
+  const userNodes = useUserNodes();
 
   // const [nodesMemo, setNodesMemo] = useState(nodes);
   // useEffect(() => {
@@ -36,8 +36,8 @@ export function Nodes() {
 
   return (
     <mesh ref={hoverAnimationRefWave}>
-      {nodes.map((node, idx) => {
-        return <Node key={node.id_str} node={node} />;
+      {userNodes.map((node, idx) => {
+        return <Node key={node.id_str} userNode={node} />;
       })}
     </mesh>
   );

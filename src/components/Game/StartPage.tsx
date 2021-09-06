@@ -1,4 +1,4 @@
-import { Button, Tooltip, useMediaQuery } from "@material-ui/core";
+import { Button, useMediaQuery } from "@material-ui/core";
 import { useLoading } from "providers/store/useSelectors";
 import styled from "styled-components/macro";
 import { Canvas } from "@react-three/fiber";
@@ -11,9 +11,7 @@ import { colorLink, colorSecondary, darkBackground } from "utils/colors";
 import { useAtom } from "jotai";
 import { isMusicOnAtom } from "providers/store/store";
 import { CUSTOM_SCROLLBAR_CSS } from "components/common/styledComponents";
-import { SOCIAL_MEDIA_PSYOPS } from "./HighScores/LearnMoreResources";
 import { BOT_TYPES } from "utils/constants";
-import { useMount } from "utils/utils";
 import { useInterval } from "utils/useInterval";
 
 export function StartPage({ startLookingAtTweets }) {

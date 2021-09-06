@@ -7,14 +7,12 @@ import {
   GameStepsEnum,
   isBotScoreExplainerUpAtom,
   shotsRemainingAtom,
+  latestNodeWithBotScoreAtom,
 } from "providers/store/store";
 import { useAtom } from "jotai";
 import { useSetNodesInDbForUser } from "providers/faunaProvider";
 import { useTweets } from "providers/store/useSelectors";
-import {
-  BOT_SCORE_POPUP_TIMEOUT,
-  latestNodeWithBotScoreAtom,
-} from "../TagTheBotButton";
+import { BOT_SCORE_POPUP_TIMEOUT } from "../TagTheBotButton";
 import { IconButton } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 import { getMostLikelyBotTypeText } from "./getMostLikelyBotTypeText";
@@ -42,7 +40,7 @@ export function BotScoreInfoCard() {
   const setNodesInDb = useSetNodesInDbForUser();
   const [, setGameState] = useAtom(gameStateAtom);
   const [shotsRemaining] = useAtom(shotsRemainingAtom);
-  const { latestBotScore, lastNode, clearLastNode } = useLatestTaggedNode();
+  const { latestBotScore, lastNode } = useLatestTaggedNode();
   const { botTypeText, botTypeInfo, botType, scorePercent } = latestBotScore
     ? getMostLikelyBotTypeText(latestBotScore)
     : {
@@ -61,7 +59,7 @@ export function BotScoreInfoCard() {
 
   function handleCloseBotScoreInfoCard() {
     // close the popup
-    clearLastNode();
+    // clearLastNode();
     setIsUp(false);
     // game over if 0 shots remaining
     if (shotsRemaining === 0) {
