@@ -92,7 +92,9 @@ export function Scene() {
         color="blue"
       /> */}
       <Bubbles count={gpuInfo.tier > 2 ? 2000 : 1000} />
-      <Stars count={2000} />
+      <mesh renderOrder={100000}>
+        <Stars count={2000} />
+      </mesh>
       {gltfModelBackground}
       {/* 5MB */}
       {/* {showMany && <GLTFModelLeviathan />} */}

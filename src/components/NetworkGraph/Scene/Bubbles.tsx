@@ -57,7 +57,7 @@ export function Bubbles({ count }) {
     //     />
     //   </sphereBufferGeometry>
     // </points>
-    <group ref={group} renderOrder={1}>
+    <group ref={group} renderOrder={10}>
       <Instances>
         <sphereBufferGeometry
           args={[1, gpuInfo.tier > 2 ? 26 : 10, gpuInfo.tier > 2 ? 26 : 10]}
@@ -65,12 +65,16 @@ export function Bubbles({ count }) {
 
         <meshPhysicalMaterial
           {...{
-            metalness: 0.4,
+            color: "#fff",
             transmission: 1,
+            metalness: 0.2,
             roughness: 0,
+            specularIntensity: 1,
+            specularTint: "#fff",
             envMapIntensity: 4,
+            exposure: 1,
             transparent: true,
-            opacity: 0.25,
+            opacity: 0.6,
           }}
         />
 
