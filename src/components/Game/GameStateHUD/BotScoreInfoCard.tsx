@@ -168,7 +168,7 @@ export function BotScoreInfoCard() {
                 ></animated.div>
                 <div className="percentWidthOutline"></div>
                 {botType}
-                <span className="scorePercent"> — {scorePercent}%</span>
+                <span className="scorePercent">{scorePercent}%</span>
               </div>
               {botTypeInfo && <div className="botTypeInfo">{botTypeInfo}</div>}
               <div className="botScoreInfo">
@@ -191,7 +191,8 @@ export function BotScoreInfoCard() {
   );
 }
 
-const BOTTYPE_PADDING_INNER = 8;
+const BOTTYPE_PADDING_INNER = 6;
+const BOTTYPE_BORDER_RADIUS = 14;
 const CARD_BORDER_WIDTH = 12;
 
 const HtmlBotScoreInfoOverlayStyles = styled.div`
@@ -221,6 +222,7 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
   }
   .col2 {
     justify-content: center;
+    flex-grow: 1;
   }
   .content {
     pointer-events: ${(p) => (p.isUp ? "auto" : "none")};
@@ -289,9 +291,9 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
       border-right: 3px solid #555555;
       border-left: 3px solid #555555;
       border-bottom: 3px solid #555555;
-      border-bottom-left-radius: ${CARD_BORDER_WIDTH}px;
-      border-bottom-right-radius: ${CARD_BORDER_WIDTH}px;
-      box-shadow: 0px 0px 4px #000000cc;
+      border-bottom-left-radius: ${CARD_BORDER_WIDTH / 2}px;
+      border-bottom-right-radius: ${CARD_BORDER_WIDTH / 2}px;
+      box-shadow: 0px 2px 4px #0000006c;
     }
   }
   .botTypeInfo {
@@ -311,7 +313,7 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
     );
     border-bottom-left-radius: 99px;
     padding-left: 18px;
-    margin-left: -2px;
+    margin-left: 3px;
     margin-right: 0px;
   }
   .screenName {
@@ -319,7 +321,7 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
     font-size: 1em;
     text-align: left;
     position: relative;
-    width: fit-content;
+    width: 100%;
     text-shadow: 2px 2px 1px black;
     padding-left: 1em;
     z-index: 1;
@@ -331,7 +333,7 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
     &.cardTitle:after {
       position: absolute;
       left: -52px;
-      right: -128px;
+      right: ${CARD_BORDER_WIDTH / 2}px;
       border-top-right-radius: 52px;
       bottom: 0;
       top: 0;
@@ -343,14 +345,15 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
   }
   .displayName {
     font-size: 1em;
-    width: fit-content;
+    width: 100%;
     text-align: left;
     position: relative;
     z-index: 1;
     &:after {
       position: absolute;
       left: -52px;
-      right: -230px;
+      right: ${CARD_BORDER_WIDTH / 2}px;
+
       border-bottom-right-radius: 26px;
       bottom: 0;
       top: 0;
@@ -372,15 +375,15 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
       height: 40px;
       background: ${colorSecondary};
       opacity: 0.2;
-      border-bottom-left-radius: 36px;
-      border-top-left-radius: 36px;
+      border-bottom-left-radius: ${BOTTYPE_BORDER_RADIUS}px;
+      border-top-left-radius: ${BOTTYPE_BORDER_RADIUS}px;
       top: -6px;
       bottom: -6px;
       left: -${BOTTYPE_PADDING_INNER}px;
       right: -${BOTTYPE_PADDING_INNER}px;
     }
     .percentWidthOutline {
-      border-radius: 36px;
+      border-radius: ${BOTTYPE_BORDER_RADIUS}px;
       position: absolute;
       height: 32px;
       padding: 20px;
@@ -396,6 +399,10 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
     color: ${colorSecondary};
     .scorePercent {
       font-family: "Roboto", sans-serif;
+      font-size: 0.8em;
+      position: absolute;
+      right: 6px;
+      top: 4px;
     }
   }
   @media (min-width: 768px) {
