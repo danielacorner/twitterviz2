@@ -26,12 +26,12 @@ import {
   darkBackground,
 } from "utils/colors";
 import { AvatarStyles } from "components/NetworkGraph/NodeTooltip";
+import { useWindowSize } from "utils/hooks";
 
-const PADDING = 20;
 const WIDTH = 420;
-const HEIGHT = 480;
 const TRANSFORM = false;
 const AVATAR_WIDTH = 92;
+const CARD_MIN_HEIGHT = 678;
 
 /** pops up from the bottom when we receive a bot score */
 export function BotScoreInfoCard() {
@@ -68,8 +68,15 @@ export function BotScoreInfoCard() {
   }
 
   const [isDoneAnimating, setIsDoneAnimating] = useState(false);
+  const { height } = useWindowSize();
   const springUpDown = useSpring({
-    transform: `translate3d(0,${isUp ? 36 : HEIGHT / 2}px,0)`,
+    transform: `translate3d(0,${
+      isUp
+        ? height > CARD_MIN_HEIGHT + 100
+          ? (height - CARD_MIN_HEIGHT) / 2
+          : 36
+        : CARD_MIN_HEIGHT
+    }px,0)`,
     opacity: isUp ? 1 : 0,
     position: "fixed" as any,
     zIndex: 9999999999999999,
@@ -218,6 +225,7 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
     flex-grow: 1;
   }
   .content {
+    min-height: ${CARD_MIN_HEIGHT}px;
     pointer-events: ${(p) => (p.isUp ? "auto" : "none")};
     border: ${CARD_BORDER_WIDTH}px solid #000;
     /* border-bottom-width: ${CARD_BORDER_WIDTH * 2}px; */
