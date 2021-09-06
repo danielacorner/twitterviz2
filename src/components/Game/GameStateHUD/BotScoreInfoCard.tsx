@@ -225,6 +225,7 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
   .content {
     pointer-events: ${(p) => (p.isUp ? "auto" : "none")};
     border: ${CARD_BORDER_WIDTH}px solid #000;
+    /* border-bottom-width: ${CARD_BORDER_WIDTH * 2}px; */
 
     .avatarWrapper {
       height: ${AVATAR_WIDTH}px;
@@ -237,7 +238,7 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
       height: fit-content;
       max-height: calc(100vh - 96px);
       ${CUSTOM_SCROLLBAR_CSS}
-      padding: 0 1em 0;
+      padding: 0 ${CARD_BORDER_WIDTH * 0.8}px 0;
     }
     .botScoreLegendCanvas {
       height: 340px;
@@ -274,16 +275,32 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
     /* transform: scale(1.4); */
   }
   .botScoreInfo {
-    margin-top: 1em;
-    padding-bottom: 1.5em;
+    padding: 2.2em 0.7em 1em;
+    margin-top: ${-26}px;
+    margin-bottom: ${CARD_BORDER_WIDTH * 0.75}px;
+    position: relative;
+    font-size: 0.8em;
+    height: 200px;
+    &:before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-right: 3px solid #555555;
+      border-left: 3px solid #555555;
+      border-bottom: 3px solid #555555;
+      border-bottom-left-radius: ${CARD_BORDER_WIDTH}px;
+      border-bottom-right-radius: ${CARD_BORDER_WIDTH}px;
+      box-shadow: 0px 0px 4px #000000cc;
+    }
   }
   .botTypeInfo {
     font-style: italic;
     line-height: 1.6em;
+    z-index: 999;
+    position: relative;
     font-size: 16px;
     color: ${colorSecondary};
     margin-top: 0.5em;
-    margin-bottom: 1em;
     background: rgb(0, 0, 0);
     background: linear-gradient(
       90deg,
@@ -293,7 +310,7 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
     );
     border-bottom-left-radius: 99px;
     padding-left: 18px;
-    margin-left: -6px;
+    margin-left: -2px;
     margin-right: 0px;
   }
   .screenName {
