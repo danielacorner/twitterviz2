@@ -1,4 +1,4 @@
-import { Button, useMediaQuery } from "@material-ui/core";
+import { Button, Tooltip, useMediaQuery } from "@material-ui/core";
 import { useLoading } from "providers/store/useSelectors";
 import styled from "styled-components/macro";
 import { Canvas } from "@react-three/fiber";
@@ -11,6 +11,8 @@ import { colorLink, colorSecondary } from "utils/colors";
 import { useAtom } from "jotai";
 import { isMusicOnAtom } from "providers/store/store";
 import { CUSTOM_SCROLLBAR_CSS } from "components/common/styledComponents";
+import { SOCIAL_MEDIA_PSYOPS } from "./HighScores/LearnMoreResources";
+import { BOT_TYPES } from "utils/constants";
 
 export function StartPage({ startLookingAtTweets }) {
   const isLoading = useLoading();
@@ -81,7 +83,7 @@ export function StartPage({ startLookingAtTweets }) {
         )}
         {step === 1 && (
           <>
-            <p>There are different kinds of bot:</p>
+            <p style={{ marginBottom: 0 }}>There are different kinds of bot:</p>
             <div className="canvasContainer">
               <Canvas
                 style={{
@@ -99,6 +101,31 @@ export function StartPage({ startLookingAtTweets }) {
                 />
               </Canvas>
             </div>
+            <p style={{ marginTop: 0 }}>
+              Watch out! Some bots distort the truth:
+            </p>
+            <ul style={{ textAlign: "left" }} className="">
+              <li>
+                <span style={{ fontWeight: "bold" }}>Fake Follower</span> —{" "}
+                {BOT_TYPES.FAKE_FOLLOWER.tooltipText}
+              </li>
+              <li>
+                <span style={{ fontWeight: "bold" }}>Echo Chamber</span> —{" "}
+                {BOT_TYPES.ASTROTURF.tooltipText}
+              </li>
+            </ul>
+            {/* <p>
+              Stay vigilant when browsing social media.{" "}
+              <Tooltip title={SOCIAL_MEDIA_PSYOPS.title}>
+                <a
+                  href={SOCIAL_MEDIA_PSYOPS.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Learn more about PsyOps
+                </a>
+              </Tooltip>
+            </p> */}
             <div className="buttonsRow">
               <Button
                 className="btnPrev"

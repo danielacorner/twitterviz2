@@ -44,7 +44,7 @@ export const BOT_TYPES = {
   ASTROTURF: {
     name: "Echo Chamber",
     tooltipText:
-      "A.K.A. Astroturf bot; accounts that engage in follow back groups and share and delete political content in high volume",
+      "A.K.A. Astroturf; accounts that engage in follow back groups and share and delete political content in high volume",
   },
   FINANCIAL: {
     name: "Financial",

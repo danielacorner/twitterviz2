@@ -71,7 +71,7 @@ export function BotScoreInfoCard() {
 
   const [isDoneAnimating, setIsDoneAnimating] = useState(false);
   const springUpDown = useSpring({
-    transform: `translate3d(0,${isUp ? -HEIGHT / 2 : HEIGHT}px,0)`,
+    // transform: `translate3d(0,${isUp ? -HEIGHT / 2 : HEIGHT}px,0)`,
     opacity: isUp ? 1 : 0,
     position: "fixed" as any,
     zIndex: 9999999999999999,
@@ -169,7 +169,11 @@ export function BotScoreInfoCard() {
                 {botType}
                 <span className="scorePercent">{scorePercent}%</span>
               </div>
-              {botTypeInfo && <div className="botTypeInfo">{botTypeInfo}</div>}
+              {botTypeInfo && (
+                <div className="botTypeInfoBorder">
+                  <div className="botTypeInfo">{botTypeInfo}</div>
+                </div>
+              )}
               <div className="botScoreInfo">
                 <span className="screenName" style={{ marginRight: 4 }}>
                   {latestNodeWithBotScore?.user.screen_name}
@@ -197,7 +201,7 @@ const CARD_BORDER_WIDTH = 12;
 const HtmlBotScoreInfoOverlayStyles = styled.div`
   font-family: "Roboto", sans-serif;
   transition: transform 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
-  transform: translate3d(-20px, 18px, 0px);
+  transform: translate3d(-20px, -200px, 0px);
   width: 100vw;
   text-align: left;
   background: none;
@@ -295,6 +299,11 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
       box-shadow: 0px 2px 4px #0000006c;
     }
   }
+  .botTypeInfoBorder {
+    border-right: 3px solid #555555;
+    border-left: 3px solid #555555;
+    box-shadow: 0px 2px 4px #0000006c;
+  }
   .botTypeInfo {
     font-style: italic;
     line-height: 1.6em;
@@ -307,11 +316,11 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
     background: linear-gradient(
       90deg,
       rgba(0, 0, 0, 1) 0%,
-      rgba(0, 0, 0, 1) 80%,
+      rgba(0, 0, 0, 1) calc(100% - 16px),
       rgba(0, 0, 0, 0) 100%
     );
-    border-bottom-left-radius: 99px;
-    padding-left: 18px;
+    border-bottom-left-radius: 1em;
+    padding: 0.25em 0.5em 0.5em 0.6em;
     margin-left: 3px;
     margin-right: 0px;
   }
@@ -404,18 +413,15 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
     }
   }
   @media (min-width: 768px) {
-    transform: translate3d(-20px, -200px, 0px);
     .botTypeInfo {
       margin-top: 0.5em;
       font-size: 18px;
       line-height: 1.4em;
     }
     .content {
-      padding: 0 0.5em;
       box-sizing: content-box;
       .scrollContent {
         box-sizing: border-box;
-        padding: 0 1.2em 0;
       }
     }
   }

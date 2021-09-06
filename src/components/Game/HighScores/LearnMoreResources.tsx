@@ -34,22 +34,22 @@ export function LearnMoreResources({ handleClose, isLearnMoreOpen }) {
     </DialogStyles>
   );
 }
-const LEARN_MORE_RESOURCES = [
-  {
-    title: "Secrets of Social Media PsyOps - BiaSciLab",
-    description: `Psychological Warfare through social media is one of the most powerful weapons in today's political battlefield. PsyOps groups have figured out how to sharpen the blade through algorithms and targeted advertising. Nation states are using PsyOps to influence the citizens of their enemies, fighting battles from behind the keyboard.
+export const SOCIAL_MEDIA_PSYOPS = {
+  title: "Secrets of Social Media PsyOps - BiaSciLab",
+  description: `Psychological Warfare through social media is one of the most powerful weapons in today's political battlefield. PsyOps groups have figured out how to sharpen the blade through algorithms and targeted advertising. Nation states are using PsyOps to influence the citizens of their enemies, fighting battles from behind the keyboard.
 
 In this talk, BiaSciLab with cover a brief history of PsyOps and how it has been used both on the battlefield and the political stage. Followed by a dive deep into how it works on the mind and how PsyOps groups are using social media to influence the political climate and elections worldwide.`,
-    url: "https://www.youtube.com/watch?v=6pse_lOyT14",
-  },
-  {
-    title: "Don't @ Me: Hunting Twitter Bots at Scale",
-    description: `In this talk, we explore the economy around Twitter bots, as well as demonstrate how attendees can track down bots in through a three step methodology: building a dataset, identifying common attributes of bot accounts, and building a classifier to accurately identify bots at scale.
+  url: "https://www.youtube.com/watch?v=6pse_lOyT14",
+};
+export const DONT_AT_ME = {
+  title: "Don't @ Me: Hunting Twitter Bots at Scale",
+  description: `In this talk, we explore the economy around Twitter bots, as well as demonstrate how attendees can track down bots in through a three step methodology: building a dataset, identifying common attributes of bot accounts, and building a classifier to accurately identify bots at scale.
 
 By Jordan Wright + Olabode Anise`,
-    url: "https://www.youtube.com/watch?v=bQsRg0VsYoo",
-  },
-];
+  url: "https://www.youtube.com/watch?v=bQsRg0VsYoo",
+};
+
+const LEARN_MORE_RESOURCES = [SOCIAL_MEDIA_PSYOPS, DONT_AT_ME];
 
 const DialogStyles = styled.div``;
 const LearnMoreStyles = styled.div`
