@@ -405,7 +405,7 @@ const StartPageStyles = styled.div`
     }
     .topEmoji {
       font-size: 4em;
-      top: ${MARGIN_TOP / 2}px;
+      top: calc(${MARGIN_TOP * 2 + 16}px - 1em);
     }
     .content {
       padding: 3em 3.5em;
@@ -428,7 +428,7 @@ const StartPageStyles = styled.div`
     &&&&&&&&&& {
       ul,
       ol {
-        padding-left: 24px;
+        padding-left: 26px;
       }
     }
   }
