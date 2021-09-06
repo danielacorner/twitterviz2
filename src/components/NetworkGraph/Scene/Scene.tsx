@@ -142,7 +142,6 @@ export function Scene() {
       </Physics>
       <HighScores />
       <Background background={true} />
-      <BotScoreInfoCard />
       {/* <BotScoreLegendHUD /> */}
       {process.env.NODE_ENV === "development" && <Stats />}
       <Effects />

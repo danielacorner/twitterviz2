@@ -69,7 +69,7 @@ export function BotScoreInfoCard() {
 
   const [isDoneAnimating, setIsDoneAnimating] = useState(false);
   const springUpDown = useSpring({
-    transform: `translate3d(0,${isUp ? -HEIGHT / 6 : HEIGHT / 2}px,0)`,
+    transform: `translate3d(0,${isUp ? 36 : HEIGHT / 2}px,0)`,
     opacity: isUp ? 1 : 0,
     position: "fixed" as any,
     zIndex: 9999999999999999,
@@ -94,20 +94,7 @@ export function BotScoreInfoCard() {
   }, [isUp]);
 
   return (
-    <Html
-      // occlude={[]}
-      transform={TRANSFORM}
-      position={[0, 0, 0]}
-      calculatePosition={(group, camera, size) => {
-        return [PADDING, size?.height - HEIGHT - PADDING, camera.position.z];
-      }}
-      style={{
-        pointerEvents: "none",
-        position: "fixed",
-        top: 0,
-        zIndex: 9999999999999999,
-      }}
-    >
+    <BotScoreInfoCardStyles>
       <animated.div style={springUpDown}>
         <HtmlBotScoreInfoOverlayStyles {...{ botTypeText, scorePercent, isUp }}>
           <div className="content">
@@ -188,7 +175,7 @@ export function BotScoreInfoCard() {
           </div>
         </HtmlBotScoreInfoOverlayStyles>
       </animated.div>
-    </Html>
+    </BotScoreInfoCardStyles>
   );
 }
 
@@ -196,10 +183,15 @@ const BOTTYPE_PADDING_INNER = 6;
 const BOTTYPE_BORDER_RADIUS = 14;
 const CARD_BORDER_WIDTH = 12;
 
+const BotScoreInfoCardStyles = styled.div`
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999999999999999;
+`;
 const HtmlBotScoreInfoOverlayStyles = styled.div`
   font-family: "Roboto", sans-serif;
   transition: transform 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
-  transform: translate3d(-20px, -200px, 0px);
   width: 100vw;
   text-align: left;
   background: none;

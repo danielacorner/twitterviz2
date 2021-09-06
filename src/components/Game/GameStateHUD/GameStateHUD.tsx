@@ -5,6 +5,7 @@ import Score from "../Score";
 import { AudioSoundButton } from "./AudioSoundButton";
 import { ShotsRemaining } from "./ShotsRemaining";
 import styled from "styled-components/macro";
+import { BotScoreInfoCard } from "./BotScoreInfoCard";
 export function GameStateHUD() {
   const song = shuffle(trackList)[0];
 
@@ -13,6 +14,8 @@ export function GameStateHUD() {
       <Score />
       <ShotsRemaining />
       <ServerError />
+      <BotScoreInfoCard />
+
       <AudioSoundButton
         {...{
           title: song.title,

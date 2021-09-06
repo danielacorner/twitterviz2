@@ -142,7 +142,9 @@ export const Node = ({
   const onPointerLeave = () => {
     setIsPointerOver(false);
   };
-  const onClick = () => {
+  const onClick = (e) => {
+    e.stopPropagation();
+
     const newSelectedNode = {
       ...userNode.tweets[0],
       user: userNode.user,
@@ -197,7 +199,8 @@ export const Node = ({
   const [, setLatestNodeWithBotScore] = useAtom(latestNodeWithBotScoreAtom);
   const [, setBotScorePopupNode] = useAtom(botScorePopupNodeAtom);
 
-  function handleShowBotScoreInfoCard() {
+  function handleShowBotScoreInfoCard(e) {
+    e.stopPropagation();
     setIsUp(true);
     setLatestNodeWithBotScore(userNode.tweets[0]);
     setBotScorePopupNode(userNode);
