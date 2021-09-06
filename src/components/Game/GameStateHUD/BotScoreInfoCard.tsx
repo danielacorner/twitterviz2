@@ -209,6 +209,7 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
   .topRow {
     display: flex;
     gap: 16px;
+    margin-bottom: -6px;
     height: 64px;
     margin-top: ${CARD_BORDER_WIDTH / 2}px;
     margin-left: ${-CARD_BORDER_WIDTH / 2}px;
@@ -239,11 +240,12 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
       padding: 0 1em 0;
     }
     .botScoreLegendCanvas {
-      height: 320px;
-      padding-top: 6px;
+      height: 340px;
+      padding-top: 36px;
       margin-bottom: 6px;
       border-right: 3px solid #555555;
       border-left: 3px solid #555555;
+      box-shadow: 0px 0px 4px #000000cc;
     }
     box-shadow: 0px 1px 11px #0000009c;
     border-radius: 16px;
@@ -282,6 +284,17 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
     color: ${colorSecondary};
     margin-top: 0.5em;
     margin-bottom: 1em;
+    background: rgb(0, 0, 0);
+    background: linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 1) 80%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    border-bottom-left-radius: 99px;
+    padding-left: 18px;
+    margin-left: -6px;
+    margin-right: 0px;
   }
   .screenName {
     color: ${textSecondaryColor};
@@ -307,6 +320,7 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
       background: #0b1015;
       z-index: -1;
       content: "";
+      box-shadow: 0px 1px 4px #000000cc;
     }
   }
   .displayName {
@@ -325,6 +339,7 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
       background: #2a4553;
       z-index: -1;
       content: "";
+      box-shadow: 0px 1px 4px #000000cc;
     }
   }
   .screenName,
@@ -355,6 +370,7 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
       top: -6px;
       border: 1px solid #ffffff30;
       margin: -0.5px;
+      box-shadow: 0px 1px 4px #000000cc;
     }
     font-size: 1em;
     /* text-align: center; */
