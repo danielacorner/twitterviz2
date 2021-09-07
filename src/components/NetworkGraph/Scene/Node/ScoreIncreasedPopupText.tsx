@@ -13,8 +13,7 @@ import { colorSecondary } from "utils/colors";
 import { getMostLikelyBotTypeText } from "components/Game/GameStateHUD/getMostLikelyBotTypeText";
 
 export function ScoreIncreasedPopupText({ isMounted, botScore }) {
-  const { scoreIncrease, color, maxBotScore, maxBotType } =
-    getScoreFromBotScore(botScore);
+  const { scoreIncrease, color, maxBotScore } = getScoreFromBotScore(botScore);
 
   const [isAnimationComplete, setIsAnimationComplete] = useState(false);
   const { position } = useSpring({
