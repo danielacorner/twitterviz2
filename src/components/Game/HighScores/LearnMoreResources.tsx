@@ -30,7 +30,7 @@ export function LearnMoreResources({ handleClose, isLearnMoreOpen }) {
         <LearnMoreStyles>
           {/* <div className="learnMoreTitle">More about twitter bots</div> */}
           {LEARN_MORE_RESOURCES.map(({ title, description, url }) => (
-            <div className="learnMoreRow" key={url}>
+            <div key={url} className="learnMoreRow">
               <a href={url} target="_blank" rel="noopener noreferrer">
                 <div className="title">{title}</div>
                 <div className="player">
@@ -44,7 +44,7 @@ export function LearnMoreResources({ handleClose, isLearnMoreOpen }) {
           ))}
           {LEARN_MORE_IMAGE_LINKS.map(
             ({ title, description, url, imageUrl }) => (
-              <div className="learnMoreRow">
+              <div key={url} className="learnMoreRow">
                 <a href={url} target="_blank" rel="noopener noreferrer">
                   <div className="title" style={{ marginBottom: 12 }}>
                     {title}

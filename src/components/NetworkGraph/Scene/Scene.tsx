@@ -355,14 +355,21 @@ function GLTFModelGuppy() {
     </animated.mesh>
   );
 }
-const clownfish_SECONDS_PER_ROTATION = 60;
-const clownfish_SECONDS_PER_UP_DOWN_WAVE = 20;
-const clownfish_WAVE_DY = 3;
-const clownfishScale = 0.4;
 // swims in a circle
 function GLTFModelclownfish() {
+  const {
+    clownfish_SECONDS_PER_ROTATION,
+    clownfish_SECONDS_PER_UP_DOWN_WAVE,
+    clownfish_WAVE_DY,
+    clownfishScale,
+  } = useControls({
+    clownfish_SECONDS_PER_ROTATION: 60,
+    clownfish_SECONDS_PER_UP_DOWN_WAVE: 20,
+    clownfish_WAVE_DY: 10,
+    clownfishScale: 0.2,
+  });
   const { x, y, z, clownfish_INITIAL_ROTATION_Y } = {
-    x: -27,
+    x: -20,
     y: -2,
     z: 0,
     clownfish_INITIAL_ROTATION_Y: Math.random() * Math.PI,
@@ -427,7 +434,7 @@ function GLTFModelclownfish() {
 }
 const schooloffish_SECONDS_PER_ROTATION = 50;
 const schooloffish_SECONDS_PER_UP_DOWN_WAVE = 25;
-const schooloffish_WAVE_DY = 5;
+const schooloffish_WAVE_DY = 16;
 
 // swims in a circle
 function GLTFModelschooloffish() {
@@ -827,16 +834,16 @@ function GLTFModelsailfish() {
     sailfish_SECONDS_PER_ROTATION,
     sailfish_SECONDS_PER_UP_DOWN_WAVE,
     sailfishScale,
-  } = useControls({
+  } = {
     x: 91,
     y: 6,
     z: 0,
     sailfish_WAVE_DY: -9,
     sailfish_INITIAL_ROTATION_Y: Math.random() * Math.PI,
-    sailfish_SECONDS_PER_ROTATION: 96,
-    sailfish_SECONDS_PER_UP_DOWN_WAVE: 21,
-    sailfishScale: 1.7,
-  });
+    sailfish_SECONDS_PER_ROTATION: 45,
+    sailfish_SECONDS_PER_UP_DOWN_WAVE: -12,
+    sailfishScale: 1.8,
+  };
 
   const swimAnimationRef = useRef(null as any);
 

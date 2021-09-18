@@ -79,7 +79,7 @@ export function Bubbles({ count }) {
         />
 
         {coords.map(([p1, p2, p3], i) => {
-          const rand = rand_normal() * 3;
+          const rand = rand_normal() * 2;
           return (
             <Instance
               key={i}
