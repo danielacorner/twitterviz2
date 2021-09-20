@@ -26,11 +26,12 @@ import {
 } from "utils/colors";
 import { AvatarStyles } from "components/NetworkGraph/NodeTooltip";
 import { useWindowSize } from "utils/hooks";
-
+const usernameColor = "#999";
+const botTypeColor = colorSecondary;
 const WIDTH = 420;
 const TRANSFORM = false;
 const AVATAR_WIDTH = 92;
-const CARD_MIN_HEIGHT = 678;
+const CARD_MIN_HEIGHT = 400;
 
 /** pops up from the bottom when we receive a bot score */
 export function BotScoreInfoCard() {
@@ -99,13 +100,34 @@ export function BotScoreInfoCard() {
     }
   }, [isUp]);
 
+  const ConclusionSentence = () => (
+    <span>
+      {scorePercent}% odds that{" "}
+      <span style={{ color: usernameColor }}>
+        @{lastNode?.user.screen_name}
+      </span>{" "}
+      {lastNode?.user.name} is a
+      {["a", "e", "i", "o", "u", "y"].includes(
+        botType?.charAt(0).toLowerCase() || ""
+      )
+        ? "n"
+        : ""}{" "}
+      {
+        <span style={{ fontStyle: "italic", color: botTypeColor }}>
+          {botType}
+        </span>
+      }{" "}
+      bot.
+    </span>
+  );
+
   return (
     <BotScoreInfoCardStyles>
       <animated.div style={springUpDown}>
         <HtmlBotScoreInfoOverlayStyles {...{ botTypeText, scorePercent, isUp }}>
           <div className="content">
-            <div className="topRow">
-              <div className="avatarWrapper col1">
+            <div className="top-row">
+              <div className="avatar-wrapper col1">
                 <AvatarStyles
                   customCss={`
                 z-index: 9999999999999;
@@ -124,14 +146,14 @@ export function BotScoreInfoCard() {
               </div>
 
               <div className="col2">
-                <div className="screenName cardTitle">
+                <div className="screen-name card-title">
                   {lastNode?.user.screen_name}
                 </div>
-                <div className="displayName">{lastNode?.user.name}</div>
+                <div className="display-name">{lastNode?.user.name}</div>
               </div>
             </div>
-            <div className="scrollContent">
-              <div className="botScoreLegendCanvas">
+            <div className="scroll-content">
+              <div className="bot-score-legend-canvas">
                 <Suspense fallback={null}>
                   <Canvas style={{ overflow: "visible" }}>
                     <mesh scale={[2.5, 2.5, 2.5]} position={[0, 0.4, 0]}>
@@ -149,31 +171,34 @@ export function BotScoreInfoCard() {
                   </Canvas>
                 </Suspense>
               </div>
-              <div className="botType">
+              <div className="bot-type">
                 <animated.div
                   style={{
                     ...springExpandOnMount,
                   }}
-                  className="percentWidth"
+                  className="percent-width"
                 ></animated.div>
-                <div className="percentWidthOutline"></div>
-                {botType}
-                <span className="scorePercent">{scorePercent}%</span>
+                <div className="bot-type-text">{botType}</div>
+
+                <div className="percent-width-outline"></div>
+
+                <span className="score-percent">{scorePercent}%</span>
               </div>
-              {botTypeInfo && (
-                <div className="botTypeInfoBorder">
-                  <div className="botTypeInfo">{botTypeInfo}</div>
+
+              <div className="bot-score-info">
+                <div>
+                  <ConclusionSentence />
+                  {botTypeInfo && (
+                    <span className="bot-type-info">({botTypeInfo})</span>
+                  )}
                 </div>
-              )}
-              <div className="botScoreInfo">
-                <span className="screenName" style={{ marginRight: 4 }}>
-                  {latestNodeWithBotScore?.user.screen_name}
-                </span>
-                {botTypeText} bot
+                <div className="bot-type-text-explanation">
+                  @{lastNode?.user.screen_name} {botTypeText} bot...
+                </div>
               </div>
             </div>
             <IconButton
-              className="btnClose"
+              className="btn-close"
               onClick={handleCloseBotScoreInfoCard}
             >
               <Close />
@@ -206,7 +231,7 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
     : "none"}; */
   box-sizing: border-box;
   font-size: ${TRANSFORM ? 4 : 24}px;
-  .topRow {
+  .top-row {
     display: flex;
     gap: 16px;
     margin-bottom: -18px;
@@ -229,20 +254,20 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
     border: ${CARD_BORDER_WIDTH}px solid #000;
     /* border-bottom-width: ${CARD_BORDER_WIDTH * 2}px; */
 
-    .avatarWrapper {
+    .avatar-wrapper {
       height: ${AVATAR_WIDTH}px;
 
       width: ${AVATAR_WIDTH}px;
       margin-top: ${-CARD_BORDER_WIDTH}px;
     }
-    .scrollContent {
+    .scroll-content {
       width: 100%;
       height: fit-content;
       max-height: calc(100vh - 96px);
       ${CUSTOM_SCROLLBAR_CSS}
       padding: 0 ${CARD_BORDER_WIDTH * 0.8}px 0;
     }
-    .botScoreLegendCanvas {
+    .bot-score-legend-canvas {
       height: 340px;
       padding-top: 36px;
       margin-bottom: 6px;
@@ -264,7 +289,7 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
     position: relative;
     background: ${darkBackground};
   }
-  .btnClose {
+  .btn-close {
     position: absolute;
     position: absolute;
     top: -19px;
@@ -276,14 +301,16 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
   .MuiSvgIcon-root {
     /* transform: scale(1.4); */
   }
-  .botScoreInfo {
-    padding: 2.2em 0.7em 1em;
+  .bot-score-info {
+    padding: 1.3em 0.7em 1em;
     margin-top: ${-26}px;
     margin-bottom: ${CARD_BORDER_WIDTH * 0.75}px;
     background: #1e1f20;
     position: relative;
     font-size: 0.8em;
-    height: 200px;
+    min-height: 12em;
+    display: grid;
+    grid-template-rows: auto 1fr;
     &:before {
       content: "";
       position: absolute;
@@ -296,32 +323,17 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
       box-shadow: 0px 2px 4px #0000006c;
     }
   }
-  .botTypeInfoBorder {
-    border-right: 3px solid #555555;
-    border-left: 3px solid #555555;
-    box-shadow: 0px 2px 4px #0000006c;
-  }
-  .botTypeInfo {
+
+  .bot-type-info {
+    color: #999;
     font-style: italic;
     line-height: 1.6em;
     z-index: 999;
     position: relative;
     font-size: 16px;
-    color: ${colorSecondary};
-    margin-top: 0.5em;
-    background: rgb(0, 0, 0);
-    background: linear-gradient(
-      90deg,
-      rgba(0, 0, 0, 1) 0%,
-      rgba(0, 0, 0, 1) calc(100% - 16px),
-      rgba(0, 0, 0, 0) 100%
-    );
-    border-bottom-left-radius: 1em;
-    padding: 0.25em 0.5em 0.5em 0.6em;
-    margin-left: 3px;
-    margin-right: 0px;
+    margin: 0em 0px 0px 3px;
   }
-  .screenName {
+  .screen-name {
     color: ${textSecondaryColor};
     font-size: 1em;
     text-align: left;
@@ -335,7 +347,7 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
       left: 0;
       content: "@";
     }
-    &.cardTitle:after {
+    &.card-title:after {
       position: absolute;
       left: -52px;
       right: ${CARD_BORDER_WIDTH / 2}px;
@@ -348,7 +360,7 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
       box-shadow: 0px 1px 4px #000000cc;
     }
   }
-  .displayName {
+  .display-name {
     font-size: 1em;
     width: 100%;
     text-align: left;
@@ -367,26 +379,25 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
       box-shadow: 0px 1px 4px #000000cc;
     }
   }
-  .screenName,
-  .botType {
+  .screen-name,
+  .bot-type {
     font-family: "Poiret One", cursive;
   }
-  .botType {
+  .bot-type {
     position: relative;
+    z-index: 9999999999;
     left: 0px;
-    .percentWidth {
-      position: absolute;
-      height: 40px;
-      background: ${colorSecondary};
-      opacity: 0.2;
-      border-bottom-left-radius: ${BOTTYPE_BORDER_RADIUS}px;
-      border-top-left-radius: ${BOTTYPE_BORDER_RADIUS}px;
-      top: -6px;
-      bottom: -6px;
-      left: -${BOTTYPE_PADDING_INNER}px;
-      right: -${BOTTYPE_PADDING_INNER}px;
+    top: -20px;
+    font-size: 1em;
+    /* text-align: center; */
+    color: ${colorSecondary};
+    .bot-type-text {
+      z-index: 2;
+      position: relative;
+      margin-left: 0.2em;
     }
-    .percentWidthOutline {
+
+    .percent-width-outline {
       border-radius: ${BOTTYPE_BORDER_RADIUS}px;
       position: absolute;
       height: 32px;
@@ -397,11 +408,23 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
       border: 1px solid #ffffff30;
       margin: -0.5px;
       box-shadow: 0px 1px 4px #000000cc;
+      background: #0b1015;
     }
-    font-size: 1em;
-    /* text-align: center; */
-    color: ${colorSecondary};
-    .scorePercent {
+
+    .percent-width {
+      position: absolute;
+      z-index: 2;
+      height: 40px;
+      background: ${colorSecondary};
+      opacity: 0.2;
+      border-bottom-left-radius: ${BOTTYPE_BORDER_RADIUS}px;
+      border-top-left-radius: ${BOTTYPE_BORDER_RADIUS}px;
+      top: -6px;
+      bottom: -6px;
+      left: -${BOTTYPE_PADDING_INNER}px;
+      right: -${BOTTYPE_PADDING_INNER}px;
+    }
+    .score-percent {
       font-family: "Roboto", sans-serif;
       font-size: 0.8em;
       position: absolute;
@@ -409,15 +432,32 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
       top: 4px;
     }
   }
+  .bot-type-text-explanation {
+    margin-top: 0.5em;
+    font-style: italic;
+    color: #888888;
+    text-align: right;
+    margin-right: 0.5em;
+    background: rgba(0, 0, 0, 0.8);
+    background: linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0.85) 16px,
+      rgba(0, 0, 0, 0) 100%
+    );
+    border-bottom-left-radius: 1em;
+    padding: 0.5em 0.5em 0.8em 1em;
+    display: grid;
+    align-items: end;
+  }
   @media (min-width: 768px) {
-    .botTypeInfo {
-      margin-top: 0.5em;
+    .bot-type-info {
       font-size: 18px;
       line-height: 1.4em;
     }
     .content {
       box-sizing: content-box;
-      .scrollContent {
+      .scroll-content {
         box-sizing: border-box;
       }
     }

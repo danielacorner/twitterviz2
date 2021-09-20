@@ -21,6 +21,57 @@ export function StartPage({ startLookingAtTweets }) {
   const [isAudioPlaying, setIsAudioPlaying] = useAtom(isMusicOnAtom);
   const isTabletOrLarger = useMediaQuery(`(min-width: ${768}px)`);
 
+  const startGame = () => {
+    setStep(0);
+    startLookingAtTweets();
+    if (!isAudioPlaying) {
+      setIsAudioPlaying(true);
+    }
+  };
+
+  const BtnSkip = () => (
+    <Button color={"secondary"} onClick={startGame}>
+      Skip
+    </Button>
+  );
+  const BtnNext = () => (
+    <Button
+      disabled={isLoading}
+      variant="contained"
+      color={"primary"}
+      onClick={() => {
+        setStep((p) => p + 1);
+      }}
+      endIcon={<ChevronRight />}
+    >
+      Next
+    </Button>
+  );
+  const BtnPrev = () => (
+    <Button
+      className="btnPrev"
+      variant="outlined"
+      disabled={isLoading}
+      color={"primary"}
+      onClick={() => {
+        setStep((p) => p - 1);
+      }}
+      startIcon={<ChevronLeft />}
+    >
+      Prev
+    </Button>
+  );
+  const BtnPlay = () => (
+    <Button
+      disabled={isLoading}
+      variant="contained"
+      color={"primary"}
+      onClick={startGame}
+    >
+      Play
+    </Button>
+  );
+
   return (
     <StartPageStyles>
       <div className="topEmoji">🎣</div>
@@ -65,20 +116,16 @@ export function StartPage({ startLookingAtTweets }) {
                 </li>
               </ul>
             </p>
-
-            <Button
-              disabled={isLoading}
-              variant="contained"
-              color={"primary"}
-              onClick={() => {
-                if (!isAudioPlaying) {
-                  setIsAudioPlaying(true);
-                }
-                setStep((p) => p + 1);
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr auto",
+                gridGap: "0.5em",
               }}
             >
-              Next
-            </Button>
+              <BtnNext />
+              <BtnSkip />
+            </div>
           </>
         )}
         {step === 1 && (
@@ -103,30 +150,16 @@ export function StartPage({ startLookingAtTweets }) {
               ThisPersonDoesNotExist.com
             </a>
             <div style={{ marginBottom: "1em" }}></div>
-            <div className="buttonsRow">
-              <Button
-                className="btnPrev"
-                variant="outlined"
-                disabled={isLoading}
-                color={"primary"}
-                onClick={() => {
-                  setStep((p) => p - 1);
-                }}
-                startIcon={<ChevronLeft />}
-              >
-                Prev
-              </Button>
-              <Button
-                disabled={isLoading}
-                variant="contained"
-                color={"primary"}
-                onClick={() => {
-                  setStep((p) => p + 1);
-                }}
-                endIcon={<ChevronRight />}
-              >
-                Next
-              </Button>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "auto 1fr auto",
+                gridGap: "0.5em",
+              }}
+            >
+              <BtnPrev />
+              <BtnNext />
+              <BtnSkip />
             </div>
           </>
         )}
@@ -165,30 +198,16 @@ export function StartPage({ startLookingAtTweets }) {
                 {BOT_TYPES.ASTROTURF.tooltipText}
               </li>
             </ul>
-            <div className="buttonsRow">
-              <Button
-                className="btnPrev"
-                variant="outlined"
-                disabled={isLoading}
-                color={"primary"}
-                onClick={() => {
-                  setStep((p) => p - 1);
-                }}
-                startIcon={<ChevronLeft />}
-              >
-                Prev
-              </Button>
-              <Button
-                disabled={isLoading}
-                variant="contained"
-                color={"primary"}
-                onClick={() => {
-                  setStep((p) => p + 1);
-                }}
-                endIcon={<ChevronRight />}
-              >
-                Next
-              </Button>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "auto 1fr auto",
+                gridGap: "0.5em",
+              }}
+            >
+              <BtnPrev />
+              <BtnNext />
+              <BtnSkip />
             </div>
           </>
         )}
@@ -232,33 +251,15 @@ export function StartPage({ startLookingAtTweets }) {
               <p>Take your shot,</p>
               <p>guess which one's a bot!</p>
             </div>
-            <div className="buttonsRow">
-              <Button
-                className="btnPrev"
-                variant="outlined"
-                disabled={isLoading}
-                color={"primary"}
-                onClick={() => {
-                  setStep((p) => p - 1);
-                }}
-                startIcon={<ChevronLeft />}
-              >
-                Prev
-              </Button>
-              <Button
-                disabled={isLoading}
-                variant="contained"
-                color={"primary"}
-                onClick={() => {
-                  setStep(0);
-                  startLookingAtTweets();
-                  if (!isAudioPlaying) {
-                    setIsAudioPlaying(true);
-                  }
-                }}
-              >
-                Play
-              </Button>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "auto 1fr",
+                gridGap: "0.5em",
+              }}
+            >
+              <BtnPrev />
+              <BtnPlay />
             </div>
           </>
         )}
@@ -339,11 +340,7 @@ const StartPageStyles = styled.div`
     color: ${colorSecondary};
     display: none;
   }
-  .buttonsRow {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-gap: 0.5em;
-  }
+
   li {
     margin-bottom: 1em;
     line-height: 1.3em;
