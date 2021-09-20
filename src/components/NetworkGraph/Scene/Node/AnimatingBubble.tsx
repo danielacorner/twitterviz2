@@ -5,8 +5,8 @@ import { useState } from "react";
 import { useMount } from "utils/utils";
 import { getRandomPosition, notABotMaterial } from "./Node";
 
-const V1 = 0.001;
-const BUBBLE_RADIUS_MULT = 0.18;
+const V1 = 0.0;
+const BUBBLE_RADIUS_MULT = 0.25;
 export function AnimatingBubble({ handleUnmount }) {
   const [sphereRef /*, api */] = useSphere(() => ({
     mass: 0.007,

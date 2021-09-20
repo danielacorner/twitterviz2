@@ -71,7 +71,7 @@ export function BotScoreInfoCard() {
   const { height } = useWindowSize();
   const springUpDown = useSpring({
     transform: `translate3d(0,${
-      isUp
+      !isUp
         ? height > CARD_MIN_HEIGHT + 100
           ? (height - CARD_MIN_HEIGHT) / 2
           : 36
