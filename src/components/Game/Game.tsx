@@ -64,6 +64,9 @@ export const usePlayAgain = () => {
   return () => {
     setLoading(true);
     deleteAllTweets().then((ret) => {
+      setScore(0);
+      setShotsRemaining(SHOTS_REMAINING);
+
       // try to fetch new tweets from API;
       // if it doesn't respond quickly, then try to fetch from DB
 
@@ -77,8 +80,7 @@ export const usePlayAgain = () => {
           if (error || msUntilRateLimitReset) {
             replaceNodesInDbForUser(newTweets);
             setTweets(newTweets);
-            setScore(0);
-            setShotsRemaining(SHOTS_REMAINING);
+
             setLoading(false);
             console.log("🌟🚨🌟🚨🌟🚨🌟🚨 ~ deleteAllTweets ~ error", error);
             setServerError(

@@ -80,6 +80,7 @@ function VolumeControls({ volume, setVolume }) {
       <div className="volumeControlsContent">
         {[...Array(NUM_VOLUME_STEPS + 1)].map((_, idx) => (
           <div
+            key={idx}
             className={`volumeTick${volume > idx ? " active" : ""}${
               volume === idx ? " current" : ""
             }`}

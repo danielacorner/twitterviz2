@@ -113,10 +113,18 @@ export default function TagTheBotButton() {
     opacity: isMounted && isUp && !isLoading ? 1 : 0,
   });
 
-  return isUp &&
+  const showTagTheBotButton =
+    isUp &&
     selectedNode &&
     shotsRemaining > 0 &&
-    !Boolean(selectedNode.botScore) ? (
+    !Boolean(selectedNode.botScore);
+  // console.log("🌟🚨 ~ TagTheBotButton ~ isUp", isUp);
+  // console.log("~ shotsRemaining", shotsRemaining);
+  // console.log("~ selectedNode", selectedNode);
+  // console.log("~ selectedNode.botScore", selectedNode?.botScore);
+  // console.log("~ showTagTheBotButton", showTagTheBotButton);
+
+  return showTagTheBotButton && selectedNode ? (
     <AnimatedBottomButtonsStyles style={springUpOnMount}>
       <Tooltip title={"Take your shot! Higher bot scores = more points"}>
         <Button
@@ -135,6 +143,10 @@ export default function TagTheBotButton() {
             });
             const hiddenBotScore = selectedNode.hiddenBotScore;
             if (hiddenBotScore) {
+              console.log(
+                "🏴‍☠️🧰 ~ TagTheBotButton ~ hiddenBotScore",
+                hiddenBotScore
+              );
               const newBotScore = { ...hiddenBotScore };
               setSelectedNode(null);
               setTimeout(() => {
@@ -155,6 +167,10 @@ export default function TagTheBotButton() {
                 handleReceiveBotScore(newBotScore, nodeIdStr);
               }, 1500);
             } else {
+              console.log(
+                "fetching bot score for ",
+                selectedNode.user.username
+              );
               fetchBotScoreForTweet(selectedNode).then((botScore) => {
                 setSelectedNode(null);
                 // setTooltipNode(null);

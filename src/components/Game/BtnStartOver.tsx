@@ -1,7 +1,7 @@
 import { useAtom } from "jotai";
 import { gameStateAtom, GameStepsEnum } from "providers/store/store";
 import styled from "styled-components/macro";
-import { IconButton, Tooltip } from "@material-ui/core";
+import { Button, Tooltip } from "@material-ui/core";
 import { Replay } from "@material-ui/icons";
 import { usePlayAgain } from "./Game";
 
@@ -12,21 +12,23 @@ export function BtnStartOver() {
   return (
     <BtnStartOverStyles>
       <Tooltip title="Start Over">
-        <IconButton
+        <Button
           className="btnStartOver"
           onClick={() => {
             setGameState({ ...gameState, step: GameStepsEnum.welcome });
             resetScoreAndFetchNewTweets();
           }}
+          startIcon={<Replay />}
         >
-          <Replay />
-        </IconButton>
+          Start Over
+        </Button>
       </Tooltip>
     </BtnStartOverStyles>
   );
 }
 const BtnStartOverStyles = styled.div`
   .btnStartOver {
+    opacity: 0.6;
     position: fixed;
     z-index: 999999999999999999;
     bottom: 0;
