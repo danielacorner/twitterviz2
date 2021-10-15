@@ -32,7 +32,8 @@ import { useControls } from "leva";
 import { useMounted } from "utils/hooks";
 import { randBetween } from "utils/utils";
 import { NodeContent } from "./NodeContent";
-import { AnimatingBubble } from "./AnimatingBubble";
+import { Instance } from "@react-three/drei";
+import { PopAnimation } from "./PopAnimation";
 
 export const defaultNodeMaterial = new THREE.MeshPhysicalMaterial({
   emissive: "#0b152f",
@@ -159,12 +160,11 @@ export const Node = ({
   };
 
   const [sphereRef, api] = useSphere(() => ({
-    mass: 1,
-    position: startPosition as any,
+    position: startPosition,
     // position: getRandomPosition(-5 * RADIUS, 5 * RADIUS),
     // type: !paused ? "Dynamic" : "Static",
     // https://threejs.org/docs/scenes/geometry-browser.html#IcosahedronBufferGeometry
-    args: NODE_RADIUS * NODE_RADIUS_COLLISION_MULTIPLIER,
+    args: [NODE_RADIUS * NODE_RADIUS_COLLISION_MULTIPLIER] as any,
   }));
 
   useGravity(api, vec);
@@ -206,7 +206,7 @@ export const Node = ({
     setBotScorePopupNode(userNode);
   }
   return (
-    <animated.group ref={sphereRef}>
+    <Instance ref={sphereRef}>
       <ScaleOnHover>
         <animated.mesh renderOrder={2} ref={sphereRef}>
           <animated.mesh
@@ -229,7 +229,7 @@ export const Node = ({
                 isTooltipNode,
                 isPointerOver,
                 isScanningNode,
-
+                nodeGeometry,
                 isRightClickingThisNode,
               }}
             />
@@ -239,7 +239,7 @@ export const Node = ({
           </animated.mesh>
         </animated.mesh>
       </ScaleOnHover>
-    </animated.group>
+    </Instance>
   );
 };
 function ScaleOnHover({ children }: { children: React.ReactNode }) {
@@ -260,25 +260,6 @@ function ScaleOnHover({ children }: { children: React.ReactNode }) {
   );
 }
 
-function PopAnimation() {
-  const numBubbles =
-    Math.round(Math.random() * 7) + (Math.random() > 0.9 ? 50 : 7);
-  const [bubblesIds, setBubblesIds] = useState(
-    [...new Array(numBubbles)].map((_) => Math.random())
-  );
-  return (
-    <>
-      {bubblesIds.map((bubbleId) => (
-        <AnimatingBubble
-          key={bubbleId}
-          handleUnmount={() => {
-            setBubblesIds((p) => p.filter((id) => id !== bubbleId));
-          }}
-        />
-      ))}
-    </>
-  );
-}
 export function getRandomPosition(min, max) {
   return [
     Math.random() * (max - min) + min,
@@ -287,7 +268,7 @@ export function getRandomPosition(min, max) {
   ];
 }
 /** start at ("bubble up" or "emerge from") bottom center  */
-function getStartPosition() {
+function getStartPosition(): [x: number, y: number, z: number] {
   // start position
   function addSpread(val: number, spread: number) {
     return randBetween(val - spread, val + spread);

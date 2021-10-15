@@ -1,3 +1,4 @@
+import { Instances } from "@react-three/drei";
 import { useUserNodes } from "../useUserNodes";
 import { Node } from "./Node/Node";
 import { useHoverAnimation } from "./useHoverAnimation";
@@ -36,9 +37,16 @@ export function Nodes() {
 
   return (
     <mesh ref={hoverAnimationRefWave}>
-      {userNodes.map((node, idx) => {
-        return <Node key={node.id_str} userNode={node} />;
-      })}
+      {/* Instances https://codesandbox.io/s/floating-instanced-shoes-h8o2d?file=/src/App.js */}
+      <Instances
+        // material={mat}
+        limit={1000} // Optional: max amount of items (for calculating buffer size)
+        range={1000} // Optional: draw-range
+      >
+        {userNodes.map((node, idx) => {
+          return <Node key={node.id_str} userNode={node} />;
+        })}
+      </Instances>
     </mesh>
   );
 }

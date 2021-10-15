@@ -13,7 +13,7 @@ export function GameStateHUD() {
     <>
       <Score />
       <ShotsRemaining />
-      <ServerError />
+      <ServerErrorMsg />
       <BotScoreInfoCard />
 
       <AudioSoundButton
@@ -25,7 +25,7 @@ export function GameStateHUD() {
     </>
   );
 }
-function ServerError() {
+function ServerErrorMsg() {
   const [serverError] = useAtom(serverErrorAtom);
   const msUntilRateLimitReset = serverError?.msUntilRateLimitReset;
   return serverError ? (

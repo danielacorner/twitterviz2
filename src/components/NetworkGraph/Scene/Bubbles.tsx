@@ -1,7 +1,6 @@
 import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import { Instance, Instances } from "./Instances";
-import { useDetectGPU } from "@react-three/drei";
+import { Instance, Instances, useDetectGPU } from "@react-three/drei";
 
 // https://codesandbox.io/s/9y8vkjykyy?file=/src/index.js
 const WIDTH = 200;
