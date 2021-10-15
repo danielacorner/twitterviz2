@@ -34,59 +34,15 @@ import { randBetween } from "utils/utils";
 import { NodeContent } from "./NodeContent";
 import { Instance } from "@react-three/drei";
 import { PopAnimation } from "./PopAnimation";
-
-export const defaultNodeMaterial = new THREE.MeshPhysicalMaterial({
-  emissive: "#0b152f",
-  metalness: 0.4,
-  transmission: 1,
-  roughness: 0,
-  envMapIntensity: 4,
-  transparent: true,
-  // color: "#316c83",
-});
-export const opacityMaterial = new THREE.MeshPhysicalMaterial({
-  emissive: "#0b152f",
-  metalness: 0.97,
-  transmission: 1,
-  roughness: 0,
-  envMapIntensity: 4,
-  // color: "#316c83",
-});
-export const rightClickNodeMaterial = new THREE.MeshPhysicalMaterial({
-  // emissive: "#471111",
-  metalness: -1,
-  transmission: 1,
-  roughness: 0,
-  envMapIntensity: 4,
-  // color: "#be5626",
-});
-export const notABotMaterial = new THREE.MeshPhysicalMaterial({
-  emissive: "#0b152f",
-  metalness: 0.4,
-  transmission: 1,
-  roughness: 0,
-  envMapIntensity: 4,
-  transparent: true,
-  // opacity: 0,
-  // color: "#be5626",
-});
-export const pointerOverMaterial = new THREE.MeshPhysicalMaterial({
-  // emissive: "#002741",
-  metalness: -1.5,
-  roughness: 0.1,
-  transmission: 1,
-  envMapIntensity: 4,
-  // color: "#3ad64f",
-});
-export const tooltipNodeMaterial = new THREE.MeshPhysicalMaterial({
-  // emissive: "#002741",
-  metalness: 1,
-  roughness: 0.2,
-  transmission: 1,
-  envMapIntensity: 4,
-  // color: "#26be3a",
-});
-export const nodeGeometry = new THREE.SphereGeometry(NODE_RADIUS, 28, 28);
+import {
+  notABotMaterial,
+  defaultNodeMaterial,
+  opacityMaterial,
+  rightClickNodeMaterial,
+  pointerOverMaterial,
+  tooltipNodeMaterial,
+  invisibleMaterial,
+} from "./materialsAndGeometries";
 
 export const Node = ({
   vec = new THREE.Vector3(),
@@ -205,6 +161,22 @@ export const Node = ({
     setLatestNodeWithBotScore(userNode.tweets[0]);
     setBotScorePopupNode(userNode);
   }
+
+  const [doneAnimating, setDoneAnimating] = useState(false);
+  const material = isNotABot
+    ? notABotMaterial
+    : !doneAnimating
+    ? opacityMaterial
+    : isScanningNode
+    ? invisibleMaterial
+    : isRightClickingThisNode
+    ? rightClickNodeMaterial
+    : isPointerOver && isTooltipNode
+    ? pointerOverMaterial
+    : isTooltipNode
+    ? tooltipNodeMaterial
+    : defaultNodeMaterial;
+
   return (
     <Instance ref={sphereRef}>
       <ScaleOnHover>
@@ -223,16 +195,15 @@ export const Node = ({
                   onWheel: onScroll,
                 })}
           >
-            <NodeContent
+            {/* <NodeContent
               {...{
                 node: userNode,
                 isTooltipNode,
                 isPointerOver,
                 isScanningNode,
-                nodeGeometry,
                 isRightClickingThisNode,
               }}
-            />
+            /> */}
             {isNotABot && shouldPop && <PopAnimation />}
             {/* <ScanningAnimation /> */}
             {isScanningNode ? <ScanningAnimation /> : null}

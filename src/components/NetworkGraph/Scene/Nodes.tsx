@@ -1,5 +1,9 @@
 import { Instances } from "@react-three/drei";
 import { useUserNodes } from "../useUserNodes";
+import {
+  defaultNodeMaterial,
+  nodeGeometry,
+} from "./Node/materialsAndGeometries";
 import { Node } from "./Node/Node";
 import { useHoverAnimation } from "./useHoverAnimation";
 
@@ -39,7 +43,8 @@ export function Nodes() {
     <mesh ref={hoverAnimationRefWave}>
       {/* Instances https://codesandbox.io/s/floating-instanced-shoes-h8o2d?file=/src/App.js */}
       <Instances
-        // material={mat}
+        material={defaultNodeMaterial}
+        geometry={nodeGeometry}
         limit={1000} // Optional: max amount of items (for calculating buffer size)
         range={1000} // Optional: draw-range
       >

@@ -3,7 +3,8 @@ import { useSpring, animated } from "@react-spring/three";
 import { CONFIG_POP_OUT, NODE_RADIUS } from "utils/constants";
 import { useState } from "react";
 import { useMount } from "utils/utils";
-import { getRandomPosition, notABotMaterial } from "./Node";
+import { getRandomPosition } from "./Node";
+import { notABotMaterial } from "./materialsAndGeometries";
 
 const V1 = 0.0;
 const BUBBLE_RADIUS_MULT = 0.25;

@@ -15,7 +15,7 @@ import {
   pointerOverMaterial,
   tooltipNodeMaterial,
   nodeGeometry,
-} from "./Node";
+} from "./materialsAndGeometries";
 
 export function NodeContent({
   node,

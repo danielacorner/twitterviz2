@@ -10,6 +10,7 @@ import { ScanningAnimation } from "./ScanningAnimation";
 import { useLatestTaggedNode } from "./useLatestTaggedNode";
 import { useWindowSize } from "utils/hooks";
 import { useHoverAnimation } from "../useHoverAnimation";
+import { defaultNodeMaterial } from "./materialsAndGeometries";
 /** pops up and animates when you get a new bot score */
 export function BotScorePopupNode() {
   const { latestBotScore, node, lastNode } = useLatestTaggedNode();
@@ -90,7 +91,7 @@ function BotScorePopupNodeAnimation({
         ref={hoverAnimationRefWave}
       >
         {nodeDisplay ? (
-          <>
+          <mesh material={defaultNodeMaterial}>
             <NodeContent
               {...{
                 node: nodeDisplay,
@@ -104,7 +105,7 @@ function BotScorePopupNodeAnimation({
               }}
             />
             {nodeDisplay.user.botScore ? null : <ScanningAnimation />}
-          </>
+          </mesh>
         ) : null}
       </animated.mesh>
     </Canvas>
