@@ -120,7 +120,7 @@ export const Node = ({
     // position: getRandomPosition(-5 * RADIUS, 5 * RADIUS),
     // type: !paused ? "Dynamic" : "Static",
     // https://threejs.org/docs/scenes/geometry-browser.html#IcosahedronBufferGeometry
-    args: [NODE_RADIUS * NODE_RADIUS_COLLISION_MULTIPLIER] as any,
+    args: [NODE_RADIUS * NODE_RADIUS_COLLISION_MULTIPLIER],
   }));
 
   useGravity(api, vec);

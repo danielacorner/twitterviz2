@@ -57,11 +57,10 @@ export default function MediaContent({
 			}}
 		>
 			{["video", "animated_gif"].includes(type) ? (
-				autoPlay || clickedOnce ? (
-					<VideoWithControls
-						{...{ videoRef, isTooltip, containerWidth, mediaItem }}
-					/>
-				) : (
+				autoPlay || clickedOnce ? null : (
+					// <VideoWithControls
+					// 	{...{ videoRef, isTooltip, containerWidth, mediaItem }}
+					// />
 					// must use custom element to enable lazy-loading poster image
 					<PosterImage
 						{...{
