@@ -70,13 +70,7 @@ export function BotScoreInfoCard() {
   const [isDoneAnimating, setIsDoneAnimating] = useState(false);
   const { height } = useWindowSize();
   const springUpDown = useSpring({
-    transform: `translate3d(0,${
-      !isUp
-        ? height > CARD_MIN_HEIGHT + 100
-          ? (height - CARD_MIN_HEIGHT) / 2
-          : 36
-        : CARD_MIN_HEIGHT
-    }px,0)`,
+    transform: `translate3d(0,${isUp ? 80 : CARD_MIN_HEIGHT * 2}px,0)`,
     opacity: isUp ? 1 : 0,
     position: "fixed" as any,
     zIndex: 9999999999999999,
@@ -296,7 +290,7 @@ const HtmlBotScoreInfoOverlayStyles = styled.div`
     right: -21px;
     z-index: 2;
     opacity: 0.9;
-    /* background: #ffffff3d; */
+    background: #ffffff36;
   }
   .MuiSvgIcon-root {
     /* transform: scale(1.4); */
