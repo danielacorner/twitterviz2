@@ -42,34 +42,32 @@ export default function NodeBillboard({ node }: { node: UserNode }) {
   const [isUp] = useAtom(isBotScoreExplainerUpAtom);
 
   return (
-    <Billboard {...({} as any)} args={[0, 0, 0]}>
-      <mesh ref={ref}>
-        <Html
-          transform={true}
-          sprite={false}
-          style={{
-            width: 0,
-            height: 0,
-            marginLeft: -100,
-            marginTop: -100,
-            opacity: isUp ? 0.4 : 0.8,
-          }}
-        >
-          <AnimatedHtmlStyles style={springOpacity}>
-            <AvatarStyles>
-              <img
-                src={
-                  node?.user.profile_image_url_https ||
-                  node?.user.profile_image_url
-                }
-                alt=""
-              />
-            </AvatarStyles>
-            {/* <TweetsColumn {...{ hasBotScore, tweets, isLight, originalPoster }} /> */}
-          </AnimatedHtmlStyles>
-        </Html>
-      </mesh>
-    </Billboard>
+    <mesh ref={ref}>
+      <Html
+        transform={true}
+        sprite={false}
+        style={{
+          width: 0,
+          height: 0,
+          marginLeft: -100,
+          marginTop: -100,
+          opacity: isUp ? 0.4 : 0.8,
+        }}
+      >
+        <AnimatedHtmlStyles style={springOpacity}>
+          <AvatarStyles>
+            <img
+              src={
+                node?.user.profile_image_url_https ||
+                node?.user.profile_image_url
+              }
+              alt=""
+            />
+          </AvatarStyles>
+          {/* <TweetsColumn {...{ hasBotScore, tweets, isLight, originalPoster }} /> */}
+        </AnimatedHtmlStyles>
+      </Html>
+    </mesh>
   );
 }
 

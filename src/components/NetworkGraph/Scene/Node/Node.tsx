@@ -195,7 +195,7 @@ export const Node = ({
                   onWheel: onScroll,
                 })}
           >
-            {/* <NodeContent
+            <NodeContent
               {...{
                 node: userNode,
                 isTooltipNode,
@@ -203,7 +203,7 @@ export const Node = ({
                 isScanningNode,
                 isRightClickingThisNode,
               }}
-            /> */}
+            />
             {isNotABot && shouldPop && <PopAnimation />}
             {/* <ScanningAnimation /> */}
             {isScanningNode ? <ScanningAnimation /> : null}
