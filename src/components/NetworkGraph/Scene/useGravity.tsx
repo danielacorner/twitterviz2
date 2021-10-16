@@ -3,6 +3,8 @@ import { useEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useConfig } from "providers/store/useConfig";
 
+const G = 0.008;
+
 /** within this distance, nodes slow down to 0 */
 const MAX_DISTANCE_FROM_CENTER = 16;
 /** apply force toward center
@@ -40,11 +42,12 @@ export function useGravity(api: PublicApi, vec: any) {
         [0, 0, 0]
       );
 
-      // if we're near the center, slow down
+      // if we're near the center, slow down faster
       if (distanceFromCenter < MAX_DISTANCE_FROM_CENTER) {
         const [vx, vy, vz] = velocity.current.map((d) => d * 0.94);
         api.velocity.set(vx, vy, vz);
       } else {
+        // slow down normally
         const [vx, vy, vz] = velocity.current.map((d) => d * 0.99);
         api.velocity.set(vx, vy, vz);
       }
@@ -61,8 +64,6 @@ function getDistanceBetweenPoints(p1, p2) {
   const z = p1[2] - p2[2];
   return Math.sqrt(x * x + y * y + z * z);
 }
-
-const G = 0.008;
 
 /** inverse gravity = gets stronger farther from the center */
 function getInverseGravityForce(distanceFromCenter, G) {

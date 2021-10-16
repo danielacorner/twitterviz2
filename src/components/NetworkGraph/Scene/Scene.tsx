@@ -187,7 +187,8 @@ export function getHourOfDay() {
 }
 
 function DebugInDev({ children }) {
-  return false && process.env.NODE_ENV !== "production" ? (
+  const { debug } = useControls({ debug: false });
+  return debug && process.env.NODE_ENV !== "production" ? (
     <Debug>{children}</Debug>
   ) : (
     <>{children}</>

@@ -114,12 +114,12 @@ export const Node = ({
       });
     }
   };
-
   const [sphereRef, api] = useSphere(() => ({
+    mass: 1,
     position: startPosition,
-    // position: getRandomPosition(-5 * RADIUS, 5 * RADIUS),
-    // type: !paused ? "Dynamic" : "Static",
-    // https://threejs.org/docs/scenes/geometry-browser.html#IcosahedronBufferGeometry
+    // linearDamping: 0.1,
+    // material: { friction: 0, restitution: 0 },
+    // geometry: geo,
     args: [NODE_RADIUS * NODE_RADIUS_COLLISION_MULTIPLIER],
   }));
 
