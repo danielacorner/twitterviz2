@@ -87,7 +87,7 @@
     "tslint-react-hooks": "^2.2.2",
     "typescript": "^4.3.5"
   },
-  "proxy": "http://172.21.224.1:8080",
+  "proxy": "http://172.19.144.1:8080",
   "resolutions": {
     "**/@typescript-eslint/eslint-plugin": "^4.1.1",
     "**/@typescript-eslint/parser": "^4.1.1"
