@@ -46,8 +46,9 @@ const SoundButtonStyles = styled.div`
   white-space: nowrap;
   display: flex;
   position: fixed;
-  top: 54px;
-  right: 8px;
+  bottom: -6px;
+  right: 2px;
+  opacity: 0.6;
   padding-bottom: 16px;
   align-items: center;
   z-index: 9;

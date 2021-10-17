@@ -7,7 +7,7 @@ import {
 } from "utils/constants";
 import { UserNode } from "components/NetworkGraph/useUserNodes";
 import { useFrame } from "@react-three/fiber";
-import { useRef } from "react";
+import { Fragment, useRef } from "react";
 import { animated, useSpring } from "react-spring";
 import { useMounted } from "utils/hooks";
 import { useAtom } from "jotai";
@@ -41,33 +41,37 @@ export default function NodeBillboard({ node }: { node: UserNode }) {
   });
   const [isUp] = useAtom(isBotScoreExplainerUpAtom);
 
+  const BillboardIfNoBotScore = node.user.botScore ? Fragment : Billboard;
+
   return (
-    <mesh ref={ref}>
-      <Html
-        transform={true}
-        sprite={false}
-        style={{
-          width: 0,
-          height: 0,
-          marginLeft: -100,
-          marginTop: -100,
-          opacity: isUp ? 0.4 : 0.8,
-        }}
-      >
-        <AnimatedHtmlStyles style={springOpacity}>
-          <AvatarStyles>
-            <img
-              src={
-                node?.user.profile_image_url_https ||
-                node?.user.profile_image_url
-              }
-              alt=""
-            />
-          </AvatarStyles>
-          {/* <TweetsColumn {...{ hasBotScore, tweets, isLight, originalPoster }} /> */}
-        </AnimatedHtmlStyles>
-      </Html>
-    </mesh>
+    <BillboardIfNoBotScore>
+      <mesh ref={ref}>
+        <Html
+          transform={true}
+          sprite={false}
+          style={{
+            width: 0,
+            height: 0,
+            marginLeft: -100,
+            marginTop: -100,
+            opacity: isUp ? 0.4 : 0.8,
+          }}
+        >
+          <AnimatedHtmlStyles style={springOpacity}>
+            <AvatarStyles>
+              <img
+                src={
+                  node?.user.profile_image_url_https ||
+                  node?.user.profile_image_url
+                }
+                alt=""
+              />
+            </AvatarStyles>
+            {/* <TweetsColumn {...{ hasBotScore, tweets, isLight, originalPoster }} /> */}
+          </AnimatedHtmlStyles>
+        </Html>
+      </mesh>
+    </BillboardIfNoBotScore>
   );
 }
 

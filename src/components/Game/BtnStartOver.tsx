@@ -30,8 +30,8 @@ const BtnStartOverStyles = styled.div`
   .btnStartOver {
     opacity: 0.6;
     position: fixed;
-    z-index: 999999999999999999;
-    bottom: 0;
-    left: 0;
+    z-index: 9999999;
+    bottom: 6px;
+    left: 10px;
   }
 `;
