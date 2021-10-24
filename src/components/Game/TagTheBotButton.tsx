@@ -33,6 +33,7 @@ export default function TagTheBotButton() {
   const tweets = useTweets();
   const setTweets = useSetTweets();
   const selectedNode = useSelectedNode();
+  console.log("🌟🚨 ~ TagTheBotButton ~ selectedNode", selectedNode);
   const setSelectedNode = useSetSelectedNode();
   const fetchBotScoreForTweet = useFetchBotScoreForTweet();
   const fetchAndReplaceNode = useFetchAndReplaceNode();
@@ -106,15 +107,16 @@ export default function TagTheBotButton() {
   }
 
   const isMounted = useIsMounted();
-  const isUp =
+
+  const isTagTheBotButtonUp =
     selectedNode && shotsRemaining > 0 && !Boolean(selectedNode.botScore);
   const springUpOnMount = useSpring({
-    transform: `translateY(${isMounted && isUp && !isLoading ? 0 : 128}px)`,
-    opacity: isMounted && isUp && !isLoading ? 1 : 0,
+    transform: `translateY(${isMounted && isTagTheBotButtonUp ? 0 : 128}px)`,
+    opacity: isMounted && isTagTheBotButtonUp && !isLoading ? 1 : 0,
   });
 
   const showTagTheBotButton =
-    isUp &&
+    isTagTheBotButtonUp &&
     selectedNode &&
     shotsRemaining > 0 &&
     !Boolean(selectedNode.botScore);

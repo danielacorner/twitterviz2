@@ -4,13 +4,14 @@ import {
   useDetectGPU,
   useGLTF,
   Stars,
+  Loader,
 } from "@react-three/drei";
 import { Debug, Physics } from "@react-three/cannon";
 import { useFrame, useThree } from "@react-three/fiber";
 import { animated } from "@react-spring/three";
 import { CAMERA_POSITION } from "utils/constants";
 import { useSpring } from "react-spring";
-import { Suspense, useRef } from "react";
+import { Suspense, useRef, useState } from "react";
 import {
   areOrbitControlsEnabledAtom,
   gameStateAtom,
@@ -28,6 +29,7 @@ import { useIsMounted } from "./useIsMounted";
 import { shuffle } from "lodash";
 import * as THREE from "three";
 import { Bubbles } from "./Bubbles";
+import { useMount } from "utils/utils";
 
 export function Scene() {
   // const vertices = getVertices(nodes.length);
@@ -63,24 +65,23 @@ export function Scene() {
   //   immediate: false,
   // });
 
-  const showMany = gpuInfo.tier > 2;
+  const [showExtraStuff, setShow] = useState(false);
+  useMount(() => {
+    setTimeout(() => {
+      setShow(true);
+    }, 18 * 1000);
+  });
 
-  const gltfModelBackground = shuffle(
-    showMany
-      ? [
-          // 61MB
-          <GLTFModelCoral />,
-          // 73MB
-          <GLTFModelTerrain />,
-          // 10MB
-          <GLTFModelFishTreasureBackground />,
-        ]
-      : [
-          // 10MB
-          <GLTFModelFishTreasureBackground />,
-        ]
-  )[0];
   const { px, py, pz } = useControls({ px: -2.15, py: 5, pz: 0.1 });
+
+  const gltfModelBackground = shuffle([
+    // 8.4MB
+    <GLTFModelCoral />,
+    // 7.4MB
+    <GLTFModelTerrain />,
+    // 10MB
+    <GLTFModelFishTreasureBackground />,
+  ])[0];
   return (
     <Suspense fallback={null}>
       {/* <ambientLight intensity={0.75} /> */}
@@ -90,30 +91,16 @@ export function Scene() {
         angle={0.2}
         color="blue"
       /> */}
+      {gltfModelBackground}
+
       <Bubbles count={gpuInfo.tier > 2 ? 2000 : 1000} />
       <mesh renderOrder={100000}>
         <Stars count={2000} />
       </mesh>
-      {gltfModelBackground}
       {/* 5MB */}
       {/* {showMany && <GLTFModelLeviathan />} */}
       {/* 5MB */}
-      {showMany && <GLTFModelGuppy />}
-      {/* 5MB */}
-      {showMany && <GLTFModelclownfish />}
-      {/* 1MB */}
-      <GLTFModelschooloffish />
-      {/* 1MB */}
-      <GLTFModelyellowfish />
-      {/* 18MB */}
-      {/* <GLTFModelhammerhead /> */}
-      {/* 2MB */}
-      <GLTFModelgreatwhite />
-      {/* <Stars /> */}
-      {/* 5MB */}
-      {showMany && <GLTFModelballena />}
-      {/* 0.5MB */}
-      <GLTFModelsailfish />
+      {showExtraStuff && <ExtraStuff />}
       <mesh scale={[20, 20, 20]}></mesh>
       <directionalLight position={[px, py, pz]} intensity={4} />
       <OrbitControls
@@ -144,6 +131,31 @@ export function Scene() {
       {/* <BotScoreLegendHUD /> */}
       {process.env.NODE_ENV === "development" && <Stats />}
       <Effects />
+    </Suspense>
+  );
+}
+function ExtraStuff() {
+  const gpuInfo = useDetectGPU();
+
+  const showMany = gpuInfo.tier > 2;
+  return (
+    <Suspense fallback={null}>
+      {showMany && <GLTFModelGuppy />}
+      {/* 5MB */}
+      {showMany && <GLTFModelclownfish />}
+      {/* 1MB */}
+      <GLTFModelschooloffish />
+      {/* 1MB */}
+      <GLTFModelyellowfish />
+      {/* 18MB */}
+      {/* <GLTFModelhammerhead /> */}
+      {/* 2MB */}
+      <GLTFModelgreatwhite />
+      {/* <Stars /> */}
+      {/* 5MB */}
+      {showMany && <GLTFModelballena />}
+      {/* 0.5MB */}
+      <GLTFModelsailfish />
     </Suspense>
   );
 }
@@ -218,21 +230,22 @@ function GLTFModelFishTreasureBackground() {
 }
 
 function GLTFModelCoral() {
-  const gltf = useGLTF("/coral/scene.gltf");
+  const gltf = useGLTF("/coral/coral_trimmed_2.glb");
   // const hoverAnimationRef = useHoverAnimation();
+  // const { x, y, z } = useControls({ x: 0, y: -32, z: 0 });
+
   return (
     <animated.mesh>
-      <primitive scale={2} position={[-0, -35, 0]} object={gltf.scene} />
+      <primitive scale={2} position={[-0, -30, 0]} object={gltf.scene} />
     </animated.mesh>
   );
 }
 
 function GLTFModelTerrain() {
-  const model = useGLTF("/terrain/scene.gltf");
-
+  const model = useGLTF("/terrain/terrain_005_trimmed_2.glb");
   return (
     <animated.mesh>
-      <primitive scale={14} position={[2, -51, 33]} object={model.scene} />
+      <primitive scale={14} position={[0, -32, 0]} object={model.scene} />
     </animated.mesh>
   );
 }

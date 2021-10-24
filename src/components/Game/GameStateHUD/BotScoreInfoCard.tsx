@@ -26,6 +26,7 @@ import {
 } from "utils/colors";
 import { AvatarStyles } from "components/NetworkGraph/NodeTooltip";
 import { useWindowSize } from "utils/hooks";
+import { Html } from "@react-three/drei";
 const usernameColor = "#999";
 const botTypeColor = colorSecondary;
 const WIDTH = 420;
@@ -116,14 +117,18 @@ export function BotScoreInfoCard() {
   );
 
   return (
-    <BotScoreInfoCardStyles>
-      <animated.div style={springUpDown}>
-        <HtmlBotScoreInfoOverlayStyles {...{ botTypeText, scorePercent, isUp }}>
-          <div className="content">
-            <div className="top-row">
-              <div className="avatar-wrapper col1">
-                <AvatarStyles
-                  customCss={`
+    <Canvas>
+      <Html>
+        <BotScoreInfoCardStyles>
+          <animated.div style={springUpDown}>
+            <HtmlBotScoreInfoOverlayStyles
+              {...{ botTypeText, scorePercent, isUp }}
+            >
+              <div className="content">
+                <div className="top-row">
+                  <div className="avatar-wrapper col1">
+                    <AvatarStyles
+                      customCss={`
                 z-index: 9999999999999;
                 height: ${AVATAR_WIDTH}px;
                 width: ${AVATAR_WIDTH}px;
@@ -131,76 +136,80 @@ export function BotScoreInfoCard() {
                 box-shadow: 0px 2px 3px rgba(0,0,0,0.5);
                 border: 4px solid ${darkBackground};
             `}
-                >
-                  <img
-                    src={latestNodeWithBotScore?.user?.profile_image_url_https}
-                    alt=""
-                  />
-                </AvatarStyles>
-              </div>
-
-              <div className="col2">
-                <div className="screen-name card-title">
-                  {lastNode?.user.screen_name}
-                </div>
-                <div className="display-name">{lastNode?.user.name}</div>
-              </div>
-            </div>
-            <div className="scroll-content">
-              <div className="bot-score-legend-canvas">
-                <Suspense fallback={null}>
-                  <Canvas style={{ overflow: "visible" }}>
-                    <mesh scale={[2.5, 2.5, 2.5]} position={[0, 0.4, 0]}>
-                      <BotScoreLegend
-                        {...{
-                          showTooltips: true,
-                          showScorePercents: true,
-                          showAvatar: true,
-                          isInStartMenu: false,
-                          position: [0, 0, 0],
-                          scale: [1, 1, 1],
-                        }}
+                    >
+                      <img
+                        src={
+                          latestNodeWithBotScore?.user?.profile_image_url_https
+                        }
+                        alt=""
                       />
-                    </mesh>
-                  </Canvas>
-                </Suspense>
-              </div>
-              <div className="bot-type">
-                <animated.div
-                  style={{
-                    ...springExpandOnMount,
-                  }}
-                  className="percent-width"
-                ></animated.div>
-                <div className="bot-type-text">{botType}</div>
+                    </AvatarStyles>
+                  </div>
 
-                <div className="percent-width-outline"></div>
-
-                <span className="score-percent">{scorePercent}%</span>
-              </div>
-
-              <div className="bot-score-info">
-                <div>
-                  <ConclusionSentence />
-                  {botTypeInfo && (
-                    <span className="bot-type-info">({botTypeInfo})</span>
-                  )}
+                  <div className="col2">
+                    <div className="screen-name card-title">
+                      {lastNode?.user.screen_name}
+                    </div>
+                    <div className="display-name">{lastNode?.user.name}</div>
+                  </div>
                 </div>
-                <div className="bot-type-text-explanation">
-                  @{lastNode?.user.screen_name} {botTypeText} bot...
+                <div className="scroll-content">
+                  <div className="bot-score-legend-canvas">
+                    <Suspense fallback={null}>
+                      <Canvas style={{ overflow: "visible" }}>
+                        <mesh scale={[2.5, 2.5, 2.5]} position={[0, 0.4, 0]}>
+                          <BotScoreLegend
+                            {...{
+                              showTooltips: true,
+                              showScorePercents: true,
+                              showAvatar: true,
+                              isInStartMenu: false,
+                              position: [0, 0, 0],
+                              scale: [1, 1, 1],
+                            }}
+                          />
+                        </mesh>
+                      </Canvas>
+                    </Suspense>
+                  </div>
+                  <div className="bot-type">
+                    <animated.div
+                      style={{
+                        ...springExpandOnMount,
+                      }}
+                      className="percent-width"
+                    ></animated.div>
+                    <div className="bot-type-text">{botType}</div>
+
+                    <div className="percent-width-outline"></div>
+
+                    <span className="score-percent">{scorePercent}%</span>
+                  </div>
+
+                  <div className="bot-score-info">
+                    <div>
+                      <ConclusionSentence />
+                      {botTypeInfo && (
+                        <span className="bot-type-info">({botTypeInfo})</span>
+                      )}
+                    </div>
+                    <div className="bot-type-text-explanation">
+                      @{lastNode?.user.screen_name} {botTypeText} bot...
+                    </div>
+                  </div>
                 </div>
+                <IconButton
+                  className="btn-close"
+                  onClick={handleCloseBotScoreInfoCard}
+                >
+                  <Close />
+                </IconButton>
               </div>
-            </div>
-            <IconButton
-              className="btn-close"
-              onClick={handleCloseBotScoreInfoCard}
-            >
-              <Close />
-            </IconButton>
-          </div>
-        </HtmlBotScoreInfoOverlayStyles>
-      </animated.div>
-    </BotScoreInfoCardStyles>
+            </HtmlBotScoreInfoOverlayStyles>
+          </animated.div>
+        </BotScoreInfoCardStyles>
+      </Html>
+    </Canvas>
   );
 }
 
