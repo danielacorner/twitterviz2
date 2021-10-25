@@ -16,6 +16,7 @@ import {
   tooltipNodeMaterial,
   nodeGeometry,
 } from "./materialsAndGeometries";
+import ErrorBoundary3D from "components/ErrorBoundary3D";
 
 export function NodeContent({
   node,
@@ -70,7 +71,7 @@ export function NodeContent({
     clamp: true,
   });
   return (
-    <>
+    <ErrorBoundary3D>
       <animated.mesh>
         <animated.mesh ref={isPopupNode ? null : null}>
           {isScanningNode ? null : (
@@ -106,7 +107,7 @@ export function NodeContent({
           {isScanningNode && <ScanningNodeAnimation />}
         </animated.mesh>
       </animated.mesh>
-    </>
+    </ErrorBoundary3D>
   );
 }
 function ScanningNodeAnimation() {
