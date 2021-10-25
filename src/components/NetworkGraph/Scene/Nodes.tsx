@@ -1,4 +1,5 @@
 import { Instances } from "@react-three/drei";
+import { uniqBy } from "lodash";
 import { useUserNodes } from "../useUserNodes";
 import {
   defaultNodeMaterial,
@@ -48,7 +49,7 @@ export function Nodes() {
         limit={1000} // Optional: max amount of items (for calculating buffer size)
         range={1000} // Optional: draw-range
       >
-        {userNodes.map((node, idx) => {
+        {uniqBy(userNodes, (n) => n.id_str).map((node, idx) => {
           return <Node key={node.id_str} userNode={node} />;
         })}
       </Instances>

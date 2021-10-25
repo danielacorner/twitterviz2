@@ -30,7 +30,9 @@ import { shuffle } from "lodash";
 import * as THREE from "three";
 import { Bubbles } from "./Bubbles";
 import { useMount } from "utils/utils";
+import { atomWithStorage } from "jotai/utils";
 
+const showExtraStuffAtom = atomWithStorage("showAllModels", false);
 export function Scene() {
   // const vertices = getVertices(nodes.length);
   const [areOrbitControlsEnabled] = useAtom(areOrbitControlsEnabledAtom);
@@ -65,7 +67,7 @@ export function Scene() {
   //   immediate: false,
   // });
 
-  const [showExtraStuff, setShow] = useState(false);
+  const [showExtraStuff, setShow] = useAtom(showExtraStuffAtom);
   useMount(() => {
     setTimeout(() => {
       setShow(true);
@@ -230,7 +232,7 @@ function GLTFModelFishTreasureBackground() {
 }
 
 function GLTFModelCoral() {
-  const gltf = useGLTF("/coral/coral_trimmed_2.glb");
+  const gltf = useGLTF("/coral/coral_draco.glb");
   // const hoverAnimationRef = useHoverAnimation();
   // const { x, y, z } = useControls({ x: 0, y: -32, z: 0 });
 
@@ -242,7 +244,7 @@ function GLTFModelCoral() {
 }
 
 function GLTFModelTerrain() {
-  const model = useGLTF("/terrain/terrain_005_trimmed_2.glb");
+  const model = useGLTF("/terrain/terrain_draco.glb");
   return (
     <animated.mesh>
       <primitive scale={14} position={[0, -32, 0]} object={model.scene} />
@@ -691,7 +693,7 @@ function GLTFModelgreatwhite() {
     greatwhiteScale,
   } = {
     x: 413,
-    y: 26,
+    y: -26,
     z: 0,
     greatwhite_WAVE_DY: 24,
     greatwhite_INITIAL_ROTATION_Y: Math.random() * Math.PI,

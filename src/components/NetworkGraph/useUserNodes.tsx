@@ -14,7 +14,7 @@ export function useUserNodes(): UserNode[] {
 
 // map new api to old api (compatibly with nodes from old api)
 export function getUserNodeFromTweet(t: Tweet): UserNode {
-  const userId = t.user.id_str || String(t.user.id);
+  const userId = t.user.id_str || String(t.user?.id);
 
   return {
     user: t.user,

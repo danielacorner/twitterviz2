@@ -265,13 +265,9 @@ function TextBillboard({
             : `hsl(0,0%,${(textLightness * 100).toFixed(0)}%)`
         }
         textAlign={"center"}
-        anchorY={"top"}
+        anchorY={"bottom"}
         maxWidth={0.5}
-        position={[
-          showLabels ? 0 : 0.3,
-          (isBottom ? -2 : 2.2) * (showLabels ? 1 : 0.7),
-          0,
-        ]}
+        position={[showLabels ? 0 : 0.3, 2 * (showLabels ? 1 : 0.7), 0]}
         fontSize={1}
         fillOpacity={brightenText ? 1 : score ** 0.1}
       >
