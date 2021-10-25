@@ -270,10 +270,9 @@ export function StartPage({ startLookingAtTweets }) {
 }
 const MARGIN_TOP = 92;
 const StartPageStyles = styled.div`
-  position: relative;
   font-family: "Roboto", sans-serif;
   font-size: 1.5rem;
-
+  z-index: 99999;
   position: fixed;
   inset: 0;
   display: grid;
