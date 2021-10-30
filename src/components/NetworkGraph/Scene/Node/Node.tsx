@@ -10,7 +10,7 @@ import useStore, {
   rightClickMenuAtom,
   scanningUserNodeIdAtom,
   tooltipTweetIndexAtom,
-  useAreBotsLinedUp,
+  useIsGameOver,
 } from "providers/store/store";
 import { useAtom } from "jotai";
 import {
@@ -128,7 +128,7 @@ export const Node = ({
   const mounted = useMounted();
 
   // hide nodes when the game ends
-  const hide = (useAreBotsLinedUp() && !userNode.user.botScore) || !mounted;
+  const hide = (useIsGameOver() && !userNode.user.botScore) || !mounted;
 
   const isNotABot = userNode.user.isNotABot;
 

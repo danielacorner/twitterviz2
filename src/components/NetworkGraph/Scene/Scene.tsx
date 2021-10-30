@@ -99,9 +99,6 @@ export function Scene() {
       <mesh renderOrder={100000}>
         <Stars count={2000} />
       </mesh>
-      {/* 5MB */}
-      {/* {showMany && <GLTFModelLeviathan />} */}
-      {/* 5MB */}
       {showExtraStuff && <ExtraStuff />}
       <mesh scale={[20, 20, 20]}></mesh>
       <directionalLight position={[px, py, pz]} intensity={4} />
@@ -158,6 +155,8 @@ function ExtraStuff() {
       {showMany && <GLTFModelballena />}
       {/* 0.5MB */}
       <GLTFModelsailfish />
+      {/* 2MB */}
+      <GLTFModelLeviathan />
     </Suspense>
   );
 }
@@ -252,66 +251,67 @@ function GLTFModelTerrain() {
   );
 }
 
-// const SECONDS_PER_ROTATION = 240;
-// const SECONDS_PER_UP_DOWN_WAVE = 20;
-// const WAVE_DY = 60;
+const SECONDS_PER_ROTATION = 240;
+const SECONDS_PER_UP_DOWN_WAVE = 20;
+const WAVE_DY = -60;
 
 // swims in a circle
-// function GLTFModelLeviathan() {
-//   const { x, y, z } = { x: -900, y: 216, z: -316 };
-//   const { scaleKelp } = { scaleKelp: 89 };
+function GLTFModelLeviathan() {
+  const { x, y, z } = { x: 740, y: -500, z: 0 };
+  const { scaleKelp } = { scaleKelp: 89 };
 
-//   const swimAnimationRef = useRef(null as any);
+  const swimAnimationRef = useRef(null as any);
 
-//   useFrame(({ clock }) => {
-//     if (!swimAnimationRef.current) {
-//       return;
-//     }
-//     const rotY = (Math.PI * clock.getElapsedTime()) / SECONDS_PER_ROTATION;
-//     swimAnimationRef.current.rotation.set(0, rotY, 0);
+  useFrame(({ clock }) => {
+    if (!swimAnimationRef.current) {
+      return;
+    }
+    const rotY =
+      ((Math.PI * clock.getElapsedTime()) / SECONDS_PER_ROTATION) * -1;
+    swimAnimationRef.current.rotation.set(0, rotY, 0);
 
-//     const deltaY =
-//       Math.sin(clock.getElapsedTime() / SECONDS_PER_UP_DOWN_WAVE) * WAVE_DY;
-//     swimAnimationRef.current.position.set(0, deltaY, 0);
-//   });
+    const deltaY =
+      Math.sin(clock.getElapsedTime() / SECONDS_PER_UP_DOWN_WAVE) * WAVE_DY;
+    swimAnimationRef.current.position.set(0, deltaY, 0);
+  });
 
-//   const model = useGLTF("/leviathan/scene.gltf");
-//   // const hoverAnimationRef = useHoverAnimation();
+  const model = useGLTF("/leviathan/scene.gltf");
+  // const hoverAnimationRef = useHoverAnimation();
 
-//   // Here's the animation part
-//   // *************************
-//   let mixer;
-//   if (model.animations.length) {
-//     mixer = new THREE.AnimationMixer(model.scene);
-//     model.animations.forEach((clip) => {
-//       const action = mixer.clipAction(clip);
-//       action.play();
-//     });
-//   }
+  // Here's the animation part
+  // *************************
+  let mixer;
+  if (model.animations.length) {
+    mixer = new THREE.AnimationMixer(model.scene);
+    model.animations.forEach((clip) => {
+      const action = mixer.clipAction(clip);
+      action.play();
+    });
+  }
 
-//   useFrame((state, delta) => {
-//     mixer?.update(delta);
-//   });
-//   // *************************
+  useFrame((state, delta) => {
+    mixer?.update(delta);
+  });
+  // *************************
 
-//   model.scene.traverse((child) => {
-//     if ((child as any).isMesh) {
-//       child.castShadow = true;
-//       child.receiveShadow = true;
-//       (child as any).material.side = THREE.FrontSide;
-//     }
-//   });
+  model.scene.traverse((child) => {
+    if ((child as any).isMesh) {
+      child.castShadow = true;
+      child.receiveShadow = true;
+      (child as any).material.side = THREE.FrontSide;
+    }
+  });
 
-//   return (
-//     <animated.mesh ref={swimAnimationRef}>
-//       <primitive
-//         scale={10 * scaleKelp}
-//         position={[x, y, z]}
-//         object={model.scene}
-//       />
-//     </animated.mesh>
-//   );
-// }
+  return (
+    <animated.mesh ref={swimAnimationRef}>
+      <primitive
+        scale={10 * scaleKelp}
+        position={[x, y, z]}
+        object={model.scene}
+      />
+    </animated.mesh>
+  );
+}
 
 const guppy_SECONDS_PER_ROTATION = 180;
 const guppy_SECONDS_PER_UP_DOWN_WAVE = 20;
@@ -533,7 +533,7 @@ function GLTFModelyellowfish() {
     yellowfishScale,
   } = {
     x: 34,
-    y: -4,
+    y: -40,
     z: 0,
     yellowfish_WAVE_DY: 10,
     yellowfish_INITIAL_ROTATION_Y: Math.random() * Math.PI,
@@ -693,7 +693,7 @@ function GLTFModelgreatwhite() {
     greatwhiteScale,
   } = {
     x: 413,
-    y: -26,
+    y: -86,
     z: 0,
     greatwhite_WAVE_DY: 24,
     greatwhite_INITIAL_ROTATION_Y: Math.random() * Math.PI,
@@ -772,7 +772,7 @@ function GLTFModelballena() {
     ballenaScale,
   } = {
     x: 0,
-    y: 60,
+    y: 260,
     z: 980,
     ballena_WAVE_DY: 24,
     ballena_INITIAL_ROTATION_Y: Math.random() * Math.PI,
