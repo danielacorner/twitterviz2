@@ -4,6 +4,7 @@ import { appUserIdAtom, serverErrorAtom } from "providers/store/store";
 import { useSetTweets, useTweets } from "providers/store/useSelectors";
 import { BotScore, Tweet } from "types";
 import { SERVER_URL } from "utils/constants";
+import { EMPTY_TWEET } from "utils/emptyTweet";
 
 /** fetch one bot score and send to store>tweets
  *
@@ -20,15 +21,13 @@ export function useFetchBotScoreForTweet() {
     try {
       console.log("🌟🚨 ~ fetching bot score for tweet", tweet);
       if (!tweet) {
+        console.log("🌟🚨 ~ !tweet", tweet);
         return null;
       }
-      // const tweetsByUser = tweets.filter(
-      //   (t) => t.user.id_str === tweet.user.id_str
-      // );
       const resp = await fetch(`${SERVER_URL}/api/generate_bot_score`, {
         headers: { "content-type": "application/json" },
         method: "POST",
-        body: JSON.stringify([tweet]),
+        body: JSON.stringify([{ ...EMPTY_TWEET, ...tweet }]),
       });
       console.log("🤖 ~ fetching bot score ~ resp", resp);
       const { data: botScore, error: botScoreError } = await resp.json();

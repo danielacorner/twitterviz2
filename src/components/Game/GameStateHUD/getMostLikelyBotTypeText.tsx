@@ -5,7 +5,15 @@ export function getMostLikelyBotTypeText(botScore: BotScore) {
   let botTypeText = "";
   let botTypeInfo = "";
   let botType = "";
-
+  if (!botScore) {
+    console.log("🌟🚨 ~ getMostLikelyBotTypeText ~ !botScore", botScore);
+    return {
+      botTypeText: null,
+      botTypeInfo: null,
+      botType: null,
+      scorePercent: null,
+    };
+  }
   const {
     // overall,
     fake_follower,
