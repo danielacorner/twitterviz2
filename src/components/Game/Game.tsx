@@ -118,8 +118,6 @@ function GameContent() {
 
   const startGame = usePlayAgain();
 
-  const startLookingAtTweets = useStartLookingAtTweets();
-
   // start the game on mount
   useMount(startGame);
 
@@ -127,7 +125,7 @@ function GameContent() {
 
   switch (gameState.step) {
     case GameStepsEnum.welcome:
-      return <StartPage {...{ startLookingAtTweets }} />;
+      return <StartPage />;
     case GameStepsEnum.lookingAtTweetsWithBotScores:
       return <BtnStartOver />;
     // case GameStepsEnum.gameOver:

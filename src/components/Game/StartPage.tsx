@@ -14,16 +14,20 @@ import { CUSTOM_SCROLLBAR_CSS } from "components/common/styledComponents";
 import { BOT_TYPES } from "utils/constants";
 import { useInterval } from "utils/useInterval";
 import ErrorBoundary from "components/ErrorBoundary3D";
+import { useStartLookingAtTweets } from "./Game";
 
-export function StartPage({ startLookingAtTweets }) {
+export function StartPage() {
   const isLoading = useLoading();
 
-  const [step, setStep] = useState(0);
+  const [startPageStep, setStartPageStep] = useState(0);
   const [isAudioPlaying, setIsAudioPlaying] = useAtom(isMusicOnAtom);
   const isTabletOrLarger = useMediaQuery(`(min-width: ${768}px)`);
+  const startLookingAtTweets = useStartLookingAtTweets();
 
   const startGame = () => {
-    setStep(0);
+    if (startPageStep !== 0) {
+      setStartPageStep(0);
+    }
     startLookingAtTweets();
     if (!isAudioPlaying) {
       setIsAudioPlaying(true);
@@ -41,7 +45,7 @@ export function StartPage({ startLookingAtTweets }) {
       variant="contained"
       color={"primary"}
       onClick={() => {
-        setStep((p) => p + 1);
+        setStartPageStep((p) => p + 1);
       }}
       endIcon={<ChevronRight />}
     >
@@ -55,7 +59,7 @@ export function StartPage({ startLookingAtTweets }) {
       disabled={isLoading}
       color={"primary"}
       onClick={() => {
-        setStep((p) => p - 1);
+        setStartPageStep((p) => p - 1);
       }}
       startIcon={<ChevronLeft />}
     >
@@ -78,7 +82,7 @@ export function StartPage({ startLookingAtTweets }) {
       <div className="topEmoji">🎣</div>
       <div className="content">
         <h1 className="title font-effect-shadow-multiple">Plenty of Bots</h1>
-        {step === 0 && (
+        {startPageStep === 0 && (
           <>
             <p style={{ textAlign: "center", marginBottom: "2em" }}>
               Twitter is full of bots 🤖
@@ -129,7 +133,7 @@ export function StartPage({ startLookingAtTweets }) {
             </div>
           </>
         )}
-        {step === 1 && (
+        {startPageStep === 1 && (
           <ErrorBoundary>
             <p>These days, AI generates realistic fake avatars:</p>
             <div className="thisPersonDoesNotExist">
@@ -164,7 +168,7 @@ export function StartPage({ startLookingAtTweets }) {
             </div>
           </ErrorBoundary>
         )}
-        {step === 2 && (
+        {startPageStep === 2 && (
           <>
             <p style={{ marginBottom: 0, marginTop: -18 }}>
               There are different kinds of bot:
@@ -212,7 +216,7 @@ export function StartPage({ startLookingAtTweets }) {
             </div>
           </>
         )}
-        {step === 3 && (
+        {startPageStep === 3 && (
           <>
             <p>With practice, you might get better at identifying bots!</p>
             <ol>
@@ -264,7 +268,7 @@ export function StartPage({ startLookingAtTweets }) {
             </div>
           </>
         )}
-        <div className="numSteps">{step + 1}/2</div>
+        <div className="numSteps">{startPageStep + 1}/2</div>
       </div>
     </StartPageStyles>
   );
