@@ -24,14 +24,24 @@ export function useFetchBotScoreForTweet() {
         console.log("🌟🚨 ~ !tweet", tweet);
         return null;
       }
-      const resp = await fetch(`${SERVER_URL}/api/generate_bot_score`, {
-        headers: { "content-type": "application/json" },
-        method: "POST",
-        body: JSON.stringify([{ ...EMPTY_TWEET, ...tweet }]),
-      });
-      console.log("🤖 ~ fetching bot score ~ resp", resp);
+      let resp = null as any;
+      try {
+        resp = await fetch(`${SERVER_URL}/api/generate_bot_score`, {
+          headers: { "content-type": "application/json" },
+          method: "POST",
+          body: JSON.stringify([{ ...EMPTY_TWEET, ...tweet }]),
+        });
+      } catch (error) {
+        console.log("🌟🚨 ~ return ~ error", error);
+        setServerError(error as any);
+        return null;
+      }
+
+      console.log("🤖 ~ fetched bot score ~ resp", resp);
       const { data: botScore, error: botScoreError } = await resp.json();
+      console.log("🤖🤖 ~ botScore", botScore);
       if (botScoreError) {
+        console.log("!🤖🤖 ~ botScoreError", botScoreError);
         setServerError(botScoreError);
       }
 
