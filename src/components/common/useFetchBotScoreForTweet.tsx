@@ -18,7 +18,7 @@ export function useFetchBotScoreForTweet() {
 
   return async (tweet: Tweet): Promise<BotScore | null> => {
     try {
-      console.log("🌟🚨 ~ return ~ tweet", tweet);
+      console.log("🌟🚨 ~ fetching bot score for tweet", tweet);
       if (!tweet) {
         return null;
       }
@@ -31,7 +31,10 @@ export function useFetchBotScoreForTweet() {
         body: JSON.stringify([tweet]),
       });
       console.log("🤖 ~ fetching bot score ~ resp", resp);
-      const botScore = await resp.json();
+      const { data: botScore, error: botScoreError } = await resp.json();
+      if (botScoreError) {
+        setServerError(botScoreError);
+      }
 
       // save the bot score to the tweet
       const tweetWithBotScore = {

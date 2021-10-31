@@ -13,6 +13,7 @@ import { isMusicOnAtom } from "providers/store/store";
 import { CUSTOM_SCROLLBAR_CSS } from "components/common/styledComponents";
 import { BOT_TYPES } from "utils/constants";
 import { useInterval } from "utils/useInterval";
+import ErrorBoundary from "components/ErrorBoundary3D";
 
 export function StartPage({ startLookingAtTweets }) {
   const isLoading = useLoading();
@@ -129,7 +130,7 @@ export function StartPage({ startLookingAtTweets }) {
           </>
         )}
         {step === 1 && (
-          <>
+          <ErrorBoundary>
             <p>These days, AI generates realistic fake avatars:</p>
             <div className="thisPersonDoesNotExist">
               <a
@@ -161,7 +162,7 @@ export function StartPage({ startLookingAtTweets }) {
               <BtnNext />
               <BtnSkip />
             </div>
-          </>
+          </ErrorBoundary>
         )}
         {step === 2 && (
           <>

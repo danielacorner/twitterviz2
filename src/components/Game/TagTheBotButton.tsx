@@ -152,20 +152,6 @@ export default function TagTheBotButton() {
               const newBotScore = { ...hiddenBotScore };
               setSelectedNode(null);
               setTimeout(() => {
-                // setTweets(
-                //   tweets.map((t) =>
-                //     t.id_str === selectedNode.id_str
-                //       ? {
-                //           ...t,
-                //           botScore: newBotScore,
-                //           user: {
-                //             ...selectedNode.user,
-                //             botScore: newBotScore,
-                //           },
-                //         }
-                //       : t
-                //   )
-                // );
                 handleReceiveBotScore(newBotScore, nodeIdStr);
               }, 1500);
             } else {
@@ -174,8 +160,11 @@ export default function TagTheBotButton() {
                 selectedNode.user.username
               );
               fetchBotScoreForTweet(selectedNode).then((botScore) => {
+                console.log(
+                  "🌟🚨 ~ fetchBotScoreForTweet ~ botScore",
+                  botScore
+                );
                 setSelectedNode(null);
-                // setTooltipNode(null);
                 if (botScore) {
                   handleReceiveBotScore(botScore, nodeIdStr);
                 }

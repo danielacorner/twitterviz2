@@ -17,9 +17,8 @@ export function PopAnimation() {
         range={1000} // Optional: draw-range
       >
         {bubblesIds.map((bubbleId) => (
-          <Instance>
+          <Instance key={bubbleId}>
             <AnimatingBubble
-              key={bubbleId}
               handleUnmount={() => {
                 setBubblesIds((p) => p.filter((id) => id !== bubbleId));
               }}
