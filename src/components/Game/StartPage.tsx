@@ -404,12 +404,10 @@ const StartPageStyles = styled.div`
     }
     .topEmoji {
       font-size: 4em;
-      top: calc(${MARGIN_TOP * 2 + 16}px - 1em);
     }
     .content {
       padding: 3em 3.5em;
       max-width: 640px;
-      margin-top: ${MARGIN_TOP * 2}px;
 
       .title {
         font-size: 6em;
