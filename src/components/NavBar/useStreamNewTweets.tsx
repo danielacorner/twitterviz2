@@ -65,12 +65,12 @@ export function useStreamNewTweets() {
             "🌟🚨 ~ file: useStreamNewTweets.tsx ~ line 64 ~ returnnewPromise ~ text",
             text
           );
-          setServerError({
-            ok: resp.ok,
-            status: resp.status,
-            statusText: resp.statusText,
-            text,
-          });
+          // setServerError({
+          //   ok: resp.ok,
+          //   status: resp.status,
+          //   statusText: resp.statusText,
+          //   text,
+          // });
           setLoading(false);
         });
         return reject();
