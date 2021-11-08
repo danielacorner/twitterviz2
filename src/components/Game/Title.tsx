@@ -1,16 +1,17 @@
 import styled from "styled-components/macro";
 import { useSpring, animated } from "react-spring";
 import { MARGIN_TOP } from "utils/constants";
+import { useControls } from "leva";
 
-export function Title({ isMinimized }) {
-  console.log("🌟🚨 ~ Title ~ isMinimized", isMinimized);
-  const { x, y, cx, cy } = { x: -2.8, y: 0.86, cx: -249, cy: 51 };
+export function Title({ isMinimized, scaleY }) {
+  const { x, y, cx, cy } = useControls({ x: -2.8, y: 0.86, cx: -252, cy: 51 });
   const springContainer = useSpring({
     top: -MARGIN_TOP,
     transform: `scale(${isMinimized ? 0.5 : 1}) translate(${
       isMinimized ? cx : 0
-    }px,${isMinimized ? cy : 0}px)`,
+    }px,${isMinimized ? cy : 0}px) `,
     marginTop: isMinimized ? 0 : -12,
+    transformOrigin: "top right",
   });
   const springX = useSpring({
     transform: `translateX(${isMinimized ? 100 * x : 0}px)`,
@@ -34,6 +35,8 @@ export function Title({ isMinimized }) {
   );
 }
 const TitleStyles = styled(animated.div)`
+  display: grid;
+  justify-items: center;
   .title {
     font-family: "Rancho", cursive;
     font-size: 4em;
@@ -41,11 +44,12 @@ const TitleStyles = styled(animated.div)`
     line-height: 1em;
   }
   margin: auto;
-  transform-origin: top center;
-  position: fixed;
   z-index: 10;
+  position: absolute;
+  top: 0;
   left: 0;
   right: 0;
+  transform-origin: top left;
   height: 100px;
   .content {
   }

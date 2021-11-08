@@ -82,212 +82,218 @@ export function StartPage() {
     </Button>
   );
   const windowSize = useWindowSize();
-  const scaleY = windowSize.height / 1080;
+  const vmin = Math.min(windowSize.width, windowSize.height);
+  console.log("🌟🚨 ~ StartPage ~ vmin", vmin);
+  const TOOLTIP_WIDTH_ = 578;
+  const scaleY = vmin > TOOLTIP_WIDTH_ ? 1 : vmin / TOOLTIP_WIDTH_;
+  // const scaleY = windowSize.height / 1080;
   console.log("🌟🚨 ~ StartPage ~ scaleY", scaleY);
   const springScale = useSpring({
     transform: `scale(${scaleY})`,
   });
   return (
-    <animated.div style={{ ...springScale, transformOrigin: "top center" }}>
+    <animated.div style={{ ...springScale, transformOrigin: "left" }}>
       <StartPageStyles>
-        <Title {...{ isMinimized }} />
-        <div className="content">
-          {startPageStep === 0 && (
-            <>
-              {/* space for the title */}
-              <div style={{ height: 100 }} />
+        <div className="titleAndCard">
+          <Title {...{ isMinimized, scaleY }} />
+          <div className="content">
+            {startPageStep === 0 && (
+              <>
+                {/* space for the title */}
+                <div style={{ height: 100 }} />
 
-              <h1
-                style={{
-                  textAlign: "center",
-                  marginBottom: "2em",
-                  marginTop: "1em",
-                }}
-              >
-                Twitter is full of bots 🤖
-              </h1>
-              <p>In 2020 for example, </p>
-              <p style={{ marginBottom: 0 }}>
-                <ul style={{ textAlign: "left" }}>
-                  <li>
-                    <a
-                      href="https://www.npr.org/sections/coronavirus-live-updates/2020/05/20/859814085/researchers-nearly-half-of-accounts-tweeting-about-coronavirus-are-likely-bots"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <span style={{ fontWeight: "bold", color: colorLink }}>
-                        50%
-                      </span>{" "}
-                      <span style={{ fontSize: "0.8em", color: colorLink }}>
-                        of all accounts spreading messages about COVID-19 were
-                        bots
-                      </span>
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="https://www.marketwatch.com/story/about-half-of-the-twitter-accounts-calling-for-reopening-america-are-probably-bots-report-2020-05-26"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <span style={{ fontWeight: "bold", color: colorLink }}>
-                        82%
-                      </span>{" "}
-                      <span style={{ fontSize: "0.8em", color: colorLink }}>
-                        of the most influential COVID-19 retweeters were bots
-                      </span>
-                    </a>
-                  </li>
-                </ul>
-              </p>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr auto",
-                  gridGap: "0.5em",
-                }}
-              >
-                <BtnNext />
-                <BtnSkip />
-              </div>
-            </>
-          )}
-          {startPageStep === 1 && (
-            <ErrorBoundary>
-              <p>These days, AI generates realistic fake avatars:</p>
-              <div className="thisPersonDoesNotExist">
+                <h1
+                  style={{
+                    textAlign: "center",
+                    marginBottom: "2em",
+                    marginTop: "1em",
+                  }}
+                >
+                  Twitter is full of bots 🤖
+                </h1>
+                <p>In 2020 for example, </p>
+                <p style={{ marginBottom: 0 }}>
+                  <ul style={{ textAlign: "left" }}>
+                    <li>
+                      <a
+                        href="https://www.npr.org/sections/coronavirus-live-updates/2020/05/20/859814085/researchers-nearly-half-of-accounts-tweeting-about-coronavirus-are-likely-bots"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <span style={{ fontWeight: "bold", color: colorLink }}>
+                          50%
+                        </span>{" "}
+                        <span style={{ fontSize: "0.8em", color: colorLink }}>
+                          of all accounts spreading messages about COVID-19 were
+                          bots
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://www.marketwatch.com/story/about-half-of-the-twitter-accounts-calling-for-reopening-america-are-probably-bots-report-2020-05-26"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <span style={{ fontWeight: "bold", color: colorLink }}>
+                          82%
+                        </span>{" "}
+                        <span style={{ fontSize: "0.8em", color: colorLink }}>
+                          of the most influential COVID-19 retweeters were bots
+                        </span>
+                      </a>
+                    </li>
+                  </ul>
+                </p>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr auto",
+                    gridGap: "0.5em",
+                  }}
+                >
+                  <BtnNext />
+                  <BtnSkip />
+                </div>
+              </>
+            )}
+            {startPageStep === 1 && (
+              <ErrorBoundary>
+                <p>These days, AI generates realistic fake avatars:</p>
+                <div className="thisPersonDoesNotExist">
+                  <a
+                    href="https://thispersondoesnotexist.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <div className="person" style={{ pointerEvents: "none" }}>
+                      <ReloadingIframe delay={2500} />
+                    </div>
+                  </a>
+                </div>
                 <a
                   href="https://thispersondoesnotexist.com/"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <div className="person" style={{ pointerEvents: "none" }}>
-                    <ReloadingIframe delay={2500} />
-                  </div>
+                  ThisPersonDoesNotExist.com
                 </a>
-              </div>
-              <a
-                href="https://thispersondoesnotexist.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                ThisPersonDoesNotExist.com
-              </a>
-              <div style={{ marginBottom: "1em" }}></div>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "auto 1fr auto",
-                  gridGap: "0.5em",
-                }}
-              >
-                <BtnPrev />
-                <BtnNext />
-                <BtnSkip />
-              </div>
-            </ErrorBoundary>
-          )}
-          {startPageStep === 2 && (
-            <>
-              <p style={{ marginBottom: 0, marginTop: -18 }}>
-                There are different kinds of bot:
-              </p>
-              <div className="canvasContainer">
-                <Canvas
+                <div style={{ marginBottom: "1em" }}></div>
+                <div
                   style={{
-                    width: 480,
-                    height: 360,
+                    display: "grid",
+                    gridTemplateColumns: "auto 1fr auto",
+                    gridGap: "0.5em",
                   }}
                 >
-                  <BotScoreLegend
-                    showScorePercents={false}
-                    showTooltips={true}
-                    showAvatar={false}
-                    isInStartMenu={true}
-                    position={[0, 0.2, 0]}
-                    scale={[2.5, 2.5, 2.5]}
-                  />
-                </Canvas>
+                  <BtnPrev />
+                  <BtnNext />
+                  <BtnSkip />
+                </div>
+              </ErrorBoundary>
+            )}
+            {startPageStep === 2 && (
+              <>
+                <p style={{ marginBottom: 0, marginTop: -18 }}>
+                  There are different kinds of bot:
+                </p>
+                <div className="canvasContainer">
+                  <Canvas
+                    style={{
+                      width: 480,
+                      height: 360,
+                    }}
+                  >
+                    <BotScoreLegend
+                      showScorePercents={false}
+                      showTooltips={true}
+                      showAvatar={false}
+                      isInStartMenu={true}
+                      position={[0, 0.2, 0]}
+                      scale={[2.5, 2.5, 2.5]}
+                    />
+                  </Canvas>
+                </div>
+                <p style={{ marginTop: 0 }}>
+                  Watch out! Some bots distort the truth:
+                </p>
+                <ul style={{ textAlign: "left" }} className="">
+                  <li>
+                    <span style={{ fontWeight: "bold" }}>Fake Follower</span> —{" "}
+                    {BOT_TYPES.FAKE_FOLLOWER.tooltipText}
+                  </li>
+                  <li>
+                    <span style={{ fontWeight: "bold" }}>Echo Chamber</span> —{" "}
+                    {BOT_TYPES.ASTROTURF.tooltipText}
+                  </li>
+                </ul>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "auto 1fr auto",
+                    gridGap: "0.5em",
+                  }}
+                >
+                  <BtnPrev />
+                  <BtnNext />
+                  <BtnSkip />
+                </div>
+              </>
+            )}
+            {startPageStep === 3 && (
+              <div>
+                <p>With practice, you might get better at identifying bots!</p>
+                <ol>
+                  <li>
+                    <p>
+                      🕵️‍♀️ Inspect 10 recent tweets about COVID{" "}
+                      <span style={{ verticalAlign: "middle" }}>
+                        <COVIDSVG />
+                      </span>{" "}
+                      (from{" "}
+                      <a
+                        href="https://developer.twitter.com/en/docs/tutorials/consuming-streaming-data"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ fontWeight: "bold" }}
+                      >
+                        Twitter Stream
+                      </a>
+                      )
+                    </p>
+                  </li>
+                  <li>
+                    <p>🎯 Guess which ones are bots</p>
+                  </li>
+                  <li>
+                    <p>
+                      🤖 Then we'll get their{" "}
+                      <span style={{ fontWeight: "bold" }}>
+                        <a href="https://botometer.osome.iu.edu/">Botometer</a>{" "}
+                        bot score
+                      </span>{" "}
+                      and see how well you did.
+                    </p>
+                  </li>
+                </ol>
+                <div className="takeYourShot">
+                  <p>Take your shot,</p>
+                  <p>guess which one's a bot!</p>
+                </div>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "auto 1fr",
+                    gridGap: "0.5em",
+                  }}
+                >
+                  <BtnPrev />
+                  <BtnPlay />
+                </div>
               </div>
-              <p style={{ marginTop: 0 }}>
-                Watch out! Some bots distort the truth:
-              </p>
-              <ul style={{ textAlign: "left" }} className="">
-                <li>
-                  <span style={{ fontWeight: "bold" }}>Fake Follower</span> —{" "}
-                  {BOT_TYPES.FAKE_FOLLOWER.tooltipText}
-                </li>
-                <li>
-                  <span style={{ fontWeight: "bold" }}>Echo Chamber</span> —{" "}
-                  {BOT_TYPES.ASTROTURF.tooltipText}
-                </li>
-              </ul>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "auto 1fr auto",
-                  gridGap: "0.5em",
-                }}
-              >
-                <BtnPrev />
-                <BtnNext />
-                <BtnSkip />
-              </div>
-            </>
-          )}
-          {startPageStep === 3 && (
-            <>
-              <p>With practice, you might get better at identifying bots!</p>
-              <ol>
-                <li>
-                  <p>
-                    🕵️‍♀️ Inspect 10 recent tweets about COVID{" "}
-                    <span style={{ verticalAlign: "middle" }}>
-                      <COVIDSVG />
-                    </span>{" "}
-                    (from{" "}
-                    <a
-                      href="https://developer.twitter.com/en/docs/tutorials/consuming-streaming-data"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ fontWeight: "bold" }}
-                    >
-                      Twitter Stream
-                    </a>
-                    )
-                  </p>
-                </li>
-                <li>
-                  <p>🎯 Guess which ones are bots</p>
-                </li>
-                <li>
-                  <p>
-                    🤖 Then we'll get their{" "}
-                    <span style={{ fontWeight: "bold" }}>
-                      <a href="https://botometer.osome.iu.edu/">Botometer</a>{" "}
-                      bot score
-                    </span>{" "}
-                    and see how well you did.
-                  </p>
-                </li>
-              </ol>
-              <div className="takeYourShot">
-                <p>Take your shot,</p>
-                <p>guess which one's a bot!</p>
-              </div>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "auto 1fr",
-                  gridGap: "0.5em",
-                }}
-              >
-                <BtnPrev />
-                <BtnPlay />
-              </div>
-            </>
-          )}
-          <div className="numSteps">{startPageStep + 1}/2</div>
+            )}
+            <div className="numSteps">{startPageStep + 1}/2</div>
+          </div>
         </div>
       </StartPageStyles>
     </animated.div>
@@ -302,6 +308,9 @@ const StartPageStyles = styled.div`
   inset: 0;
   display: grid;
   justify-items: center;
+  .titleAndCard {
+    position: relative;
+  }
 
   .content {
     font-size: 1rem;
@@ -312,8 +321,6 @@ const StartPageStyles = styled.div`
     position: relative;
     overflow: auto;
     ${POPUP_BASE_CSS}
-    max-width: calc(100vmin - ${MARGIN_SIDES}px);
-    max-height: calc(100vmin - ${MARGIN_SIDES}px);
     ul,
     ol {
       padding-left: 16px;
@@ -412,7 +419,7 @@ const StartPageStyles = styled.div`
 
   .content {
     padding: 3em 3.5em;
-    max-width: 640px;
+    width: 578px;
     /* margin-top: ${MARGIN_TOP * 2}px; */
 
     li::marker {
