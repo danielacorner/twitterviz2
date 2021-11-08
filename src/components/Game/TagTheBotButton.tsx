@@ -179,6 +179,7 @@ export default function TagTheBotButton() {
         <Button
           style={{ textTransform: "none" }}
           variant="contained"
+          className="its-a-human"
           color="secondary"
           onClick={() => {
             setLoading(true);

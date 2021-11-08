@@ -32,7 +32,7 @@ import { useControls } from "leva";
 import { useMounted } from "utils/hooks";
 import { randBetween } from "utils/utils";
 import { NodeContent } from "./NodeContent";
-import { Instance } from "@react-three/drei";
+import { Html, Instance } from "@react-three/drei";
 import { PopAnimation } from "./PopAnimation";
 import {
   notABotMaterial,
@@ -43,6 +43,7 @@ import {
   tooltipNodeMaterial,
   invisibleMaterial,
 } from "./materialsAndGeometries";
+import ErrorBoundary from "components/ErrorBoundary3D";
 
 export const Node = ({
   vec = new THREE.Vector3(),
@@ -178,39 +179,48 @@ export const Node = ({
     : defaultNodeMaterial;
 
   return (
-    <Instance ref={sphereRef}>
-      <ScaleOnHover>
-        <animated.mesh renderOrder={2} ref={sphereRef}>
-          <animated.mesh
-            scale={springScale.scale as any}
-            // material-transparent={true}
-            // material-opacity={springScale.opacity}
-            {...(hasBotScore
-              ? { onClick: handleShowBotScoreInfoCard }
-              : {
-                  onPointerEnter,
-                  onPointerLeave,
-                  onContextMenu,
-                  onClick,
-                  onWheel: onScroll,
-                })}
-          >
-            <NodeContent
-              {...{
-                node: userNode,
-                isTooltipNode,
-                isPointerOver,
-                isScanningNode,
-                isRightClickingThisNode,
-              }}
-            />
-            {isNotABot && shouldPop && <PopAnimation />}
-            {/* <ScanningAnimation /> */}
-            {isScanningNode ? <ScanningAnimation /> : null}
+    <ErrorBoundary>
+      <Instance ref={sphereRef}>
+        <ScaleOnHover>
+          <animated.mesh renderOrder={2} ref={sphereRef}>
+            <Html>
+              <button
+                className="hidden-node-button"
+                style={{ width: 1, height: 1, opacity: 0 }}
+                {...{ onClick }}
+              />
+            </Html>
+            <animated.mesh
+              scale={springScale.scale as any}
+              // material-transparent={true}
+              // material-opacity={springScale.opacity}
+              {...(hasBotScore
+                ? { onClick: handleShowBotScoreInfoCard }
+                : {
+                    onPointerEnter,
+                    onPointerLeave,
+                    onContextMenu,
+                    onClick,
+                    onWheel: onScroll,
+                  })}
+            >
+              <NodeContent
+                {...{
+                  node: userNode,
+                  isTooltipNode,
+                  isPointerOver,
+                  isScanningNode,
+                  isRightClickingThisNode,
+                }}
+              />
+              {isNotABot && shouldPop && <PopAnimation />}
+              {/* <ScanningAnimation /> */}
+              {isScanningNode ? <ScanningAnimation /> : null}
+            </animated.mesh>
           </animated.mesh>
-        </animated.mesh>
-      </ScaleOnHover>
-    </Instance>
+        </ScaleOnHover>
+      </Instance>
+    </ErrorBoundary>
   );
 };
 function ScaleOnHover({ children }: { children: React.ReactNode }) {

@@ -39,7 +39,7 @@ export function StartPage() {
   };
 
   const BtnSkip = () => (
-    <Button color={"secondary"} onClick={startGame}>
+    <Button color={"secondary"} className={"btn-skip"} onClick={startGame}>
       Skip
     </Button>
   );
