@@ -11,18 +11,20 @@ import { colorLink, colorSecondary, darkBackground } from "utils/colors";
 import { useAtom } from "jotai";
 import { isMusicOnAtom } from "providers/store/store";
 import { CUSTOM_SCROLLBAR_CSS } from "components/common/styledComponents";
-import { BOT_TYPES } from "utils/constants";
+import { BOT_TYPES, MARGIN_TOP } from "utils/constants";
 import { useInterval } from "utils/useInterval";
 import ErrorBoundary from "components/ErrorBoundary3D";
 import { useStartLookingAtTweets } from "./Game";
+import { Title } from "./Title";
 
 export function StartPage() {
   const isLoading = useLoading();
-
   const [startPageStep, setStartPageStep] = useState(0);
   const [isAudioPlaying, setIsAudioPlaying] = useAtom(isMusicOnAtom);
   const isTabletOrLarger = useMediaQuery(`(min-width: ${768}px)`);
   const startLookingAtTweets = useStartLookingAtTweets();
+
+  const isMinimized = startPageStep > 0;
 
   const startGame = () => {
     if (startPageStep !== 0) {
@@ -76,14 +78,15 @@ export function StartPage() {
       Play
     </Button>
   );
-
   return (
     <StartPageStyles>
-      <div className="topEmoji">🎣</div>
+      <Title {...{ isMinimized }} />
       <div className="content">
-        <h1 className="title font-effect-shadow-multiple">Plenty of Bots</h1>
         {startPageStep === 0 && (
           <>
+            {/* space for the title */}
+            <div style={{ height: 100 }} />
+
             <p style={{ textAlign: "center", marginBottom: "2em" }}>
               Twitter is full of bots 🤖
             </p>
@@ -273,7 +276,6 @@ export function StartPage() {
     </StartPageStyles>
   );
 }
-const MARGIN_TOP = 92;
 const StartPageStyles = styled.div`
   font-family: "Roboto", sans-serif;
   font-size: 1.5rem;
@@ -282,13 +284,7 @@ const StartPageStyles = styled.div`
   inset: 0;
   display: grid;
   justify-items: center;
-  .topEmoji {
-    position: absolute;
-    font-size: 2em;
-    top: calc(${MARGIN_TOP + 8}px - 1em);
-    z-index: 99999;
-    text-shadow: 0 2px 5px black;
-  }
+
   .content {
     font-size: 1rem;
     margin-top: ${MARGIN_TOP}px;
@@ -297,15 +293,11 @@ const StartPageStyles = styled.div`
     box-shadow: 0px 2px 30px 8px #00000068;
     position: relative;
     max-height: calc(100vh - ${MARGIN_TOP + 16}px);
+    min-height: calc(fit-content + 1px);
     overflow: auto;
     ${POPUP_BASE_CSS}
     max-width: calc(100vw - 32px);
-    .title {
-      font-family: "Rancho", cursive;
-      font-size: 4em;
-      margin: 0em 0 32px;
-      line-height: 1em;
-    }
+
     ul,
     ol {
       padding-left: 16px;
@@ -402,19 +394,12 @@ const StartPageStyles = styled.div`
       width: 1.5em;
       height: 1.5em;
     }
-    .topEmoji {
-      font-size: 4em;
-      top: calc(${MARGIN_TOP * 2 + 16}px - 1em);
-    }
+
     .content {
       padding: 3em 3.5em;
       max-width: 640px;
       margin-top: ${MARGIN_TOP * 2}px;
 
-      .title {
-        font-size: 6em;
-        margin: 0.1em 0 0.4em;
-      }
       li::marker {
         font-size: 1.5em;
       }

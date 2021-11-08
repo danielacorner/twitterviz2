@@ -5,7 +5,7 @@ import mockTweetsData from "../../assets/mockTweetsData.json";
 import { useLocation } from "react-router";
 import qs from "query-string";
 import { atom, useAtom } from "jotai";
-import { atomWithHash, atomWithStorage } from "jotai/utils";
+import { atomWithStorage } from "jotai/utils";
 import { UserNode } from "components/NetworkGraph/useUserNodes";
 
 export const SHOTS_REMAINING = process.env.NODE_ENV === "development" ? 2 : 3;
@@ -74,7 +74,7 @@ export const isDarkModeAtom = atomWithStorage<boolean>(
   "atoms:isDarkMode",
   true
 );
-export const selectedNodeIdAtom = atomWithHash<string | null>("selected", null);
+export const selectedNodeIdAtom = atom<string | null>(null);
 
 export const useSearchObj = () => qs.parse(useLocation()?.search);
 export type GlobalStateType = {
