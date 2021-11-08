@@ -6,7 +6,7 @@ export function Title({ isMinimized }) {
   console.log("🌟🚨 ~ Title ~ isMinimized", isMinimized);
   const { x, y, cx, cy } = { x: -2.8, y: 0.86, cx: -249, cy: 51 };
   const springContainer = useSpring({
-    top: MARGIN_TOP,
+    top: -MARGIN_TOP,
     transform: `scale(${isMinimized ? 0.5 : 1}) translate(${
       isMinimized ? cx : 0
     }px,${isMinimized ? cy : 0}px)`,

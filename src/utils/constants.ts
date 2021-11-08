@@ -34,7 +34,10 @@ export const FILTER_LEVELS = {
 };
 
 export const BOT_TYPES = {
-  OVERALL: { name: "Overall", tooltipText: "Overall" },
+  OVERALL: {
+    name: "Overall",
+    tooltipText: "Overall: probability that this account is a bot",
+  },
   OTHER: {
     name: "Other",
     tooltipText:

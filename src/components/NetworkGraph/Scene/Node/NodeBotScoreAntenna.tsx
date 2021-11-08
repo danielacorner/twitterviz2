@@ -96,7 +96,7 @@ export function NodeBotScoreAntennae({
               forceOpaque,
               isInStartMenu,
               showScorePercents,
-              tooltipText,
+              tooltipText: `${label}: ${tooltipText}`,
               score,
               label,
               showLabels,
