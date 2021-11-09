@@ -99,7 +99,9 @@ export function Scene() {
       <mesh renderOrder={100000}>
         <Stars count={2000} />
       </mesh>
-      {showExtraStuff && <ExtraStuff />}
+      {showExtraStuff && process.env.NODE_ENV === "production" && (
+        <ExtraStuff />
+      )}
       <mesh scale={[20, 20, 20]}></mesh>
       <directionalLight position={[px, py, pz]} intensity={4} />
       <OrbitControls

@@ -179,7 +179,7 @@ export const Node = ({
     : defaultNodeMaterial;
 
   return (
-    <ErrorBoundary>
+    <>
       <Instance ref={sphereRef}>
         <ScaleOnHover>
           <animated.mesh renderOrder={2} ref={sphereRef}>
@@ -213,14 +213,20 @@ export const Node = ({
                   isRightClickingThisNode,
                 }}
               />
-              {isNotABot && shouldPop && <PopAnimation />}
               {/* <ScanningAnimation /> */}
               {isScanningNode ? <ScanningAnimation /> : null}
             </animated.mesh>
           </animated.mesh>
         </ScaleOnHover>
       </Instance>
-    </ErrorBoundary>
+      <ErrorBoundary>
+        {isNotABot ? (
+          process.env.NODE_ENV === "development" && <PopAnimation />
+        ) : (
+          <></>
+        )}
+      </ErrorBoundary>
+    </>
   );
 };
 function ScaleOnHover({ children }: { children: React.ReactNode }) {

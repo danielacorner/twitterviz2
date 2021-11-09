@@ -28,15 +28,19 @@ export function useFetchAndReplaceNode() {
   function setNotABot(node: Tweet) {
     setTweetsFromServer((prev) => {
       console.log("🌟🚨 ~ setNotABot ~ prev", prev);
-      return prev.filter(Boolean).map((t) =>
-        t.id_str === node.id_str || t.id === node.id
-          ? {
-              ...node,
-              isNotABot: true,
-              user: { ...node.user, isNotABot: true },
-            }
-          : t
-      );
+      return prev
+        .filter(Boolean)
+        .map((t) =>
+          (node.id_str && t.id_str && t.id_str === node.id_str) ||
+          (t.id && node.id && t.id === node.id)
+            ? {
+                ...node,
+                isNotABot: true,
+                user: { ...node.user, isNotABot: true },
+              }
+            : t
+        )
+        .filter(Boolean);
     });
   }
 
@@ -58,8 +62,22 @@ export function useFetchAndReplaceNode() {
       };
     }
     // set the tweet to "not a bot" immediately
+    if (!tweet) {
+      console.log("🌟🚨 ~ useFetchAndReplaceNode ~ tweet", tweet);
+      return {
+        data: tweetsFromServer,
+        error: null,
+        msUntilRateLimitReset: null,
+      };
+    }
     const nextTweets = tweetsFromServer
-      .map((t) => (t.id_str === tweet.id_str ? { ...t, isNotABot: true } : t))
+      .filter(Boolean)
+      .map((t) =>
+        (t.id_str && tweet.id_str && t.id_str === tweet.id_str) ||
+        (t.id && tweet.id && t.id === tweet.id)
+          ? { ...t, isNotABot: true }
+          : t
+      )
       .filter(Boolean);
     console.log(
       "🌟🚨 ~ useFetchAndReplaceNode ~ tweetsFromServer",
@@ -75,10 +93,10 @@ export function useFetchAndReplaceNode() {
       try {
         // first, remove the tweet
         setNotABot(tweet);
-        const filteredTweets = tweetsFromServer.filter(
-          (t) => !((t.id_str || t.id) === (tweet.id_str || tweet.id))
-        );
-        setTweetsFromServer(filteredTweets);
+        // const filteredTweets = tweetsFromServer.filter(
+        //   (t) => !((t.id_str || t.id) === (tweet.id_str || tweet.id))
+        // );
+        // setTweetsFromServer(filteredTweets);
 
         const resp = await fetch(
           `${SERVER_URL}/api/stream?num=${numNewTweets}&filterLevel=${FILTER_LEVELS.low}`
