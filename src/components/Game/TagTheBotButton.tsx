@@ -187,16 +187,13 @@ export default function TagTheBotButton() {
             // fetch new nodes & replace on click
             fetchAndReplaceNode(selectedNode).then(
               ({ data, error, msUntilRateLimitReset }) => {
-                setServerError(
-                  error || msUntilRateLimitReset
-                    ? {
-                        ...error,
-                        ...(msUntilRateLimitReset
-                          ? { msUntilRateLimitReset }
-                          : {}),
-                      }
-                    : null
-                );
+                const showError = Boolean(error || msUntilRateLimitReset);
+                if (showError) {
+                  setServerError({
+                    ...error,
+                    ...(msUntilRateLimitReset ? { msUntilRateLimitReset } : {}),
+                  });
+                }
                 setLoading(false);
                 setSelectedNode(null);
               }

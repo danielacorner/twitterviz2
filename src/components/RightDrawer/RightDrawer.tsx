@@ -10,6 +10,7 @@ import { CUSTOM_SCROLLBAR_CSS } from "components/common/styledComponents";
 import { Close } from "@material-ui/icons";
 import { isRightDrawerOpenAtom } from "providers/store/store";
 import { useAtom } from "jotai";
+const DRAWER_WIDTH = 623;
 
 /** Selected Tweet drawer */
 export function RightDrawer() {
@@ -26,6 +27,18 @@ export function RightDrawer() {
         onClose={() => {
           setIsRightDrawerOpen(false);
           setSelectedNode(null);
+        }}
+        PaperProps={{
+          style: {
+            position: "fixed",
+            // left: `calc(50vw - ${DRAWER_WIDTH / 4}px)`,
+            left: 0,
+            width: `100vw`,
+
+            justifyContent: "center",
+            display: "grid",
+            right: 0,
+          },
         }}
       >
         <DrawerStyles>

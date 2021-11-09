@@ -35,6 +35,7 @@ export function useFetchAndReplaceNode() {
     console.log("🤖 checking if it's a human 👪");
 
     if (!tweet) {
+      console.log({ error: "no tweet passed!" });
       return {
         data: [],
         error: "no tweet passed!",
@@ -42,9 +43,9 @@ export function useFetchAndReplaceNode() {
       };
     }
     // set the tweet to "not a bot" immediately
-    setTweets((p) =>
-      p.map((t) => (t.id_str === tweet.id_str ? { ...t, isNotABot: true } : t))
-    );
+    // setTweets((p) =>
+    //   p.map((t) => (t.id_str === tweet.id_str ? { ...t, isNotABot: true } : t))
+    // );
 
     // replace with N new tweets
 
@@ -67,11 +68,14 @@ export function useFetchAndReplaceNode() {
             .concat(responseTweets)
         );
         console.log("🌟🚨 ~ return ~ error", error);
+        console.log("🌟🚨 ~ return ~ responseTweets", responseTweets);
         console.log(
           "🌟🚨 ~ return ~ msUntilRateLimitReset",
           msUntilRateLimitReset
         );
-        setServerError(error);
+        if (error) {
+          setServerError(error);
+        }
         return { data: responseTweets, error, msUntilRateLimitReset };
       } catch (err) {
         console.log(
