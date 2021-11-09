@@ -126,6 +126,7 @@ function LinearProgressIndicator() {
       color={"secondary"}
       variant="determinate"
       value={progress}
+      style={{ top: 0, left: 0, right: 0, position: "fixed" }}
     />
   ) : null;
 }

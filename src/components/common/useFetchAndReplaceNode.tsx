@@ -3,7 +3,7 @@ import {
   isTwitterApiUsageExceededAtom,
   serverErrorAtom,
 } from "providers/store/store";
-import { useSetTweets, useTweets } from "providers/store/useSelectors";
+import { tweetsFromServerAtom, useTweets } from "providers/store/useSelectors";
 import { Tweet } from "types";
 import { FILTER_LEVELS, SERVER_URL } from "utils/constants";
 import {
@@ -20,10 +20,25 @@ export function useFetchAndReplaceNode() {
   const numNewTweets = 1;
   // const numNewTweets = Math.round(Math.random() * 2);
   const tweets = useTweets();
-  const setTweets = useSetTweets();
+  const [tweetsFromServer, setTweetsFromServer] = useAtom(tweetsFromServerAtom);
   // const [selectedNodeId] = useAtom(selectedNodeIdAtom);
   const [isTwitterApiUsageExceeded] = useAtom(isTwitterApiUsageExceededAtom);
   const [, setServerError] = useAtom(serverErrorAtom);
+
+  function setNotABot(node: Tweet) {
+    setTweetsFromServer((prev) => {
+      console.log("🌟🚨 ~ setNotABot ~ prev", prev);
+      return prev.filter(Boolean).map((t) =>
+        t.id_str === node.id_str || t.id === node.id
+          ? {
+              ...node,
+              isNotABot: true,
+              user: { ...node.user, isNotABot: true },
+            }
+          : t
+      );
+    });
+  }
 
   return async (
     tweet: Tweet
@@ -43,15 +58,28 @@ export function useFetchAndReplaceNode() {
       };
     }
     // set the tweet to "not a bot" immediately
-    // setTweets((p) =>
-    //   p.map((t) => (t.id_str === tweet.id_str ? { ...t, isNotABot: true } : t))
-    // );
+    const nextTweets = tweetsFromServer
+      .map((t) => (t.id_str === tweet.id_str ? { ...t, isNotABot: true } : t))
+      .filter(Boolean);
+    console.log(
+      "🌟🚨 ~ useFetchAndReplaceNode ~ tweetsFromServer",
+      tweetsFromServer
+    );
+    console.log("🌟🚨 ~ useFetchAndReplaceNode ~ nextTweets", nextTweets);
+    setTweetsFromServer(nextTweets);
 
     // replace with N new tweets
 
     // if we still have stream API usage remaining
     if (!isTwitterApiUsageExceeded) {
       try {
+        // first, remove the tweet
+        setNotABot(tweet);
+        const filteredTweets = tweetsFromServer.filter(
+          (t) => !((t.id_str || t.id) === (tweet.id_str || tweet.id))
+        );
+        setTweetsFromServer(filteredTweets);
+
         const resp = await fetch(
           `${SERVER_URL}/api/stream?num=${numNewTweets}&filterLevel=${FILTER_LEVELS.low}`
         );
@@ -61,19 +89,41 @@ export function useFetchAndReplaceNode() {
           error,
           msUntilRateLimitReset,
         } = await resp.json();
-        setTweets((p) =>
-          p
-            .map((t) => (t.id_str === tweet.id_str ? (null as any) : t))
-            .filter(Boolean)
-            .concat(responseTweets)
-        );
-        console.log("🌟🚨 ~ return ~ error", error);
-        console.log("🌟🚨 ~ return ~ responseTweets", responseTweets);
+        if (responseTweets.length > numNewTweets) {
+          console.warn("⏰🔔⏰🔔 hey! too many nodes received");
+          console.log(
+            "🌟🚨 ~ useFetchAndReplaceNode ~ responseTweets",
+            responseTweets
+          );
+        }
         console.log(
-          "🌟🚨 ~ return ~ msUntilRateLimitReset",
-          msUntilRateLimitReset
+          "🌟🚨 ~ useFetchAndReplaceNode ~ tweetsFromServer",
+          tweetsFromServer
         );
+        console.log(
+          "🌟🚨🌟🚨🌟🚨🌟🚨🌟🚨🌟🚨🌟🚨🌟🚨🌟🚨🌟🚨🌟🚨🌟🚨🌟🚨🌟🚨🌟🚨🌟🚨 ~ useFetchAndReplaceNode ~ tweet",
+          tweet
+        );
+
+        const nextTweets = tweetsFromServer.map((t) =>
+          (t.id_str || t.id) === (tweet.id_str || tweet.id)
+            ? {
+                ...(responseTweets[0] as any),
+                id_str: String(responseTweets[0].id),
+              }
+            : t
+        ); /* .filter(Boolean); */
+        // responseTweets[0],
+        console.log("🌟🚨 ~ useFetchAndReplaceNode ~ nextTweets", nextTweets);
+        setTweetsFromServer(nextTweets);
+        if (msUntilRateLimitReset) {
+          console.log(
+            "🌟🚨 ~ return ~ msUntilRateLimitReset",
+            msUntilRateLimitReset
+          );
+        }
         if (error) {
+          console.log("🌟🚨 ~ return ~ error", error);
           setServerError(error);
         }
         return { data: responseTweets, error, msUntilRateLimitReset };
@@ -113,12 +163,12 @@ export function useFetchAndReplaceNode() {
 
       // ? wait for animation
       setTimeout(() => {
-        setTweets((p) =>
-          p
-            .map((t) => (t.id_str === tweet.id_str ? (null as any) : t))
-            .filter(Boolean)
-            .concat(randomDedupedTweets)
-        );
+        const nextTweets = tweetsFromServer
+          .map((t) => (t.id_str === tweet.id_str ? (null as any) : t))
+          .filter(Boolean)
+          .concat(randomDedupedTweets);
+        console.log("🌟🚨 ~ setTimeout ~ nextTweets", nextTweets);
+        setTweetsFromServer(nextTweets);
       }, 350);
 
       return {

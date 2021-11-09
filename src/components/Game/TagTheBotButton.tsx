@@ -91,21 +91,6 @@ export default function TagTheBotButton() {
     // TODO: rotate the camera to face the front of the node
   }
 
-  function setNotABot(node: Tweet) {
-    setTweets((prev) => {
-      console.log("🌟🚨 ~ setNotABot ~ prev", prev);
-      return prev.filter(Boolean).map((t) =>
-        t.id_str === node.id_str
-          ? {
-              ...node,
-              isNotABot: true,
-              user: { ...node.user, isNotABot: true },
-            }
-          : t
-      );
-    });
-  }
-
   const isMounted = useIsMounted();
 
   const isTagTheBotButtonUp =
@@ -183,21 +168,29 @@ export default function TagTheBotButton() {
           color="secondary"
           onClick={() => {
             setLoading(true);
-            setNotABot(selectedNode);
+            // setNotABot(selectedNode);
             // fetch new nodes & replace on click
-            fetchAndReplaceNode(selectedNode).then(
-              ({ data, error, msUntilRateLimitReset }) => {
-                const showError = Boolean(error || msUntilRateLimitReset);
-                if (showError) {
-                  setServerError({
-                    ...error,
-                    ...(msUntilRateLimitReset ? { msUntilRateLimitReset } : {}),
-                  });
+            if (selectedNode) {
+              console.log(
+                "🌟🚨 ~ TagTheBotButton ~ selectedNode",
+                selectedNode
+              );
+              fetchAndReplaceNode(selectedNode).then(
+                ({ data, error, msUntilRateLimitReset }) => {
+                  const showError = Boolean(error || msUntilRateLimitReset);
+                  if (showError) {
+                    setServerError({
+                      ...error,
+                      ...(msUntilRateLimitReset
+                        ? { msUntilRateLimitReset }
+                        : {}),
+                    });
+                  }
+                  setLoading(false);
+                  setSelectedNode(null);
                 }
-                setLoading(false);
-                setSelectedNode(null);
-              }
-            );
+              );
+            }
             setIsRightDrawerOpen(false);
           }}
         >

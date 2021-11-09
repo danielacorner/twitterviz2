@@ -15,7 +15,7 @@ export const isTwitterApiUsageExceededAtom = atom<number | null>(null);
 
 export const latestNodeWithBotScoreAtom = atom<Tweet | null>(null);
 export const isBotScoreExplainerUpAtom = atom<boolean>(false);
-export const isMusicOnAtom = atom<boolean>(false);
+export const isMusicOnAtom = atomWithStorage<boolean>("atoms:isMusicOn", false);
 export const volumeAtom = atom<number>(5);
 export const isRightDrawerOpenAtom = atom<boolean>(false);
 export const areOrbitControlsEnabledAtom = atom<boolean>(true);
