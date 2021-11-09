@@ -3,7 +3,7 @@ import {
   useSelectedNode,
   useSetSelectedNode,
 } from "../../providers/store/useSelectors";
-import { Drawer, IconButton } from "@material-ui/core";
+import { ClickAwayListener, Drawer, IconButton } from "@material-ui/core";
 import { Timeline, Tweet as TweetWidget } from "react-twitter-widgets";
 import { NodeTooltipContent } from "../NetworkGraph/NodeTooltip";
 import { CUSTOM_SCROLLBAR_CSS } from "components/common/styledComponents";
@@ -22,7 +22,7 @@ export function RightDrawer() {
   return (
     <>
       <Drawer
-        anchor="right"
+        anchor={isRightDrawerOpen ? "bottom" : "top"}
         open={isRightDrawerOpen}
         onClose={() => {
           setIsRightDrawerOpen(false);
@@ -43,75 +43,84 @@ export function RightDrawer() {
       >
         <DrawerStyles>
           {selectedNode?.user && (
-            <div className="content">
-              <IconButton
-                className="btnClose"
-                onClick={() => {
-                  setIsRightDrawerOpen(false);
-                  setSelectedNode(null);
-                }}
-              >
-                <Close />
-              </IconButton>
-              <NodeTooltipContent
-                {...{
-                  isLight: false,
-                  originalPoster: selectedNode?.user,
-                  tweet: selectedNode,
-                  tooltipCss: `.allMedia{max-height:unset}`,
-                  compact: false,
-                  tooltipStyles: { pointerEvents: "auto", maxWidth: "100%" },
-                }}
-              />
-              {selectedNode && (
-                <>
-                  <a
-                    href={`https://twitter.com/${selectedNode.user.screen_name}/status/${selectedNode.id_str}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ cursor: "pointer" }}
-                  >
-                    <div
-                      style={{
-                        position: "relative",
-                        zIndex: 0,
-                        pointerEvents: "none",
-                      }}
+            <ClickAwayListener
+              onClickAway={() => {
+                setIsRightDrawerOpen(false);
+                setSelectedNode(null);
+              }}
+            >
+              <div className="content">
+                <IconButton
+                  className="btnClose"
+                  onClick={() => {
+                    setIsRightDrawerOpen(false);
+                    setSelectedNode(null);
+                  }}
+                >
+                  <Close />
+                </IconButton>
+                <NodeTooltipContent
+                  {...{
+                    isLight: false,
+                    originalPoster: selectedNode?.user,
+                    tweet: selectedNode,
+                    tooltipCss: `.allMedia{max-height:unset}`,
+                    compact: false,
+                    tooltipStyles: { pointerEvents: "auto", maxWidth: "100%" },
+                  }}
+                />
+                {selectedNode && (
+                  <>
+                    <a
+                      href={`https://twitter.com/${selectedNode.user.screen_name}/status/${selectedNode.id_str}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ cursor: "pointer" }}
                     >
-                      <TweetWidget
-                        tweetId={selectedNode.id_str || String(selectedNode.id)}
-                        options={{ theme: "dark" }}
-                      />
-                    </div>
-                  </a>
-                  {selectedNode.user.pinned_tweet_id && (
-                    <div className="pinnedTweet">
-                      <div className="pinnedTweetIndicator">
-                        <div className="icon">
-                          <PinnedTweetIcon />
-                        </div>
-                        <div className="text">Pinned Tweet</div>
+                      <div
+                        style={{
+                          position: "relative",
+                          zIndex: 0,
+                          pointerEvents: "none",
+                        }}
+                      >
+                        <TweetWidget
+                          tweetId={
+                            selectedNode.id_str || String(selectedNode.id)
+                          }
+                          options={{ theme: "dark" }}
+                        />
                       </div>
-                      <TweetWidget
-                        tweetId={selectedNode.user.pinned_tweet_id}
-                        options={{ theme: "dark" }}
-                      />
-                    </div>
-                  )}
-                </>
-              )}
-              <Timeline
-                dataSource={{
-                  sourceType: "profile",
-                  screenName:
-                    selectedNode?.user.screen_name ||
-                    selectedNode?.user.username,
-                }}
-                options={{
-                  theme: "dark",
-                }}
-              />
-            </div>
+                    </a>
+                    {selectedNode.user.pinned_tweet_id && (
+                      <div className="pinnedTweet">
+                        <div className="pinnedTweetIndicator">
+                          <div className="icon">
+                            <PinnedTweetIcon />
+                          </div>
+                          <div className="text">Pinned Tweet</div>
+                        </div>
+                        <TweetWidget
+                          tweetId={selectedNode.user.pinned_tweet_id}
+                          options={{ theme: "dark" }}
+                        />
+                      </div>
+                    )}
+                  </>
+                )}
+                <Timeline
+                  dataSource={{
+                    sourceType: "profile",
+                    screenName:
+                      selectedNode?.user.screen_name ||
+                      selectedNode?.user.username,
+                  }}
+                  options={{
+                    theme: "dark",
+                  }}
+                />
+              </div>
+            </ClickAwayListener>
           )}
         </DrawerStyles>
       </Drawer>
